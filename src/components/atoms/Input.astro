@@ -1,0 +1,28 @@
+---
+interface Props {
+	width?: number;
+	placeholder?: string;
+}
+
+const { placeholder, width } = Astro.props;
+const cssWidth = `${width}px`;
+---
+
+<input class="soft" type="text" placeholder={placeholder} />
+
+<style define:vars={{ cssWidth }}>
+	input {
+		padding: 5px 20px;
+		border-radius: 30px;
+		width: var(--cssWidth);
+		box-shadow: var(--soft-pressed-shadow);
+	}
+
+	input:placeholder-shown {
+		box-shadow: var(--soft-flat-shadow);
+	}
+
+	input:focus {
+		box-shadow: var(--soft-pressed-shadow);
+	}
+</style>

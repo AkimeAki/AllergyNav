@@ -1,0 +1,19 @@
+.input {
+	display: flex;
+	border-radius: 30px;
+	gap: 10px;
+	cursor: pointer;
+}
+
+.placeholder {
+	padding: 5px 20px;
+	opacity: 0.7;
+}
+
+.tag {
+	border-radius: 30px;
+	padding: 5px 20px;
+	background-color: #ff5252;
+	box-shadow: 3px 3px 6px #ff5252, -3px -3px 6px #ffffff;
+	color: white;
+}

@@ -1,0 +1,26 @@
+---
+import SearchHeader from "@/components/organisms/SearchHeader.astro";
+import "@/styles/reset.css";
+import "@/styles/var.css";
+
+interface Props {
+	title?: string;
+}
+
+const { title } = Astro.props;
+const serviceTitle = "アレルギーナビ";
+const pageTitle = title === undefined ? serviceTitle : `${title} | ${serviceTitle}`;
+---
+
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<title>{pageTitle}</title>
+	</head>
+	<body>
+		<SearchHeader />
+		<slot />
+	</body>
+</html>

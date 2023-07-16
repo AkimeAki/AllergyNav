@@ -1,0 +1,23 @@
+---
+import Input from "@/components/atoms/Input.astro";
+import IconButton from "@/components/atoms/IconButton.astro";
+import SearchIcon from "@/assets/icons/search_fill.svg";
+---
+
+<header class="soft">
+	<Input width={150} placeholder="エリア" />
+	<Input placeholder="キーワード" />
+	<IconButton image={SearchIcon} />
+</header>
+
+<style>
+	header {
+		display: flex;
+		justify-content: flex-end;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 20px;
+		height: 60px;
+		padding: 0 10px;
+	}
+</style>
