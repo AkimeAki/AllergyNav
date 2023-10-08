@@ -1,0 +1,38 @@
+steps:
+  # ビルド
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "--build-arg",
+        "API_URL=${_API_URL}",
+        "-t",
+        "${_IMAGE_NAME}:${COMMIT_SHA}",
+        "-f",
+        "docker/app/Dockerfile.prod",
+        "."
+      ]
+  # push
+  # いつもは勝手にpushしてくれるのに、なぜかデプロイも自動でしてくれない
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "${_IMAGE_NAME}:${COMMIT_SHA}"]
+  # デプロイ
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      [
+        "run",
+        "deploy",
+        "${_SERVICE_NAME}",
+        "--image",
+        "${_IMAGE_NAME}:${COMMIT_SHA}",
+        "--region",
+        "${_REGION}",
+        "--allow-unauthenticated"
+      ]
+substitutions:
+  _IMAGE_NAME: "asia-northeast1-docker.pkg.dev/${PROJECT_ID}/mumbler/production"
+  _SERVICE_NAME: "mumbler"
+  _REGION: "asia-northeast1"
+images:
+  - "${_IMAGE_NAME}:${COMMIT_SHA}"

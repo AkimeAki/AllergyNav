@@ -2,31 +2,37 @@
 	"name": "allergy-nav",
 	"version": "0.1.0",
 	"private": true,
+	"engines": {
+		"node": "18.18.0",
+		"npm": "9.8.1"
+	},
 	"scripts": {
-		"dev": "astro dev --host",
-		"build": "astro build",
-		"preview": "astro preview --host",
-		"astro": "astro",
-		"lint": "eslint './src/**/*.{ts,tsx,astro}'",
-		"lint:fix": "npm run lint -- --fix; prettier --write './**/*'"
+		"dev": "WATCHPACK_POLLING=true next dev -p 5001",
+		"build": "next build",
+		"start": "next start",
+		"lint": "eslint \"./**/*.{js,cjs,mjs,ts,tsx}\"",
+		"format": "prettier --write './**/*.{json,js,cjs,mjs,ts,tsx,yaml,yml,html}'",
+		"lint:fix": "npm run lint -- --fix && npm run format"
 	},
 	"dependencies": {
-		"@astrojs/node": "^5.3.0",
-		"@astrojs/react": "^2.2.1",
-		"@types/react": "^18.2.14",
-		"@types/react-dom": "^18.2.6",
-		"astro": "^2.7.4",
+		"@emotion/react": "^11.11.1",
+		"@types/node": "^20.7.1",
+		"@types/react": "^18.2.15",
+		"@types/react-dom": "^18.2.7",
+		"aki-reset-css": "github:AkimeAki/Reset-CSS#1.0.0",
+		"next": "13.5.4",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
-		"sass": "^1.63.6"
+		"recoil": "^0.7.7",
+		"typescript": "^5.0.2"
 	},
 	"devDependencies": {
-		"@typescript-eslint/parser": "^5.61.0",
-		"eslint": "^8.44.0",
-		"eslint-config-prettier": "^8.8.0",
-		"eslint-config-standard-with-typescript": "^36.0.0",
-		"eslint-plugin-astro": "^0.27.2",
-		"prettier": "^2.8.8",
-		"prettier-plugin-astro": "^0.10.0"
+		"eslint": "^8.45.0",
+		"eslint-config-next": "13.5.4",
+		"eslint-config-prettier": "^9.0.0",
+		"eslint-config-standard-with-typescript": "^39.1.0",
+		"prettier": "^3.0.3",
+		"prettier-config": "github:AkimeAki/Prettier-Config#1.0.0",
+		"typescript-config": "github:AkimeAki/TypeScript-Config#2.0.2"
 	}
 }

@@ -1,13 +1,16 @@
-import React from "react";
-import AllergyItem from "@/components/atoms/AllergyItem";
-import type { Allergy } from "@/definition";
-import { allergyList } from "@/definition";
-import css from "./AllergySelect.module.scss";
+/** @jsxImportSource @emotion/react */
+"use client";
 
-export default function AllergySelect(): JSX.Element {
-	const [tags, setTags] = React.useState<string[]>([]);
+import { useState, useEffect } from "react";
+import AllergenItem from "@/components/atoms/AllergenItem";
+import type { Allergen } from "@/definition";
+import { allergenList } from "@/definition";
+import { css } from "@emotion/react";
 
-	const clickAllergyItem = (id: Allergy, selected: boolean): void => {
+export default function AllergySelect() {
+	const [tags, setTags] = useState<Allergen[]>([]);
+
+	const clickAllergenItem = (id: Allergen, selected: boolean): void => {
 		const currentTags = [...tags];
 		if (selected) {
 			const index = currentTags.indexOf(id);
@@ -18,28 +21,33 @@ export default function AllergySelect(): JSX.Element {
 		}
 	};
 
-	React.useEffect(() => {
-		console.log(tags);
-	}, [tags]);
-
 	return (
-		<div className={css.wrapper}>
-			{Object.keys(allergyList).map((item) => {
-				const allergy = item as Allergy;
-				const selected = tags.some((tag) => tag === allergy);
+		<aside
+			css={css`
+				display: grid;
+				grid-template-columns: repeat(7, 1fr);
+				place-items: center;
+				gap: 10px;
+				padding: 10px;
+				width: 100%;
+			`}
+		>
+			{Object.keys(allergenList).map((item) => {
+				const allergen = item as Allergen;
+				const selected = tags.some((tag) => tag === allergen);
 
 				return (
-					<AllergyItem
-						key={allergy}
-						image={allergyList[allergy].image}
-						text={allergyList[allergy].name}
+					<AllergenItem
+						key={allergen}
+						image={allergenList[allergen].image}
+						text={allergenList[allergen].name}
 						onClick={() => {
-							clickAllergyItem(allergy, selected);
+							clickAllergenItem(allergen, selected);
 						}}
 						selected={selected}
 					/>
 				);
 			})}
-		</div>
+		</aside>
 	);
 }

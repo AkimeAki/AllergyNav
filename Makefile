@@ -1,21 +1,17 @@
-.PHONY: ps
+.PHONY: コンテナ一覧
 ps:
 	docker compose ps -a
 
-.PHONY: up
-up:
+.PHONY: コンテナ起動
+init:
+	@make delete
 	docker compose build --no-cache
 	docker compose up -d
-	@make package-install
 
-.PHONY: down
-down:
+.PHONY: コンテナ削除
+delete:
 	docker compose down --rmi all --volumes --remove-orphans
 
-.PHONY: package-install
-package-install:
-	docker compose exec -it app npm ci
-
-.PHONY: attach
+.PHONY: コンテナにアタッチ
 attach:
 	docker compose exec -it app bash

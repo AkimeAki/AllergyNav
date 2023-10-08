@@ -1,8 +1,8 @@
 services:
   app:
     build:
-      context: ./
-      dockerfile: Dockerfile
+      context: ./docker/app/
+      dockerfile: Dockerfile.dev
     tty: true
     stdin_open: true
     init: true
@@ -11,7 +11,7 @@ services:
       CHOKIDAR_USEPOLLING: 1
       HOST: 0.0.0.0
     ports:
-      - "4001:4001"
+      - "5001:5001"
     working_dir: /app/
     volumes:
       - ./:/app/

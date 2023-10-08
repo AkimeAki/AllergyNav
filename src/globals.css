@@ -1,0 +1,18 @@
+@layer base {
+	:root {
+		--color-black: #656565;
+		--color-red: #d2374f;
+		--color-orange: #ff8a65;
+		--color-green: #8cffa7;
+		--color-purple: #8a65ff;
+	}
+}
+
+* {
+	line-height: 1;
+	color: var(--color-black);
+}
+
+html {
+	overflow-y: scroll;
+}
