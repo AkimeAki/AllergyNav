@@ -44,6 +44,8 @@ export default function AllergenItem({ image, text, selected = false, onClick, s
 					transition-duration: 200ms;
 					transition-property: filter;
 				`}
+				width={100}
+				height={100}
 				src={image}
 				alt=""
 			/>

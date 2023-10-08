@@ -102,8 +102,11 @@ export default function Client(): JSX.Element {
 									<Image
 										css={css`
 											aspect-ratio: 1/1;
+											width: 250px;
 										`}
-										src="https://placehold.jp/30/F5F5F5/ff5757/250x250.png?text=NO%20IMAGE"
+										src="/no-image.png"
+										width={250}
+										height={250}
 										alt="お店の画像"
 									/>
 									<div
