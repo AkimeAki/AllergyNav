@@ -4,6 +4,14 @@
 		"browser": true,
 		"es2023": true
 	},
-	"extends": ["next/core-web-vitals", "standard-with-typescript", "prettier", "next-env.d"],
-	"ignorePatterns": ["dist", ".eslintrc.cjs", "next.config.js"]
+	"extends": ["next/core-web-vitals", "standard-with-typescript", "prettier"],
+	"rules": {
+		"@typescript-eslint/consistent-type-imports": [
+			"warn",
+			{
+				"prefer": "type-imports"
+			}
+		]
+	},
+	"ignorePatterns": ["dist", ".eslintrc.cjs", "next.config.js", "next-env.d.ts"]
 }

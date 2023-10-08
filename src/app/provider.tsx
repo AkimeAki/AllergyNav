@@ -12,7 +12,7 @@ interface Props {
 	children: ReactNode;
 }
 
-export default function ({ children }: Props) {
+export default function Provider({ children }: Props): JSX.Element {
 	return (
 		<RecoilRoot>
 			<Header />

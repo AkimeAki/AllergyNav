@@ -1,15 +1,15 @@
 /** @jsxImportSource @emotion/react */
 "use client";
 
-import Button from "@/components/atoms/Button";
-import AllergySelect from "@/components/molecules/AllergySelect";
+import AllergySelect from "@/components/organisms/AllergenSelect";
 import { css } from "@emotion/react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import type { Allergen } from "@/definition";
+import ButtonLink from "@/components/atoms/ButtonLink";
 
-export default function () {
+export default function Layout(): JSX.Element {
 	const [keywords, setKeywords] = useState<string>("");
-	const router = useRouter();
+	const [tags, setTags] = useState<Allergen[]>([]);
 
 	return (
 		<>
@@ -44,11 +44,12 @@ export default function () {
 				</div>
 				マークを付けてください。
 			</div>
-			<AllergySelect />
+			<AllergySelect tags={tags} setTags={setTags} />
 			<div
 				css={css`
 					display: flex;
 					gap: 20px;
+					align-items: center;
 				`}
 			>
 				<input
@@ -68,13 +69,7 @@ export default function () {
 						border-radius: 30px;
 					`}
 				/>
-				<Button
-					onClick={() => {
-						router.push(`/store?keywords=${keywords}&llergen=`);
-					}}
-				>
-					検索
-				</Button>
+				<ButtonLink href={`/store?keywords=${keywords}&allergen=${tags.join(",")}`}>検索</ButtonLink>
 			</div>
 		</>
 	);

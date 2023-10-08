@@ -7,7 +7,7 @@ interface Props {
 	scale: number;
 }
 
-export default function ({ scale }: Props) {
+export default function Loading({ scale }: Props): JSX.Element {
 	return (
 		<div
 			css={css`

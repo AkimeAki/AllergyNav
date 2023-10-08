@@ -1,25 +1,20 @@
 /** @jsxImportSource @emotion/react */
 "use client";
 
-import { useState, useEffect } from "react";
 import AllergenItem from "@/components/atoms/AllergenItem";
 import type { Allergen } from "@/definition";
 import { allergenList } from "@/definition";
+import { allergenSelect } from "@/hooks/allergen-select";
 import { css } from "@emotion/react";
+import type { Dispatch, SetStateAction } from "react";
 
-export default function AllergySelect() {
-	const [tags, setTags] = useState<Allergen[]>([]);
+interface Props {
+	tags: Allergen[];
+	setTags: Dispatch<SetStateAction<Allergen[]>>;
+}
 
-	const clickAllergenItem = (id: Allergen, selected: boolean): void => {
-		const currentTags = [...tags];
-		if (selected) {
-			const index = currentTags.indexOf(id);
-			currentTags.splice(index, 1);
-			setTags(currentTags);
-		} else {
-			setTags([...currentTags, id]);
-		}
-	};
+export default function AllergenSelect({ tags, setTags }: Props): JSX.Element {
+	const { clickAllergenItem } = allergenSelect(tags, setTags);
 
 	return (
 		<aside

@@ -29,7 +29,7 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 	};
 };
 
-export default function ({ params }: Props) {
+export default function Layout({ params }: Props): JSX.Element {
 	const id = parseInt(params.id ?? "");
 
 	return <Client id={id} />;

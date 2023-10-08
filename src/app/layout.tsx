@@ -16,7 +16,7 @@ interface Props {
 	children: ReactNode;
 }
 
-export default function ({ children }: Props) {
+export default function Layout({ children }: Props): JSX.Element {
 	return (
 		<html lang="ja">
 			<head>

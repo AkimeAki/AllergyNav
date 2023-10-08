@@ -2,19 +2,21 @@
 "use client";
 
 import { css } from "@emotion/react";
-import type { ReactNode, MouseEventHandler } from "react";
+import Link from "next/link";
+import type { ReactNode } from "react";
 
 interface Props {
-	onClick?: MouseEventHandler<HTMLButtonElement>;
+	href: string;
 	children: ReactNode;
 }
 
-export default function Button({ onClick, children }: Props): JSX.Element {
+export default function ButtonLink({ href, children }: Props): JSX.Element {
 	return (
-		<button
-			type="button"
-			onClick={onClick}
+		<Link
+			href={href}
 			css={css`
+				display: inline-block;
+				text-decoration: none;
 				position: relative;
 				cursor: pointer;
 				padding: 15px 40px;
@@ -51,6 +53,6 @@ export default function Button({ onClick, children }: Props): JSX.Element {
 			`}
 		>
 			{children}
-		</button>
+		</Link>
 	);
 }

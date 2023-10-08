@@ -5,7 +5,7 @@ import { css } from "@emotion/react";
 import SvgImage from "@/components/atoms/SvgImage";
 import FooterLink from "@/components/atoms/FooterLink";
 
-export default function () {
+export default function Footer(): JSX.Element {
 	return (
 		<footer
 			css={css`

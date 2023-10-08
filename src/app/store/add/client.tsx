@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSetRecoilState } from "recoil";
 
-export default function () {
+export default function Client(): JSX.Element {
 	const [name, setName] = useState<string>("");
 	const [address, setAddress] = useState<string>("");
 	const setMessages = useSetRecoilState(messagesSelector);
@@ -28,6 +28,10 @@ export default function () {
 					address
 				})
 			});
+
+			if (result.status !== 200) {
+				throw new Error();
+			}
 
 			const response = await result.json();
 			const id = response.data.id;

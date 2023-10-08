@@ -10,7 +10,7 @@ interface Props {
 	href: string;
 }
 
-export default function ({ children, href }: Props) {
+export default function HeaderLink({ children, href }: Props): JSX.Element {
 	return (
 		<Link
 			css={css`

@@ -8,8 +8,9 @@ import { useSetRecoilState } from "recoil";
 import Loading from "@/components/atoms/Loading";
 import Link from "next/link";
 import { messagesSelector } from "@/selector/messages";
+import Image from "next/image";
 
-export default function () {
+export default function TopStoreList(): JSX.Element {
 	const [isLoading, setIsLoading] = useState(true);
 	const [stores, setStores] = useState<Store[]>([]);
 	const setMessages = useSetRecoilState(messagesSelector);
@@ -67,7 +68,7 @@ export default function () {
 								}
 							`}
 						>
-							<img
+							<Image
 								css={css`
 									aspect-ratio: 1/1;
 									width: 100%;

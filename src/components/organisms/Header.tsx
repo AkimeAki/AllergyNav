@@ -5,7 +5,7 @@ import { css } from "@emotion/react";
 import Link from "next/link";
 import HeaderLink from "@/components/atoms/HeaderLink";
 
-export default function () {
+export default function Header(): JSX.Element {
 	return (
 		<header
 			css={css`

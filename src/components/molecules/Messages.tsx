@@ -6,7 +6,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { messagesSetToggleState, messagesState } from "@/atoms/message";
 import { useEffect } from "react";
 
-export default function Home() {
+export default function Messages(): JSX.Element {
 	const [messages, setMessages] = useRecoilState(messagesState);
 	const messagesToggle = useRecoilValue(messagesSetToggleState);
 
@@ -19,6 +19,7 @@ export default function Home() {
 				return _messages;
 			});
 		}, 5000);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [messagesToggle]);
 
 	return (

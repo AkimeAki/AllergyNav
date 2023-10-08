@@ -14,10 +14,10 @@ interface Props {
 	id: number;
 }
 
-export default function ({ id }: Props) {
+export default function Client({ id }: Props): JSX.Element {
 	const [name, setName] = useState<string>("");
 	const [address, setAddress] = useState<string>("");
-	const [isLoading, setIsLoading] = useState(true);
+	const [, setIsLoading] = useState(true);
 	const setMessages = useSetRecoilState(messagesSelector);
 	const router = useRouter();
 
@@ -34,6 +34,7 @@ export default function ({ id }: Props) {
 				const response = await result.json();
 				const data = response.data;
 				setName(data.name);
+				setAddress(data.address);
 				setIsLoading(false);
 			} catch (e) {
 				setMessages({
@@ -91,6 +92,7 @@ export default function ({ id }: Props) {
 			<div>
 				<Label>住所</Label>
 				<TextInput
+					value={address}
 					onChange={(e) => {
 						setAddress(e.target.value);
 					}}

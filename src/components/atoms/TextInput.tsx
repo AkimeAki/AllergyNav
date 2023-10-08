@@ -2,7 +2,6 @@
 "use client";
 
 import { css } from "@emotion/react";
-import { ReactNode } from "react";
 import type { ChangeEventHandler } from "react";
 
 interface Props {
@@ -10,7 +9,7 @@ interface Props {
 	value?: string;
 }
 
-export default function ({ onChange, value }: Props): JSX.Element {
+export default function TextInput({ onChange, value }: Props): JSX.Element {
 	return (
 		<div
 			css={css`

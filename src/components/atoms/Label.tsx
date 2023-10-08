@@ -2,13 +2,13 @@
 "use client";
 
 import { css } from "@emotion/react";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 interface Props {
 	children: ReactNode;
 }
 
-export default function ({ children }: Props) {
+export default function Label({ children }: Props): JSX.Element {
 	return (
 		<label
 			css={css`

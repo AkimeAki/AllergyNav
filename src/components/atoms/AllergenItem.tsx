@@ -3,14 +3,17 @@
 
 import type { MouseEvent } from "react";
 import { css } from "@emotion/react";
+import type { SerializedStyles } from "@emotion/react";
+import Image from "next/image";
 
 interface Props {
 	image: string;
 	text: string;
 	selected?: boolean;
 	onClick?: (event: MouseEvent<HTMLElement>) => void;
+	style?: SerializedStyles;
 }
-export default function AllergyItem({ image, text, selected = false, onClick }: Props) {
+export default function AllergenItem({ image, text, selected = false, onClick, style = css`` }: Props): JSX.Element {
 	return (
 		<div
 			css={css`
@@ -20,17 +23,18 @@ export default function AllergyItem({ image, text, selected = false, onClick }: 
 				justify-content: center;
 				align-items: center;
 				width: 90px;
-				aspect-ratio: 1/1;
 				cursor: pointer;
 				user-select: none;
 
 				&:hover > img {
 					filter: opacity(${selected ? "0.4" : "1"}) ${!selected && "drop-shadow(0px 0px 1px #777777)"};
 				}
+
+				${style}
 			`}
 			onClick={onClick}
 		>
-			<img
+			<Image
 				css={css`
 					width: 40px;
 					aspect-ratio: 1/1;

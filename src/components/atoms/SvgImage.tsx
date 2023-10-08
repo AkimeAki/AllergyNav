@@ -4,17 +4,14 @@
 import { css } from "@emotion/react";
 import type { SerializedStyles } from "@emotion/react";
 
-export default function ({
-	src,
-	size,
-	color,
-	style = css``
-}: {
+interface Props {
 	src: string;
 	size: string;
 	color: string;
 	style?: SerializedStyles;
-}) {
+}
+
+export default function SvgImage({ src, size, color, style = css`` }: Props): JSX.Element {
 	return (
 		<div
 			css={css`
