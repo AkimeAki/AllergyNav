@@ -3,98 +3,82 @@
 
 import { css } from "@emotion/react";
 
-interface Props {
-	scale: number;
-}
-
-export default function Loading({ scale }: Props): JSX.Element {
+export default function (): JSX.Element {
 	return (
 		<div
 			css={css`
-				transform: scale(${scale});
+				display: flex;
+				justify-content: center;
 			`}
 		>
 			<div
 				css={css`
-					color: var(--color-orange);
-					font-size: 90px;
-					text-indent: -9999em;
-					overflow: hidden;
-					width: 1em;
-					height: 1em;
-					border-radius: 50%;
-					margin: 72px auto;
 					position: relative;
-					transform: translateZ(0);
-					animation:
-						load6 1.7s infinite ease,
-						round 1.7s infinite ease;
+					width: 40px;
+					height: 30px;
+					animation-name: viewLoading;
+					animation-duration: 1.5s;
+					animation-fill-mode: forwards;
+					opacity: 0;
 
-					@keyframes load6 {
+					@keyframes viewLoading {
 						0% {
-							box-shadow:
-								0 -0.83em 0 -0.4em,
-								0 -0.83em 0 -0.42em,
-								0 -0.83em 0 -0.44em,
-								0 -0.83em 0 -0.46em,
-								0 -0.83em 0 -0.477em;
+							opacity: 0;
 						}
-						5%,
-						95% {
-							box-shadow:
-								0 -0.83em 0 -0.4em,
-								0 -0.83em 0 -0.42em,
-								0 -0.83em 0 -0.44em,
-								0 -0.83em 0 -0.46em,
-								0 -0.83em 0 -0.477em;
+
+						50% {
+							opacity: 0;
 						}
-						10%,
-						59% {
-							box-shadow:
-								0 -0.83em 0 -0.4em,
-								-0.087em -0.825em 0 -0.42em,
-								-0.173em -0.812em 0 -0.44em,
-								-0.256em -0.789em 0 -0.46em,
-								-0.297em -0.775em 0 -0.477em;
-						}
-						20% {
-							box-shadow:
-								0 -0.83em 0 -0.4em,
-								-0.338em -0.758em 0 -0.42em,
-								-0.555em -0.617em 0 -0.44em,
-								-0.671em -0.488em 0 -0.46em,
-								-0.749em -0.34em 0 -0.477em;
-						}
-						38% {
-							box-shadow:
-								0 -0.83em 0 -0.4em,
-								-0.377em -0.74em 0 -0.42em,
-								-0.645em -0.522em 0 -0.44em,
-								-0.775em -0.297em 0 -0.46em,
-								-0.82em -0.09em 0 -0.477em;
-						}
+
 						100% {
-							box-shadow:
-								0 -0.83em 0 -0.4em,
-								0 -0.83em 0 -0.42em,
-								0 -0.83em 0 -0.44em,
-								0 -0.83em 0 -0.46em,
-								0 -0.83em 0 -0.477em;
+							opacity: 1;
 						}
 					}
-					@keyframes round {
-						0% {
-							-webkit-transform: rotate(0deg);
-							transform: rotate(0deg);
+
+					& div {
+						position: absolute;
+						top: 50%;
+						background-color: var(--color-orange);
+						width: 10px;
+						height: 30px;
+						border-radius: 20px;
+						animation-name: loading;
+						animation-duration: 0.7s;
+						animation-iteration-count: infinite;
+						animation-direction: alternate-reverse;
+					}
+
+					@keyframes loading {
+						from {
+							height: 30px;
 						}
-						100% {
-							-webkit-transform: rotate(360deg);
-							transform: rotate(360deg);
+
+						to {
+							height: 5px;
 						}
 					}
 				`}
 			>
-				Loading...
+				<div
+					css={css`
+						left: 0;
+						transform: translate(0, -50%);
+					`}
+				/>
+				<div
+					css={css`
+						left: 50%;
+						transform: translate(-50%, -50%);
+						animation-delay: calc(1s / 3);
+					`}
+				/>
+				<div
+					css={css`
+						right: 0;
+						transform: translate(0, -50%);
+						animation-delay: calc((1s / 3) * 2);
+					`}
+				/>
 			</div>
 		</div>
 	);

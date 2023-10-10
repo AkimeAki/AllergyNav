@@ -1,8 +1,8 @@
 /** @jsxImportSource @emotion/react */
 "use client";
 
-import { css } from "@emotion/react";
 import type { ReactNode } from "react";
+import { css } from "@emotion/react";
 
 interface Props {
 	children: ReactNode;
@@ -10,12 +10,17 @@ interface Props {
 
 export default function ({ children }: Props): JSX.Element {
 	return (
-		<label
+		<h2
 			css={css`
-				display: block;
+				font-weight: 700;
+				font-size: 18px;
+				background-color: var(--color-orange);
+				padding: 10px 20px;
+				color: white;
+				border-radius: 20px;
 			`}
 		>
 			{children}
-		</label>
+		</h2>
 	);
 }

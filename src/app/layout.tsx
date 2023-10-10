@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-page-custom-font */
 import "@/globals.css";
 import "aki-reset-css";
 import type { Metadata } from "next";
@@ -16,11 +17,14 @@ interface Props {
 	children: ReactNode;
 }
 
-export default function Layout({ children }: Props): JSX.Element {
+export default function ({ children }: Props): JSX.Element {
 	return (
 		<html lang="ja">
 			<head>
-				<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+				<link
+					rel="stylesheet"
+					href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap"
+				/>
 				<link rel="preconnect" href="https://fonts.googleapis.com" />
 				<link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
 				<link

@@ -1,15 +1,18 @@
 /** @jsxImportSource @emotion/react */
 "use client";
 
-import AllergySelect from "@/components/organisms/AllergenSelect";
 import { css } from "@emotion/react";
 import { useState } from "react";
 import type { Allergen } from "@/definition";
 import ButtonLink from "@/components/atoms/ButtonLink";
+import AllergenItem from "@/components/atoms/AllergenItem";
+import { allergenList } from "@/definition";
+import { allergenSelect } from "@/hooks/allergen-select";
 
-export default function Layout(): JSX.Element {
+export default function (): JSX.Element {
 	const [keywords, setKeywords] = useState<string>("");
 	const [tags, setTags] = useState<Allergen[]>([]);
+	const { clickAllergenItem } = allergenSelect(tags, setTags);
 
 	return (
 		<>
@@ -44,7 +47,33 @@ export default function Layout(): JSX.Element {
 				</div>
 				マークを付けてください。
 			</div>
-			<AllergySelect tags={tags} setTags={setTags} />
+			<aside
+				css={css`
+					display: grid;
+					grid-template-columns: repeat(7, 1fr);
+					place-items: center;
+					gap: 10px;
+					padding: 30px;
+					width: 100%;
+				`}
+			>
+				{Object.keys(allergenList).map((item) => {
+					const allergen = item as Allergen;
+					const selected = tags.some((tag) => tag === allergen);
+
+					return (
+						<AllergenItem
+							key={allergen}
+							image={allergenList[allergen].image}
+							text={allergenList[allergen].name}
+							onClick={() => {
+								clickAllergenItem(allergen, selected);
+							}}
+							selected={selected}
+						/>
+					);
+				})}
+			</aside>
 			<div
 				css={css`
 					display: flex;

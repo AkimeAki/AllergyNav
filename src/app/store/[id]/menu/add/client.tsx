@@ -18,7 +18,7 @@ interface Props {
 	id: number;
 }
 
-export default function Client({ id }: Props): JSX.Element {
+export default function ({ id }: Props): JSX.Element {
 	const [name, setName] = useState<string>("");
 	const setMessages = useSetRecoilState(messagesSelector);
 	const router = useRouter();
@@ -117,18 +117,23 @@ export default function Client({ id }: Props): JSX.Element {
 						const selected = allergens.some((tag) => tag === allergen);
 
 						return (
-							<AllergenItem
+							<div
 								key={allergen}
-								image={allergenList[allergen].image}
-								text={allergenList[allergen].name}
-								onClick={() => {
-									clickAllergenItem(allergen, selected);
-								}}
-								selected={selected}
-								style={css`
+								css={css`
+									display: flex;
+									justify-content: center;
 									width: calc(100% / 7);
 								`}
-							/>
+							>
+								<AllergenItem
+									image={allergenList[allergen].image}
+									text={allergenList[allergen].name}
+									onClick={() => {
+										clickAllergenItem(allergen, selected);
+									}}
+									selected={selected}
+								/>
+							</div>
 						);
 					})}
 				</div>

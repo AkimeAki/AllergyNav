@@ -10,7 +10,7 @@ interface Props {
 	href: string;
 }
 
-export default function FooterLink({ children, href }: Props): JSX.Element {
+export default function ({ children, href }: Props): JSX.Element {
 	return (
 		<Link
 			href={href}

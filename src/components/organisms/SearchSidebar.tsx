@@ -10,11 +10,14 @@ import AllergenItem from "@/components/atoms/AllergenItem";
 import { useSearchParams } from "next/navigation";
 import TextInput from "@/components/atoms/TextInput";
 import ButtonLink from "@/components/atoms/ButtonLink";
+import SubTitle from "@/components/atoms/SubTitle";
+import Loading from "@/components/atoms/Loading";
 
-export default function SearchSidebar(): JSX.Element {
+export default function (): JSX.Element {
 	const [tags, setTags] = useState<Allergen[]>([]);
 	const { clickAllergenItem } = allergenSelect(tags, setTags);
 	const searchParams = useSearchParams();
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const params = {
 		allergen: searchParams.get("allergen"),
 		keywords: searchParams.get("keywords")
@@ -33,6 +36,8 @@ export default function SearchSidebar(): JSX.Element {
 		if (params.keywords !== null) {
 			setKeywords(params.keywords);
 		}
+
+		setIsLoading(false);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -45,11 +50,14 @@ export default function SearchSidebar(): JSX.Element {
 			`}
 		>
 			<div>
-				<h3>除去するアレルゲン</h3>
+				<SubTitle>除去するアレルゲン</SubTitle>
 				<section
 					css={css`
+						position: relative;
 						display: flex;
 						flex-wrap: wrap;
+						margin-top: 10px;
+						opacity: ${isLoading ? "0.6" : "1"};
 					`}
 				>
 					{Object.keys(allergenList).map((item) => {
@@ -57,31 +65,78 @@ export default function SearchSidebar(): JSX.Element {
 						const selected = tags.some((tag) => tag === allergen);
 
 						return (
-							<AllergenItem
+							<div
 								key={allergen}
-								image={allergenList[allergen].image}
-								text={allergenList[allergen].name}
-								onClick={() => {
-									clickAllergenItem(allergen, selected);
-								}}
-								selected={selected}
-								style={css`
+								css={css`
+									display: flex;
+									justify-content: center;
 									width: calc(100% / 4);
+									margin-bottom: 20px;
 								`}
-							/>
+							>
+								<AllergenItem
+									image={allergenList[allergen].image}
+									text={allergenList[allergen].name}
+									onClick={() => {
+										clickAllergenItem(allergen, selected);
+									}}
+									selected={selected}
+								/>
+							</div>
 						);
 					})}
+					{isLoading && (
+						<div
+							css={css`
+								position: absolute;
+								top: 0;
+								left: 0;
+								width: 100%;
+								height: 100%;
+								display: flex;
+								justify-content: center;
+								align-items: center;
+								z-index: 999;
+								cursor: wait;
+							`}
+						>
+							<Loading />
+						</div>
+					)}
 				</section>
 			</div>
 			<div>
-				<h3>キーワード</h3>
-				<section>
+				<SubTitle>キーワード</SubTitle>
+				<section
+					css={css`
+						position: relative;
+						opacity: ${isLoading ? "0.6" : "1"};
+					`}
+				>
 					<TextInput
 						value={keywords}
 						onChange={(e) => {
 							setKeywords(e.target.value);
 						}}
 					/>
+					{isLoading && (
+						<div
+							css={css`
+								position: absolute;
+								top: 0;
+								left: 0;
+								width: 100%;
+								height: 100%;
+								display: flex;
+								justify-content: center;
+								align-items: center;
+								z-index: 999;
+								cursor: wait;
+							`}
+						>
+							<Loading />
+						</div>
+					)}
 				</section>
 			</div>
 			<div>

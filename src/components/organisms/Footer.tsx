@@ -5,7 +5,7 @@ import { css } from "@emotion/react";
 import SvgImage from "@/components/atoms/SvgImage";
 import FooterLink from "@/components/atoms/FooterLink";
 
-export default function Footer(): JSX.Element {
+export default function (): JSX.Element {
 	return (
 		<footer
 			css={css`
@@ -44,7 +44,7 @@ export default function Footer(): JSX.Element {
 						src={"/logo/twitter.svg"}
 						size="25px"
 						color="var(--color-black)"
-						style={css`
+						css={css`
 							transform: translate(1px, 0px);
 						`}
 					/>

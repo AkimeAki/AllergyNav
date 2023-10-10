@@ -5,6 +5,6 @@ export const metadata: Metadata = {
 	title: "お店一覧"
 };
 
-export default function Layout(): JSX.Element {
+export default function (): JSX.Element {
 	return <Client />;
 }

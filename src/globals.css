@@ -11,6 +11,7 @@
 * {
 	line-height: 1;
 	color: var(--color-black);
+	font-weight: 400;
 }
 
 html {

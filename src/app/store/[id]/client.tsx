@@ -3,23 +3,34 @@
 
 import { useEffect, useState } from "react";
 import { css } from "@emotion/react";
-import type { Store, Menu } from "@/type";
+import type { Store } from "@/type";
 import { useSetRecoilState } from "recoil";
 import { messagesSelector } from "@/selector/messages";
 import Loading from "@/components/atoms/Loading";
 import ButtonLink from "@/components/atoms/ButtonLink";
-import AllergenItem from "@/components/atoms/AllergenItem";
-import { allergenList } from "@/definition";
+import MenuTab from "./menu";
+import MapTab from "./map";
+import ImageTab from "./image";
+import CommentTab from "./comment";
+import Tab from "@/components/atoms/Tab";
 
 interface Props {
 	id: number;
 }
 
-export default function Client({ id }: Props): JSX.Element {
+export default function ({ id }: Props): JSX.Element {
 	const [isLoading, setIsLoading] = useState(true);
-	const [store, setStore] = useState<Store>({});
-	const [menu, setMenu] = useState<Menu[]>([]);
+	const [store, setStore] = useState<Store>({
+		id: NaN,
+		name: "",
+		address: "",
+		chain_id: null,
+		description: "",
+		updated_at: "",
+		created_at: ""
+	});
 	const setMessages = useSetRecoilState(messagesSelector);
+	const [tab, setTab] = useState<"menu" | "image" | "map" | "comment">("menu");
 
 	useEffect(() => {
 		const getStore = async (): Promise<void> => {
@@ -31,17 +42,17 @@ export default function Client({ id }: Props): JSX.Element {
 					}
 				});
 
-				const menuResult = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu?storeId=${id}`, {
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json"
-					}
-				});
-
 				const storeResponse = await storeResult.json();
-				const menuResponse = await menuResult.json();
+
+				storeResponse.data.description = storeResponse.data.description.replace(/\r\n|\n|\r/g, "<br />");
+				storeResponse.data.description = storeResponse.data.description.replace(
+					/http[^\s|\r\n|\n|\r]*(\s|\r\n|\n|\r|$)/g,
+					(match: string) => {
+						return `<a href="${match.trim()}" target="_blank">${match.trim()}</a> `;
+					}
+				);
+
 				setStore(storeResponse.data);
-				setMenu(menuResponse.data);
 				setIsLoading(false);
 			} catch (e) {
 				setMessages({
@@ -57,27 +68,16 @@ export default function Client({ id }: Props): JSX.Element {
 
 	return (
 		<>
-			{isLoading ? (
-				<Loading scale={0.5} />
-			) : (
-				<>
-					<section
-						css={css`
-							display: flex;
-							justify-content: space-between;
-							align-items: center;
-						`}
-					>
-						<h2
-							css={css`
-								font-size: 25px;
-								font-weight: 600;
-							`}
-						>
-							{store.name}
-						</h2>
-						<ButtonLink href={`/store/${store.id}/edit`}>編集する</ButtonLink>
-					</section>
+			<div
+				css={css`
+					display: flex;
+					flex-direction: column;
+					gap: 30px;
+				`}
+			>
+				{isLoading ? (
+					<Loading />
+				) : (
 					<section>
 						<div
 							css={css`
@@ -88,63 +88,87 @@ export default function Client({ id }: Props): JSX.Element {
 						>
 							<h2
 								css={css`
-									font-size: 20px;
+									font-size: 25px;
+									font-weight: 600;
 								`}
 							>
-								メニュー
+								{store.name}
 							</h2>
-							<ButtonLink href={`/store/${store.id}/menu/add`}>メニューを追加する</ButtonLink>
+							<ButtonLink href={`/store/${store.id}/edit`}>編集する</ButtonLink>
 						</div>
 						<div>
-							{menu.map((item) => (
-								<div
-									key={item.id}
-									css={css`
-										display: flex;
-										flex-direction: column;
-										gap: 20px;
-										transition-duration: 200ms;
-										transition-property: box-shadow;
-										border-radius: 7px;
-										border-width: 2px;
-										border-style: solid;
-										border-color: #f3f3f3;
-										padding: 20px;
-
-										&:hover {
-											box-shadow: 0px 0px 15px -10px #777777;
-										}
-									`}
-								>
-									<h3>{item.name}</h3>
-									<h4>含まれるアレルゲン</h4>
-
-									{item.allergens?.map((allergen, index) => {
-										if (allergen.id !== null) {
-											return (
-												<AllergenItem
-													key={allergen.id}
-													image={allergenList[allergen.id].image}
-													text={allergenList[allergen.id].name}
-													style={css`
-														cursor: default;
-
-														&:hover > img {
-															filter: none;
-														}
-													`}
-												/>
-											);
-										}
-
-										return <div key={index}>なし</div>;
-									})}
-								</div>
-							))}
+							<table>
+								<tbody>
+									<tr>
+										<th>住所: </th>
+										<td>{store.address}</td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
+						<div
+							dangerouslySetInnerHTML={{
+								__html: store.description
+							}}
+						/>
 					</section>
-				</>
-			)}
+				)}
+				<section>
+					<div
+						css={css`
+							display: flex;
+							border-radius: 30px;
+							overflow: hidden;
+							border-style: solid;
+							border-color: var(--color-orange);
+							border-width: 2px;
+						`}
+					>
+						<Tab
+							selected={tab === "menu"}
+							onClick={() => {
+								setTab("menu");
+							}}
+						>
+							メニュー
+						</Tab>
+						<Tab
+							selected={tab === "image"}
+							onClick={() => {
+								setTab("image");
+							}}
+						>
+							画像
+						</Tab>
+						<Tab
+							selected={tab === "map"}
+							onClick={() => {
+								setTab("map");
+							}}
+						>
+							地図
+						</Tab>
+						<Tab
+							selected={tab === "comment"}
+							onClick={() => {
+								setTab("comment");
+							}}
+						>
+							コメント
+						</Tab>
+					</div>
+					<div
+						css={css`
+							padding: 20px 0;
+						`}
+					>
+						{tab === "menu" && <MenuTab id={id} />}
+						{tab === "map" && <MapTab address={store.address} />}
+						{tab === "image" && <ImageTab />}
+						{tab === "comment" && <CommentTab id={id} />}
+					</div>
+				</section>
+			</div>
 		</>
 	);
 }

@@ -12,7 +12,7 @@ import { messagesSelector } from "@/selector/messages";
 import SearchSidebar from "@/components/organisms/SearchSidebar";
 import Image from "next/image";
 
-export default function Client(): JSX.Element {
+export default function (): JSX.Element {
 	const [isLoading, setIsLoading] = useState(true);
 	const [stores, setStores] = useState<Store[]>([]);
 	const setMessages = useSetRecoilState(messagesSelector);
@@ -28,7 +28,7 @@ export default function Client(): JSX.Element {
 				const queryAllergen = params.allergen ?? "";
 				const queryKeywords = params.keywords ?? "";
 				const result = await fetch(
-					`${process.env.NEXT_PUBLIC_API_URL}/store?keywords=${queryKeywords}&=allergen${queryAllergen}`,
+					`${process.env.NEXT_PUBLIC_API_URL}/store?keywords=${queryKeywords}&allergen=${queryAllergen}`,
 					{
 						method: "GET",
 						headers: {
@@ -36,6 +36,10 @@ export default function Client(): JSX.Element {
 						}
 					}
 				);
+
+				if (result.status !== 200) {
+					throw new Error();
+				}
 
 				const response = await result.json();
 				const data = response.data;
@@ -67,7 +71,7 @@ export default function Client(): JSX.Element {
 			</div>
 			<div>
 				{isLoading ? (
-					<Loading scale={0.5} />
+					<Loading />
 				) : (
 					<section
 						css={css`

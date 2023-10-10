@@ -9,7 +9,7 @@
 	"scripts": {
 		"dev": "WATCHPACK_POLLING=true next dev -p 5001",
 		"build": "next build",
-		"start": "next start",
+		"start": "next start -p 5001",
 		"lint": "eslint \"./**/*.{js,cjs,mjs,ts,tsx}\"",
 		"format": "prettier --write './**/*.{json,js,cjs,mjs,ts,tsx,yaml,yml,html}'",
 		"lint:fix": "npm run lint -- --fix && npm run format"

@@ -10,7 +10,7 @@ import Link from "next/link";
 import { messagesSelector } from "@/selector/messages";
 import Image from "next/image";
 
-export default function TopStoreList(): JSX.Element {
+export default function (): JSX.Element {
 	const [isLoading, setIsLoading] = useState(true);
 	const [stores, setStores] = useState<Store[]>([]);
 	const setMessages = useSetRecoilState(messagesSelector);

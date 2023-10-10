@@ -7,9 +7,10 @@ import type { ChangeEventHandler } from "react";
 interface Props {
 	onChange?: ChangeEventHandler<HTMLInputElement>;
 	value?: string;
+	readonly?: boolean;
 }
 
-export default function TextInput({ onChange, value }: Props): JSX.Element {
+export default function ({ onChange, value, readonly = false }: Props): JSX.Element {
 	return (
 		<div
 			css={css`
@@ -20,6 +21,7 @@ export default function TextInput({ onChange, value }: Props): JSX.Element {
 				type="text"
 				onChange={onChange}
 				value={value}
+				readOnly={readonly}
 				css={css`
 					display: block;
 					width: 100%;
@@ -28,6 +30,16 @@ export default function TextInput({ onChange, value }: Props): JSX.Element {
 
 					&:focus + div {
 						width: 100%;
+					}
+
+					&[readonly] {
+						background-color: #e4e4e4;
+						user-select: none;
+						cursor: wait;
+
+						&:focus + div {
+							width: 0;
+						}
 					}
 				`}
 			/>
@@ -38,7 +50,7 @@ export default function TextInput({ onChange, value }: Props): JSX.Element {
 					left: 0;
 					width: 0;
 					height: 2px;
-					background-color: var(--color-purple);
+					background-color: var(--color-green);
 					transition-duration: 400ms;
 					transition-property: width;
 					z-index: 2;

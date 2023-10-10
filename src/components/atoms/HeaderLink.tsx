@@ -10,7 +10,7 @@ interface Props {
 	href: string;
 }
 
-export default function HeaderLink({ children, href }: Props): JSX.Element {
+export default function ({ children, href }: Props): JSX.Element {
 	return (
 		<Link
 			css={css`
@@ -24,6 +24,7 @@ export default function HeaderLink({ children, href }: Props): JSX.Element {
 				overflow: hidden;
 				transition-duration: 200ms;
 				transition-property: box-shadow;
+				user-select: none;
 
 				&:after {
 					content: "";
@@ -33,7 +34,7 @@ export default function HeaderLink({ children, href }: Props): JSX.Element {
 					left: 0;
 					width: 0;
 					height: 3px;
-					background-color: var(--color-purple);
+					background-color: var(--color-green);
 					transition-duration: 400ms;
 					transition-property: width;
 					transition-timing-function: ease-in-out;

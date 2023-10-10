@@ -8,42 +8,64 @@ import { messagesSelector } from "@/selector/messages";
 import type { Store } from "@/type";
 import { css } from "@emotion/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 
-export default function (): JSX.Element {
+interface Props {
+	id: number;
+}
+
+export default function Client({ id }: Props): JSX.Element {
 	const [name, setName] = useState<Store["name"]>("");
 	const [address, setAddress] = useState<Store["address"]>("");
 	const [description, setDescription] = useState<Store["description"]>("");
-	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [, setIsLoading] = useState(true);
 	const setMessages = useSetRecoilState(messagesSelector);
 	const router = useRouter();
 
+	useEffect(() => {
+		const getStore = async (): Promise<void> => {
+			try {
+				const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store/${id}`, {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json"
+					}
+				});
+
+				const response = await result.json();
+				const data = response.data;
+				setName(data.name);
+				setAddress(data.address);
+				setDescription(data.description);
+				setIsLoading(false);
+			} catch (e) {
+				setMessages({
+					status: "error",
+					message: "接続エラーが発生しました。"
+				});
+			}
+		};
+
+		void getStore();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	const clickButton = async (): Promise<void> => {
 		try {
-			setIsLoading(true);
-			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store`, {
-				method: "POST",
+			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store/${id}`, {
+				method: "PUT",
 				headers: {
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
 					name,
-					address,
-					description
+					address
 				})
 			});
 
-			if (result.status !== 200) {
-				throw new Error();
-			}
-
 			const response = await result.json();
-			const id = response.data.id;
-			setMessages({
-				status: "success",
-				message: "お店を登録できました。"
-			});
+			setMessages(response.messages);
 			router.push(`/store/${id}`);
 		} catch (e) {
 			setMessages({
@@ -64,24 +86,25 @@ export default function (): JSX.Element {
 			<div>
 				<Label>名前</Label>
 				<TextInput
+					value={name}
 					onChange={(e) => {
 						setName(e.target.value);
 					}}
-					readonly={isLoading}
 				/>
 			</div>
 			<div>
 				<Label>住所</Label>
 				<TextInput
+					value={address}
 					onChange={(e) => {
 						setAddress(e.target.value);
 					}}
-					readonly={isLoading}
 				/>
 			</div>
 			<div>
 				<Label>詳細</Label>
 				<textarea
+					value={description}
 					onChange={(e) => {
 						setDescription(e.target.value);
 					}}
@@ -94,36 +117,16 @@ export default function (): JSX.Element {
 						border-color: var(--color-orange);
 						margin-top: 10px;
 						padding: 10px;
-						transition-duration: 200ms;
-						transition-property: border-color;
-
-						&:focus {
-							border-color: var(--color-green);
-						}
-
-						&[readonly] {
-							background-color: #e4e4e4;
-							user-select: none;
-							cursor: wait;
-
-							&:focus {
-								border-color: var(--color-orange);
-							}
-						}
 					`}
-					readOnly={isLoading}
 				/>
 			</div>
 			<div>
 				<Button
 					onClick={() => {
-						if (!isLoading) {
-							void clickButton();
-						}
+						void clickButton();
 					}}
-					loading={isLoading}
 				>
-					{isLoading ? "登録中…" : "登録する"}
+					更新する
 				</Button>
 			</div>
 		</form>

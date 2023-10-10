@@ -6,7 +6,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { messagesSetToggleState, messagesState } from "@/atoms/message";
 import { useEffect } from "react";
 
-export default function Messages(): JSX.Element {
+export default function (): JSX.Element {
 	const [messages, setMessages] = useRecoilState(messagesState);
 	const messagesToggle = useRecoilValue(messagesSetToggleState);
 

@@ -5,7 +5,7 @@ import { css } from "@emotion/react";
 import Link from "next/link";
 import HeaderLink from "@/components/atoms/HeaderLink";
 
-export default function Header(): JSX.Element {
+export default function (): JSX.Element {
 	return (
 		<header
 			css={css`
@@ -39,9 +39,10 @@ export default function Header(): JSX.Element {
 							font-size: 20px;
 							color: white;
 							text-decoration: none;
+							font-weight: 700;
 						`}
 					>
-						アレルギーナビ
+						アレルギーナビ 超β版
 					</Link>
 				</h1>
 				<div
@@ -51,6 +52,7 @@ export default function Header(): JSX.Element {
 						gap: 20px;
 					`}
 				>
+					<HeaderLink href="/chain">チェーン店一覧</HeaderLink>
 					<HeaderLink href="/store">お店一覧</HeaderLink>
 					<HeaderLink href="/store/add">お店を追加</HeaderLink>
 				</div>

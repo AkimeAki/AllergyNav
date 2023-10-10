@@ -8,10 +8,10 @@ interface Props {
 	src: string;
 	size: string;
 	color: string;
-	style?: SerializedStyles;
+	css?: SerializedStyles;
 }
 
-export default function SvgImage({ src, size, color, style = css`` }: Props): JSX.Element {
+export default function ({ src, size, color, css: style = css`` }: Props): JSX.Element {
 	return (
 		<div
 			css={css`
