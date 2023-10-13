@@ -4,8 +4,9 @@
 import Button from "@/components/atoms/Button";
 import Label from "@/components/atoms/Label";
 import TextInput from "@/components/atoms/TextInput";
+import Select from "@/components/molecules/Select";
 import { messagesSelector } from "@/selector/messages";
-import type { Message, Store } from "@/type";
+import type { Chain, Message, Store, ChainList } from "@/type";
 import { css } from "@emotion/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -18,6 +19,12 @@ interface Props {
 export default function ({ id }: Props): JSX.Element {
 	const [name, setName] = useState<Store["name"]>("");
 	const [address, setAddress] = useState<Store["address"]>("");
+	const [chain, setChain] = useState<ChainList>({
+		id: null,
+		name: null
+	});
+	const [openedChain, setOpenedChain] = useState<boolean>(false);
+	const [chainList, setChainList] = useState<ChainList[]>([]);
 	const [description, setDescription] = useState<Store["description"]>("");
 	const [isLoading, setIsLoading] = useState(true);
 	const [isSendLoading, setIsSendLoading] = useState(false);
@@ -38,6 +45,11 @@ export default function ({ id }: Props): JSX.Element {
 				const data = response.data;
 				setName(data.name);
 				setAddress(data.address);
+				setChain({
+					id: data.chain_id,
+					name: data.chain_name
+				});
+
 				setDescription(data.description);
 				setIsLoading(false);
 			} catch (e) {
@@ -52,6 +64,35 @@ export default function ({ id }: Props): JSX.Element {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	const clickChainSelector = async (): Promise<void> => {
+		try {
+			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chain`, {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json"
+				}
+			});
+
+			const response = await result.json();
+			const data = response.data;
+			const chainList: ChainList[] = [];
+			data.forEach((chain: Chain) => {
+				chainList.push({
+					id: chain.id,
+					name: chain.name
+				});
+			});
+			setOpenedChain(true);
+			setChainList(chainList);
+		} catch (e) {
+			setIsLoading(true);
+			setMessages({
+				status: "error",
+				message: "接続エラーが発生しました。"
+			});
+		}
+	};
+
 	const clickButton = async (): Promise<void> => {
 		setIsSendLoading(true);
 		try {
@@ -63,7 +104,8 @@ export default function ({ id }: Props): JSX.Element {
 				body: JSON.stringify({
 					name,
 					address,
-					description
+					description,
+					chain_id: chain.id
 				})
 			});
 
@@ -91,6 +133,9 @@ export default function ({ id }: Props): JSX.Element {
 				flex-direction: column;
 				gap: 20px;
 			`}
+			onSubmit={(e) => {
+				e.preventDefault();
+			}}
 		>
 			<div>
 				<Label>名前</Label>
@@ -111,6 +156,32 @@ export default function ({ id }: Props): JSX.Element {
 					}}
 					readonly={isLoading || isSendLoading}
 				/>
+			</div>
+			<div>
+				<Label>チェーン店</Label>
+				<Select
+					value={chain.id === null ? "null" : String(chain.id)}
+					disabled={isLoading || isSendLoading}
+					onChange={(e) => {
+						setChain({
+							id: isNaN(parseInt(e.target.value)) ? null : parseInt(e.target.value),
+							name: null
+						});
+					}}
+					onClick={() => {
+						void clickChainSelector();
+					}}
+				>
+					<option value="null">なし</option>
+					{chainList.map((chain) => (
+						<option key={chain.id} value={String(chain.id)}>
+							{chain.name}
+						</option>
+					))}
+					{!openedChain && (
+						<option value={chain.id === null ? "null" : String(chain.id)}>{chain.name ?? "なし"}</option>
+					)}
+				</Select>
 			</div>
 			<div>
 				<Label>詳細</Label>

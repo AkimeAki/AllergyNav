@@ -4,6 +4,7 @@
 import { css } from "@emotion/react";
 import Link from "next/link";
 import HeaderLink from "@/components/atoms/HeaderLink";
+import Image from "next/image";
 
 export default function (): JSX.Element {
 	return (
@@ -31,30 +32,73 @@ export default function (): JSX.Element {
 					height: 100%;
 				`}
 			>
-				<h1>
+				<h1
+					css={css`
+						height: 100%;
+					`}
+				>
 					<Link
 						href="/"
 						css={css`
+							display: flex;
+							align-items: center;
 							margin-left: 20px;
-							font-size: 20px;
-							color: white;
 							text-decoration: none;
-							font-weight: 700;
+							height: 100%;
+							gap: 10px;
 						`}
 					>
-						アレルギーナビ 超β版
+						<Image
+							src="/icons/allergy-nav.png"
+							alt="アイコン"
+							width={340}
+							height={250}
+							css={css`
+								aspect-ratio: 340/250;
+								width: 50px;
+								font-size: 20px;
+								height: auto;
+							`}
+						/>
+						<div
+							css={css`
+								font-weight: 700;
+								color: white;
+							`}
+						>
+							アレルギーナビ 超β版
+						</div>
 					</Link>
 				</h1>
 				<div
 					css={css`
-						margin-right: 20px;
+						margin-right: 10px;
 						display: flex;
 						gap: 20px;
 					`}
 				>
 					<HeaderLink href="/chain">チェーン店一覧</HeaderLink>
+					<HeaderLink
+						href="/chain/add"
+						style={css`
+							@media (max-width: 1040px) {
+								display: none;
+							}
+						`}
+					>
+						チェーン店を追加
+					</HeaderLink>
 					<HeaderLink href="/store">お店一覧</HeaderLink>
-					<HeaderLink href="/store/add">お店を追加</HeaderLink>
+					<HeaderLink
+						href="/store/add"
+						style={css`
+							@media (max-width: 1040px) {
+								display: none;
+							}
+						`}
+					>
+						お店を追加
+					</HeaderLink>
 				</div>
 			</div>
 		</header>

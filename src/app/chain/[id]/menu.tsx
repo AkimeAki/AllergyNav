@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 "use client";
 
-import type { Chain, Menu, Store } from "@/type";
+import type { Menu } from "@/type";
 import { css } from "@emotion/react";
 import AllergenItem from "@/components/atoms/AllergenItem";
 import { allergenList } from "@/definition";
@@ -13,19 +13,18 @@ import { messagesSelector } from "@/selector/messages";
 import Loading from "@/components/atoms/Loading";
 
 interface Props {
-	id: Store["id"];
+	id: number;
 }
 
 export default function ({ id }: Props): JSX.Element {
 	const setMessages = useSetRecoilState(messagesSelector);
-	const [chainName, setChainName] = useState<Chain["name"] | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [menu, setMenu] = useState<Menu[]>([]);
 
 	useEffect(() => {
 		const getStore = async (): Promise<void> => {
 			try {
-				const menuResult = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu?storeId=${id}`, {
+				const menuResult = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu?chainId=${id}`, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json"
@@ -34,31 +33,7 @@ export default function ({ id }: Props): JSX.Element {
 
 				const menuResponse = await menuResult.json();
 
-				const storeResult = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store/${id}`, {
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json"
-					}
-				});
-
-				const storeResponse = await storeResult.json();
-				const chainId = storeResponse.data.chain_id;
-				if (chainId !== null) {
-					setChainName(storeResponse.data.chain_name);
-					const chainMenuResult = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu?chainId=${chainId}`, {
-						method: "GET",
-						headers: {
-							"Content-Type": "application/json"
-						}
-					});
-
-					const chainMenuResponse = await chainMenuResult.json();
-
-					setMenu([...menuResponse.data, ...chainMenuResponse.data]);
-				} else {
-					setMenu(menuResponse.data);
-				}
-
+				setMenu(menuResponse.data);
 				setIsLoading(false);
 			} catch (e) {
 				setMessages({
@@ -79,22 +54,13 @@ export default function ({ id }: Props): JSX.Element {
 			) : (
 				<div>
 					<ButtonLink
-						href={`/store/${id}/menu/add`}
+						href={`/chain/${id}/menu/add`}
 						style={css`
 							margin-bottom: 20px;
 						`}
 					>
 						メニューを追加する
 					</ButtonLink>
-					{chainName !== null && (
-						<div
-							css={css`
-								margin-bottom: 20px;
-							`}
-						>
-							チェーン店「{chainName}」の共通メニューも表示されています。
-						</div>
-					)}
 					<div
 						css={css`
 							display: flex;

@@ -29,7 +29,7 @@ export default function (): JSX.Element {
 				const queryAllergen = params.allergen ?? "";
 				const queryKeywords = params.keywords ?? "";
 				const result = await fetch(
-					`${process.env.NEXT_PUBLIC_API_URL}/store?keywords=${queryKeywords}&allergen=${queryAllergen}`,
+					`${process.env.NEXT_PUBLIC_API_URL}/chain?keywords=${queryKeywords}&allergen=${queryAllergen}`,
 					{
 						method: "GET",
 						headers: {
@@ -77,7 +77,7 @@ export default function (): JSX.Element {
 					gap: 20px;
 				`}
 			>
-				<SubTitle>お店一覧</SubTitle>
+				<SubTitle>チェーン店一覧</SubTitle>
 				{isLoading ? (
 					<Loading />
 				) : (
@@ -147,7 +147,7 @@ export default function (): JSX.Element {
 										height: 100%;
 										z-index: 99;
 									`}
-									href={`/store/${store.id}`}
+									href={`/chain/${store.id}`}
 								/>
 							</div>
 						))}

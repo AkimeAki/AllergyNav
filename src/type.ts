@@ -9,7 +9,16 @@ export interface Store {
 	id: number;
 	name: string;
 	address: string;
-	chain_id: number | null;
+	chain_id: Chain["id"] | null;
+	chain_name: Chain["name"] | null;
+	description: string;
+	updated_at: string;
+	created_at: string;
+}
+
+export interface Chain {
+	id: number;
+	name: string;
 	description: string;
 	updated_at: string;
 	created_at: string;
@@ -35,4 +44,9 @@ export interface Comment {
 	store_id: number;
 	updated_at: string;
 	created_at: string;
+}
+
+export interface ChainList {
+	id: Store["chain_id"];
+	name: Store["chain_name"];
 }

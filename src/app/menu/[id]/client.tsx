@@ -76,7 +76,7 @@ export default function ({ id }: Props): JSX.Element {
 	return (
 		<>
 			{isLoading ? (
-				<Loading scale={0.5} />
+				<Loading />
 			) : (
 				<div
 					css={css`

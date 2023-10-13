@@ -5,7 +5,7 @@ import Button from "@/components/atoms/Button";
 import Label from "@/components/atoms/Label";
 import TextInput from "@/components/atoms/TextInput";
 import { messagesSelector } from "@/selector/messages";
-import type { Store } from "@/type";
+import type { Chain } from "@/type";
 import { css } from "@emotion/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -16,9 +16,8 @@ interface Props {
 }
 
 export default function Client({ id }: Props): JSX.Element {
-	const [name, setName] = useState<Store["name"]>("");
-	const [address, setAddress] = useState<Store["address"]>("");
-	const [description, setDescription] = useState<Store["description"]>("");
+	const [name, setName] = useState<Chain["name"]>("");
+	const [description, setDescription] = useState<Chain["description"]>("");
 	const [, setIsLoading] = useState(true);
 	const setMessages = useSetRecoilState(messagesSelector);
 	const router = useRouter();
@@ -26,7 +25,7 @@ export default function Client({ id }: Props): JSX.Element {
 	useEffect(() => {
 		const getStore = async (): Promise<void> => {
 			try {
-				const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store/${id}`, {
+				const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chain/${id}`, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json"
@@ -36,7 +35,6 @@ export default function Client({ id }: Props): JSX.Element {
 				const response = await result.json();
 				const data = response.data;
 				setName(data.name);
-				setAddress(data.address);
 				setDescription(data.description);
 				setIsLoading(false);
 			} catch (e) {
@@ -60,13 +58,13 @@ export default function Client({ id }: Props): JSX.Element {
 				},
 				body: JSON.stringify({
 					name,
-					address
+					description
 				})
 			});
 
 			const response = await result.json();
 			setMessages(response.messages);
-			router.push(`/store/${id}`);
+			router.push(`/chain/${id}`);
 		} catch (e) {
 			setMessages({
 				status: "error",
@@ -92,15 +90,6 @@ export default function Client({ id }: Props): JSX.Element {
 					value={name}
 					onChange={(e) => {
 						setName(e.target.value);
-					}}
-				/>
-			</div>
-			<div>
-				<Label>住所</Label>
-				<TextInput
-					value={address}
-					onChange={(e) => {
-						setAddress(e.target.value);
 					}}
 				/>
 			</div>

@@ -6,7 +6,7 @@ interface Props {
 }
 
 export const metadata: Metadata = {
-	title: "メニューを追加｜お店"
+	title: "メニューを追加｜チェーン店"
 };
 
 export default function ({ params }: Props): JSX.Element {

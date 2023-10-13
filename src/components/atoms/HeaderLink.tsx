@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 "use client";
 
+import type { SerializedStyles } from "@emotion/react";
 import { css } from "@emotion/react";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -8,9 +9,10 @@ import type { ReactNode } from "react";
 interface Props {
 	children: ReactNode;
 	href: string;
+	style?: SerializedStyles;
 }
 
-export default function ({ children, href }: Props): JSX.Element {
+export default function ({ children, href, style = css`` }: Props): JSX.Element {
 	return (
 		<Link
 			css={css`
@@ -47,6 +49,8 @@ export default function ({ children, href }: Props): JSX.Element {
 				&:hover:after {
 					width: 100%;
 				}
+
+				${style}
 			`}
 			href={href}
 		>

@@ -7,7 +7,7 @@ import { allergenSelect } from "@/hooks/allergen-select";
 import { css } from "@emotion/react";
 import { useEffect, useState } from "react";
 import AllergenItem from "@/components/atoms/AllergenItem";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import TextInput from "@/components/atoms/TextInput";
 import ButtonLink from "@/components/atoms/ButtonLink";
 import SubTitle from "@/components/atoms/SubTitle";
@@ -23,6 +23,7 @@ export default function (): JSX.Element {
 		keywords: searchParams.get("keywords")
 	};
 	const [keywords, setKeywords] = useState<string>("");
+	const pathname = usePathname();
 
 	useEffect(() => {
 		if (params.allergen !== null) {
@@ -49,6 +50,22 @@ export default function (): JSX.Element {
 				gap: 30px;
 			`}
 		>
+			<div
+				css={css`
+					display: grid;
+					grid-template-columns: 1fr 1fr;
+					gap: 5px;
+
+					a {
+						font-size: 15px;
+						padding: 7px 0;
+						text-align: center;
+					}
+				`}
+			>
+				<ButtonLink href="/store/add">お店を追加</ButtonLink>
+				<ButtonLink href="/chain/add">チェーン店を追加</ButtonLink>
+			</div>
 			<div>
 				<SubTitle>除去するアレルゲン</SubTitle>
 				<section
@@ -140,7 +157,7 @@ export default function (): JSX.Element {
 				</section>
 			</div>
 			<div>
-				<ButtonLink href={`/store?keywords=${keywords}&allergen=${tags.join(",")}`}>検索する</ButtonLink>
+				<ButtonLink href={`${pathname}?keywords=${keywords}&allergen=${tags.join(",")}`}>検索する</ButtonLink>
 			</div>
 		</aside>
 	);

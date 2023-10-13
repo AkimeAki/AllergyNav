@@ -3,17 +3,16 @@
 
 import { useEffect, useState } from "react";
 import { css } from "@emotion/react";
-import type { Store } from "@/type";
+import type { Chain } from "@/type";
 import { useSetRecoilState } from "recoil";
 import { messagesSelector } from "@/selector/messages";
 import Loading from "@/components/atoms/Loading";
 import ButtonLink from "@/components/atoms/ButtonLink";
 import MenuTab from "./menu";
-import MapTab from "./map";
 import ImageTab from "./image";
+import StoreTab from "./store";
 import CommentTab from "./comment";
 import Tab from "@/components/atoms/Tab";
-import Link from "next/link";
 
 interface Props {
 	id: number;
@@ -21,40 +20,37 @@ interface Props {
 
 export default function ({ id }: Props): JSX.Element {
 	const [isLoading, setIsLoading] = useState(true);
-	const [store, setStore] = useState<Store>({
+	const [store, setStore] = useState<Chain>({
 		id: NaN,
 		name: "",
-		address: "",
-		chain_id: null,
-		chain_name: null,
 		description: "",
 		updated_at: "",
 		created_at: ""
 	});
 	const setMessages = useSetRecoilState(messagesSelector);
-	const [tab, setTab] = useState<"menu" | "image" | "map" | "comment">("menu");
+	const [tab, setTab] = useState<"menu" | "image" | "comment" | "store">("menu");
 
 	useEffect(() => {
 		const getStore = async (): Promise<void> => {
 			try {
-				const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store/${id}`, {
+				const storeResult = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chain/${id}`, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json"
 					}
 				});
 
-				const response = await result.json();
+				const storeResponse = await storeResult.json();
 
-				response.data.description = response.data.description.replace(/\r\n|\n|\r/g, "<br />");
-				response.data.description = response.data.description.replace(
+				storeResponse.data.description = storeResponse.data.description.replace(/\r\n|\n|\r/g, "<br />");
+				storeResponse.data.description = storeResponse.data.description.replace(
 					/http[^\s|\r\n|\n|\r]*(\s|\r\n|\n|\r|$)/g,
 					(match: string) => {
 						return `<a href="${match.trim()}" target="_blank">${match.trim()}</a> `;
 					}
 				);
 
-				setStore(response.data);
+				setStore(storeResponse.data);
 				setIsLoading(false);
 			} catch (e) {
 				setMessages({
@@ -96,61 +92,7 @@ export default function ({ id }: Props): JSX.Element {
 							>
 								{store.name}
 							</h2>
-							<ButtonLink href={`/store/${store.id}/edit`}>編集する</ButtonLink>
-						</div>
-						<div
-							css={css`
-								display: table;
-								border-top-left-radius: 20px;
-								border-bottom-left-radius: 20px;
-								overflow: hidden;
-								margin-bottom: 20px;
-							`}
-						>
-							<table
-								css={css`
-									border-collapse: collapse;
-
-									th,
-									td {
-										padding: 10px;
-										border-width: 2px;
-										border-style: solid;
-										border-color: var(--color-orange);
-									}
-
-									th {
-										text-align: left;
-										background-color: var(--color-orange);
-										color: white;
-										font-weight: 700;
-										padding-left: 20px;
-										padding-right: 20px;
-									}
-								`}
-							>
-								<tbody>
-									{store.chain_id !== null && (
-										<tr>
-											<th>チェーン店</th>
-											<td>
-												<Link href={`/chain/${store.chain_id}`}>{store.chain_name}</Link>
-											</td>
-										</tr>
-									)}
-									<tr>
-										<th>住所</th>
-										<td>
-											<Link
-												href={`https://www.google.com/maps/place/${store.address}`}
-												target="_blank"
-											>
-												{store.address}
-											</Link>
-										</td>
-									</tr>
-								</tbody>
-							</table>
+							<ButtonLink href={`/chain/${store.id}/edit`}>編集する</ButtonLink>
 						</div>
 						<div
 							dangerouslySetInnerHTML={{
@@ -187,12 +129,12 @@ export default function ({ id }: Props): JSX.Element {
 							画像
 						</Tab>
 						<Tab
-							selected={tab === "map"}
+							selected={tab === "store"}
 							onClick={() => {
-								setTab("map");
+								setTab("store");
 							}}
 						>
-							地図
+							お店一覧
 						</Tab>
 						<Tab
 							selected={tab === "comment"}
@@ -209,8 +151,8 @@ export default function ({ id }: Props): JSX.Element {
 						`}
 					>
 						{tab === "menu" && <MenuTab id={id} />}
-						{tab === "map" && <MapTab address={store.address} />}
 						{tab === "image" && <ImageTab />}
+						{tab === "store" && <StoreTab id={id} />}
 						{tab === "comment" && <CommentTab id={id} />}
 					</div>
 				</section>

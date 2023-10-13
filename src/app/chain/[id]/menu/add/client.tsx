@@ -36,7 +36,7 @@ export default function ({ id }: Props): JSX.Element {
 				},
 				body: JSON.stringify({
 					name,
-					storeId: id,
+					chainId: id,
 					allergens: JSON.stringify(allergens)
 				})
 			});
@@ -49,7 +49,7 @@ export default function ({ id }: Props): JSX.Element {
 				status: "success",
 				message: "メニューを登録できました。"
 			});
-			router.push(`/store/${id}`);
+			router.push(`/chain/${id}`);
 		} catch (e) {
 			setMessages({
 				status: "error",
