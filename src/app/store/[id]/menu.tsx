@@ -3,14 +3,13 @@
 
 import type { Chain, Menu, Store } from "@/type";
 import { css } from "@emotion/react";
-import AllergenItem from "@/components/atoms/AllergenItem";
 import { allergenList } from "@/definition";
-import Link from "next/link";
 import ButtonLink from "@/components/atoms/ButtonLink";
 import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { messagesSelector } from "@/selector/messages";
 import Loading from "@/components/atoms/Loading";
+import AllergenItem from "@/components/atoms/AllergenItem";
 
 interface Props {
 	id: Store["id"];
@@ -19,20 +18,18 @@ interface Props {
 export default function ({ id }: Props): JSX.Element {
 	const setMessages = useSetRecoilState(messagesSelector);
 	const [chainName, setChainName] = useState<Chain["name"] | null>(null);
-	const [isLoading, setIsLoading] = useState(true);
+	const [loading, setLoading] = useState(true);
 	const [menu, setMenu] = useState<Menu[]>([]);
 
 	useEffect(() => {
 		const getStore = async (): Promise<void> => {
 			try {
-				const menuResult = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu?storeId=${id}`, {
+				const menuResult = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu?store=${id}`, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json"
 					}
 				});
-
-				const menuResponse = await menuResult.json();
 
 				const storeResult = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store/${id}`, {
 					method: "GET",
@@ -41,11 +38,17 @@ export default function ({ id }: Props): JSX.Element {
 					}
 				});
 
+				if (menuResult.status !== 200 || storeResult.status !== 200) {
+					throw new Error();
+				}
+
+				const menuResponse = await menuResult.json();
 				const storeResponse = await storeResult.json();
-				const chainId = storeResponse.data.chain_id;
+
+				const chainId = storeResponse.chain_id;
 				if (chainId !== null) {
-					setChainName(storeResponse.data.chain_name);
-					const chainMenuResult = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu?chainId=${chainId}`, {
+					setChainName(storeResponse.chain_name);
+					const chainMenuResult = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu?chain=${chainId}`, {
 						method: "GET",
 						headers: {
 							"Content-Type": "application/json"
@@ -54,12 +57,12 @@ export default function ({ id }: Props): JSX.Element {
 
 					const chainMenuResponse = await chainMenuResult.json();
 
-					setMenu([...menuResponse.data, ...chainMenuResponse.data]);
+					setMenu([...menuResponse, ...chainMenuResponse]);
 				} else {
-					setMenu(menuResponse.data);
+					setMenu(menuResponse);
 				}
 
-				setIsLoading(false);
+				setLoading(false);
 			} catch (e) {
 				setMessages({
 					status: "error",
@@ -74,18 +77,17 @@ export default function ({ id }: Props): JSX.Element {
 
 	return (
 		<>
-			{isLoading ? (
+			{loading ? (
 				<Loading />
 			) : (
 				<div>
-					<ButtonLink
-						href={`/store/${id}/menu/add`}
-						style={css`
+					<div
+						css={css`
 							margin-bottom: 20px;
 						`}
 					>
-						メニューを追加する
-					</ButtonLink>
+						<ButtonLink href={`/store/${id}/menu/add`}>メニューを追加する</ButtonLink>
+					</div>
 					{chainName !== null && (
 						<div
 							css={css`
@@ -117,10 +119,6 @@ export default function ({ id }: Props): JSX.Element {
 									border-style: solid;
 									border-color: #f3f3f3;
 									padding: 20px;
-
-									&:hover {
-										box-shadow: 0px 0px 15px -10px #777777;
-									}
 								`}
 							>
 								<h3
@@ -156,18 +154,8 @@ export default function ({ id }: Props): JSX.Element {
 
 										return <div key={index}>なし</div>;
 									})}
+									{item.allergens.length === 0 && <p>無し</p>}
 								</div>
-								<Link
-									href={`/menu/${item.id}`}
-									css={css`
-										position: absolute;
-										top: -2px;
-										left: -2px;
-										width: calc(100% + 4px);
-										height: calc(100% + 4px);
-										border-radius: inherit;
-									`}
-								/>
 							</div>
 						))}
 					</div>

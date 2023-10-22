@@ -27,7 +27,7 @@ export interface Chain {
 export interface Menu {
 	id: number;
 	name: string;
-	store_id: number;
+	store_id: number | null;
 	chain_id: number | null;
 	updated_at: string;
 	created_at: string;

@@ -12,14 +12,14 @@ import MenuTab from "./menu";
 import ImageTab from "./image";
 import StoreTab from "./store";
 import CommentTab from "./comment";
-import Tab from "@/components/atoms/Tab";
+import Tab from "@/components/molecules/Tab";
 
 interface Props {
 	id: number;
 }
 
 export default function ({ id }: Props): JSX.Element {
-	const [isLoading, setIsLoading] = useState(true);
+	const [loading, setLoading] = useState(true);
 	const [store, setStore] = useState<Chain>({
 		id: NaN,
 		name: "",
@@ -33,25 +33,29 @@ export default function ({ id }: Props): JSX.Element {
 	useEffect(() => {
 		const getStore = async (): Promise<void> => {
 			try {
-				const storeResult = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chain/${id}`, {
+				const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chain/${id}`, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json"
 					}
 				});
 
-				const storeResponse = await storeResult.json();
+				if (result.status !== 200) {
+					throw new Error();
+				}
 
-				storeResponse.data.description = storeResponse.data.description.replace(/\r\n|\n|\r/g, "<br />");
-				storeResponse.data.description = storeResponse.data.description.replace(
+				const response = await result.json();
+
+				response.description = response.description.replace(/\r\n|\n|\r/g, "<br />");
+				response.description = response.description.replace(
 					/http[^\s|\r\n|\n|\r]*(\s|\r\n|\n|\r|$)/g,
 					(match: string) => {
 						return `<a href="${match.trim()}" target="_blank">${match.trim()}</a> `;
 					}
 				);
 
-				setStore(storeResponse.data);
-				setIsLoading(false);
+				setStore(response);
+				setLoading(false);
 			} catch (e) {
 				setMessages({
 					status: "error",
@@ -73,7 +77,7 @@ export default function ({ id }: Props): JSX.Element {
 					gap: 30px;
 				`}
 			>
-				{isLoading ? (
+				{loading ? (
 					<Loading />
 				) : (
 					<section>

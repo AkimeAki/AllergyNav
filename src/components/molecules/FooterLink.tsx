@@ -28,6 +28,12 @@ export default function ({ children, href }: Props): JSX.Element {
 				transition-property: box-shadow;
 
 				&:hover {
+					@media (hover: hover) {
+						box-shadow: 0px 0px 15px -7px #777777;
+					}
+				}
+
+				&:active {
 					box-shadow: 0px 0px 15px -7px #777777;
 				}
 			`}

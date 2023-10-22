@@ -2,25 +2,26 @@
 "use client";
 
 import { css } from "@emotion/react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { messagesSetToggleState, messagesState } from "@/atoms/message";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { messagesToggleState, messagesState } from "@/atoms/message";
 import { useEffect } from "react";
+import { deleteMessagesSelector, messagesSelector, messagesToggleSelector } from "@/selector/messages";
 
 export default function (): JSX.Element {
-	const [messages, setMessages] = useRecoilState(messagesState);
-	const messagesToggle = useRecoilValue(messagesSetToggleState);
+	const messages = useRecoilValue(messagesState);
+	const deleteMessages = useSetRecoilState(deleteMessagesSelector);
+	// const messagesToggle = useRecoilValue(messagesToggleSelector);
 
 	useEffect(() => {
+		console.log(messages);
 		setTimeout(() => {
-			setMessages((messages) => {
-				const _messages = [...messages];
-				_messages.pop();
-
-				return _messages;
-			});
+			if (messages.length !== 0) {
+				console.log("aaassd");
+				deleteMessages();
+			}
 		}, 5000);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [messagesToggle]);
+	}, [messages]);
 
 	return (
 		<div

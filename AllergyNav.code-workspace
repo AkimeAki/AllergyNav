@@ -45,5 +45,13 @@
 			"editor.formatOnSave": true,
 			"editor.defaultFormatter": "esbenp.prettier-vscode"
 		}
+	},
+	"extensions": {
+		"recommendations": [
+			"bierner.comment-tagged-templates",
+			"dbaeumer.vscode-eslint",
+			"esbenp.prettier-vscode",
+			"EditorConfig.EditorConfig"
+		]
 	}
 }

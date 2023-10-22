@@ -1,8 +1,9 @@
 /** @jsxImportSource @emotion/react */
 "use client";
 
-import AllergenItem from "@/components/atoms/AllergenItem";
+import AllergenButton from "@/components/molecules/AllergenButton";
 import Button from "@/components/atoms/Button";
+import GoogleIcon from "@/components/atoms/GoogleIcon";
 import Label from "@/components/atoms/Label";
 import TextInput from "@/components/atoms/TextInput";
 import { allergenList } from "@/definition";
@@ -21,13 +22,13 @@ interface Props {
 export default function ({ id }: Props): JSX.Element {
 	const [name, setName] = useState<string>("");
 	const setMessages = useSetRecoilState(messagesSelector);
-	const [isLoading, setIsLoading] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const router = useRouter();
 	const [allergens, setAllergens] = useState<Allergen[]>([]);
 	const { clickAllergenItem } = allergenSelect(allergens, setAllergens);
 
 	const clickButton = async (): Promise<void> => {
-		setIsLoading(true);
+		setLoading(true);
 		try {
 			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu`, {
 				method: "POST",
@@ -36,7 +37,7 @@ export default function ({ id }: Props): JSX.Element {
 				},
 				body: JSON.stringify({
 					name,
-					chainId: id,
+					chain: id,
 					allergens: JSON.stringify(allergens)
 				})
 			});
@@ -75,18 +76,13 @@ export default function ({ id }: Props): JSX.Element {
 					onChange={(e) => {
 						setName(e.target.value);
 					}}
-					readonly={isLoading}
+					disabled={loading}
 				/>
 			</div>
 			<div>
 				<Label>アレルゲン</Label>
-				<div
-					css={css`
-						display: flex;
-						align-items: center;
-					`}
-				>
-					以下の中からこのメニューに
+				<div>
+					以下の中から
 					<span
 						css={css`
 							font-weight: 900;
@@ -99,16 +95,13 @@ export default function ({ id }: Props): JSX.Element {
 						含まれている
 					</span>
 					アレルゲンにクリックして
-					<div
+					<span
 						css={css`
-							color: var(--color-red);
-							margin: 0 5px;
-							font-size: 25px;
+							vertical-align: sub;
 						`}
-						className="material-symbols-outlined"
 					>
-						skull
-					</div>
+						<GoogleIcon name="skull" size={25} color="var(--color-red)" />
+					</span>
 					マークを付けてください。
 				</div>
 				<div
@@ -131,7 +124,7 @@ export default function ({ id }: Props): JSX.Element {
 									width: calc(100% / 7);
 								`}
 							>
-								<AllergenItem
+								<AllergenButton
 									image={allergenList[allergen].image}
 									text={allergenList[allergen].name}
 									onClick={() => {
@@ -147,13 +140,13 @@ export default function ({ id }: Props): JSX.Element {
 			<div>
 				<Button
 					onClick={() => {
-						if (!isLoading) {
+						if (!loading) {
 							void clickButton();
 						}
 					}}
-					loading={isLoading}
+					loading={loading}
 				>
-					{isLoading ? "登録中…" : "登録する"}
+					{loading ? "登録中…" : "登録する"}
 				</Button>
 			</div>
 		</form>

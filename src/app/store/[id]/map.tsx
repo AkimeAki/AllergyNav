@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function ({ address }: Props): JSX.Element {
-	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [loading, setLoading] = useState<boolean>(true);
 	const [coordinates, setCoordinates] = useState<string>("");
 	const setMessages = useSetRecoilState(messagesSelector);
 
@@ -24,7 +24,7 @@ export default function ({ address }: Props): JSX.Element {
 				const data = await response.json();
 				setCoordinates(`${data[0].geometry.coordinates[1]},${data[0].geometry.coordinates[0]}`);
 				setTimeout(() => {
-					setIsLoading(false);
+					setLoading(false);
 				}, 2000);
 			} catch (e) {
 				setMessages({
@@ -42,7 +42,7 @@ export default function ({ address }: Props): JSX.Element {
 		<div
 			css={css`
 				position: relative;
-				opacity: ${isLoading ? "0.6" : "1"};
+				opacity: ${loading ? "0.6" : "1"};
 			`}
 		>
 			<iframe
@@ -54,7 +54,7 @@ export default function ({ address }: Props): JSX.Element {
 					padding: 30px;
 				`}
 			/>
-			{isLoading && (
+			{loading && (
 				<div
 					css={css`
 						position: absolute;

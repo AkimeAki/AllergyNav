@@ -3,7 +3,7 @@
 
 import type { Menu } from "@/type";
 import { css } from "@emotion/react";
-import AllergenItem from "@/components/atoms/AllergenItem";
+import AllergenButton from "@/components/molecules/AllergenButton";
 import { allergenList } from "@/definition";
 import Link from "next/link";
 
@@ -60,7 +60,7 @@ export default function ({ menu }: Props): JSX.Element {
 						{item.allergens?.map((allergen, index) => {
 							if (allergen.id !== null) {
 								return (
-									<AllergenItem
+									<AllergenButton
 										key={allergen.id}
 										image={allergenList[allergen.id].image}
 										text={allergenList[allergen.id].name}

@@ -1,17 +1,16 @@
 /** @jsxImportSource @emotion/react */
 "use client";
 
-import type { MouseEvent } from "react";
 import { css } from "@emotion/react";
 import Image from "next/image";
+import GoogleIcon from "@/components/atoms/GoogleIcon";
 
 interface Props {
 	image: string;
 	text: string;
 	selected?: boolean;
-	onClick?: (event: MouseEvent<HTMLElement>) => void;
 }
-export default function ({ image, text, selected = false, onClick }: Props): JSX.Element {
+export default function ({ image, text, selected = false }: Props): JSX.Element {
 	return (
 		<div
 			css={css`
@@ -21,14 +20,7 @@ export default function ({ image, text, selected = false, onClick }: Props): JSX
 				justify-content: center;
 				align-items: center;
 				width: 50px;
-				cursor: pointer;
-				user-select: none;
-
-				&:hover > img {
-					filter: opacity(${selected ? "0.4" : "1"}) ${!selected && "drop-shadow(0px 0px 1px #777777)"};
-				}
 			`}
-			onClick={onClick}
 		>
 			<Image
 				css={css`
@@ -65,12 +57,9 @@ export default function ({ image, text, selected = false, onClick }: Props): JSX
 						top: 50%;
 						left: 50%;
 						transform: translate(-50%, -50%);
-						color: var(--color-red);
-						font-size: 40px;
 					`}
-					className="material-symbols-outlined"
 				>
-					skull
+					<GoogleIcon name="skull" size={40} color="var(--color-red)" />
 				</div>
 			)}
 		</div>

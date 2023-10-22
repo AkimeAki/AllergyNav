@@ -25,6 +25,10 @@ export default function ({ children, selected, onClick }: Props): JSX.Element {
 				padding: 10px;
 				border: none;
 				cursor: pointer;
+
+				@media (max-width: 500px) {
+					font-size: 14px;
+				}
 			`}
 		>
 			{children}

@@ -41,3 +41,36 @@ export const allergenList: AllergenList = {
 		image: "/icons/peanut.png"
 	}
 };
+
+const DB_LOCAL =
+	process.env.DATABASE_URL === undefined
+		? true
+		: process.env.DB_LOCAL === undefined
+		? true
+		: Boolean(isNaN(parseInt(process.env.DB_LOCAL)) ? true : parseInt(process.env.DB_LOCAL));
+
+const localDbData = {
+	host: "db",
+	user: "root",
+	password: "root",
+	database: "dev"
+};
+
+export const mysqlConfig = DB_LOCAL ? localDbData : process.env.DATABASE_URL ?? localDbData;
+
+export class NotFoundError extends Error {
+	constructor(message?: string) {
+		super(message);
+		this.name = "NotFoundError";
+	}
+}
+
+export class ValidationError extends Error {
+	constructor(message?: string) {
+		super(message);
+		this.name = "ValidationError";
+	}
+}
+
+export const headerHeight = 70;
+export const viewSidebarWidth = 753;

@@ -3,6 +3,7 @@
 
 import Button from "@/components/atoms/Button";
 import Label from "@/components/atoms/Label";
+import TextArea from "@/components/atoms/TextArea";
 import TextInput from "@/components/atoms/TextInput";
 import { messagesSelector } from "@/selector/messages";
 import type { Chain } from "@/type";
@@ -18,7 +19,8 @@ interface Props {
 export default function Client({ id }: Props): JSX.Element {
 	const [name, setName] = useState<Chain["name"]>("");
 	const [description, setDescription] = useState<Chain["description"]>("");
-	const [, setIsLoading] = useState(true);
+	const [loading, setLoading] = useState(true);
+	const [isSendLoading, setIsSendLoading] = useState(false);
 	const setMessages = useSetRecoilState(messagesSelector);
 	const router = useRouter();
 
@@ -33,10 +35,9 @@ export default function Client({ id }: Props): JSX.Element {
 				});
 
 				const response = await result.json();
-				const data = response.data;
-				setName(data.name);
-				setDescription(data.description);
-				setIsLoading(false);
+				setName(response.name);
+				setDescription(response.description);
+				setLoading(false);
 			} catch (e) {
 				setMessages({
 					status: "error",
@@ -50,8 +51,9 @@ export default function Client({ id }: Props): JSX.Element {
 	}, []);
 
 	const clickButton = async (): Promise<void> => {
+		setIsSendLoading(true);
 		try {
-			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store/${id}`, {
+			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chain/${id}`, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json"
@@ -62,8 +64,14 @@ export default function Client({ id }: Props): JSX.Element {
 				})
 			});
 
-			const response = await result.json();
-			setMessages(response.messages);
+			if (result.status !== 200) {
+				throw new Error();
+			}
+
+			setMessages({
+				status: "success",
+				message: "チェーン店を編集できました。"
+			});
 			router.push(`/chain/${id}`);
 		} catch (e) {
 			setMessages({
@@ -91,34 +99,23 @@ export default function Client({ id }: Props): JSX.Element {
 					onChange={(e) => {
 						setName(e.target.value);
 					}}
+					disabled={loading || isSendLoading}
 				/>
 			</div>
 			<div>
 				<Label>詳細</Label>
-				<textarea
-					value={description}
-					onChange={(e) => {
-						setDescription(e.target.value);
-					}}
-					css={css`
-						width: 100%;
-						height: 300px;
-						resize: vertical;
-						border-style: solid;
-						border-width: 2px;
-						border-color: var(--color-orange);
-						margin-top: 10px;
-						padding: 10px;
-					`}
-				/>
+				<TextArea value={description} setValue={setDescription} disabled={loading || isSendLoading} />
 			</div>
 			<div>
 				<Button
 					onClick={() => {
-						void clickButton();
+						if (!(loading || isSendLoading)) {
+							void clickButton();
+						}
 					}}
+					loading={loading || isSendLoading}
 				>
-					更新する
+					{loading ? "読込中…" : isSendLoading ? "更新中…" : "更新する"}
 				</Button>
 			</div>
 		</form>

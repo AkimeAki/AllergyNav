@@ -1,15 +1,36 @@
 import type { Metadata } from "next";
 import Client from "./client";
+import { notFound } from "next/navigation";
 
 interface Props {
 	params: { id: string };
 }
 
-export const metadata: Metadata = {
-	title: "メニューを追加｜チェーン店"
+export const generateMetadata = async ({ params }: Props): Promise<Metadata> => {
+	let title = "";
+
+	try {
+		const id = parseInt(params.id ?? "");
+		const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chain/${id}`, {
+			method: "GET"
+		});
+
+		if (result.status !== 200) {
+			throw new Error();
+		}
+
+		const response = await result.json();
+		title = response.name;
+	} catch (e) {
+		notFound();
+	}
+
+	return {
+		title: `${title}｜チェーン店のメニューを追加`
+	};
 };
 
-export default function ({ params }: Props): JSX.Element {
+export default async function ({ params }: Props): Promise<JSX.Element> {
 	const id = parseInt(params.id ?? "");
 
 	return <Client id={id} />;

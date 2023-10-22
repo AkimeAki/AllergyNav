@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Client from "./client";
+import { notFound } from "next/navigation";
 
 interface Props {
 	params: { id: string };
@@ -10,26 +11,26 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 
 	try {
 		const id = parseInt(params.id ?? "");
-		const result = await fetch(`${process.env.API_URL}/store/${id}`, {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json"
-			}
+		const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chain/${id}`, {
+			method: "GET"
 		});
 
+		if (result.status !== 200) {
+			throw new Error();
+		}
+
 		const response = await result.json();
-		const data = response.data;
-		title = data.name;
+		title = response.name;
 	} catch (e) {
-		title = "エラー";
+		notFound();
 	}
 
 	return {
-		title: `${title}｜編集`
+		title: `${title}｜チェーン店を編集`
 	};
 };
 
-export default function ({ params }: Props): JSX.Element {
+export default async function ({ params }: Props): Promise<JSX.Element> {
 	const id = parseInt(params.id ?? "");
 
 	return <Client id={id} />;

@@ -4,8 +4,9 @@
 import Button from "@/components/atoms/Button";
 import Label from "@/components/atoms/Label";
 import SubTitle from "@/components/atoms/SubTitle";
+import TextArea from "@/components/atoms/TextArea";
 import TextInput from "@/components/atoms/TextInput";
-import Select from "@/components/molecules/Select";
+import Select from "@/components/atoms/Select";
 import { messagesSelector } from "@/selector/messages";
 import type { Chain, ChainList, Store } from "@/type";
 import { css } from "@emotion/react";
@@ -22,13 +23,17 @@ export default function (): JSX.Element {
 	});
 	const [chainList, setChainList] = useState<ChainList[]>([]);
 	const [description, setDescription] = useState<Store["description"]>("");
-	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [loading, setLoading] = useState<boolean>(false);
 	const setMessages = useSetRecoilState(messagesSelector);
 	const router = useRouter();
 
 	const clickButton = async (): Promise<void> => {
+		if (name === "" || address === "") {
+			return;
+		}
+
 		try {
-			setIsLoading(true);
+			setLoading(true);
 			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store`, {
 				method: "POST",
 				headers: {
@@ -38,7 +43,7 @@ export default function (): JSX.Element {
 					name,
 					address,
 					description,
-					chain_id: chain.id
+					chain: chain.id
 				})
 			});
 
@@ -47,7 +52,7 @@ export default function (): JSX.Element {
 			}
 
 			const response = await result.json();
-			const id = response.data.id;
+			const id = response.id;
 			setMessages({
 				status: "success",
 				message: "お店を登録できました。"
@@ -71,9 +76,8 @@ export default function (): JSX.Element {
 			});
 
 			const response = await result.json();
-			const data = response.data;
 			const chainList: ChainList[] = [];
-			data.forEach((chain: Chain) => {
+			response.forEach((chain: Chain) => {
 				chainList.push({
 					id: chain.id,
 					name: chain.name
@@ -81,7 +85,7 @@ export default function (): JSX.Element {
 			});
 			setChainList(chainList);
 		} catch (e) {
-			setIsLoading(true);
+			setLoading(true);
 			setMessages({
 				status: "error",
 				message: "接続エラーが発生しました。"
@@ -114,7 +118,7 @@ export default function (): JSX.Element {
 						onChange={(e) => {
 							setName(e.target.value);
 						}}
-						readonly={isLoading}
+						disabled={loading}
 					/>
 				</div>
 				<div>
@@ -123,14 +127,14 @@ export default function (): JSX.Element {
 						onChange={(e) => {
 							setAddress(e.target.value);
 						}}
-						readonly={isLoading}
+						disabled={loading}
 					/>
 				</div>
 				<div>
 					<Label>チェーン店</Label>
 					<Select
 						value={chain.id === null ? "null" : String(chain.id)}
-						disabled={isLoading}
+						disabled={loading}
 						onChange={(e) => {
 							setChain({
 								id: isNaN(parseInt(e.target.value)) ? null : parseInt(e.target.value),
@@ -151,49 +155,18 @@ export default function (): JSX.Element {
 				</div>
 				<div>
 					<Label>詳細</Label>
-					<textarea
-						onChange={(e) => {
-							setDescription(e.target.value);
-						}}
-						css={css`
-							width: 100%;
-							height: 300px;
-							resize: vertical;
-							border-style: solid;
-							border-width: 2px;
-							border-color: var(--color-orange);
-							margin-top: 10px;
-							padding: 10px;
-							transition-duration: 200ms;
-							transition-property: border-color;
-
-							&:focus {
-								border-color: var(--color-green);
-							}
-
-							&[readonly] {
-								background-color: #e4e4e4;
-								user-select: none;
-								cursor: wait;
-
-								&:focus {
-									border-color: var(--color-orange);
-								}
-							}
-						`}
-						readOnly={isLoading}
-					/>
+					<TextArea value={description} setValue={setDescription} disabled={loading} />
 				</div>
 				<div>
 					<Button
 						onClick={() => {
-							if (!isLoading) {
+							if (!loading) {
 								void clickButton();
 							}
 						}}
-						loading={isLoading}
+						loading={loading}
 					>
-						{isLoading ? "登録中…" : "登録する"}
+						{loading ? "登録中…" : "登録する"}
 					</Button>
 				</div>
 			</form>

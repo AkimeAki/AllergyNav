@@ -1,27 +1,28 @@
 /** @jsxImportSource @emotion/react */
 "use client";
 
-import type { SerializedStyles } from "@emotion/react";
 import { css } from "@emotion/react";
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { MouseEventHandler, ReactNode } from "react";
 
 interface Props {
 	href: string;
 	children: ReactNode;
-	style?: SerializedStyles;
+	size?: "normal" | "small";
+	onClick?: MouseEventHandler<HTMLAnchorElement>;
 }
 
-export default function ({ href, children, style = css`` }: Props): JSX.Element {
+export default function ({ href, children, size = "normal", onClick }: Props): JSX.Element {
 	return (
 		<Link
+			onClick={onClick}
 			href={href}
 			css={css`
 				display: inline-block;
 				text-decoration: none;
 				position: relative;
 				cursor: pointer;
-				padding: 12px 30px;
+				padding: ${size === "small" ? "7px 10px" : "12px 30px"};
 				background-color: white;
 				border-style: solid;
 				border-color: var(--color-orange);
@@ -33,6 +34,8 @@ export default function ({ href, children, style = css`` }: Props): JSX.Element 
 				transition-property: box-shadow;
 				white-space: nowrap;
 				user-select: none;
+				font-size: ${size === "small" ? 15 : 18}px;
+				text-align: center;
 
 				&:hover {
 					box-shadow: 0px 0px 15px -10px #777777;
@@ -55,8 +58,6 @@ export default function ({ href, children, style = css`` }: Props): JSX.Element 
 				&:hover:after {
 					width: 100%;
 				}
-
-				${style}
 			`}
 		>
 			{children}

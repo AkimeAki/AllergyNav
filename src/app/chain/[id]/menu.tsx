@@ -3,14 +3,13 @@
 
 import type { Menu } from "@/type";
 import { css } from "@emotion/react";
-import AllergenItem from "@/components/atoms/AllergenItem";
 import { allergenList } from "@/definition";
-import Link from "next/link";
 import ButtonLink from "@/components/atoms/ButtonLink";
 import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { messagesSelector } from "@/selector/messages";
 import Loading from "@/components/atoms/Loading";
+import AllergenItem from "@/components/atoms/AllergenItem";
 
 interface Props {
 	id: number;
@@ -18,23 +17,27 @@ interface Props {
 
 export default function ({ id }: Props): JSX.Element {
 	const setMessages = useSetRecoilState(messagesSelector);
-	const [isLoading, setIsLoading] = useState(true);
+	const [loading, setLoading] = useState(true);
 	const [menu, setMenu] = useState<Menu[]>([]);
 
 	useEffect(() => {
 		const getStore = async (): Promise<void> => {
 			try {
-				const menuResult = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu?chainId=${id}`, {
+				const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu?chain=${id}`, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json"
 					}
 				});
 
-				const menuResponse = await menuResult.json();
+				if (result.status !== 200) {
+					throw new Error();
+				}
 
-				setMenu(menuResponse.data);
-				setIsLoading(false);
+				const response = await result.json();
+
+				setMenu(response);
+				setLoading(false);
 			} catch (e) {
 				setMessages({
 					status: "error",
@@ -49,18 +52,17 @@ export default function ({ id }: Props): JSX.Element {
 
 	return (
 		<>
-			{isLoading ? (
+			{loading ? (
 				<Loading />
 			) : (
 				<div>
-					<ButtonLink
-						href={`/chain/${id}/menu/add`}
-						style={css`
+					<div
+						css={css`
 							margin-bottom: 20px;
 						`}
 					>
-						メニューを追加する
-					</ButtonLink>
+						<ButtonLink href={`/chain/${id}/menu/add`}>メニューを追加する</ButtonLink>
+					</div>
 					<div
 						css={css`
 							display: flex;
@@ -122,18 +124,8 @@ export default function ({ id }: Props): JSX.Element {
 
 										return <div key={index}>なし</div>;
 									})}
+									{item.allergens.length === 0 && <p>無し</p>}
 								</div>
-								<Link
-									href={`/menu/${item.id}`}
-									css={css`
-										position: absolute;
-										top: -2px;
-										left: -2px;
-										width: calc(100% + 4px);
-										height: calc(100% + 4px);
-										border-radius: inherit;
-									`}
-								/>
 							</div>
 						))}
 					</div>

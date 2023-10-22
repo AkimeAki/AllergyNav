@@ -4,6 +4,7 @@
 import Button from "@/components/atoms/Button";
 import Label from "@/components/atoms/Label";
 import SubTitle from "@/components/atoms/SubTitle";
+import TextArea from "@/components/atoms/TextArea";
 import TextInput from "@/components/atoms/TextInput";
 import { messagesSelector } from "@/selector/messages";
 import type { Chain } from "@/type";
@@ -15,13 +16,13 @@ import { useSetRecoilState } from "recoil";
 export default function (): JSX.Element {
 	const [name, setName] = useState<Chain["name"]>("");
 	const [description, setDescription] = useState<Chain["description"]>("");
-	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [loading, setLoading] = useState<boolean>(false);
 	const setMessages = useSetRecoilState(messagesSelector);
 	const router = useRouter();
 
 	const clickButton = async (): Promise<void> => {
 		try {
-			setIsLoading(true);
+			setLoading(true);
 			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chain`, {
 				method: "POST",
 				headers: {
@@ -38,7 +39,7 @@ export default function (): JSX.Element {
 			}
 
 			const response = await result.json();
-			const id = response.data.id;
+			const id = response.id;
 			setMessages({
 				status: "success",
 				message: "チェーン店を登録できました。"
@@ -77,54 +78,24 @@ export default function (): JSX.Element {
 						onChange={(e) => {
 							setName(e.target.value);
 						}}
-						readonly={isLoading}
+						disabled={loading}
 					/>
 				</div>
 				<div>
 					<Label>詳細</Label>
-					<textarea
-						onChange={(e) => {
-							setDescription(e.target.value);
-						}}
-						css={css`
-							width: 100%;
-							height: 300px;
-							resize: vertical;
-							border-style: solid;
-							border-width: 2px;
-							border-color: var(--color-orange);
-							margin-top: 10px;
-							padding: 10px;
-							transition-duration: 200ms;
-							transition-property: border-color;
 
-							&:focus {
-								border-color: var(--color-green);
-							}
-
-							&[readonly] {
-								background-color: #e4e4e4;
-								user-select: none;
-								cursor: wait;
-
-								&:focus {
-									border-color: var(--color-orange);
-								}
-							}
-						`}
-						readOnly={isLoading}
-					/>
+					<TextArea value={description} setValue={setDescription} disabled={loading} />
 				</div>
 				<div>
 					<Button
 						onClick={() => {
-							if (!isLoading) {
+							if (!loading) {
 								void clickButton();
 							}
 						}}
-						loading={isLoading}
+						loading={loading}
 					>
-						{isLoading ? "登録中…" : "登録する"}
+						{loading ? "登録中…" : "登録する"}
 					</Button>
 				</div>
 			</form>

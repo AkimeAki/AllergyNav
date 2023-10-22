@@ -3,7 +3,8 @@
 
 import { css } from "@emotion/react";
 import SvgImage from "@/components/atoms/SvgImage";
-import FooterLink from "@/components/atoms/FooterLink";
+import FooterLink from "@/components/molecules/FooterLink";
+import { viewSidebarWidth } from "@/definition";
 
 export default function (): JSX.Element {
 	return (
@@ -17,6 +18,10 @@ export default function (): JSX.Element {
 				height: 200px;
 				color: white;
 				gap: 30px;
+
+				@media (max-width: ${viewSidebarWidth}px) {
+					display: none;
+				}
 			`}
 		>
 			<div
@@ -40,14 +45,24 @@ export default function (): JSX.Element {
 					<SvgImage src={"/logo/x.svg"} size="20px" color="var(--color-black)" />
 				</FooterLink>
 				<FooterLink href="https://twitter.com/Akime_Aki">
-					<SvgImage
-						src={"/logo/twitter.svg"}
-						size="25px"
-						color="var(--color-black)"
+					<div
 						css={css`
 							transform: translate(1px, 0px);
+							font-size: 0;
 						`}
-					/>
+					>
+						<SvgImage src={"/logo/twitter.svg"} size="25px" color="var(--color-black)" />
+					</div>
+				</FooterLink>
+				<FooterLink href="https://github.com/AkimeAki/AllergyNav">
+					<div
+						css={css`
+							transform: translate(0px, -1px);
+							font-size: 0;
+						`}
+					>
+						<SvgImage src={"/logo/github.svg"} size="30px" color="var(--color-black)" />
+					</div>
 				</FooterLink>
 			</div>
 		</footer>

@@ -12,7 +12,7 @@ import MenuTab from "./menu";
 import MapTab from "./map";
 import ImageTab from "./image";
 import CommentTab from "./comment";
-import Tab from "@/components/atoms/Tab";
+import Tab from "@/components/molecules/Tab";
 import Link from "next/link";
 
 interface Props {
@@ -20,7 +20,7 @@ interface Props {
 }
 
 export default function ({ id }: Props): JSX.Element {
-	const [isLoading, setIsLoading] = useState(true);
+	const [loading, setLoading] = useState(true);
 	const [store, setStore] = useState<Store>({
 		id: NaN,
 		name: "",
@@ -44,18 +44,22 @@ export default function ({ id }: Props): JSX.Element {
 					}
 				});
 
+				if (result.status !== 200) {
+					throw new Error();
+				}
+
 				const response = await result.json();
 
-				response.data.description = response.data.description.replace(/\r\n|\n|\r/g, "<br />");
-				response.data.description = response.data.description.replace(
+				response.description = response.description.replace(/\r\n|\n|\r/g, "<br />");
+				response.description = response.description.replace(
 					/http[^\s|\r\n|\n|\r]*(\s|\r\n|\n|\r|$)/g,
 					(match: string) => {
 						return `<a href="${match.trim()}" target="_blank">${match.trim()}</a> `;
 					}
 				);
 
-				setStore(response.data);
-				setIsLoading(false);
+				setStore(response);
+				setLoading(false);
 			} catch (e) {
 				setMessages({
 					status: "error",
@@ -69,152 +73,150 @@ export default function ({ id }: Props): JSX.Element {
 	}, []);
 
 	return (
-		<>
-			<div
-				css={css`
-					display: flex;
-					flex-direction: column;
-					gap: 30px;
-				`}
-			>
-				{isLoading ? (
-					<Loading />
-				) : (
-					<section>
-						<div
-							css={css`
-								display: flex;
-								justify-content: space-between;
-								align-items: center;
-							`}
-						>
-							<h2
-								css={css`
-									font-size: 25px;
-									font-weight: 600;
-								`}
-							>
-								{store.name}
-							</h2>
-							<ButtonLink href={`/store/${store.id}/edit`}>編集する</ButtonLink>
-						</div>
-						<div
-							css={css`
-								display: table;
-								border-top-left-radius: 20px;
-								border-bottom-left-radius: 20px;
-								overflow: hidden;
-								margin-bottom: 20px;
-							`}
-						>
-							<table
-								css={css`
-									border-collapse: collapse;
-
-									th,
-									td {
-										padding: 10px;
-										border-width: 2px;
-										border-style: solid;
-										border-color: var(--color-orange);
-									}
-
-									th {
-										text-align: left;
-										background-color: var(--color-orange);
-										color: white;
-										font-weight: 700;
-										padding-left: 20px;
-										padding-right: 20px;
-									}
-								`}
-							>
-								<tbody>
-									{store.chain_id !== null && (
-										<tr>
-											<th>チェーン店</th>
-											<td>
-												<Link href={`/chain/${store.chain_id}`}>{store.chain_name}</Link>
-											</td>
-										</tr>
-									)}
-									<tr>
-										<th>住所</th>
-										<td>
-											<Link
-												href={`https://www.google.com/maps/place/${store.address}`}
-												target="_blank"
-											>
-												{store.address}
-											</Link>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-						<div
-							dangerouslySetInnerHTML={{
-								__html: store.description
-							}}
-						/>
-					</section>
-				)}
+		<div
+			css={css`
+				display: flex;
+				flex-direction: column;
+				gap: 30px;
+			`}
+		>
+			{loading ? (
+				<Loading />
+			) : (
 				<section>
 					<div
 						css={css`
 							display: flex;
-							border-radius: 30px;
-							overflow: hidden;
-							border-style: solid;
-							border-color: var(--color-orange);
-							border-width: 2px;
+							justify-content: space-between;
+							align-items: center;
 						`}
 					>
-						<Tab
-							selected={tab === "menu"}
-							onClick={() => {
-								setTab("menu");
-							}}
+						<h2
+							css={css`
+								font-size: 25px;
+								font-weight: 600;
+							`}
 						>
-							メニュー
-						</Tab>
-						<Tab
-							selected={tab === "image"}
-							onClick={() => {
-								setTab("image");
-							}}
-						>
-							画像
-						</Tab>
-						<Tab
-							selected={tab === "map"}
-							onClick={() => {
-								setTab("map");
-							}}
-						>
-							地図
-						</Tab>
-						<Tab
-							selected={tab === "comment"}
-							onClick={() => {
-								setTab("comment");
-							}}
-						>
-							コメント
-						</Tab>
+							{store.name}
+						</h2>
+						<ButtonLink href={`/store/${store.id}/edit`}>編集する</ButtonLink>
 					</div>
 					<div
 						css={css`
-							padding: 20px 0;
+							display: table;
+							border-top-left-radius: 20px;
+							border-bottom-left-radius: 20px;
+							overflow: hidden;
+							margin-bottom: 20px;
 						`}
 					>
-						{tab === "menu" && <MenuTab id={id} />}
-						{tab === "map" && <MapTab address={store.address} />}
-						{tab === "image" && <ImageTab />}
-						{tab === "comment" && <CommentTab id={id} />}
+						<table
+							css={css`
+								border-collapse: collapse;
+
+								th,
+								td {
+									padding: 10px;
+									border-width: 2px;
+									border-style: solid;
+									border-color: var(--color-orange);
+								}
+
+								th {
+									text-align: left;
+									background-color: var(--color-orange);
+									color: white;
+									font-weight: 700;
+									padding-left: 20px;
+									padding-right: 20px;
+								}
+							`}
+						>
+							<tbody>
+								{store.chain_id !== null && (
+									<tr>
+										<th>チェーン店</th>
+										<td>
+											<Link href={`/chain/${store.chain_id}`}>{store.chain_name}</Link>
+										</td>
+									</tr>
+								)}
+								<tr>
+									<th>住所</th>
+									<td>
+										<Link
+											href={`https://www.google.com/maps/place/${store.address}`}
+											target="_blank"
+										>
+											{store.address}
+										</Link>
+									</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
+					<div
+						dangerouslySetInnerHTML={{
+							__html: store.description
+						}}
+					/>
 				</section>
-			</div>
-		</>
+			)}
+			<section>
+				<div
+					css={css`
+						display: flex;
+						border-radius: 30px;
+						overflow: hidden;
+						border-style: solid;
+						border-color: var(--color-orange);
+						border-width: 2px;
+					`}
+				>
+					<Tab
+						selected={tab === "menu"}
+						onClick={() => {
+							setTab("menu");
+						}}
+					>
+						メニュー
+					</Tab>
+					<Tab
+						selected={tab === "image"}
+						onClick={() => {
+							setTab("image");
+						}}
+					>
+						画像
+					</Tab>
+					<Tab
+						selected={tab === "map"}
+						onClick={() => {
+							setTab("map");
+						}}
+					>
+						地図
+					</Tab>
+					<Tab
+						selected={tab === "comment"}
+						onClick={() => {
+							setTab("comment");
+						}}
+					>
+						コメント
+					</Tab>
+				</div>
+				<div
+					css={css`
+						padding: 20px 0;
+					`}
+				>
+					{tab === "menu" && <MenuTab id={id} />}
+					{tab === "map" && <MapTab address={store.address} />}
+					{tab === "image" && <ImageTab />}
+					{tab === "comment" && <CommentTab id={id} />}
+				</div>
+			</section>
+		</div>
 	);
 }

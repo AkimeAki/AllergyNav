@@ -11,16 +11,16 @@ import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import SubTitle from "@/components/atoms/SubTitle";
 import type { Comment } from "@/type";
+import TextArea from "@/components/atoms/TextArea";
 
 interface Props {
 	id: number;
 }
 
 export default function ({ id }: Props): JSX.Element {
-	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [loading, setLoading] = useState<boolean>(true);
 	const [isSendLoading, setIsSendLoading] = useState<boolean>(false);
 	const [newComment, setNewComment] = useState<string>("");
-	const [newCommentLine, setNewCommentLine] = useState<number>(1);
 	const [comments, setComments] = useState<Comment[]>([]);
 	const [commentTitle, setCommentTitle] = useState<string>("");
 	const [sendCommentTrigger, setSendCommentTrigger] = useState<boolean>(false);
@@ -28,7 +28,7 @@ export default function ({ id }: Props): JSX.Element {
 
 	const clickButton = async (): Promise<void> => {
 		try {
-			setIsLoading(true);
+			setLoading(true);
 			setIsSendLoading(true);
 			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/comment`, {
 				method: "POST",
@@ -36,7 +36,7 @@ export default function ({ id }: Props): JSX.Element {
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
-					storeId: id,
+					store: id,
 					title: commentTitle,
 					content: newComment
 				})
@@ -48,11 +48,10 @@ export default function ({ id }: Props): JSX.Element {
 
 			setCommentTitle("");
 			setNewComment("");
-			setNewCommentLine(1);
 			setSendCommentTrigger((trigger) => {
 				return !trigger;
 			});
-			setIsLoading(false);
+			setLoading(false);
 			setIsSendLoading(false);
 
 			setMessages({
@@ -70,7 +69,7 @@ export default function ({ id }: Props): JSX.Element {
 	useEffect(() => {
 		const getComments = async (): Promise<void> => {
 			try {
-				const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/comment?storeId=${id}`, {
+				const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/comment?store=${id}`, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json"
@@ -83,8 +82,8 @@ export default function ({ id }: Props): JSX.Element {
 
 				const response = await result.json();
 
-				setComments(response.data);
-				setIsLoading(false);
+				setComments(response);
+				setLoading(false);
 			} catch (e) {
 				setMessages({
 					status: "error",
@@ -146,35 +145,7 @@ export default function ({ id }: Props): JSX.Element {
 					</div>
 					<div>
 						<Label>コメント</Label>
-						<textarea
-							value={newComment}
-							onChange={(e) => {
-								setNewComment(e.target.value);
-								setNewCommentLine(() => {
-									const line = (e.target.value.match(/\r\n|\n|\r/g) ?? []).length + 1;
-									return line;
-								});
-							}}
-							css={css`
-								width: 100%;
-								height: calc(20px * ${newCommentLine} + (20px + 4px));
-								resize: none;
-								border-style: solid;
-								border-width: 2px;
-								border-color: var(--color-orange);
-								margin-top: 10px;
-								padding: 10px;
-								line-height: 20px;
-								font-size: 18px;
-								transition-duration: 200ms;
-								transition-property: border-color;
-								overflow: hidden;
-
-								&:focus {
-									border-color: var(--color-green);
-								}
-							`}
-						/>
+						<TextArea value={newComment} setValue={setNewComment} />
 					</div>
 					<div>
 						<Button
@@ -206,7 +177,7 @@ export default function ({ id }: Props): JSX.Element {
 				)}
 			</div>
 			<SubTitle>コメント一覧</SubTitle>
-			{isLoading ? (
+			{loading ? (
 				<Loading />
 			) : (
 				<div

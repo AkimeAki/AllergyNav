@@ -16,23 +16,27 @@ interface Props {
 
 export default function ({ id }: Props): JSX.Element {
 	const setMessages = useSetRecoilState(messagesSelector);
-	const [isLoading, setIsLoading] = useState(true);
+	const [loading, setLoading] = useState(true);
 	const [stores, setStores] = useState<Store[]>([]);
 
 	useEffect(() => {
 		const getStore = async (): Promise<void> => {
 			try {
-				const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store?chainId=${id}`, {
+				const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store?chain=${id}`, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json"
 					}
 				});
 
+				if (result.status !== 200) {
+					throw new Error();
+				}
+
 				const response = await result.json();
 
-				setStores(response.data);
-				setIsLoading(false);
+				setStores(response);
+				setLoading(false);
 			} catch (e) {
 				setMessages({
 					status: "error",
@@ -47,7 +51,7 @@ export default function ({ id }: Props): JSX.Element {
 
 	return (
 		<>
-			{isLoading ? (
+			{loading ? (
 				<Loading />
 			) : (
 				<div

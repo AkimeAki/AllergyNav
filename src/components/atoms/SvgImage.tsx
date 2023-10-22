@@ -2,16 +2,14 @@
 "use client";
 
 import { css } from "@emotion/react";
-import type { SerializedStyles } from "@emotion/react";
 
 interface Props {
 	src: string;
 	size: string;
 	color: string;
-	css?: SerializedStyles;
 }
 
-export default function ({ src, size, color, css: style = css`` }: Props): JSX.Element {
+export default function ({ src, size, color }: Props): JSX.Element {
 	return (
 		<div
 			css={css`
@@ -27,7 +25,6 @@ export default function ({ src, size, color, css: style = css`` }: Props): JSX.E
 				width: ${size};
 				background-color: ${color};
 				transform: translateY(0.5px);
-				${style}
 			`}
 		/>
 	);

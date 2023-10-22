@@ -3,10 +3,11 @@
 
 import Button from "@/components/atoms/Button";
 import Label from "@/components/atoms/Label";
+import TextArea from "@/components/atoms/TextArea";
 import TextInput from "@/components/atoms/TextInput";
-import Select from "@/components/molecules/Select";
+import Select from "@/components/atoms/Select";
 import { messagesSelector } from "@/selector/messages";
-import type { Chain, Message, Store, ChainList } from "@/type";
+import type { Chain, Store, ChainList } from "@/type";
 import { css } from "@emotion/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -26,7 +27,7 @@ export default function ({ id }: Props): JSX.Element {
 	const [openedChain, setOpenedChain] = useState<boolean>(false);
 	const [chainList, setChainList] = useState<ChainList[]>([]);
 	const [description, setDescription] = useState<Store["description"]>("");
-	const [isLoading, setIsLoading] = useState(true);
+	const [loading, setLoading] = useState(true);
 	const [isSendLoading, setIsSendLoading] = useState(false);
 	const setMessages = useSetRecoilState(messagesSelector);
 	const router = useRouter();
@@ -41,17 +42,20 @@ export default function ({ id }: Props): JSX.Element {
 					}
 				});
 
+				if (result.status !== 200) {
+					throw new Error();
+				}
+
 				const response = await result.json();
-				const data = response.data;
-				setName(data.name);
-				setAddress(data.address);
+				setName(response.name);
+				setAddress(response.address);
 				setChain({
-					id: data.chain_id,
-					name: data.chain_name
+					id: response.chain_id,
+					name: response.chain_name
 				});
 
-				setDescription(data.description);
-				setIsLoading(false);
+				setDescription(response.description);
+				setLoading(false);
 			} catch (e) {
 				setMessages({
 					status: "error",
@@ -73,10 +77,13 @@ export default function ({ id }: Props): JSX.Element {
 				}
 			});
 
+			if (result.status !== 200) {
+				throw new Error();
+			}
+
 			const response = await result.json();
-			const data = response.data;
 			const chainList: ChainList[] = [];
-			data.forEach((chain: Chain) => {
+			response.forEach((chain: Chain) => {
 				chainList.push({
 					id: chain.id,
 					name: chain.name
@@ -85,7 +92,7 @@ export default function ({ id }: Props): JSX.Element {
 			setOpenedChain(true);
 			setChainList(chainList);
 		} catch (e) {
-			setIsLoading(true);
+			setLoading(true);
 			setMessages({
 				status: "error",
 				message: "接続エラーが発生しました。"
@@ -105,7 +112,7 @@ export default function ({ id }: Props): JSX.Element {
 					name,
 					address,
 					description,
-					chain_id: chain.id
+					chain: chain.id
 				})
 			});
 
@@ -113,10 +120,6 @@ export default function ({ id }: Props): JSX.Element {
 				throw new Error();
 			}
 
-			const response = await result.json();
-			response.messages.forEach((message: Message) => {
-				setMessages(message);
-			});
 			router.push(`/store/${id}`);
 		} catch (e) {
 			setMessages({
@@ -144,7 +147,7 @@ export default function ({ id }: Props): JSX.Element {
 					onChange={(e) => {
 						setName(e.target.value);
 					}}
-					readonly={isLoading || isSendLoading}
+					disabled={loading || isSendLoading}
 				/>
 			</div>
 			<div>
@@ -154,14 +157,14 @@ export default function ({ id }: Props): JSX.Element {
 					onChange={(e) => {
 						setAddress(e.target.value);
 					}}
-					readonly={isLoading || isSendLoading}
+					disabled={loading || isSendLoading}
 				/>
 			</div>
 			<div>
 				<Label>チェーン店</Label>
 				<Select
 					value={chain.id === null ? "null" : String(chain.id)}
-					disabled={isLoading || isSendLoading}
+					disabled={loading || isSendLoading}
 					onChange={(e) => {
 						setChain({
 							id: isNaN(parseInt(e.target.value)) ? null : parseInt(e.target.value),
@@ -185,50 +188,18 @@ export default function ({ id }: Props): JSX.Element {
 			</div>
 			<div>
 				<Label>詳細</Label>
-				<textarea
-					value={description}
-					onChange={(e) => {
-						setDescription(e.target.value);
-					}}
-					css={css`
-						width: 100%;
-						height: 300px;
-						resize: vertical;
-						border-style: solid;
-						border-width: 2px;
-						border-color: var(--color-orange);
-						margin-top: 10px;
-						padding: 10px;
-						transition-duration: 200ms;
-						transition-property: border-color;
-
-						&:focus {
-							border-color: var(--color-green);
-						}
-
-						&[readonly] {
-							background-color: #e4e4e4;
-							user-select: none;
-							cursor: wait;
-
-							&:focus {
-								border-color: var(--color-orange);
-							}
-						}
-					`}
-					readOnly={isLoading || isSendLoading}
-				/>
+				<TextArea value={description} setValue={setDescription} disabled={loading || isSendLoading} />
 			</div>
 			<div>
 				<Button
 					onClick={() => {
-						if (!(isLoading || isSendLoading)) {
+						if (!(loading || isSendLoading)) {
 							void clickButton();
 						}
 					}}
-					loading={isLoading || isSendLoading}
+					loading={loading || isSendLoading}
 				>
-					{isLoading ? "読込中…" : isSendLoading ? "更新中…" : "更新する"}
+					{loading ? "読込中…" : isSendLoading ? "更新中…" : "更新する"}
 				</Button>
 			</div>
 		</form>

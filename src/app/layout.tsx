@@ -3,7 +3,7 @@ import "@/globals.css";
 import "aki-reset-css";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import Provider from "@/app/provider";
+import Provider from "@/layouts/Provider";
 
 export const metadata: Metadata = {
 	title: {

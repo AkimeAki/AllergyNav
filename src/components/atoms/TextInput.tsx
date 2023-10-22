@@ -7,32 +7,44 @@ import type { ChangeEventHandler } from "react";
 interface Props {
 	onChange?: ChangeEventHandler<HTMLInputElement>;
 	value?: string;
-	readonly?: boolean;
+	disabled?: boolean;
+	size?: "small" | "normal";
+	password?: boolean;
+	autoComplete?: string;
 }
 
-export default function ({ onChange, value, readonly = false }: Props): JSX.Element {
+export default function ({
+	onChange,
+	value,
+	disabled = false,
+	size = "normal",
+	password = false,
+	autoComplete
+}: Props): JSX.Element {
 	return (
 		<div
 			css={css`
 				position: relative;
+				width: 100%;
 			`}
 		>
 			<input
-				type="text"
+				type={password ? "password" : "text"}
 				onChange={onChange}
 				value={value}
-				readOnly={readonly}
+				disabled={disabled}
+				autoComplete={autoComplete}
 				css={css`
 					display: block;
 					width: 100%;
-					padding: 10px;
+					padding: ${size === "small" ? "5px 10px" : "10px"};
 					border: none;
 
 					&:focus + div {
 						width: 100%;
 					}
 
-					&[readonly] {
+					&[disabled] {
 						background-color: #e4e4e4;
 						user-select: none;
 						cursor: wait;

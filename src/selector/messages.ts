@@ -1,4 +1,4 @@
-import { messagesSetToggleState, messagesState } from "@/atoms/message";
+import { messagesToggleState, messagesState } from "@/atoms/message";
 import type { Message } from "@/type";
 import { DefaultValue, selector } from "recoil";
 
@@ -8,8 +8,8 @@ export const messagesSelector = selector<Message>({
 	set: ({ set }, newValue) => {
 		set(messagesState, (messages) => {
 			if (!(newValue instanceof DefaultValue)) {
-				set(messagesSetToggleState, (messagesSetToggle) => {
-					return !messagesSetToggle;
+				set(messagesToggleState, (messagesToggle) => {
+					return !messagesToggle;
 				});
 
 				const _messages = [...messages];
@@ -22,12 +22,25 @@ export const messagesSelector = selector<Message>({
 	}
 });
 
-export const messagesSetToggleSelector = selector({
-	key: "messagesSetToggleSelector",
+export const deleteMessagesSelector = selector({
+	key: "deleteMessagesSelector",
 	get: () => {},
 	set: ({ set }) => {
-		set(messagesSetToggleState, (messagesSetToggle) => {
-			return !messagesSetToggle;
+		set(messagesState, (messages) => {
+			const _messages = [...messages];
+			_messages.pop();
+
+			return _messages;
+		});
+	}
+});
+
+export const messagesToggleSelector = selector({
+	key: "messagesToggleSelector",
+	get: ({ get }) => get(messagesToggleState),
+	set: ({ set }) => {
+		set(messagesToggleState, (messagesToggle) => {
+			return !messagesToggle;
 		});
 	}
 });

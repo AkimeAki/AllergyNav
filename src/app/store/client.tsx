@@ -12,24 +12,26 @@ import { messagesSelector } from "@/selector/messages";
 import SearchSidebar from "@/components/organisms/SearchSidebar";
 import Image from "next/image";
 import SubTitle from "@/components/atoms/SubTitle";
+import GoogleIcon from "@/components/atoms/GoogleIcon";
+import { viewSidebarWidth } from "@/definition";
 
 export default function (): JSX.Element {
-	const [isLoading, setIsLoading] = useState(true);
+	const [loading, setLoading] = useState(true);
 	const [stores, setStores] = useState<Store[]>([]);
 	const setMessages = useSetRecoilState(messagesSelector);
 	const searchParams = useSearchParams();
 	const params = {
-		allergen: searchParams.get("allergen"),
+		allergens: searchParams.get("allergens"),
 		keywords: searchParams.get("keywords")
 	};
 
 	useEffect(() => {
 		const getStore = async (): Promise<void> => {
 			try {
-				const queryAllergen = params.allergen ?? "";
+				const queryAllergens = params.allergens ?? "";
 				const queryKeywords = params.keywords ?? "";
 				const result = await fetch(
-					`${process.env.NEXT_PUBLIC_API_URL}/store?keywords=${queryKeywords}&allergen=${queryAllergen}`,
+					`${process.env.NEXT_PUBLIC_API_URL}/store?keywords=${queryKeywords}&allergens=${queryAllergens}`,
 					{
 						method: "GET",
 						headers: {
@@ -43,9 +45,8 @@ export default function (): JSX.Element {
 				}
 
 				const response = await result.json();
-				const data = response.data;
-				setStores(data);
-				setIsLoading(false);
+				setStores(response);
+				setLoading(false);
 			} catch (e) {
 				setMessages({
 					status: "error",
@@ -54,7 +55,7 @@ export default function (): JSX.Element {
 			}
 		};
 
-		setIsLoading(true);
+		setLoading(true);
 		void getStore();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [searchParams]);
@@ -65,11 +66,50 @@ export default function (): JSX.Element {
 				display: grid;
 				grid-template-columns: 300px 1fr;
 				gap: 10px;
+
+				@media (max-width: 960px) {
+					grid-template-columns: 220px 1fr;
+				}
+
+				@media (max-width: 800px) {
+					display: block;
+					margin-top: 60px;
+				}
 			`}
 		>
-			<div>
-				<SearchSidebar />
-			</div>
+			<Link
+				href="/store/add"
+				css={css`
+					display: none;
+					position: fixed;
+					bottom: 80px;
+					right: 20px;
+					background-color: var(--color-orange);
+					border-radius: 50%;
+					width: 55px;
+					height: 55px;
+					justify-content: center;
+					align-items: center;
+					box-shadow: 0px 0px 13px -7px #000000;
+					cursor: pointer;
+					user-select: none;
+					text-decoration: none;
+					z-index: 999;
+
+					@media (max-width: ${viewSidebarWidth}px) {
+						display: flex;
+					}
+				`}
+			>
+				<div
+					css={css`
+						transform: translate(2px, 0px);
+					`}
+				>
+					<GoogleIcon name="add_business" color="white" size={30} />
+				</div>
+			</Link>
+			<SearchSidebar />
 			<div
 				css={css`
 					display: flex;
@@ -78,7 +118,7 @@ export default function (): JSX.Element {
 				`}
 			>
 				<SubTitle>お店一覧</SubTitle>
-				{isLoading ? (
+				{loading ? (
 					<Loading />
 				) : (
 					<section

@@ -6,7 +6,7 @@ export const messagesState = atom<Message[]>({
 	default: []
 });
 
-export const messagesSetToggleState = atom<boolean>({
-	key: "messagesSetToggleState",
+export const messagesToggleState = atom<boolean>({
+	key: "messagesToggleState",
 	default: false
 });

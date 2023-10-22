@@ -14,14 +14,14 @@ interface Props {
 }
 
 export default function ({ id }: Props): JSX.Element {
-	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [loading, setLoading] = useState<boolean>(true);
 	const [comments, setComments] = useState<Comment[]>([]);
 	const setMessages = useSetRecoilState(messagesSelector);
 
 	useEffect(() => {
 		const getComments = async (): Promise<void> => {
 			try {
-				const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/comment?chainId=${id}`, {
+				const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/comment?chain=${id}`, {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json"
@@ -34,8 +34,8 @@ export default function ({ id }: Props): JSX.Element {
 
 				const response = await result.json();
 
-				setComments(response.data);
-				setIsLoading(false);
+				setComments(response);
+				setLoading(false);
 			} catch (e) {
 				setMessages({
 					status: "error",
@@ -74,7 +74,7 @@ export default function ({ id }: Props): JSX.Element {
 				<p>コメントの記入はそれぞれのお店のページで記入してください。</p>
 			</div>
 			<SubTitle>コメント一覧</SubTitle>
-			{isLoading ? (
+			{loading ? (
 				<Loading />
 			) : (
 				<div
