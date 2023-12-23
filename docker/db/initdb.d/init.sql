@@ -7,7 +7,7 @@ SET
 USE dev;
 
 CREATE TABLE
-	chains (
+	store_groups (
 		id INT(10) NOT NULL AUTO_INCREMENT,
 		name VARCHAR(40) NOT NULL,
 		description TEXT NOT NULL,
@@ -18,10 +18,10 @@ CREATE TABLE
 	) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 CREATE TABLE
-	chain_histories (
+	store_group_histories (
 		id INT(10) NOT NULL AUTO_INCREMENT,
 		ip VARCHAR(40) NOT NULL,
-		chain_id INT(10),
+		store_group_id INT(10),
 		name VARCHAR(40),
 		description TEXT,
 		deleted BOOLEAN,
@@ -34,7 +34,7 @@ CREATE TABLE
 		id INT(10) NOT NULL AUTO_INCREMENT,
 		name VARCHAR(40) NOT NULL,
 		address VARCHAR(100) NOT NULL,
-		chain_id INT(10) DEFAULT NULL,
+		store_group_id INT(10) DEFAULT NULL,
 		description TEXT NOT NULL,
 		deleted BOOLEAN NOT NULL DEFAULT FALSE,
 		updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -49,7 +49,7 @@ CREATE TABLE
 		store_id INT(10),
 		name VARCHAR(40),
 		address VARCHAR(100),
-		chain_id INT(10),
+		store_group_id INT(10),
 		description TEXT,
 		deleted BOOLEAN,
 		created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -71,7 +71,7 @@ CREATE TABLE
 		id INT(10) NOT NULL AUTO_INCREMENT,
 		name VARCHAR(40) NOT NULL,
 		store_id INT(10) DEFAULT NULL,
-		chain_id INT(10) DEFAULT NULL,
+		store_group_id INT(10) DEFAULT NULL,
 		deleted BOOLEAN NOT NULL DEFAULT FALSE,
 		updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 		created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -85,7 +85,7 @@ CREATE TABLE
 		menu_id INT(10),
 		name VARCHAR(40),
 		store_id INT(10),
-		chain_id INT(10),
+		store_group_id INT(10),
 		deleted BOOLEAN,
 		created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		PRIMARY KEY(id)
@@ -96,7 +96,7 @@ CREATE TABLE
 		id INT(10) NOT NULL AUTO_INCREMENT,
 		menu_id INT(10) DEFAULT NULL,
 		store_id INT(10) DEFAULT NULL,
-		chain_id INT(10) DEFAULT NULL,
+		store_group_id INT(10) DEFAULT NULL,
 		file_name VARCHAR(40) NOT NULL,
 		deleted BOOLEAN NOT NULL DEFAULT FALSE,
 		updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

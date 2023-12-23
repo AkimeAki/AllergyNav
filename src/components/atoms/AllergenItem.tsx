@@ -1,7 +1,4 @@
-/** @jsxImportSource @emotion/react */
-"use client";
-
-import { css } from "@emotion/react";
+import { css } from "@kuma-ui/core";
 import Image from "next/image";
 import GoogleIcon from "@/components/atoms/GoogleIcon";
 
@@ -10,10 +7,11 @@ interface Props {
 	text: string;
 	selected?: boolean;
 }
+
 export default function ({ image, text, selected = false }: Props): JSX.Element {
 	return (
 		<div
-			css={css`
+			className={css`
 				position: relative;
 				display: flex;
 				flex-direction: column;
@@ -23,22 +21,31 @@ export default function ({ image, text, selected = false }: Props): JSX.Element 
 			`}
 		>
 			<Image
-				css={css`
-					width: 40px;
-					aspect-ratio: 1/1;
-					object-fit: contain;
-					vertical-align: bottom;
-					filter: opacity(${selected ? "0.4" : "1"});
-					transition-duration: 200ms;
-					transition-property: filter;
-				`}
+				className={[
+					css`
+						width: 40px;
+						height: auto;
+						aspect-ratio: 1/1;
+						object-fit: contain;
+						vertical-align: bottom;
+						transition-duration: 200ms;
+						transition-property: filter;
+					`,
+					selected
+						? css`
+								filter: opacity(0.4);
+						  `
+						: css`
+								filter: opacity(1);
+						  `
+				].join(" ")}
 				width={100}
 				height={100}
 				src={image}
-				alt=""
+				alt={`${text}のアイコン`}
 			/>
 			<div
-				css={css`
+				className={css`
 					position: relative;
 					text-align: center;
 					white-space: nowrap;
@@ -52,7 +59,7 @@ export default function ({ image, text, selected = false }: Props): JSX.Element 
 			</div>
 			{selected && (
 				<div
-					css={css`
+					className={css`
 						position: absolute;
 						top: 50%;
 						left: 50%;

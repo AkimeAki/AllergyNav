@@ -1,7 +1,4 @@
-/** @jsxImportSource @emotion/react */
-"use client";
-
-import { css } from "@emotion/react";
+import { css } from "@kuma-ui/core";
 import type { ChangeEventHandler } from "react";
 
 interface Props {
@@ -13,18 +10,10 @@ interface Props {
 	autoComplete?: string;
 }
 
-export default function ({
-	onChange,
-	value,
-	disabled = false,
-	size = "normal",
-	password = false,
-	autoComplete
-}: Props): JSX.Element {
+export default function ({ onChange, value, disabled = false, password = false, autoComplete }: Props): JSX.Element {
 	return (
 		<div
-			css={css`
-				position: relative;
+			className={css`
 				width: 100%;
 			`}
 		>
@@ -34,49 +23,26 @@ export default function ({
 				value={value}
 				disabled={disabled}
 				autoComplete={autoComplete}
-				css={css`
+				className={css`
 					display: block;
 					width: 100%;
-					padding: ${size === "small" ? "5px 10px" : "10px"};
-					border: none;
-
-					&:focus + div {
-						width: 100%;
-					}
+					padding: 5px 20px;
+					border-style: solid;
+					border-width: 1px;
+					border-color: var(--color-orange);
+					border-radius: 20px;
+					transition-duration: 200ms;
+					transition-property: box-shadow;
 
 					&[disabled] {
-						background-color: #e4e4e4;
+						background-color: var(--color-gray);
 						user-select: none;
-						cursor: wait;
-
-						&:focus + div {
-							width: 0;
-						}
+						cursor: default;
 					}
-				`}
-			/>
-			<div
-				css={css`
-					position: absolute;
-					bottom: 0;
-					left: 0;
-					width: 0;
-					height: 2px;
-					background-color: var(--color-green);
-					transition-duration: 400ms;
-					transition-property: width;
-					z-index: 2;
-				`}
-			/>
-			<div
-				css={css`
-					position: absolute;
-					bottom: 0;
-					left: 0;
-					width: 100%;
-					height: 2px;
-					background-color: var(--color-orange);
-					z-index: 1;
+
+					&:focus {
+						box-shadow: 0 0 0 1px var(--color-orange);
+					}
 				`}
 			/>
 		</div>

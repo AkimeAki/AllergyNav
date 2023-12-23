@@ -7,7 +7,7 @@ import { safeNumber, safeString } from "@/libs/trans-type";
 interface MenuRow extends RowDataPacket {
 	id: number;
 	name: string;
-	chain_id: number | null;
+	group_id: number | null;
 	store_id: number | null;
 	updated_at: string;
 	created_at: string;
@@ -23,7 +23,7 @@ interface Props {
 const data: Menu = {
 	id: NaN,
 	name: "",
-	chain_id: null,
+	group_id: null,
 	store_id: null,
 	updated_at: "",
 	created_at: "",
@@ -49,7 +49,7 @@ export const GET = async (_: Request, { params }: Props): Promise<Response> => {
 				menu.id as id,
 				menu.name as name,
 				menu.store_id as store_id,
-				menu.chain_id as chain_id,
+				menu.group_id as group_id,
 				menu.updated_at as updated_at,
 				menu.created_at as created_at,
 				menu.allergens as allergens
@@ -58,7 +58,7 @@ export const GET = async (_: Request, { params }: Props): Promise<Response> => {
 					menu.id as id,
 					menu.name as name,
 					menu.store_id as store_id,
-					menu.chain_id as chain_id,
+					menu.group_id as group_id,
 					menu.deleted as deleted,
 					menu.updated_at as updated_at,
 					menu.created_at as created_at,
@@ -67,7 +67,7 @@ export const GET = async (_: Request, { params }: Props): Promise<Response> => {
 				LEFT JOIN menu_allergens ON menu.id = menu_allergens.menu_id
 				LEFT JOIN allergens ON menu_allergens.allergen_id = allergens.id
 				WHERE menu.id = ?
-				GROUP BY id, name, store_id, chain_id, updated_at, created_at, deleted
+				GROUP BY id, name, store_id, group_id, updated_at, created_at, deleted
 				HAVING deleted = FALSE
 			) menu
 		`;
@@ -78,7 +78,7 @@ export const GET = async (_: Request, { params }: Props): Promise<Response> => {
 			data.id = rows[0].id;
 			data.name = rows[0].name;
 			data.store_id = rows[0].store_id;
-			data.chain_id = rows[0].chain_id;
+			data.group_id = rows[0].group_id;
 			data.updated_at = rows[0].updated_at;
 			data.created_at = rows[0].created_at;
 			data.allergens = JSON.parse(rows[0].allergens);
@@ -114,7 +114,7 @@ export const PUT = async (req: Request, { params }: Props): Promise<Response> =>
 
 		const name = safeString(body.name);
 		const allergens = safeString(body.allergens);
-		const chainId = safeNumber(body.chain);
+		const groupId = safeNumber(body.group);
 		const storeId = safeNumber(body.store);
 		const menuId = safeNumber(params.id);
 
@@ -122,7 +122,7 @@ export const PUT = async (req: Request, { params }: Props): Promise<Response> =>
 			throw new ValidationError();
 		}
 
-		if (storeId === null && chainId === null) {
+		if (storeId === null && groupId === null) {
 			throw new ValidationError();
 		}
 
@@ -133,10 +133,10 @@ export const PUT = async (req: Request, { params }: Props): Promise<Response> =>
 				name = ?,
 				allergens = ?,
 				store_id = ?,
-				chain_id = ?
+				group_id = ?
 			WHERE id = ? AND deleted = FALSE
 		`;
-		const [result] = await connection.query(sql, [name, allergens, storeId, chainId, menuId]);
+		const [result] = await connection.query(sql, [name, allergens, storeId, groupId, menuId]);
 
 		if (!Array.isArray(result)) {
 			data.id = result.insertId;

@@ -13,7 +13,8 @@
 			}
 		],
 		"import/no-anonymous-default-export": "off",
-		"react/display-name": "off"
+		"react/display-name": "off",
+		"react-hooks/exhaustive-deps": "off"
 	},
 	"ignorePatterns": ["dist", ".eslintrc.cjs", "next.config.js", "next-env.d.ts"]
 }

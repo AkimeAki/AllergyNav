@@ -9,14 +9,13 @@ export interface Store {
 	id: number;
 	name: string;
 	address: string;
-	chain_id: Chain["id"] | null;
-	chain_name: Chain["name"] | null;
+	group_id: StoreGroup["id"] | null;
 	description: string;
 	updated_at: string;
 	created_at: string;
 }
 
-export interface Chain {
+export interface StoreGroup {
 	id: number;
 	name: string;
 	description: string;
@@ -28,7 +27,7 @@ export interface Menu {
 	id: number;
 	name: string;
 	store_id: number | null;
-	chain_id: number | null;
+	group_id: number | null;
 	updated_at: string;
 	created_at: string;
 	allergens: Array<{
@@ -46,7 +45,7 @@ export interface Comment {
 	created_at: string;
 }
 
-export interface ChainList {
-	id: Store["chain_id"];
-	name: Store["chain_name"];
+export interface StoreGroupList {
+	id: number | null;
+	name: string | null;
 }

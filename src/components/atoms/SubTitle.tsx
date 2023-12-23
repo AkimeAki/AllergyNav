@@ -1,8 +1,5 @@
-/** @jsxImportSource @emotion/react */
-"use client";
-
+import { css } from "@kuma-ui/core";
 import type { ReactNode } from "react";
-import { css } from "@emotion/react";
 
 interface Props {
 	children: ReactNode;
@@ -11,7 +8,8 @@ interface Props {
 export default function ({ children }: Props): JSX.Element {
 	return (
 		<h2
-			css={css`
+			className={css`
+				width: 100%;
 				font-weight: 700;
 				font-size: 18px;
 				background-color: var(--color-orange);

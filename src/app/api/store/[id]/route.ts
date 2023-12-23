@@ -1,15 +1,15 @@
 import mysql from "mysql2/promise";
 import type { RowDataPacket } from "mysql2/promise";
 import { mysqlConfig, NotFoundError, ValidationError } from "@/definition";
-import type { Chain, Store } from "@/type";
+import type { StoreGroup, Store } from "@/type";
 import { safeNumber, safeString } from "@/libs/trans-type";
 
 interface StoreRow extends RowDataPacket {
 	id: number;
 	name: string;
 	address: string;
-	chain_id: Chain["id"] | null;
-	chain_name: Chain["name"] | null;
+	store_group_id: StoreGroup["id"] | null;
+	group_name: StoreGroup["name"] | null;
 	description: string;
 	deleted: boolean;
 	updated_at: string;
@@ -26,8 +26,7 @@ const data: Store = {
 	id: NaN,
 	name: "",
 	address: "",
-	chain_id: null,
-	chain_name: null,
+	group_id: null,
 	description: "",
 	updated_at: "",
 	created_at: ""
@@ -36,6 +35,7 @@ const data: Store = {
 let status = 500;
 
 export const GET = async (_: Request, { params }: Props): Promise<Response> => {
+	console.log("aa");
 	let connection: mysql.Connection | null = null;
 
 	try {
@@ -53,12 +53,12 @@ export const GET = async (_: Request, { params }: Props): Promise<Response> => {
 				stores.name as name,
 				stores.address as address,
 				stores.description as description,
-				stores.chain_id as chain_id,
-				chains.name as chain_name,
+				stores.store_group_id as store_group_id,
+				store_groups.name as group_name,
 				stores.updated_at as updated_at,
 				stores.created_at as created_at
 			FROM stores
-			LEFT JOIN chains ON chains.id = stores.chain_id
+			LEFT JOIN store_groups ON store_groups.id = stores.store_group_id
 			WHERE stores.id = ? AND stores.deleted = FALSE
 		`;
 		const [rows] = await connection.query<StoreRow[]>(sql, [storeId]);
@@ -68,8 +68,8 @@ export const GET = async (_: Request, { params }: Props): Promise<Response> => {
 			data.name = rows[0].name;
 			data.address = rows[0].address;
 			data.description = rows[0].description;
-			data.chain_id = rows[0].chain_id;
-			data.chain_name = rows[0].chain_name;
+			data.store_group_id = rows[0].store_group_id;
+			data.group_name = rows[0].group_name;
 			data.updated_at = rows[0].updated_at;
 			data.created_at = rows[0].created_at;
 		} else {
@@ -105,7 +105,7 @@ export const PUT = async (req: Request, { params }: { params: { id: string } }):
 		const name = safeString(body.name);
 		const address = safeString(body.address);
 		const description = safeString(body.description);
-		const chainId = safeNumber(body.chain);
+		const groupId = safeNumber(body.group);
 		const storeId = safeNumber(params.id);
 
 		if (name === null || address === null || description === null || storeId === null) {
@@ -120,10 +120,10 @@ export const PUT = async (req: Request, { params }: { params: { id: string } }):
 					name = ?,
 					address = ?,
 					description = ?,
-					chain_id = ?
+					store_group_id = ?
 				WHERE id = ? AND deleted = FALSE
 			`,
-			[name, address, description, chainId, storeId]
+			[name, address, description, groupId, storeId]
 		);
 
 		if (!Array.isArray(result)) {

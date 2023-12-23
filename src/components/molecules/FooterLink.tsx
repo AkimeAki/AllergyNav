@@ -1,29 +1,27 @@
-/** @jsxImportSource @emotion/react */
-"use client";
-
-import { css } from "@emotion/react";
+import { css } from "@kuma-ui/core";
+import Image from "next/image";
 import Link from "next/link";
-import type { ReactNode } from "react";
 
 interface Props {
-	children: ReactNode;
 	href: string;
+	name: string;
 }
 
-export default function ({ children, href }: Props): JSX.Element {
+export default function ({ href, name }: Props): JSX.Element {
 	return (
 		<Link
 			href={href}
 			target="_blank"
-			css={css`
+			className={css`
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				width: 50px;
+				width: 40px;
 				aspect-ratio: 1/1;
 				font-size: 0;
 				border-radius: 50%;
 				background-color: white;
+				overflow: hidden;
 				transition-duration: 200ms;
 				transition-property: box-shadow;
 
@@ -38,7 +36,16 @@ export default function ({ children, href }: Props): JSX.Element {
 				}
 			`}
 		>
-			{children}
+			<Image
+				width={100}
+				height={100}
+				src={`/icons/circle/${name}.png`}
+				alt={`${name}のアイコン`}
+				className={css`
+					width: 100%;
+					height: 100%;
+				`}
+			/>
 		</Link>
 	);
 }

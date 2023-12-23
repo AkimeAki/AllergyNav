@@ -46,8 +46,8 @@ const DB_LOCAL =
 	process.env.DATABASE_URL === undefined
 		? true
 		: process.env.DB_LOCAL === undefined
-		? true
-		: Boolean(isNaN(parseInt(process.env.DB_LOCAL)) ? true : parseInt(process.env.DB_LOCAL));
+		  ? true
+		  : Boolean(isNaN(parseInt(process.env.DB_LOCAL)) ? true : parseInt(process.env.DB_LOCAL));
 
 const localDbData = {
 	host: "db",

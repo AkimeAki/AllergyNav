@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-page-custom-font */
 import "@/globals.css";
-import "aki-reset-css";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 

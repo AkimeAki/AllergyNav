@@ -1,9 +1,8 @@
 /* eslint-disable @next/next/no-page-custom-font */
 import "@/globals.css";
-import "aki-reset-css";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import Provider from "@/layouts/Provider";
+import { KumaRegistry } from "@kuma-ui/next-plugin/registry";
 
 export const metadata: Metadata = {
 	title: {
@@ -34,7 +33,7 @@ export default function ({ children }: Props): JSX.Element {
 				<link rel="icon" href="/favicon.png"></link>
 			</head>
 			<body>
-				<Provider>{children}</Provider>
+				<KumaRegistry>{children}</KumaRegistry>
 			</body>
 		</html>
 	);

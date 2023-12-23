@@ -1,24 +1,71 @@
-@layer base {
-	:root {
-		--color-black: #656565;
-		--color-red: #d2374f;
-		--color-orange: #ff8a65;
-		--color-green: #8cffa7;
-		--color-purple: #8a65ff;
-	}
-}
-
 * {
+	/* インターフェース */
+	box-sizing: border-box;
+	padding: 0;
+
+	/* マージン・パディング */
+	margin: 0;
+
+	/* フォント */
+	font-family: "游ゴシック体", YuGothic, "游ゴシック", "メイリオ", Meiryo, "Hiragino Kaku Gothic Pro",
+		"ヒラギノ角ゴ Pro W3", "ＭＳ Ｐゴシック", sans-serif;
+	font-size: 18px;
+	font-weight: 400;
+	line-height: 1.6;
+
 	line-height: 1;
 	color: var(--color-black);
-	font-weight: 400;
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+:root {
+	--color-black: #656565;
+	--color-gray: #c0c0c0;
+	--color-red: #d2374f;
+	--color-orange: #ff8a65;
+	--color-orange-thin: #fff3f0;
+}
+
+*:focus {
+	outline: none;
+}
+
+:root {
+	background-color: white;
+}
+
+html,
+body {
+	width: 100%;
+	height: 100%;
 }
 
 html {
 	overflow-y: scroll;
 }
 
+ul,
+ol {
+	padding-block-start: 0;
+	padding-block-end: 0;
+	padding-inline-start: 40px;
+	margin-inline-start: 0;
+	margin-inline-end: 0;
+}
+
+a {
+	color: #1976d2;
+}
+
 p {
-	line-height: 1.4;
+	margin-bottom: 10px;
+	line-height: 1.8;
+}
+
+p:last-of-type {
+	margin-bottom: 0;
+}
+
+li {
+	line-height: 1.8;
 }

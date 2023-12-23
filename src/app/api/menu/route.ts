@@ -7,7 +7,7 @@ import { safeNumber, safeString } from "@/libs/trans-type";
 interface MenuRow extends RowDataPacket {
 	id: number;
 	name: string;
-	chain_id: number | null;
+	group_id: number | null;
 	store_id: number | null;
 	updated_at: string;
 	created_at: string;
@@ -25,7 +25,7 @@ export const GET = async (req: Request): Promise<Response> => {
 
 		const { searchParams } = new URL(req.url);
 		const storeId = safeNumber(searchParams.get("store"));
-		const chainId = safeNumber(searchParams.get("chain"));
+		const groupId = safeNumber(searchParams.get("group"));
 
 		let storeFilterSql = "";
 		if (storeId !== null) {
@@ -34,10 +34,10 @@ export const GET = async (req: Request): Promise<Response> => {
 			`;
 		}
 
-		let chainFilterSql = "";
-		if (chainId !== null) {
-			chainFilterSql = /* sql */ `
-				WHERE menu.chain_id = ${chainId}
+		let groupFilterSql = "";
+		if (groupId !== null) {
+			groupFilterSql = /* sql */ `
+				WHERE menu.group_id = ${groupId}
 			`;
 		}
 
@@ -46,7 +46,7 @@ export const GET = async (req: Request): Promise<Response> => {
 				menu.id as id,
 				menu.name as name,
 				menu.store_id as store_id,
-				menu.chain_id as chain_id,
+				menu.group_id as group_id,
 				menu.updated_at as updated_at,
 				menu.created_at as created_at,
 				IFNULL(CONCAT("[", GROUP_CONCAT((CONCAT('{"id": "', allergens.id, '", "name": "', allergens.name, '"}')) SEPARATOR ","), "]"), "[]") as allergens
@@ -55,7 +55,7 @@ export const GET = async (req: Request): Promise<Response> => {
 					id,
 					name,
 					store_id,
-					chain_id,
+					group_id,
 					updated_at,
 					created_at
 				FROM menu
@@ -64,8 +64,8 @@ export const GET = async (req: Request): Promise<Response> => {
 			LEFT JOIN menu_allergens ON menu.id = menu_allergens.menu_id
 			LEFT JOIN allergens ON menu_allergens.allergen_id = allergens.id
 			${storeFilterSql}
-			${chainFilterSql}
-			GROUP BY id, name, store_id, chain_id, updated_at, created_at
+			${groupFilterSql}
+			GROUP BY id, name, store_id, group_id, updated_at, created_at
 		`;
 
 		const [rows] = await connection.query<MenuRow[]>(sql);
@@ -73,7 +73,7 @@ export const GET = async (req: Request): Promise<Response> => {
 			data.push({
 				id: row.id,
 				name: row.name,
-				chain_id: row.chain_id,
+				group_id: row.group_id,
 				store_id: row.store_id,
 				updated_at: row.updated_at,
 				created_at: row.created_at,
@@ -106,7 +106,7 @@ export const POST = async (req: Request): Promise<Response> => {
 	const data: Menu = {
 		id: NaN,
 		name: "",
-		chain_id: null,
+		group_id: null,
 		store_id: null,
 		updated_at: "",
 		created_at: "",
@@ -120,7 +120,7 @@ export const POST = async (req: Request): Promise<Response> => {
 
 		const name = safeString(body.name);
 		const allergens = safeString(body.allergens);
-		const chainId = safeNumber(body.chain);
+		const groupId = safeNumber(body.group);
 		const storeId = safeNumber(body.store);
 
 		if (name === null) {
@@ -130,19 +130,19 @@ export const POST = async (req: Request): Promise<Response> => {
 		const values: {
 			name: string;
 			store_id?: number;
-			chain_id?: number;
+			group_id?: number;
 		} = {
 			name
 		};
 
-		if (storeId === null && chainId === null) {
+		if (storeId === null && groupId === null) {
 			throw new ValidationError();
 		}
 
 		if (storeId !== null) {
 			values.store_id = storeId;
-		} else if (chainId !== null) {
-			values.chain_id = chainId;
+		} else if (groupId !== null) {
+			values.group_id = groupId;
 		}
 
 		await connection.beginTransaction();

@@ -25,21 +25,21 @@ export const GET = async (req: Request): Promise<Response> => {
 		const { searchParams } = new URL(req.url);
 
 		const storeId = safeNumber(searchParams.get("store"));
-		const chainId = safeNumber(searchParams.get("chain"));
+		const groupId = safeNumber(searchParams.get("group"));
 
 		let storeFilterSql = "";
 		if (storeId !== null) {
 			storeFilterSql = /* sql */ `WHERE comments.store_id = ${storeId}`;
 		}
 
-		let chainFilterSql = "";
-		if (chainId !== null) {
-			chainFilterSql = /* sql */ `
+		let groupFilterSql = "";
+		if (groupId !== null) {
+			groupFilterSql = /* sql */ `
 				INNER JOIN (
 					SELECT
 						stores.id as id
 					FROM stores
-					WHERE stores.chain_id = ${chainId}
+					WHERE stores.group_id = ${groupId}
 				) as stores ON stores.id = comments.store_id
 			`;
 		}
@@ -64,7 +64,7 @@ export const GET = async (req: Request): Promise<Response> => {
 				WHERE deleted = FALSE
 			) comments
 			${storeFilterSql}
-			${chainFilterSql}
+			${groupFilterSql}
 		`;
 
 		const [rows] = await connection.query<CommentRow[]>(sql);

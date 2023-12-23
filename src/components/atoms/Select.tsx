@@ -1,7 +1,4 @@
-/** @jsxImportSource @emotion/react */
-"use client";
-
-import { css } from "@emotion/react";
+import { css } from "@kuma-ui/core";
 import type { ChangeEventHandler, MouseEventHandler, ReactNode } from "react";
 
 interface Props {
@@ -20,7 +17,7 @@ export default function ({ value, disabled = false, onChange, onClick, children 
 			disabled={disabled}
 			onChange={onChange}
 			onClick={onClick}
-			css={css`
+			className={css`
 				border: none;
 				border-bottom-style: solid;
 				border-bottom-color: var(--color-orange);

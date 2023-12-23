@@ -8,8 +8,7 @@ interface StoreRow extends RowDataPacket {
 	id: number;
 	name: string;
 	address: string;
-	chain_id: number | null;
-	chain_name: string | null;
+	group_id: number | null;
 	description: string;
 	updated_at: string;
 	created_at: string;
@@ -27,11 +26,11 @@ export const GET = async (req: Request): Promise<Response> => {
 		const { searchParams } = new URL(req.url);
 		const allergens = safeString(searchParams.get("allergens"));
 		const keywords = safeString(searchParams.get("keywords"));
-		const chainId = safeNumber(searchParams.get("chain"));
+		const groupId = safeNumber(searchParams.get("group"));
 
-		let chainFilterSql = "";
-		if (chainId !== null) {
-			chainFilterSql = /* sql */ ` WHERE chain_id = ${chainId}`;
+		let groupFilterSql = "";
+		if (groupId !== null) {
+			groupFilterSql = /* sql */ ` WHERE group_id = ${groupId}`;
 		}
 
 		let allergenFilterSql = "";
@@ -70,8 +69,7 @@ export const GET = async (req: Request): Promise<Response> => {
 				stores.id as id,
 				stores.name as name,
 				stores.address as address,
-				stores.chain_id as chain_id,
-				chains.name as chain_name,
+				stores.group_id as group_id,
 				stores.description as description,
 				stores.updated_at as updated_at,
 				stores.created_at as created_at
@@ -83,7 +81,7 @@ export const GET = async (req: Request): Promise<Response> => {
 						stores.id as id,
 						stores.name as name,
 						stores.address as address,
-						stores.chain_id as chain_id,
+						stores.store_group_id as group_id,
 						stores.deleted as deleted,
 						stores.description as description,
 						stores.updated_at as updated_at,
@@ -96,24 +94,24 @@ export const GET = async (req: Request): Promise<Response> => {
 									SELECT
 										menu.id as id,
 										menu.store_id as store_id,
-										menu.chain_id as chain_id,
+										menu.group_id as group_id,
 										IFNULL(CONCAT(",", GROUP_CONCAT((allergens.id) SEPARATOR ","), ","), "") as allergen_ids
 									FROM menu
 											LEFT JOIN menu_allergens ON menu.id = menu_allergens.menu_id
 											LEFT JOIN allergens ON menu_allergens.allergen_id = allergens.id
-									GROUP BY id, store_id, chain_id
+									GROUP BY id, store_id, group_id
 									${allergenFilterSql}
-								) menu ON menu.store_id = stores.id OR menu.chain_id = stores.chain_id
+								) menu ON menu.store_id = stores.id OR menu.group_id = stores.group_id
 							`
 							: ""
 					}
-					GROUP BY id, name, address, chain_id, description, updated_at, created_at
+					GROUP BY id, name, address, group_id, description, updated_at, created_at
 					${keywordFilterSql}
 				) stores
 				WHERE stores.deleted = FALSE
 			) stores
-			LEFT JOIN chains ON chains.id = stores.chain_id
-			${chainFilterSql}
+			LEFT JOIN store_groups ON store_groups.id = stores.group_id
+			${groupFilterSql}
 		`;
 
 		const [rows] = await connection.query<StoreRow[]>(sql);
@@ -122,8 +120,7 @@ export const GET = async (req: Request): Promise<Response> => {
 				id: row.id,
 				name: row.name,
 				address: row.address,
-				chain_id: row.chain_id,
-				chain_name: row.chain_name,
+				group_id: row.group_id,
 				description: row.description,
 				updated_at: row.updated_at,
 				created_at: row.created_at
@@ -156,8 +153,7 @@ export const POST = async (req: Request): Promise<Response> => {
 		id: NaN,
 		name: "",
 		address: "",
-		chain_id: null,
-		chain_name: null,
+		group_id: null,
 		description: "",
 		updated_at: "",
 		created_at: ""
@@ -171,7 +167,7 @@ export const POST = async (req: Request): Promise<Response> => {
 		const name = safeString(body.name);
 		const address = safeString(body.address);
 		const description = safeString(body.description);
-		const chainId = safeNumber(body.chain);
+		const groupId = safeNumber(body.group);
 
 		if (name === null || address === null || description === null) {
 			throw new ValidationError();
@@ -184,7 +180,7 @@ export const POST = async (req: Request): Promise<Response> => {
 			name,
 			address,
 			description,
-			chain_id: chainId
+			store_group_id: groupId
 		});
 
 		if (!Array.isArray(result)) {

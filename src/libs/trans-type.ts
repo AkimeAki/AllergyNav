@@ -6,6 +6,6 @@ export const safeString = (value: any): string | null => {
 	return value === null || value === undefined
 		? null
 		: typeof value === "number" && isNaN(value)
-		? null
-		: String(value ?? "");
+		  ? null
+		  : String(value ?? "");
 };

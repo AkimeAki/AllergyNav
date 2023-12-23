@@ -16,19 +16,18 @@
 	},
 	"dependencies": {
 		"@emotion/react": "^11.11.1",
+		"@kuma-ui/core": "^1.5.4",
+		"@kuma-ui/next-plugin": "^1.1.14",
 		"@types/bcrypt": "^5.0.1",
 		"@types/node": "^20.7.1",
 		"@types/react": "^18.2.15",
 		"@types/react-dom": "^18.2.7",
-		"aki-reset-css": "github:AkimeAki/Reset-CSS#1.0.0",
 		"bcrypt": "^5.1.1",
 		"mysql2": "^3.6.1",
 		"next": "13.5.4",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
-		"recoil": "^0.7.7",
-		"typescript": "^5.0.2",
-		"typescript-config": "github:AkimeAki/TypeScript-Config#2.0.2"
+		"typescript": "^5.0.2"
 	},
 	"devDependencies": {
 		"eslint": "^8.45.0",
