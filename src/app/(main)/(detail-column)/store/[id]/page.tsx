@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { safeNumber } from "@/libs/trans-type";
 import { css } from "@kuma-ui/core";
 import Link from "next/link";
+import GoogleMap from "@/components/organisms/GoogleMap";
 
 interface Props {
 	params: {
@@ -17,7 +18,6 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 	}
 
 	let storeDetail;
-	let coordinate;
 	try {
 		const storeDetailFetchResult = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store/${id}`, {
 			method: "GET"
@@ -28,18 +28,6 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 		}
 
 		storeDetail = await storeDetailFetchResult.json();
-
-		const storeAccessFetchResponse = await fetch(
-			`https://msearch.gsi.go.jp/address-search/AddressSearch?q=${storeDetail.address}`,
-			{
-				method: "GET"
-			}
-		);
-		const storeAccessData = await storeAccessFetchResponse.json();
-
-		if (storeAccessData.length === 1) {
-			coordinate = `${storeAccessData[0].geometry.coordinates[1]},${storeAccessData[0].geometry.coordinates[0]}`;
-		}
 	} catch (e) {}
 
 	return (
@@ -112,16 +100,7 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 					}}
 				/>
 			)}
-			{coordinate !== undefined && (
-				<iframe
-					src={`http://maps.google.co.jp/maps?q=${coordinate}&output=embed&t=m&z=17`}
-					className={css`
-						border: none;
-						width: 100%;
-						height: 400px;
-					`}
-				/>
-			)}
+			<GoogleMap address={storeDetail.address} />
 		</div>
 	);
 }

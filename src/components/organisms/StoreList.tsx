@@ -59,97 +59,107 @@ export default function (): JSX.Element {
 			<div
 				className={css`
 					display: flex;
-					justify-content: flex-end;
-					width: 100%;
-				`}
-			>
-				<Button
-					onClick={() => {
-						setIsOpenAddModal(true);
-					}}
-				>
-					お店を追加
-				</Button>
-			</div>
-			<section
-				className={css`
-					display: flex;
 					flex-direction: column;
 					gap: 20px;
+					padding: 0 10px;
 				`}
 			>
-				{errorMessages !== "" ? (
-					<ErrorMessage>{errorMessages}</ErrorMessage>
-				) : loading ? (
-					<Loading />
-				) : (
-					<>
-						{stores.map((store) => (
-							<div
-								key={store.id}
-								className={css`
-									position: relative;
-									transition-duration: 200ms;
-									transition-property: box-shadow;
-									overflow: hidden;
-									border-radius: 7px;
-									border-width: 2px;
-									border-style: solid;
-									border-color: #f3f3f3;
-
-									&:hover {
-										box-shadow: 0px 0px 15px -10px #777777;
-									}
-								`}
-							>
+				<section
+					className={css`
+						display: flex;
+						flex-direction: column;
+						gap: 20px;
+					`}
+				>
+					{errorMessages !== "" ? (
+						<ErrorMessage>{errorMessages}</ErrorMessage>
+					) : loading ? (
+						<Loading />
+					) : (
+						<>
+							{stores.map((store) => (
 								<div
+									key={store.id}
 									className={css`
-										display: flex;
+										position: relative;
+										transition-duration: 200ms;
+										transition-property: box-shadow;
+										overflow: hidden;
+										border-radius: 7px;
+										border-width: 2px;
+										border-style: solid;
+										border-color: #f3f3f3;
+
+										&:hover {
+											box-shadow: 0px 0px 15px -10px #777777;
+										}
 									`}
 								>
-									<Image
-										className={css`
-											aspect-ratio: 1/1;
-											width: 250px;
-										`}
-										src="/no-image.png"
-										width={250}
-										height={250}
-										alt="お店の画像"
-									/>
 									<div
 										className={css`
-											padding: 10px;
-											width: 100%;
+											display: flex;
 										`}
 									>
-										<h3
+										<Image
 											className={css`
+												aspect-ratio: 1/1;
+												width: 250px;
+											`}
+											src="/no-image.png"
+											width={250}
+											height={250}
+											alt="お店の画像"
+										/>
+										<div
+											className={css`
+												padding: 10px;
 												width: 100%;
-												font-size: 20px;
 											`}
 										>
-											{store.name}
-										</h3>
+											<h3
+												className={css`
+													width: 100%;
+													font-size: 20px;
+												`}
+											>
+												{store.name}
+											</h3>
+										</div>
 									</div>
+									<Link
+										className={css`
+											display: block;
+											position: absolute;
+											top: 0;
+											left: 0;
+											width: 100%;
+											height: 100%;
+											z-index: 99;
+										`}
+										href={`/store/${store.id}`}
+									/>
 								</div>
-								<Link
-									className={css`
-										display: block;
-										position: absolute;
-										top: 0;
-										left: 0;
-										width: 100%;
-										height: 100%;
-										z-index: 99;
-									`}
-									href={`/store/${store.id}`}
-								/>
-							</div>
-						))}
-					</>
-				)}
-			</section>
+							))}
+						</>
+					)}
+				</section>
+				<div
+					className={css`
+						position: sticky;
+						bottom: 40px;
+						text-align: right;
+						z-index: 99;
+					`}
+				>
+					<Button
+						onClick={() => {
+							setIsOpenAddModal(true);
+						}}
+					>
+						お店を追加
+					</Button>
+				</div>
+			</div>
 		</>
 	);
 }

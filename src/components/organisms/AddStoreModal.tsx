@@ -102,7 +102,9 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 				<>
 					<div
 						onClick={() => {
-							setIsOpen(false);
+							if (!isStoreSending) {
+								setIsOpen(false);
+							}
 						}}
 						className={css`
 							position: fixed;
@@ -216,21 +218,24 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 										position: relative;
 									`}
 								>
-									<div
-										className={css`
-											position: absolute;
-											bottom: 0;
-											left: 0;
-											font-size: 0;
-											cursor: pointer;
-											user-select: none;
-										`}
-										onClick={() => {
-											setIsOpen(false);
-										}}
-									>
-										<GoogleIcon size={30} name="close" color="var(--color-black)" />
-									</div>
+									{!isStoreSending && (
+										<div
+											className={css`
+												position: absolute;
+												bottom: 0;
+												left: 0;
+												font-size: 0;
+												cursor: pointer;
+												user-select: none;
+											`}
+											onClick={() => {
+												setIsOpen(false);
+											}}
+										>
+											<GoogleIcon size={30} name="close" color="var(--color-black)" />
+										</div>
+									)}
+
 									<div
 										className={css`
 											width: 100%;
