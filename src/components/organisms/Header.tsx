@@ -7,12 +7,8 @@ export default function (): JSX.Element {
 		<>
 			<header
 				className={css`
-					position: fixed;
-					top: 0;
-					left: 0;
 					width: 100%;
-					background-color: var(--color-orange);
-					height: 70px;
+					height: 140px;
 					z-index: 10;
 				`}
 			>
@@ -31,7 +27,8 @@ export default function (): JSX.Element {
 				>
 					<h1
 						className={css`
-							height: 100%;
+							display: flex;
+							align-items: center;
 						`}
 					>
 						<Link
@@ -59,14 +56,12 @@ export default function (): JSX.Element {
 							<div
 								className={css`
 									font-weight: 700;
-									color: white;
 								`}
 							>
 								アレルギーナビ
 								<span
 									className={css`
 										font-weight: 700;
-										color: white;
 										margin-left: 5px;
 
 										@media (max-width: 430px) {

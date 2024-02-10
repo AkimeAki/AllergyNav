@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { safeNumber } from "@/libs/trans-type";
+import { safeNumber } from "@/libs/safe-type";
 import { css } from "@kuma-ui/core";
 import StoreComment from "@/components/organisms/StoreComment";
 
@@ -38,7 +38,6 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 					</span>
 					をお願いします。
 				</p>
-				<p>アレルギーと関係ないコメントやレビューをしたい、見たい方は、他のグルメサイトをご利用ください。</p>
 			</div>
 			<StoreComment id={id} />
 		</div>

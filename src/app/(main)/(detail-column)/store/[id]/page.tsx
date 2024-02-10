@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
-import { safeNumber } from "@/libs/trans-type";
+import { safeNumber } from "@/libs/safe-type";
 import { css } from "@kuma-ui/core";
 import Link from "next/link";
 import GoogleMap from "@/components/organisms/GoogleMap";
+import sanitizeHtml from "sanitize-html";
 
 interface Props {
 	params: {
@@ -85,7 +86,7 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 						<tr>
 							<th>住所</th>
 							<td>
-								<Link href={`https://www.google.com/maps/place/${storeDetail.address}`}>
+								<Link href={`https://www.google.com/maps/place/${storeDetail.address}`} target="_blank">
 									{storeDetail.address}
 								</Link>
 							</td>
@@ -96,7 +97,11 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 			{storeDetail !== undefined && storeDetail.description !== "" && (
 				<div
 					dangerouslySetInnerHTML={{
-						__html: storeDetail.description
+						__html: sanitizeHtml(storeDetail.description, {
+							allowedTags: [],
+							allowedAttributes: {},
+							disallowedTagsMode: "recursiveEscape"
+						})
 					}}
 				/>
 			)}

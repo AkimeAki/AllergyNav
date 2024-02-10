@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { safeNumber } from "@/libs/trans-type";
+import { safeNumber } from "@/libs/safe-type";
 import TabWrapper from "@/components/organisms/TabWrapper";
 import TabLink from "@/components/molecules/TabLink";
 import type { ReactNode } from "react";

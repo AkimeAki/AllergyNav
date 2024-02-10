@@ -16,14 +16,13 @@ export default function ({ children }: Props): JSX.Element {
 			<main
 				className={css`
 					width: 100%;
-					padding-top: 70px;
 				`}
 			>
 				<div
 					className={css`
 						max-width: 1200px;
 						margin: 0 auto;
-						padding: 90px 30px;
+						padding: 0 30px 90px 30px;
 					`}
 				>
 					{children}

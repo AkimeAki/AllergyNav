@@ -1,8 +1,8 @@
 import mysql from "mysql2/promise";
 import type { RowDataPacket } from "mysql2/promise";
 import { mysqlConfig, NotFoundError, ValidationError } from "@/definition";
-import type { StoreGroup, Store } from "@/type";
-import { safeNumber, safeString } from "@/libs/trans-type";
+import type { StoreGroup } from "@/type";
+import { safeNumber, safeString } from "@/libs/safe-type";
 
 interface StoreRow extends RowDataPacket {
 	id: number;
@@ -22,24 +22,14 @@ interface Props {
 	};
 }
 
-const data: Store = {
-	id: NaN,
-	name: "",
-	address: "",
-	group_id: null,
-	description: "",
-	updated_at: "",
-	created_at: ""
-};
-
-let status = 500;
-
 export const GET = async (_: Request, { params }: Props): Promise<Response> => {
-	console.log("aa");
+	let status = 500;
 	let connection: mysql.Connection | null = null;
 
+	let data = {};
+
 	try {
-		connection = await mysql.createConnection(mysqlConfig as string);
+		connection = await mysql.createConnection(mysqlConfig as any);
 
 		const storeId = safeNumber(params.id);
 
@@ -53,8 +43,7 @@ export const GET = async (_: Request, { params }: Props): Promise<Response> => {
 				stores.name as name,
 				stores.address as address,
 				stores.description as description,
-				stores.store_group_id as store_group_id,
-				store_groups.name as group_name,
+				stores.store_group_id as group_id,
 				stores.updated_at as updated_at,
 				stores.created_at as created_at
 			FROM stores
@@ -64,14 +53,15 @@ export const GET = async (_: Request, { params }: Props): Promise<Response> => {
 		const [rows] = await connection.query<StoreRow[]>(sql, [storeId]);
 
 		if (rows.length !== 0) {
-			data.id = rows[0].id;
-			data.name = rows[0].name;
-			data.address = rows[0].address;
-			data.description = rows[0].description;
-			data.store_group_id = rows[0].store_group_id;
-			data.group_name = rows[0].group_name;
-			data.updated_at = rows[0].updated_at;
-			data.created_at = rows[0].created_at;
+			data = {
+				id: rows[0].id,
+				name: rows[0].name,
+				address: rows[0].address,
+				description: rows[0].description,
+				group_id: rows[0].group_id,
+				updated_at: rows[0].updated_at,
+				created_at: rows[0].created_at
+			};
 		} else {
 			throw new NotFoundError();
 		}
@@ -95,7 +85,9 @@ export const GET = async (_: Request, { params }: Props): Promise<Response> => {
 };
 
 export const PUT = async (req: Request, { params }: { params: { id: string } }): Promise<Response> => {
+	let status = 500;
 	let connection: mysql.Connection | null = null;
+	let data = {};
 
 	try {
 		connection = await mysql.createConnection(mysqlConfig as string);
@@ -127,7 +119,13 @@ export const PUT = async (req: Request, { params }: { params: { id: string } }):
 		);
 
 		if (!Array.isArray(result)) {
-			data.id = result.insertId;
+			data = {
+				id: result.insertId,
+				name,
+				address,
+				description,
+				store_group_id: groupId
+			};
 		}
 
 		status = 200;

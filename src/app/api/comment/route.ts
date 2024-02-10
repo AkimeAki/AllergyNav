@@ -2,7 +2,7 @@ import mysql from "mysql2/promise";
 import type { RowDataPacket } from "mysql2/promise";
 import { NotFoundError, ValidationError, mysqlConfig } from "@/definition";
 import type { Comment } from "@/type";
-import { safeNumber, safeString } from "@/libs/trans-type";
+import { safeNumber, safeString } from "@/libs/safe-type";
 
 interface CommentRow extends RowDataPacket {
 	id: number;

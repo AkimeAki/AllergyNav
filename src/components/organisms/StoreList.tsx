@@ -77,6 +77,15 @@ export default function (): JSX.Element {
 						<Loading />
 					) : (
 						<>
+							{stores.length === 0 && (
+								<p
+									className={css`
+										text-align: center;
+									`}
+								>
+									お店が無いようです😿
+								</p>
+							)}
 							{stores.map((store) => (
 								<div
 									key={store.id}

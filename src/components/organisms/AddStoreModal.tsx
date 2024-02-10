@@ -10,7 +10,7 @@ import type { Dispatch, SetStateAction } from "react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import GoogleIcon from "@/components/atoms/GoogleIcon";
-import type { StoreGroup, StoreGroupList } from "@/type";
+import type { StoreGroupList } from "@/type";
 import Loading from "@/components/atoms/Loading";
 
 interface Props {
@@ -73,22 +73,22 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 
 	const getStoreGroupList = async (): Promise<void> => {
 		try {
-			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/group`, {
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json"
-				}
-			});
+			// const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/group`, {
+			// 	method: "GET",
+			// 	headers: {
+			// 		"Content-Type": "application/json"
+			// 	}
+			// });
 
-			const response = await result.json();
-			const groupList: StoreGroupList[] = [];
-			response.forEach((group: StoreGroup) => {
-				groupList.push({
-					id: group.id,
-					name: group.name
-				});
-			});
-			setSelectStoreGroupList(groupList);
+			// const response = await result.json();
+			// const groupList: StoreGroupList[] = [];
+			// response.forEach((group: StoreGroup) => {
+			// 	groupList.push({
+			// 		id: group.id,
+			// 		name: group.name
+			// 	});
+			// });
+			setSelectStoreGroupList([]);
 		} catch (e) {}
 	};
 

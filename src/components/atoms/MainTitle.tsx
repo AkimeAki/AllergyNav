@@ -11,9 +11,9 @@ export default function ({ children }: Props): JSX.Element {
 			className={css`
 				width: 100%;
 				font-weight: 700;
-				font-size: 30px;
+				font-size: 25px;
 				background-color: var(--color-orange);
-				padding: 10px 20px;
+				padding: 12px 20px;
 				color: white;
 				border-radius: 9999px;
 			`}

@@ -2,7 +2,7 @@ import mysql from "mysql2/promise";
 import type { RowDataPacket } from "mysql2/promise";
 import { mysqlConfig, NotFoundError, ValidationError } from "@/definition";
 import type { Menu } from "@/type";
-import { safeNumber, safeString } from "@/libs/trans-type";
+import { safeNumber, safeString } from "@/libs/safe-type";
 
 interface MenuRow extends RowDataPacket {
 	id: number;

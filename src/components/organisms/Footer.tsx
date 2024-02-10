@@ -23,11 +23,10 @@ export default function (): JSX.Element {
 				<div
 					className={css`
 						display: inline-block;
-						font-weight: 700;
 						text-align: center;
 					`}
 				>
-					&copy; 彩季
+					Created by 彩季
 				</div>
 				<div
 					className={css`

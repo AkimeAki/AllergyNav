@@ -70,18 +70,18 @@ export default function (): JSX.Element {
 											opacity: 1;
 											user-select: auto;
 											pointer-events: auto;
-									  `
+										`
 									: css`
 											opacity: 0;
 											user-select: none;
 											pointer-events: none;
-									  `
+										`
 							].join(" ")}
 						>
 							<SidebarLink href="/">トップ</SidebarLink>
 							<SidebarLink href="/store">お店一覧</SidebarLink>
-							<SidebarLink href="/group">グループ一覧</SidebarLink>
-							<SidebarLink href="/login">ログイン</SidebarLink>
+							<SidebarLink href="/group">グループ一覧（未実装）</SidebarLink>
+							<SidebarLink href="/login">ログイン（未実装）</SidebarLink>
 						</aside>
 					</div>
 				</div>

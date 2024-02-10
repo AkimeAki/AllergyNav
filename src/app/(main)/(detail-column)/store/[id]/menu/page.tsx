@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { safeNumber } from "@/libs/trans-type";
+import { safeNumber } from "@/libs/safe-type";
 
 interface Props {
 	params: {

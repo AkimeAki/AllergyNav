@@ -1,6 +1,6 @@
 import mysql from "mysql2/promise";
 import { NotFoundError, ValidationError, mysqlConfig } from "@/definition";
-import { safeString } from "@/libs/trans-type";
+import { safeString } from "@/libs/safe-type";
 import { hashPass } from "@/libs/password";
 
 let status = 500;

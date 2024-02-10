@@ -1,18 +1,15 @@
+@font-face {
+	font-family: "GenJyuuGothicL";
+	src: url(/GenJyuuGothicL-Medium.ttf);
+}
+
 * {
-	/* インターフェース */
 	box-sizing: border-box;
-	padding: 0;
-
-	/* マージン・パディング */
 	margin: 0;
-
-	/* フォント */
-	font-family: "游ゴシック体", YuGothic, "游ゴシック", "メイリオ", Meiryo, "Hiragino Kaku Gothic Pro",
-		"ヒラギノ角ゴ Pro W3", "ＭＳ Ｐゴシック", sans-serif;
+	padding: 0;
+	font-family: "GenJyuuGothicL";
 	font-size: 18px;
 	font-weight: 400;
-	line-height: 1.6;
-
 	line-height: 1;
 	color: var(--color-black);
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -58,12 +55,7 @@ a {
 }
 
 p {
-	margin-bottom: 10px;
 	line-height: 1.8;
-}
-
-p:last-of-type {
-	margin-bottom: 0;
 }
 
 li {

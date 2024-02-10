@@ -1,3 +1,5 @@
+import type { ConnectionOptions } from "mysql2/promise";
+
 export const siteTitle = "アレルギーナビ";
 
 export type Allergen = "egg" | "milk" | "wheat" | "shrimp" | "crab" | "soba" | "peanut";
@@ -42,13 +44,6 @@ export const allergenList: AllergenList = {
 	}
 };
 
-const DB_LOCAL =
-	process.env.DATABASE_URL === undefined
-		? true
-		: process.env.DB_LOCAL === undefined
-		  ? true
-		  : Boolean(isNaN(parseInt(process.env.DB_LOCAL)) ? true : parseInt(process.env.DB_LOCAL));
-
 const localDbData = {
 	host: "db",
 	user: "root",
@@ -56,7 +51,8 @@ const localDbData = {
 	database: "dev"
 };
 
-export const mysqlConfig = DB_LOCAL ? localDbData : process.env.DATABASE_URL ?? localDbData;
+export const mysqlConfig: ConnectionOptions | string =
+	(process.env.USE_DB_LOCAL === "1" ? localDbData : process.env.DATABASE_URL) ?? "";
 
 export class NotFoundError extends Error {
 	constructor(message?: string) {
