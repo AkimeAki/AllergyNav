@@ -27,13 +27,14 @@ export default function ({ href, children, size = "normal", onClick, disabled = 
 			font-weight: 700;
 			overflow: hidden;
 			transition-duration: 200ms;
-			transition-property: box-shadow, color, border-color;
+			transition-property: color, border-color, background-color;
 			white-space: nowrap;
 			user-select: none;
 			text-align: center;
 
 			&:hover {
-				box-shadow: 0px 0px 15px -10px #777777;
+				background-color: var(--color-orange);
+				color: white;
 			}
 		`,
 		size === "small"
@@ -50,9 +51,12 @@ export default function ({ href, children, size = "normal", onClick, disabled = 
 					border-color: var(--color-gray);
 					color: var(--color-gray);
 					user-select: none;
-					cursor: default;
+					cursor: not-allowed;
+					background-color: white;
 
 					&:hover {
+						background-color: white;
+						color: var(--color-gray);
 						box-shadow: none;
 					}
 				`

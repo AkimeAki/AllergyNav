@@ -10,8 +10,8 @@ import type { Dispatch, SetStateAction } from "react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import GoogleIcon from "@/components/atoms/GoogleIcon";
-import type { StoreGroupList } from "@/type";
-import Loading from "@/components/atoms/Loading";
+import Cursor from "@/components/atoms/Cursor";
+import FloatMessage from "@/components/atoms/FloatMessage";
 
 interface Props {
 	isOpen: boolean;
@@ -23,13 +23,9 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 	const [storeAddress, setStoreAddress] = useState<string>("");
 	const [storeDescription, setStoreDescription] = useState<string>("");
 	const [enableSendButton, setEnableSendButton] = useState<boolean>(false);
-	const [group, setStoreGroup] = useState<StoreGroupList>({
-		id: null,
-		name: null
-	});
-	const [selectGroupList, setSelectStoreGroupList] = useState<StoreGroupList[] | null>(null);
 	const router = useRouter();
 	const [isStoreSending, setIsStoreSending] = useState<boolean>(false);
+	const [isStoreSendingError, setIsStoreSendingError] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (storeName !== "" && storeAddress !== "") {
@@ -44,6 +40,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 			return;
 		}
 
+		setIsStoreSendingError(false);
 		setIsStoreSending(true);
 		try {
 			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store`, {
@@ -54,8 +51,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 				body: JSON.stringify({
 					name: storeName,
 					address: storeAddress,
-					description: storeDescription,
-					group: group.id
+					description: storeDescription
 				})
 			});
 
@@ -68,36 +64,23 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 			router.push(`/store/${id}`);
 		} catch (e) {
 			setIsStoreSending(false);
+			setIsStoreSendingError(true);
 		}
 	};
 
-	const getStoreGroupList = async (): Promise<void> => {
-		try {
-			// const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/group`, {
-			// 	method: "GET",
-			// 	headers: {
-			// 		"Content-Type": "application/json"
-			// 	}
-			// });
-
-			// const response = await result.json();
-			// const groupList: StoreGroupList[] = [];
-			// response.forEach((group: StoreGroup) => {
-			// 	groupList.push({
-			// 		id: group.id,
-			// 		name: group.name
-			// 	});
-			// });
-			setSelectStoreGroupList([]);
-		} catch (e) {}
-	};
-
-	useEffect(() => {
-		void getStoreGroupList();
-	}, []);
-
 	return (
 		<>
+			{isStoreSending && (
+				<>
+					<Cursor cursor="wait" />
+					<FloatMessage type="success">入力データを送信しています</FloatMessage>
+				</>
+			)}
+			{isStoreSendingError && (
+				<>
+					<FloatMessage type="error">エラーが発生しました😿</FloatMessage>
+				</>
+			)}
 			{isOpen && (
 				<>
 					<div
@@ -164,6 +147,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 									<Label required>名前</Label>
 									<TextInput
 										disabled={isStoreSending}
+										value={storeName}
 										onChange={(e) => {
 											setStoreName(e.target.value);
 										}}
@@ -173,35 +157,17 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 									<Label required>住所</Label>
 									<TextInput
 										disabled={isStoreSending}
+										value={storeAddress}
 										onChange={(e) => {
 											setStoreAddress(e.target.value);
 										}}
 									/>
 								</div>
 								<div>
-									<Label>グループ</Label>
-									{selectGroupList !== null ? (
-										<Select
-											value={group.id === null ? "null" : String(group.id)}
-											onChange={(e) => {
-												setStoreGroup({
-													id: isNaN(parseInt(e.target.value))
-														? null
-														: parseInt(e.target.value),
-													name: null
-												});
-											}}
-										>
-											<option value="null">なし</option>
-											{selectGroupList.map((group) => (
-												<option key={group.id} value={String(group.id)}>
-													{group.name}
-												</option>
-											))}
-										</Select>
-									) : (
-										<Loading message="グループリスト取得中" />
-									)}
+									<Label>グループ（未実装）</Label>
+									<Select value="null">
+										<option value="null">なし</option>
+									</Select>
 								</div>
 								<div>
 									<Label>お店の詳細情報</Label>

@@ -14,13 +14,13 @@ export default function (): JSX.Element {
 	const searchParams = useSearchParams();
 
 	const params = {
-		allergen: searchParams.get("allergen"),
+		allergens: searchParams.get("allergens"),
 		keywords: searchParams.get("keywords")
 	};
 
 	useEffect(() => {
-		if (params.allergen !== null) {
-			const queryAllergenList = params.allergen.split(",");
+		if (params.allergens !== null) {
+			const queryAllergenList = params.allergens.split(",");
 			const filterdAllergenList = queryAllergenList.filter((a) => {
 				return Object.keys(allergenList).some((b) => a === b);
 			}) as Allergen[];
@@ -93,7 +93,10 @@ export default function (): JSX.Element {
 							align-items: center;
 						`}
 					>
-						<Button size="small" href={`/store?keywords=${keywords}&allergen=${selectAllergens.join(",")}`}>
+						<Button
+							size="small"
+							href={`/store?keywords=${keywords}&allergens=${selectAllergens.join(",")}`}
+						>
 							検索
 						</Button>
 					</div>

@@ -52,7 +52,7 @@ export default function (): JSX.Element {
 						}
 					`}
 				/>
-				<Button href={`/store?keywords=${keywords}&allergen=${selectAllergens.join(",")}`}>検索</Button>
+				<Button href={`/store?keywords=${keywords}&allergens=${selectAllergens.join(",")}`}>検索</Button>
 			</div>
 		</div>
 	);

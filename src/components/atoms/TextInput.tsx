@@ -35,7 +35,7 @@ export default function ({ onChange, value, disabled = false, password = false, 
 					transition-property: box-shadow;
 
 					&[disabled] {
-						background-color: var(--color-gray);
+						background-color: #dbdbdb;
 						user-select: none;
 						cursor: default;
 					}

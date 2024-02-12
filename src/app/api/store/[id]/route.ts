@@ -1,15 +1,12 @@
 import mysql from "mysql2/promise";
 import type { RowDataPacket } from "mysql2/promise";
 import { mysqlConfig, NotFoundError, ValidationError } from "@/definition";
-import type { StoreGroup } from "@/type";
 import { safeNumber, safeString } from "@/libs/safe-type";
 
 interface StoreRow extends RowDataPacket {
 	id: number;
 	name: string;
 	address: string;
-	store_group_id: StoreGroup["id"] | null;
-	group_name: StoreGroup["name"] | null;
 	description: string;
 	deleted: boolean;
 	updated_at: string;
@@ -43,11 +40,9 @@ export const GET = async (_: Request, { params }: Props): Promise<Response> => {
 				stores.name as name,
 				stores.address as address,
 				stores.description as description,
-				stores.store_group_id as group_id,
 				stores.updated_at as updated_at,
 				stores.created_at as created_at
 			FROM stores
-			LEFT JOIN store_groups ON store_groups.id = stores.store_group_id
 			WHERE stores.id = ? AND stores.deleted = FALSE
 		`;
 		const [rows] = await connection.query<StoreRow[]>(sql, [storeId]);
@@ -58,7 +53,6 @@ export const GET = async (_: Request, { params }: Props): Promise<Response> => {
 				name: rows[0].name,
 				address: rows[0].address,
 				description: rows[0].description,
-				group_id: rows[0].group_id,
 				updated_at: rows[0].updated_at,
 				created_at: rows[0].created_at
 			};
@@ -97,7 +91,6 @@ export const PUT = async (req: Request, { params }: { params: { id: string } }):
 		const name = safeString(body.name);
 		const address = safeString(body.address);
 		const description = safeString(body.description);
-		const groupId = safeNumber(body.group);
 		const storeId = safeNumber(params.id);
 
 		if (name === null || address === null || description === null || storeId === null) {
@@ -112,10 +105,9 @@ export const PUT = async (req: Request, { params }: { params: { id: string } }):
 					name = ?,
 					address = ?,
 					description = ?,
-					store_group_id = ?
 				WHERE id = ? AND deleted = FALSE
 			`,
-			[name, address, description, groupId, storeId]
+			[name, address, description, storeId]
 		);
 
 		if (!Array.isArray(result)) {
@@ -123,8 +115,7 @@ export const PUT = async (req: Request, { params }: { params: { id: string } }):
 				id: result.insertId,
 				name,
 				address,
-				description,
-				store_group_id: groupId
+				description
 			};
 		}
 

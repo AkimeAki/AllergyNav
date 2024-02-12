@@ -33,7 +33,7 @@ export default function ({ value = "", onChange, disabled = false }: Props): JSX
 				}
 
 				&[disabled] {
-					background-color: var(--color-gray);
+					background-color: #dbdbdb;
 					user-select: none;
 					cursor: default;
 
