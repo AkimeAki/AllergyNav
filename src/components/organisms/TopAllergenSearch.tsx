@@ -1,13 +1,12 @@
 "use client";
 
 import { css } from "@kuma-ui/core";
-import AllergenSelector from "@/components/molecules/AllergenSelector";
+import BadAllergenSelect from "@/components/molecules/BadAllergenSelect";
 import Button from "@/components/atoms/Button";
 import { useState } from "react";
-import type { Allergen } from "@/definition";
 
 export default function (): JSX.Element {
-	const [selectAllergens, setSelectAllergens] = useState<Allergen[]>([]);
+	const [selectAllergens, setSelectAllergens] = useState<string[]>([]);
 	const [keywords, setKeywords] = useState<string>("");
 
 	return (
@@ -17,7 +16,11 @@ export default function (): JSX.Element {
 					padding: 30px 0;
 				`}
 			>
-				<AllergenSelector selectAllergens={selectAllergens} setSelectAllergens={setSelectAllergens} />
+				<BadAllergenSelect
+					selectAllergens={selectAllergens}
+					setSelectAllergens={setSelectAllergens}
+					position="center"
+				/>
 			</div>
 			<div
 				className={css`
@@ -27,6 +30,10 @@ export default function (): JSX.Element {
 					place-items: center;
 					gap: 20px;
 					align-items: center;
+
+					@media screen and (max-width: 600px) {
+						grid-template-columns: 1fr;
+					}
 				`}
 			>
 				<input
@@ -52,7 +59,15 @@ export default function (): JSX.Element {
 						}
 					`}
 				/>
-				<Button href={`/store?keywords=${keywords}&allergens=${selectAllergens.join(",")}`}>検索</Button>
+				<div
+					className={css`
+						@media screen and (max-width: 600px) {
+							display: none;
+						}
+					`}
+				>
+					<Button href={`/store?keywords=${keywords}&allergens=${selectAllergens.join(",")}`}>検索</Button>
+				</div>
 			</div>
 		</div>
 	);

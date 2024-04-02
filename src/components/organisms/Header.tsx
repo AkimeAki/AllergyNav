@@ -10,6 +10,10 @@ export default function (): JSX.Element {
 					width: 100%;
 					height: 140px;
 					z-index: 10;
+
+					@media (max-width: 880px) {
+						height: 60px;
+					}
 				`}
 			>
 				<div

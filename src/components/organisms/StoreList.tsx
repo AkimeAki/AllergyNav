@@ -1,6 +1,5 @@
 "use client";
 
-import type { Store } from "@/type";
 import { css } from "@kuma-ui/core";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -10,52 +9,57 @@ import ErrorMessage from "@/components/atoms/ErrorMessage";
 import Loading from "@/components/atoms/Loading";
 import Button from "@/components/atoms/Button";
 import AddStoreModal from "@/components/organisms/AddStoreModal";
+import { useGetStores } from "@/hooks/useGetStores";
+import { SessionProvider, useSession } from "next-auth/react";
+import Modal from "@/components/molecules/Modal";
+import SubTitle from "@/components/atoms/SubTitle";
 
-export default function (): JSX.Element {
+const StoreList = (): JSX.Element => {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
-	const [loading, setLoading] = useState<boolean>(true);
-	const [errorMessages, setErrorMessages] = useState<string>("");
-	const [stores, setStores] = useState<Store[]>([]);
 	const searchParams = useSearchParams();
+	const { response: stores, loading, message, getStore } = useGetStores();
+	const { data: session } = useSession();
 	const params = {
-		allergens: searchParams.get("allergens"),
-		keywords: searchParams.get("keywords")
-	};
-
-	const getStore = async (): Promise<void> => {
-		setLoading(true);
-		try {
-			const queryAllergens = params.allergens ?? "";
-			const queryKeywords = params.keywords ?? "";
-			const result = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/store?keywords=${queryKeywords}&allergens=${queryAllergens}`,
-				{
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json"
-					}
-				}
-			);
-
-			if (result.status !== 200) {
-				throw new Error();
-			}
-
-			const response = await result.json();
-			setStores(response);
-		} catch (e) {
-			setErrorMessages("接続エラーが発生しました。");
-		}
-		setLoading(false);
+		allergens: searchParams.get("allergens") ?? "",
+		keywords: searchParams.get("keywords") ?? ""
 	};
 
 	useEffect(() => {
-		void getStore();
+		void getStore(params.allergens, params.keywords);
 	}, [searchParams]);
 
 	return (
 		<>
-			<AddStoreModal isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+			{session?.user !== undefined && session?.user !== null && (
+				<AddStoreModal isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+			)}
+			{session?.user === undefined && session?.user !== null && (
+				<Modal isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal}>
+					<SubTitle>お店を追加</SubTitle>
+					<p
+						className={css`
+							text-align: center;
+							margin: 30px 0;
+						`}
+					>
+						メニューを追加するには、ログインする必要があります
+					</p>
+					<div
+						className={css`
+							display: flex;
+							gap: 20px;
+							justify-content: center;
+						`}
+					>
+						<div>
+							<Button href="/login?redirect=/store">ログイン</Button>
+						</div>
+						<div>
+							<Button href="/register?redirect=/store">アカウント作成</Button>
+						</div>
+					</div>
+				</Modal>
+			)}
 			<div
 				className={css`
 					display: flex;
@@ -66,16 +70,23 @@ export default function (): JSX.Element {
 			>
 				<section
 					className={css`
-						display: flex;
-						flex-direction: column;
+						display: grid;
+						grid-template-columns: 1fr;
 						gap: 20px;
+						flex-wrap: wrap;
+
+						@media (max-width: 880px) {
+							grid-template-columns: 1fr 1fr;
+						}
+
+						@media (max-width: 700px) {
+							grid-template-columns: 1fr;
+						}
 					`}
 				>
-					{errorMessages !== "" ? (
-						<ErrorMessage>{errorMessages}</ErrorMessage>
-					) : loading ? (
-						<Loading />
-					) : (
+					{loading && <Loading />}
+					{message !== undefined && message.type === "error" && <ErrorMessage>{message.text}</ErrorMessage>}
+					{!loading && (
 						<>
 							{stores.length === 0 && (
 								<p
@@ -107,12 +118,22 @@ export default function (): JSX.Element {
 									<div
 										className={css`
 											display: flex;
+
+											@media (max-width: 880px) {
+												flex-direction: column;
+											}
 										`}
 									>
 										<Image
 											className={css`
 												aspect-ratio: 1/1;
 												width: 250px;
+
+												@media (max-width: 880px) {
+													width: 100%;
+													height: 250px;
+													object-fit: contain;
+												}
 											`}
 											src="/no-image.png"
 											width={250}
@@ -152,23 +173,53 @@ export default function (): JSX.Element {
 						</>
 					)}
 				</section>
-				<div
-					className={css`
-						position: sticky;
-						bottom: 40px;
-						text-align: right;
-						z-index: 99;
-					`}
-				>
-					<Button
-						onClick={() => {
-							setIsOpenAddModal(true);
-						}}
+				{session !== undefined && (
+					<div
+						className={css`
+							position: sticky;
+							bottom: 40px;
+							text-align: right;
+							z-index: 99;
+							animation-name: addStoreButtonFadeIn;
+							opacity: 0;
+							animation-iteration-count: 1;
+							animation-duration: 200ms;
+							animation-fill-mode: forwards;
+
+							@keyframes addStoreButtonFadeIn {
+								0% {
+									opacity: 0;
+								}
+
+								100% {
+									opacity: 1;
+								}
+							}
+
+							@media (max-width: 600px) {
+								bottom: 20px;
+							}
+						`}
 					>
-						お店を追加
-					</Button>
-				</div>
+						<Button
+							onClick={() => {
+								setIsOpenAddModal(true);
+							}}
+							selected={isOpenAddModal}
+						>
+							お店を追加
+						</Button>
+					</div>
+				)}
 			</div>
 		</>
+	);
+};
+
+export default function (): JSX.Element {
+	return (
+		<SessionProvider>
+			<StoreList />
+		</SessionProvider>
 	);
 }

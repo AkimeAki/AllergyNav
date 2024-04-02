@@ -1,0 +1,31 @@
+{
+	"compilerOptions": {
+		"jsxImportSource": "react",
+		"declaration": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"strict": true, // strict系すべてtrue
+		"noImplicitAny": true, // 暗黙的なany禁止
+		"strictNullChecks": true,
+		"strictFunctionTypes": true,
+		"strictBindCallApply": true, // bind call applyの型を厳密にチェック
+		"strictPropertyInitialization": true,
+		"noImplicitThis": true, // thisの暗黙的なany禁止
+		"alwaysStrict": true, // 常にuse strict
+		"skipLibCheck": true,
+		"target": "es5",
+		"lib": ["dom", "dom.iterable", "esnext"],
+		"allowJs": true,
+		"noEmit": true,
+		"module": "commonjs",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"jsx": "preserve",
+		"incremental": true,
+		"paths": {
+			"@/*": ["./src/*"]
+		}
+	},
+	"include": [],
+	"exclude": ["node_modules"]
+}

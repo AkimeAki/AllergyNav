@@ -1,99 +1,82 @@
-import mysql from "mysql2/promise";
-import type { RowDataPacket } from "mysql2/promise";
-import { NotFoundError, ValidationError, mysqlConfig } from "@/definition";
-import type { Menu } from "@/type";
+import { ForbiddenError, NotFoundError, ValidationError } from "@/definition";
+import type { AddMenuResponse, GetMenusResponse } from "@/type";
 import { safeNumber, safeString } from "@/libs/safe-type";
+import { isEmptyString } from "@/libs/check-string";
+import { prisma } from "@/libs/prisma";
+import type { NextRequest } from "next/server";
+import { getServerSession } from "next-auth";
+import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
+import { getToken } from "next-auth/jwt";
 
-interface MenuRow extends RowDataPacket {
-	id: number;
-	name: string;
-	group_id: number | null;
-	store_id: number | null;
-	updated_at: string;
-	created_at: string;
-	allergens: string;
-}
-
-let status = 500;
-
-export const GET = async (req: Request): Promise<Response> => {
-	let connection: mysql.Connection | null = null;
-	const data: Menu[] = [];
+export const GET = async (req: NextRequest): Promise<Response> => {
+	let status = 500;
+	let data: GetMenusResponse = null;
 
 	try {
-		connection = await mysql.createConnection(mysqlConfig as string);
-
 		const { searchParams } = new URL(req.url);
-		const storeId = safeNumber(searchParams.get("store"));
-		const groupId = safeNumber(searchParams.get("group"));
+		const storeId = safeNumber(searchParams.get("storeId"));
 
-		let storeFilterSql = "";
-		if (storeId !== null) {
-			storeFilterSql = /* sql */ `
-				WHERE menu.store_id = ${storeId}
-			`;
-		}
-
-		let groupFilterSql = "";
-		if (groupId !== null) {
-			groupFilterSql = /* sql */ `
-				WHERE menu.group_id = ${groupId}
-			`;
-		}
-
-		const sql = /* sql */ `
-			SELECT
-				menu.id as id,
-				menu.name as name,
-				menu.store_id as store_id,
-				menu.group_id as group_id,
-				menu.updated_at as updated_at,
-				menu.created_at as created_at,
-				IFNULL(CONCAT("[", GROUP_CONCAT((CONCAT('{"id": "', allergens.id, '", "name": "', allergens.name, '"}')) SEPARATOR ","), "]"), "[]") as allergens
-			FROM (
-				SELECT
-					id,
-					name,
-					store_id,
-					group_id,
-					updated_at,
-					created_at
-				FROM menu
-				WHERE deleted = FALSE
-			) menu
-			LEFT JOIN menu_allergens ON menu.id = menu_allergens.menu_id
-			LEFT JOIN allergens ON menu_allergens.allergen_id = allergens.id
-			${storeFilterSql}
-			${groupFilterSql}
-			GROUP BY id, name, store_id, group_id, updated_at, created_at
-		`;
-
-		const [rows] = await connection.query<MenuRow[]>(sql);
-		rows.forEach((row) => {
-			data.push({
-				id: row.id,
-				name: row.name,
-				group_id: row.group_id,
-				store_id: row.store_id,
-				updated_at: row.updated_at,
-				created_at: row.created_at,
-				allergens: JSON.parse(row.allergens)
-			});
+		const result = await prisma.menu.findMany({
+			select: {
+				id: true,
+				name: true,
+				store_id: true,
+				description: true,
+				updated_at: true,
+				created_at: true,
+				menu_allergens: true,
+				created_user_id: true,
+				updated_user_id: true
+			},
+			where: {
+				deleted: false,
+				store_id: storeId ?? undefined
+			}
 		});
+
+		const allergensResult = await prisma.allergen.findMany({
+			select: {
+				id: true,
+				name: true
+			}
+		});
+
+		data = [];
+		for (const item of result) {
+			data.push({
+				id: item.id,
+				name: item.name,
+				store_id: item.store_id,
+				description: item.description,
+				updated_at: item.updated_at,
+				created_at: item.created_at,
+				allergens: item.menu_allergens.map((allergen) => {
+					let allergenName = "";
+					allergensResult.forEach((item) => {
+						if (item.id === allergen.allergen_id) {
+							allergenName = item.name;
+						}
+					});
+
+					return {
+						id: allergen.allergen_id,
+						name: allergenName
+					};
+				}),
+				created_user_id: item.created_user_id,
+				updated_user_id: item.updated_user_id
+			});
+		}
 
 		status = 200;
 	} catch (e) {
-		data.splice(0);
+		data = null;
 
 		if (e instanceof NotFoundError) {
 			status = 404;
 		} else if (e instanceof ValidationError) {
 			status = 422;
 		}
-	}
-
-	if (connection !== null) {
-		await connection.end();
 	}
 
 	return new Response(JSON.stringify(data), {
@@ -101,92 +84,116 @@ export const GET = async (req: Request): Promise<Response> => {
 	});
 };
 
-export const POST = async (req: Request): Promise<Response> => {
-	let connection: mysql.Connection | null = null;
-	const data: Menu = {
-		id: NaN,
-		name: "",
-		group_id: null,
-		store_id: null,
-		updated_at: "",
-		created_at: "",
-		allergens: []
-	};
+export const POST = async (req: NextRequest): Promise<Response> => {
+	let status = 500;
+	let data: AddMenuResponse = null;
+
+	const session = await getServerSession(nextAuthOptions);
+	const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
 	try {
-		connection = await mysql.createConnection(mysqlConfig as string);
+		if (session === null || token === null) {
+			throw new ForbiddenError();
+		}
 
 		const body = await req.json();
 
 		const name = safeString(body.name);
 		const allergens = safeString(body.allergens);
-		const groupId = safeNumber(body.group);
-		const storeId = safeNumber(body.store);
+		const storeId = safeNumber(body.storeId);
+		const description = safeString(body.description);
+		const userId = safeNumber(session?.user?.id);
 
-		if (name === null) {
+		if (name === null || description === null || allergens === null) {
 			throw new ValidationError();
 		}
 
-		const values: {
-			name: string;
-			store_id?: number;
-			group_id?: number;
-		} = {
-			name
-		};
+		if (userId === null) {
+			throw new ForbiddenError();
+		}
 
-		if (storeId === null && groupId === null) {
+		if (isEmptyString(name)) {
 			throw new ValidationError();
 		}
 
-		if (storeId !== null) {
-			values.store_id = storeId;
-		} else if (groupId !== null) {
-			values.group_id = groupId;
+		if (storeId === null) {
+			throw new ValidationError();
 		}
 
-		await connection.beginTransaction();
-		const [menuResult] = await connection.query(
-			/* sql */ `
-				INSERT INTO menu SET ?
-			`,
-			values
-		);
+		await prisma.$transaction(async (prisma): Promise<void> => {
+			const menuInsertResult = await prisma.menu.create({
+				data: {
+					name,
+					store_id: storeId,
+					description,
+					created_user_id: userId,
+					updated_user_id: userId
+				}
+			});
 
-		if (!Array.isArray(menuResult)) {
-			data.id = menuResult.insertId;
-		} else {
-			throw new Error();
-		}
-		if (allergens !== null) {
-			const allergenList = JSON.parse(allergens) as string[];
-			if (allergenList.length !== 0) {
-				const menuAllergens: Array<string | number> = [];
-
-				allergenList.forEach((allergen) => {
-					menuAllergens.push(allergen);
-					menuAllergens.push(data.id);
+			const menuAllergenInsertResult = [];
+			for (const allergen of JSON.parse(allergens) as string[]) {
+				const result = await prisma.menuAllergen.create({
+					data: {
+						allergen_id: allergen,
+						menu_id: menuInsertResult.id
+					}
 				});
 
-				let value = "";
-				for (let i = 0; i < allergenList.length; i++) {
-					if (i !== 0) {
-						value += ", (?, ?)";
-					} else {
-						value += "(?, ?)";
-					}
-				}
-
-				await connection.query(
-					/* sql */ `
-				INSERT INTO menu_allergens (allergen_id, menu_id) VALUES ${value}
-			`,
-					menuAllergens
-				);
+				menuAllergenInsertResult.push(result);
 			}
-		}
 
-		await connection.commit();
+			const allergensResult = await prisma.allergen.findMany({
+				select: {
+					id: true,
+					name: true
+				}
+			});
+
+			data = {
+				id: menuInsertResult.id,
+				name: menuInsertResult.name,
+				store_id: menuInsertResult.store_id,
+				description: menuInsertResult.description,
+				created_at: menuInsertResult.created_at,
+				updated_at: menuInsertResult.updated_at,
+				created_user_id: menuInsertResult.created_user_id,
+				updated_user_id: menuInsertResult.updated_user_id,
+				allergens: menuAllergenInsertResult.map((allergen) => {
+					let allergenName = "";
+					allergensResult.forEach((item) => {
+						if (item.id === allergen.allergen_id) {
+							allergenName = item.name;
+						}
+					});
+
+					return {
+						id: allergen.allergen_id,
+						name: allergenName
+					};
+				})
+			};
+
+			const menuHistoryInsertResult = await prisma.menuHistory.create({
+				data: {
+					name,
+					store_id: storeId,
+					menu_id: menuInsertResult.id,
+					description,
+					updated_user_id: menuInsertResult.updated_user_id
+				}
+			});
+
+			for (const allergen of JSON.parse(allergens) as string[]) {
+				await prisma.menuAllergenHistory.create({
+					data: {
+						allergen_id: allergen,
+						menu_id: menuInsertResult.id,
+						menu_history_id: menuHistoryInsertResult.id
+					}
+				});
+			}
+		});
 
 		status = 200;
 	} catch (e) {
@@ -194,11 +201,9 @@ export const POST = async (req: Request): Promise<Response> => {
 			status = 404;
 		} else if (e instanceof ValidationError) {
 			status = 422;
+		} else if (e instanceof ForbiddenError) {
+			status = 403;
 		}
-	}
-
-	if (connection !== null) {
-		await connection.end();
 	}
 
 	return new Response(JSON.stringify(data), {

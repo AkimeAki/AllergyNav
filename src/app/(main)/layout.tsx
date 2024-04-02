@@ -23,6 +23,10 @@ export default function ({ children }: Props): JSX.Element {
 						max-width: 1200px;
 						margin: 0 auto;
 						padding: 0 30px 90px 30px;
+
+						@media (max-width: 600px) {
+							padding: 0 20px 90px 20px;
+						}
 					`}
 				>
 					{children}

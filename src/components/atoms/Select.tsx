@@ -13,7 +13,7 @@ export default function ({ value, disabled = false, onChange, onClick, children 
 	return (
 		<select
 			size={1}
-			value={value}
+			defaultValue={value}
 			disabled={disabled}
 			onChange={onChange}
 			onClick={onClick}
@@ -24,11 +24,13 @@ export default function ({ value, disabled = false, onChange, onClick, children 
 				border-bottom-width: 2px;
 				padding: 10px 20px 10px 10px;
 				cursor: pointer;
+				border-top-left-radius: 5px;
+				border-top-right-radius: 5px;
 
 				&[disabled] {
 					background-color: #e4e4e4;
 					user-select: none;
-					cursor: wait;
+					cursor: not-allowed;
 				}
 			`}
 		>

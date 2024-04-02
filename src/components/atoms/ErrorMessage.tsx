@@ -11,10 +11,11 @@ export default function ({ children }: Props): JSX.Element {
 			className={css`
 				width: 100%;
 				padding: 10px;
-				background-color: var(--color-orange-thin);
 				border-width: 4px;
 				border-style: solid;
-				border-color: var(--color-red);
+				border-color: #ff6565;
+				background-color: #ffd1d1;
+				border-radius: 15px;
 				font-weight: bold;
 			`}
 		>

@@ -1,137 +1,58 @@
-import mysql from "mysql2/promise";
-import type { RowDataPacket } from "mysql2/promise";
-import { NotFoundError, ValidationError, mysqlConfig } from "@/definition";
-import type { Store } from "@/type";
-import { safeString } from "@/libs/safe-type";
+import { ForbiddenError, NotFoundError, ValidationError } from "@/definition";
+import type { AddStoreResponse, GetStoresResponse } from "@/type";
+import { safeNumber, safeString } from "@/libs/safe-type";
 import type { NextRequest } from "next/server";
-
-interface StoreRow extends RowDataPacket {
-	id: number;
-	name: string;
-	address: string;
-	description: string;
-	updated_at: string;
-	created_at: string;
-}
+import { isEmptyString } from "@/libs/check-string";
+import { prisma } from "@/libs/prisma";
+import { getServerSession } from "next-auth";
+import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
+import { getToken } from "next-auth/jwt";
 
 export const GET = async (req: NextRequest): Promise<Response> => {
-	let connection: mysql.Connection | null = null;
-	const data: Store[] = [];
+	let data: GetStoresResponse = null;
 	let status = 500;
 
 	try {
-		connection = await mysql.createConnection(mysqlConfig as any);
+		// const { searchParams } = new URL(req.url);
+		// const allergens = safeString(searchParams.get("allergens"));
+		// const keywords = safeString(searchParams.get("keywords"));
 
-		const { searchParams } = new URL(req.url);
-		const allergens = safeString(searchParams.get("allergens"));
-		const keywords = safeString(searchParams.get("keywords"));
-
-		const sql = /* sql */ `
-			SELECT
-				stores.id as id,
-				stores.ip as ip,
-				stores.name as name,
-				stores.address as address,
-				stores.description as description,
-				stores.updated_at as updated_at,
-				stores.created_at as created_at
-			FROM (
-				SELECT
-					stores.id as id,
-					stores.ip as ip,
-					stores.name as name,
-					stores.address as address,
-					stores.deleted as deleted,
-					stores.description as description,
-					stores.updated_at as updated_at,
-					stores.created_at as created_at
-				FROM stores
-				${(() => {
-					if (allergens === null) {
-						return "";
-					}
-
-					const allergenList = allergens.split(",").filter((allergen) => allergen !== "");
-					if (allergenList.length === 0) {
-						return "";
-					}
-
-					return /* sql */ `
-						INNER JOIN (
-							SELECT
-								menu.id as id,
-								menu.store_id as store_id,
-								IFNULL(CONCAT(",", GROUP_CONCAT((menu_allergens.allergen_id) SEPARATOR ","), ","), "") as allergen_ids
-							FROM menu
-								LEFT JOIN menu_allergens ON menu.id = menu_allergens.menu_id
-						GROUP BY id, store_id
-							${(() => {
-								let allergenFilterSql = "HAVING";
-								allergenList.forEach((allergen, index) => {
-									if (index !== 0) {
-										allergenFilterSql += /* sql */ ` AND`;
-									}
-
-									allergenFilterSql += /* sql */ ` allergen_ids NOT LIKE "%,${allergen},%"`;
-								});
-
-								return allergenFilterSql;
-							})()}
-						) menu ON menu.store_id = stores.id
-					`;
-				})()}
-				WHERE stores.deleted = FALSE
-				GROUP BY id, name, address, description, updated_at, created_at
-				${(() => {
-					if (keywords === null) {
-						return "";
-					}
-
-					const keywordList = keywords.split(" ").filter((keyword) => keyword !== "");
-					if (keywordList.length === 0) {
-						return "";
-					}
-
-					let keywordFilterSql = "HAVING";
-					keywordList.forEach((keyword, index) => {
-						if (index !== 0) {
-							keywordFilterSql += /* sql */ ` OR`;
-						}
-
-						keywordFilterSql += /* sql */ ` name LIKE "%${keyword}%" OR description LIKE "%${keyword}%" OR address LIKE "%${keyword}%"`;
-					});
-
-					return keywordFilterSql;
-				})()}
-			) stores
-		`;
-
-		const [rows] = await connection.query<StoreRow[]>(sql);
-		rows.forEach((row) => {
-			data.push({
-				id: row.id,
-				ip: row.ip,
-				name: row.name,
-				address: row.address,
-				description: row.description,
-				updated_at: row.updated_at,
-				created_at: row.created_at
-			});
+		const result = await prisma.store.findMany({
+			select: {
+				id: true,
+				name: true,
+				address: true,
+				description: true,
+				updated_at: true,
+				created_at: true,
+				created_user_id: true,
+				updated_user_id: true
+			}
 		});
+
+		data = [];
+		for (const item of result) {
+			data.push({
+				id: item.id,
+				name: item.name,
+				address: item.address,
+				description: item.description,
+				updated_at: item.updated_at,
+				created_at: item.created_at,
+				created_user_id: item.created_user_id,
+				updated_user_id: item.updated_user_id
+			});
+		}
 
 		status = 200;
 	} catch (e) {
-		data.splice(0);
+		data = null;
 
 		if (e instanceof NotFoundError) {
 			status = 404;
 		} else if (e instanceof ValidationError) {
 			status = 422;
 		}
-	}
-
-	if (connection !== null) {
-		await connection.end();
 	}
 
 	return new Response(JSON.stringify(data), {
@@ -140,57 +61,80 @@ export const GET = async (req: NextRequest): Promise<Response> => {
 };
 
 export const POST = async (req: NextRequest): Promise<Response> => {
-	let connection: mysql.Connection | null = null;
 	let status = 500;
-	let data = {};
+	let data: AddStoreResponse = null;
+
+	const session = await getServerSession(nextAuthOptions);
+	const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
 	try {
-		connection = await mysql.createConnection(mysqlConfig as any);
+		if (session === null || token === null) {
+			throw new ForbiddenError();
+		}
 
 		const body = await req.json();
 
 		const name = safeString(body.name);
 		const address = safeString(body.address);
 		const description = safeString(body.description);
-		const ip = req.ip ?? "";
+		const userId = safeNumber(session?.user?.id);
 
 		if (name === null || address === null || description === null) {
 			throw new ValidationError();
 		}
 
-		const sql = /* sql */ `
-			INSERT INTO stores SET ?
-		`;
-
-		const [result] = await connection.query(sql, {
-			name,
-			address,
-			description,
-			ip
-		});
-
-		if (!Array.isArray(result)) {
-			data = {
-				id: result.insertId,
-				name,
-				address,
-				description,
-				ip
-			};
+		if (userId === null) {
+			throw new ForbiddenError();
 		}
+
+		if (isEmptyString(name)) {
+			throw new ValidationError();
+		}
+
+		await prisma.$transaction(async (prisma) => {
+			const storeInsertResult = await prisma.store.create({
+				data: {
+					name,
+					address,
+					description,
+					created_user_id: userId,
+					updated_user_id: userId
+				}
+			});
+
+			data = {
+				id: storeInsertResult.id,
+				name: storeInsertResult.name,
+				address: storeInsertResult.address,
+				description: storeInsertResult.description,
+				created_at: storeInsertResult.created_at,
+				updated_at: storeInsertResult.updated_at,
+				created_user_id: storeInsertResult.created_user_id,
+				updated_user_id: storeInsertResult.updated_user_id
+			};
+
+			await prisma.storeHistory.create({
+				data: {
+					store_id: storeInsertResult.id,
+					name,
+					address,
+					description,
+					updated_user_id: storeInsertResult.updated_user_id
+				}
+			});
+		});
 
 		status = 200;
 	} catch (e) {
-		console.log(e);
+		data = null;
+
 		if (e instanceof NotFoundError) {
 			status = 404;
 		} else if (e instanceof ValidationError) {
 			status = 422;
+		} else if (e instanceof ForbiddenError) {
+			status = 403;
 		}
-	}
-
-	if (connection !== null) {
-		await connection.end();
 	}
 
 	return new Response(JSON.stringify(data), {

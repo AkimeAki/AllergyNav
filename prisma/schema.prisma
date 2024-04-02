@@ -1,0 +1,172 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  password String?
+  role     String  @default("normal")
+
+  store_comments   StoreComment[]
+  created_stores   Store[]         @relation("created_user")
+  updated_stores   Store[]         @relation("updated_user")
+  created_menus    Menu[]          @relation("created_user")
+  updated_menus    Menu[]          @relation("updated_user")
+  user_ips         UserIp[]
+  user_store_goods UserStoreGood[]
+  user_store_bads  UserStoreBad[]
+
+  @@map("users")
+}
+
+model UserIp {
+  user_id    Int
+  ip         String
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@id([user_id, ip])
+  @@map("user_ips")
+}
+
+model Store {
+  id              Int      @id @default(autoincrement())
+  name            String
+  address         String
+  description     String
+  created_user_id Int
+  updated_user_id Int
+  deleted         Boolean  @default(false)
+  created_at      DateTime @default(now())
+  updated_at      DateTime @default(now()) @updatedAt
+
+  created_user    User           @relation("created_user", fields: [created_user_id], references: [id])
+  updated_user    User           @relation("updated_user", fields: [updated_user_id], references: [id])
+  store_commentss StoreComment[]
+  menu            Menu[]
+
+  @@map("stores")
+}
+
+model StoreHistory {
+  id              Int      @id @default(autoincrement())
+  name            String
+  store_id        Int
+  address         String
+  description     String
+  updated_user_id Int
+  deleted         Boolean  @default(false)
+  created_at      DateTime @default(now())
+
+  @@map("store_histories")
+}
+
+model UserStoreGood {
+  user_id    Int      @id
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("user_store_goods")
+}
+
+model UserStoreBad {
+  user_id    Int      @id
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("user_store_bads")
+}
+
+model Menu {
+  id              Int      @id @default(autoincrement())
+  name            String
+  store_id        Int
+  description     String
+  deleted         Boolean  @default(false)
+  created_at      DateTime @default(now())
+  updated_at      DateTime @default(now()) @updatedAt
+  created_user_id Int
+  updated_user_id Int
+
+  menu_allergens MenuAllergen[]
+  store          Store          @relation(fields: [store_id], references: [id])
+  created_user   User           @relation("created_user", fields: [created_user_id], references: [id])
+  updated_user   User           @relation("updated_user", fields: [updated_user_id], references: [id])
+
+  @@map("menus")
+}
+
+model MenuHistory {
+  id              Int      @id @default(autoincrement())
+  name            String
+  menu_id         Int
+  store_id        Int
+  description     String
+  deleted         Boolean  @default(false)
+  created_at      DateTime @default(now())
+  updated_user_id Int
+
+  menu_allergen_histories MenuAllergenHistory[]
+
+  @@map("menu_histories")
+}
+
+model StoreComment {
+  id         Int      @id @default(autoincrement())
+  title      String
+  store_id   Int
+  user_id    Int
+  content    String
+  deleted    Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  store Store @relation(fields: [store_id], references: [id])
+  user  User  @relation(fields: [user_id], references: [id])
+
+  @@map("store_comments")
+}
+
+model Allergen {
+  id   String @id
+  name String
+
+  menu_allergens MenuAllergen[]
+
+  @@map("allergens")
+}
+
+model MenuAllergen {
+  allergen_id String
+  menu_id     Int
+
+  allergen Allergen @relation(fields: [allergen_id], references: [id])
+  menu     Menu     @relation(fields: [menu_id], references: [id])
+
+  @@id([allergen_id, menu_id])
+  @@map("menu_allergens")
+}
+
+model MenuAllergenHistory {
+  id              Int      @id @default(autoincrement())
+  menu_history_id Int
+  allergen_id     String
+  menu_id         Int
+  created_at      DateTime @default(now())
+
+  menu_histories MenuHistory @relation(fields: [menu_history_id], references: [id])
+
+  @@map("menu_allergen_histories")
+}

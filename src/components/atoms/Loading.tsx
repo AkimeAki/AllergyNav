@@ -8,7 +8,10 @@ interface Props {
 	delayMessage?: string;
 }
 
-export default function ({ message = "ロード中", delayMessage = "ロードに時間がかかっています" }: Props): JSX.Element {
+export default function ({
+	message = "読み込み中",
+	delayMessage = "読み込みに時間がかかっています"
+}: Props): JSX.Element {
 	const [displayMessage, setDisplayMessage] = useState<string>(message);
 
 	useEffect(() => {
@@ -47,12 +50,12 @@ export default function ({ message = "ロード中", delayMessage = "ロード�
 					}
 
 					50% {
-						content: "︰";
+						content: "・・";
 						color: var(--color-orange);
 					}
 
 					75% {
-						content: "︙";
+						content: "・・・";
 						color: var(--color-red);
 					}
 

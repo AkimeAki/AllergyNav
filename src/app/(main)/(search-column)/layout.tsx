@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { css } from "@kuma-ui/core";
-import ListSidebar from "@/components/organisms/ListSidebar";
+import StoreListSidebar from "@/components/organisms/StoreListSidebar";
 
 interface Props {
 	children: ReactNode;
@@ -18,12 +18,12 @@ export default function ({ children }: Props): JSX.Element {
 					grid-template-columns: 220px 1fr;
 				}
 
-				@media (max-width: 800px) {
+				@media (max-width: 880px) {
 					grid-template-columns: 1fr;
 				}
 			`}
 		>
-			<ListSidebar />
+			<StoreListSidebar />
 			{children}
 		</div>
 	);

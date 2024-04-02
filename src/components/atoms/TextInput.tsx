@@ -37,7 +37,7 @@ export default function ({ onChange, value, disabled = false, password = false, 
 					&[disabled] {
 						background-color: #dbdbdb;
 						user-select: none;
-						cursor: default;
+						cursor: not-allowed;
 					}
 
 					&:focus {

@@ -12,7 +12,10 @@ import { useRouter } from "next/navigation";
 import GoogleIcon from "@/components/atoms/GoogleIcon";
 import Cursor from "@/components/atoms/Cursor";
 import FloatMessage from "@/components/atoms/FloatMessage";
-
+import { useAddStore } from "@/hooks/useAddStore";
+import useClickElemenetSet from "@/hooks/useClickElemenetSet";
+import ModalBackground from "@/components/atoms/ModalBackground";
+import { isEmptyString } from "@/libs/check-string";
 interface Props {
 	isOpen: boolean;
 	setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -22,84 +25,34 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 	const [storeName, setStoreName] = useState<string>("");
 	const [storeAddress, setStoreAddress] = useState<string>("");
 	const [storeDescription, setStoreDescription] = useState<string>("");
-	const [enableSendButton, setEnableSendButton] = useState<boolean>(false);
 	const router = useRouter();
-	const [isStoreSending, setIsStoreSending] = useState<boolean>(false);
-	const [isStoreSendingError, setIsStoreSendingError] = useState<boolean>(false);
+	const { response: store, loading, message, addStore } = useAddStore();
+	const modalElement = useClickElemenetSet<HTMLDivElement>(() => {
+		if (!loading) {
+			setIsOpen(false);
+		}
+	}, [isOpen]);
 
 	useEffect(() => {
-		if (storeName !== "" && storeAddress !== "") {
-			setEnableSendButton(true);
-		} else {
-			setEnableSendButton(false);
+		if (store !== undefined) {
+			router.push(`/store/${store.id}`);
 		}
-	}, [storeName, storeAddress]);
-
-	const addStore = async (): Promise<void> => {
-		if (storeName === "" || storeAddress === "") {
-			return;
-		}
-
-		setIsStoreSendingError(false);
-		setIsStoreSending(true);
-		try {
-			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify({
-					name: storeName,
-					address: storeAddress,
-					description: storeDescription
-				})
-			});
-
-			if (result.status !== 200) {
-				throw new Error();
-			}
-
-			const response = await result.json();
-			const id = response.id;
-			router.push(`/store/${id}`);
-		} catch (e) {
-			setIsStoreSending(false);
-			setIsStoreSendingError(true);
-		}
-	};
+	}, [store]);
 
 	return (
 		<>
-			{isStoreSending && (
+			{loading && (
 				<>
 					<Cursor cursor="wait" />
 					<FloatMessage type="success">入力データを送信しています</FloatMessage>
 				</>
 			)}
-			{isStoreSendingError && (
-				<>
-					<FloatMessage type="error">エラーが発生しました😿</FloatMessage>
-				</>
+			{message !== undefined && message.type === "error" && (
+				<FloatMessage type="error">エラーが発生しました😿</FloatMessage>
 			)}
 			{isOpen && (
 				<>
-					<div
-						onClick={() => {
-							if (!isStoreSending) {
-								setIsOpen(false);
-							}
-						}}
-						className={css`
-							position: fixed;
-							top: 0;
-							left: 0;
-							width: 100%;
-							height: 100%;
-							background-color: #afafaf;
-							z-index: 50000;
-							filter: opacity(0.4);
-						`}
-					/>
+					<ModalBackground />
 					<div
 						className={css`
 							position: fixed;
@@ -125,6 +78,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 								user-select: text;
 								pointer-events: auto;
 							`}
+							ref={modalElement}
 						>
 							<SubTitle>お店を追加</SubTitle>
 							<form
@@ -146,8 +100,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 								<div>
 									<Label required>名前</Label>
 									<TextInput
-										disabled={isStoreSending}
-										value={storeName}
+										disabled={loading}
 										onChange={(e) => {
 											setStoreName(e.target.value);
 										}}
@@ -156,8 +109,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 								<div>
 									<Label required>住所</Label>
 									<TextInput
-										disabled={isStoreSending}
-										value={storeAddress}
+										disabled={loading}
 										onChange={(e) => {
 											setStoreAddress(e.target.value);
 										}}
@@ -165,15 +117,14 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 								</div>
 								<div>
 									<Label>グループ（未実装）</Label>
-									<Select value="null">
+									<Select value="null" disabled>
 										<option value="null">なし</option>
 									</Select>
 								</div>
 								<div>
 									<Label>お店の詳細情報</Label>
 									<TextArea
-										value={storeDescription}
-										disabled={isStoreSending}
+										disabled={loading}
 										onChange={(e) => {
 											setStoreDescription(e.target.value);
 										}}
@@ -184,7 +135,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 										position: relative;
 									`}
 								>
-									{!isStoreSending && (
+									{!loading && (
 										<div
 											className={css`
 												position: absolute;
@@ -210,9 +161,11 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 									>
 										<Button
 											onClick={() => {
-												void addStore();
+												void addStore(storeName, storeAddress, storeDescription);
 											}}
-											disabled={isStoreSending || !enableSendButton}
+											disabled={
+												loading || isEmptyString(storeName) || isEmptyString(storeAddress)
+											}
 										>
 											登録する
 										</Button>

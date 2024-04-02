@@ -1,102 +1,84 @@
-import mysql from "mysql2/promise";
-import type { RowDataPacket } from "mysql2/promise";
-import { mysqlConfig, NotFoundError, ValidationError } from "@/definition";
-import type { Menu } from "@/type";
+import { ForbiddenError, NotFoundError, ValidationError } from "@/definition";
+import type { EditMenuResponse, GetMenuResponse } from "@/type";
 import { safeNumber, safeString } from "@/libs/safe-type";
+import { isEmptyString } from "@/libs/check-string";
+import { prisma } from "@/libs/prisma";
+import { getServerSession } from "next-auth";
+import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
+import { getToken } from "next-auth/jwt";
+import type { NextRequest } from "next/server";
 
-interface MenuRow extends RowDataPacket {
-	id: number;
-	name: string;
-	group_id: number | null;
-	store_id: number | null;
-	updated_at: string;
-	created_at: string;
-	allergens: string;
-}
-
-interface Props {
+interface Data {
 	params: {
 		id: string;
 	};
 }
 
-const data: Menu = {
-	id: NaN,
-	name: "",
-	group_id: null,
-	store_id: null,
-	updated_at: "",
-	created_at: "",
-	allergens: []
-};
-
-let status = 500;
-
-export const GET = async (_: Request, { params }: Props): Promise<Response> => {
-	let connection: mysql.Connection | null = null;
+export const GET = async (_: Request, { params }: Data): Promise<Response> => {
+	let status = 500;
+	let data: GetMenuResponse = null;
 
 	try {
-		connection = await mysql.createConnection(mysqlConfig as string);
-
 		const menuId = safeNumber(params.id);
 
 		if (menuId === null) {
 			throw new ValidationError();
 		}
 
-		const sql = /* sql */ `
-			SELECT
-				menu.id as id,
-				menu.name as name,
-				menu.store_id as store_id,
-				menu.group_id as group_id,
-				menu.updated_at as updated_at,
-				menu.created_at as created_at,
-				menu.allergens as allergens
-			FROM (
-				SELECT
-					menu.id as id,
-					menu.name as name,
-					menu.store_id as store_id,
-					menu.group_id as group_id,
-					menu.deleted as deleted,
-					menu.updated_at as updated_at,
-					menu.created_at as created_at,
-					IFNULL(CONCAT("[", GROUP_CONCAT((CONCAT('{"id": "', allergens.id, '", "name": "', allergens.name, '"}')) SEPARATOR ","), "]"), "[]") as allergens
-				FROM menu
-				LEFT JOIN menu_allergens ON menu.id = menu_allergens.menu_id
-				LEFT JOIN allergens ON menu_allergens.allergen_id = allergens.id
-				WHERE menu.id = ?
-				GROUP BY id, name, store_id, group_id, updated_at, created_at, deleted
-				HAVING deleted = FALSE
-			) menu
-		`;
+		const result = await prisma.menu.findUniqueOrThrow({
+			where: { id: menuId },
+			select: {
+				id: true,
+				name: true,
+				store_id: true,
+				description: true,
+				updated_at: true,
+				created_at: true,
+				created_user_id: true,
+				updated_user_id: true,
+				menu_allergens: true
+			}
+		});
 
-		const [rows] = await connection.query<MenuRow[]>(sql, [menuId]);
+		const allergensResult = await prisma.allergen.findMany({
+			select: {
+				id: true,
+				name: true
+			}
+		});
 
-		if (rows[0] !== undefined && rows.length !== 0) {
-			data.id = rows[0].id;
-			data.name = rows[0].name;
-			data.store_id = rows[0].store_id;
-			data.group_id = rows[0].group_id;
-			data.updated_at = rows[0].updated_at;
-			data.created_at = rows[0].created_at;
-			data.allergens = JSON.parse(rows[0].allergens);
-		} else {
-			throw new NotFoundError();
-		}
+		data = {
+			id: result.id,
+			name: result.name,
+			store_id: result.store_id,
+			description: result.description,
+			updated_at: result.updated_at,
+			created_at: result.created_at,
+			created_user_id: result.created_user_id,
+			updated_user_id: result.updated_user_id,
+			allergens: result.menu_allergens.map((allergen) => {
+				let allergenName = "";
+				allergensResult.forEach((item) => {
+					if (item.id === allergen.allergen_id) {
+						allergenName = item.name;
+					}
+				});
+
+				return {
+					id: allergen.allergen_id,
+					name: allergenName
+				};
+			})
+		};
 
 		status = 200;
 	} catch (e) {
+		console.error(e);
 		if (e instanceof NotFoundError) {
 			status = 404;
 		} else if (e instanceof ValidationError) {
 			status = 422;
 		}
-	}
-
-	if (connection !== null) {
-		await connection.end();
 	}
 
 	return new Response(JSON.stringify(data), {
@@ -104,55 +86,129 @@ export const GET = async (_: Request, { params }: Props): Promise<Response> => {
 	});
 };
 
-export const PUT = async (req: Request, { params }: Props): Promise<Response> => {
-	let connection: mysql.Connection | null = null;
+export const PUT = async (req: NextRequest, { params }: Data): Promise<Response> => {
+	let status = 500;
+	let data: EditMenuResponse = null;
+
+	const session = await getServerSession(nextAuthOptions);
+	const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
 	try {
-		connection = await mysql.createConnection(mysqlConfig as string);
+		if (session === null || token === null) {
+			throw new ForbiddenError();
+		}
 
 		const body = await req.json();
 
 		const name = safeString(body.name);
 		const allergens = safeString(body.allergens);
-		const groupId = safeNumber(body.group);
-		const storeId = safeNumber(body.store);
+		const description = safeString(body.description);
 		const menuId = safeNumber(params.id);
+		const userId = safeNumber(session?.user?.id);
 
-		if (name === null || allergens === null || menuId === null) {
+		if (name === null || allergens === null || menuId === null || description === null) {
 			throw new ValidationError();
 		}
 
-		if (storeId === null && groupId === null) {
+		if (userId === null) {
+			throw new ForbiddenError();
+		}
+
+		if (isEmptyString(name)) {
 			throw new ValidationError();
 		}
 
-		const sql = /* sql */ `
-			UPDATE
-				stores
-			SET
-				name = ?,
-				allergens = ?,
-				store_id = ?,
-				group_id = ?
-			WHERE id = ? AND deleted = FALSE
-		`;
-		const [result] = await connection.query(sql, [name, allergens, storeId, groupId, menuId]);
+		await prisma.$transaction(async (prisma): Promise<void> => {
+			const menuUpdateResult = await prisma.menu.update({
+				data: {
+					name,
+					description,
+					updated_user_id: userId
+				},
+				where: {
+					id: menuId
+				}
+			});
 
-		if (!Array.isArray(result)) {
-			data.id = result.insertId;
-		}
+			// 前のアレルゲンとの連携を削除
+			await prisma.menuAllergen.deleteMany({
+				where: {
+					menu_id: menuId
+				}
+			});
+
+			const menuAllergenInsertResult = [];
+			for (const allergen of JSON.parse(allergens) as string[]) {
+				const result = await prisma.menuAllergen.create({
+					data: {
+						allergen_id: allergen,
+						menu_id: menuUpdateResult.id
+					}
+				});
+
+				menuAllergenInsertResult.push(result);
+			}
+
+			const allergensResult = await prisma.allergen.findMany({
+				select: {
+					id: true,
+					name: true
+				}
+			});
+
+			data = {
+				id: menuUpdateResult.id,
+				name: menuUpdateResult.name,
+				store_id: menuUpdateResult.store_id,
+				description: menuUpdateResult.description,
+				created_at: menuUpdateResult.created_at,
+				updated_at: menuUpdateResult.updated_at,
+				created_user_id: menuUpdateResult.created_user_id,
+				updated_user_id: menuUpdateResult.updated_user_id,
+				allergens: menuAllergenInsertResult.map((allergen) => {
+					let allergenName = "";
+					allergensResult.forEach((item) => {
+						if (item.id === allergen.allergen_id) {
+							allergenName = item.name;
+						}
+					});
+
+					return {
+						id: allergen.allergen_id,
+						name: allergenName
+					};
+				})
+			};
+
+			const menuHistoryInsertResult = await prisma.menuHistory.create({
+				data: {
+					name,
+					store_id: menuUpdateResult.store_id,
+					menu_id: menuUpdateResult.id,
+					description,
+					updated_user_id: menuUpdateResult.updated_user_id
+				}
+			});
+
+			for (const allergen of JSON.parse(allergens) as string[]) {
+				await prisma.menuAllergenHistory.create({
+					data: {
+						allergen_id: allergen,
+						menu_id: menuId,
+						menu_history_id: menuHistoryInsertResult.id
+					}
+				});
+			}
+		});
 
 		status = 200;
 	} catch (e) {
+		console.error(e);
 		if (e instanceof NotFoundError) {
 			status = 404;
 		} else if (e instanceof ValidationError) {
 			status = 422;
 		}
-	}
-
-	if (connection !== null) {
-		await connection.end();
 	}
 
 	return new Response(JSON.stringify(data), {
