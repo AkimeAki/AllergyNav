@@ -1,0 +1,8 @@
+/**/node_modules/
+/dist/
+/.next/
+/prisma/db.sqlite
+/prisma/migrations/
+/docker/
+/compose.prod.yml
+/compose.yml

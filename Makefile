@@ -15,3 +15,14 @@ delete:
 .PHONY: コンテナにアタッチ
 attach:
 	docker compose exec -it app bash
+
+.PHONY: コンテナ（本番）起動
+init-prod:
+	docker compose down --rmi all --volumes --remove-orphans
+	docker compose -f compose.prod.yml down --rmi all --volumes --remove-orphans
+	docker compose -f compose.prod.yml build --no-cache
+	docker compose -f compose.prod.yml up -d
+
+.PHONY: コンテナ（本番）にアタッチ
+attach-prod:
+	docker compose -f compose.prod.yml exec -it app sh

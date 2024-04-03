@@ -1,0 +1,14 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile.prod
+    tty: true
+    stdin_open: true
+    init: true
+    environment:
+      TZ: Asia/Tokyo
+      CHOKIDAR_USEPOLLING: 1
+      HOST: 0.0.0.0
+    ports:
+      - "10111:10111"
