@@ -3,3 +3,4 @@
 /.next/
 .env*.local
 /prisma/db.sqlite
+/prisma/db.sqlite-journal

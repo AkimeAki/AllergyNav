@@ -7,7 +7,8 @@ WORKDIR /app
 COPY ./ ./
 RUN npm install -g npm@10.5.0 && \
 	npm ci --omit=dev && \
-	npm run build
+	npm run build && \
+	npm run migrate:deploy
 CMD ["npm", "run", "start"]
 
 # FROM node:20.12.0-alpine3.19 AS runner

@@ -11,6 +11,7 @@ init:
 .PHONY: コンテナ削除
 delete:
 	docker compose down --rmi all --volumes --remove-orphans
+	docker compose -f compose.prod.yml down --rmi all --volumes --remove-orphans
 
 .PHONY: コンテナにアタッチ
 attach:
@@ -18,8 +19,7 @@ attach:
 
 .PHONY: コンテナ（本番）起動
 init-prod:
-	docker compose down --rmi all --volumes --remove-orphans
-	docker compose -f compose.prod.yml down --rmi all --volumes --remove-orphans
+	@make delete
 	docker compose -f compose.prod.yml build --no-cache
 	docker compose -f compose.prod.yml up -d
 

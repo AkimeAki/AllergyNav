@@ -2,7 +2,7 @@
 /dist/
 /.next/
 /prisma/db.sqlite
-/prisma/migrations/
+/prisma/db.sqlite-journal
 /docker/
 /compose.prod.yml
 /compose.yml
