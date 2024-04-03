@@ -1,17 +1,7 @@
 steps:
   # ビルド
   - name: "gcr.io/cloud-builders/docker"
-    args:
-      [
-        "build",
-        "--build-arg",
-        "API_URL=${_API_URL}",
-        "-t",
-        "${_IMAGE_NAME}:${COMMIT_SHA}",
-        "-f",
-        "docker/app/Dockerfile.prod",
-        "."
-      ]
+    args: ["build", "-t", "${_IMAGE_NAME}:${COMMIT_SHA}", "-f", "docker/app/Dockerfile.prod", "."]
   # push
   # いつもは勝手にpushしてくれるのに、なぜかデプロイも自動でしてくれない
   - name: "gcr.io/cloud-builders/docker"

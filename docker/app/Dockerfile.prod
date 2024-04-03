@@ -9,20 +9,19 @@ RUN npm install -g npm@10.5.0 && \
 	npm ci --omit=dev && \
 	npm run build && \
 	npm run migrate:deploy
-CMD ["npm", "run", "start"]
 
-# FROM node:20.12.0-alpine3.19 AS runner
+FROM node:20.12.0-alpine3.19 AS runner
 
-# ENV NODE_ENV production
-# RUN npm install -g npm@10.5.0
-# COPY --from=builder /app/next.config.js next.config.js
-# COPY --from=builder /app/.next .next
-# COPY --from=builder /app/public public
-# COPY --from=builder /app/node_modules node_modules
-# COPY --from=builder /app/package.json package.json
-# COPY --from=builder /app/package-lock.json package-lock.json
-# COPY --from=builder /app/prisma prisma
-# COPY --from=builder /app/litestream.yml /etc/litestream.yml
-# COPY --from=builder /usr/local/bin/litestream /usr/local/bin/litestream
-# COPY --from=builder /app/run.sh /run.sh
-# CMD ["sh", "run.sh"]
+ENV NODE_ENV production
+RUN npm install -g npm@10.5.0
+COPY --from=builder /app/next.config.js next.config.js
+COPY --from=builder /app/.next .next
+COPY --from=builder /app/public public
+COPY --from=builder /app/node_modules node_modules
+COPY --from=builder /app/package.json package.json
+COPY --from=builder /app/package-lock.json package-lock.json
+COPY --from=builder /app/prisma prisma
+COPY --from=builder /app/litestream.yml /etc/litestream.yml
+COPY --from=builder /usr/local/bin/litestream /usr/local/bin/litestream
+COPY --from=builder /app/run.sh /run.sh
+CMD ["sh", "run.sh"]

@@ -9,7 +9,7 @@ if [ -f ./prisma/db.sqlite ]; then
 fi
 
 # Cloud Storage からリストア
-# litestream restore -if-replica-exists -config /etc/litestream.yml ./prisma/db.sqlite
+litestream restore -if-replica-exists -config /etc/litestream.yml ./prisma/db.sqlite
 
 if [ -f ./prisma/db.sqlite ]; then
   # リストアに成功したら、リネームしていたファイルを削除
