@@ -31,8 +31,8 @@ steps:
         "--allow-unauthenticated"
       ]
 substitutions:
-  _IMAGE_NAME: "asia-northeast1-docker.pkg.dev/${PROJECT_ID}/mumbler/production"
-  _SERVICE_NAME: "mumbler"
+  _IMAGE_NAME: "asia-northeast1-docker.pkg.dev/${PROJECT_ID}/allergynav/production"
+  _SERVICE_NAME: "allergynav"
   _REGION: "asia-northeast1"
 images:
   - "${_IMAGE_NAME}:${COMMIT_SHA}"
