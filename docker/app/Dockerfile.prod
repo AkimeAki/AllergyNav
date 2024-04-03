@@ -24,4 +24,6 @@ COPY --from=builder /app/prisma prisma
 COPY --from=builder /app/litestream.yml /etc/litestream.yml
 COPY --from=builder /usr/local/bin/litestream /usr/local/bin/litestream
 COPY --from=builder /app/run.sh /run.sh
+ARG NEXTAUTH_SECRET
+ENV NEXTAUTH_SECRET ${NEXTAUTH_SECRET}
 CMD ["sh", "run.sh"]
