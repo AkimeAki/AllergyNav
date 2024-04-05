@@ -26,3 +26,11 @@ init-prod:
 .PHONY: コンテナ（本番）にアタッチ
 attach-prod:
 	docker compose -f compose.prod.yml exec -it app sh
+
+.PHONY: コンテナ（本番）一覧
+ps-prod:
+	docker compose -f compose.prod.yml ps -a
+
+.PHONY: コンテナ（本番）ログ
+logs-prod:
+	docker compose -f compose.prod.yml logs

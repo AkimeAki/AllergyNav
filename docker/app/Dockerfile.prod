@@ -13,17 +13,18 @@ RUN npm install -g npm@10.5.0 && \
 FROM node:20.12.0-alpine3.19 AS runner
 
 ENV NODE_ENV production
+WORKDIR /app
 RUN npm install -g npm@10.5.0
-COPY --from=builder /app/next.config.js next.config.js
-COPY --from=builder /app/.next .next
-COPY --from=builder /app/public public
-COPY --from=builder /app/node_modules node_modules
-COPY --from=builder /app/package.json package.json
-COPY --from=builder /app/package-lock.json package-lock.json
-COPY --from=builder /app/prisma prisma
+COPY --from=builder /app/next.config.js /app/next.config.js
+COPY --from=builder /app/.next /app/.next
+COPY --from=builder /app/public /app/public
+COPY --from=builder /app/node_modules /app/node_modules
+COPY --from=builder /app/package.json /app/package.json
+COPY --from=builder /app/package-lock.json /app/package-lock.json
+COPY --from=builder /app/prisma /app/prisma
 COPY --from=builder /app/litestream.yml /etc/litestream.yml
 COPY --from=builder /usr/local/bin/litestream /usr/local/bin/litestream
-COPY --from=builder /app/run.sh /run.sh
+COPY --from=builder /app/run.sh /app/run.sh
 ARG NEXTAUTH_SECRET
 ENV NEXTAUTH_SECRET ${NEXTAUTH_SECRET}
-CMD ["sh", "run.sh"]
+CMD ["sh", "/app/run.sh"]
