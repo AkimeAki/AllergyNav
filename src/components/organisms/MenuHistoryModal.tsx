@@ -13,7 +13,7 @@ import AllergenItem from "@/components/atoms/AllergenItem";
 import Loading from "@/components/atoms/Loading";
 
 interface Props {
-	menuId: number;
+	menuId: bigint;
 	isOpen: boolean;
 	setIsOpen: Dispatch<SetStateAction<boolean>>;
 }

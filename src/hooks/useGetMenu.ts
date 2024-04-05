@@ -5,7 +5,7 @@ interface ReturnType {
 	response: NonNullable<GetMenuResponse> | undefined;
 	loading: boolean;
 	message: Message | undefined;
-	getMenu: (menuId: number) => Promise<void>;
+	getMenu: (menuId: bigint) => Promise<void>;
 }
 
 export default function (): ReturnType {
@@ -13,7 +13,7 @@ export default function (): ReturnType {
 	const [message, setMessage] = useState<Message | undefined>(undefined);
 	const [response, setResponse] = useState<NonNullable<GetMenuResponse> | undefined>(undefined);
 
-	const getMenu = async (menuId: number): Promise<void> => {
+	const getMenu = async (menuId: bigint): Promise<void> => {
 		setLoading(true);
 		setMessage(undefined);
 		setResponse(undefined);

@@ -1,12 +1,12 @@
 interface StoreResponse {
-	id: number;
+	id: bigint;
 	name: string;
 	address: string;
 	description: string;
 	updated_at: Date;
 	created_at: Date;
-	created_user_id: number;
-	updated_user_id: number;
+	created_user_id: bigint;
+	updated_user_id: bigint;
 }
 
 export type GetStoresResponse = StoreResponse[] | null;
@@ -15,14 +15,14 @@ export type AddStoreResponse = StoreResponse | null;
 export type EditStoreResponse = StoreResponse | null;
 
 interface MenuResponse {
-	id: number;
+	id: bigint;
 	name: string;
-	store_id: number;
+	store_id: bigint;
 	description: string;
 	updated_at: Date;
 	created_at: Date;
-	created_user_id: number;
-	updated_user_id: number;
+	created_user_id: bigint;
+	updated_user_id: bigint;
 	allergens: Array<{
 		id: string;
 		name: string;
@@ -35,10 +35,10 @@ export type AddMenuResponse = MenuResponse | null;
 export type EditMenuResponse = MenuResponse | null;
 
 interface CommentResponse {
-	id: number;
+	id: bigint;
 	title: string;
 	content: string;
-	user_id: number;
+	user_id: bigint;
 	updated_at: Date;
 	created_at: Date;
 }
@@ -47,12 +47,12 @@ export type GetCommentsResponse = CommentResponse[] | null;
 export type AddCommentResponse = CommentResponse | null;
 
 interface MenuHistoryResponse {
-	id: number;
+	id: bigint;
 	name: string;
-	store_id: number;
+	store_id: bigint;
 	description: string;
 	created_at: Date;
-	updated_user_id: number;
+	updated_user_id: bigint;
 	allergens: Array<{
 		id: string;
 		name: string;
@@ -69,12 +69,12 @@ interface AllergenResponse {
 export type GetAllergensResponse = AllergenResponse[] | null;
 
 export type AddUserResponse = {
-	id: number;
+	id: bigint;
 	email: string;
 } | null;
 
 export type GetUserResponse = {
-	id: number;
+	id: bigint;
 	email: string | 403;
 	role: string | 403;
 } | null;

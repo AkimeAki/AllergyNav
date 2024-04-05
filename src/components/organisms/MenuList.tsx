@@ -21,13 +21,13 @@ interface Props {
 
 export default function ({ id }: Props): JSX.Element {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
-	const [openEditModalId, setOpenEditModalId] = useState<number>(NaN);
+	const [openEditModalId, setOpenEditModalId] = useState<bigint>();
 	const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
-	const [openHistoryModalId, setOpenHistoryModalId] = useState<number>(NaN);
+	const [openHistoryModalId, setOpenHistoryModalId] = useState<bigint>();
 	const [isOpenHistoryModal, setIsOpenHistoryModal] = useState<boolean>(false);
 	const searchParams = useSearchParams();
 	const { response: menus, loading, message, getMenus } = useGetMenus();
-	const [menuHoverId, setMenuHoverId] = useState<number>(NaN);
+	const [menuHoverId, setMenuHoverId] = useState<bigint>();
 	const params = {
 		allergens: searchParams.get("allergens") ?? "",
 		keywords: searchParams.get("keywords") ?? "",
@@ -121,7 +121,7 @@ export default function ({ id }: Props): JSX.Element {
 											setMenuHoverId(menu.id);
 										}}
 										onMouseLeave={() => {
-											setMenuHoverId(NaN);
+											setMenuHoverId(undefined);
 										}}
 									>
 										{(menuHoverId === menu.id ||
