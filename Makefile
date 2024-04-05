@@ -17,6 +17,10 @@ delete:
 attach:
 	docker compose exec -it app bash
 
+.PHONY: コンテナログ
+logs:
+	docker compose logs
+
 .PHONY: コンテナ（本番）起動
 init-prod:
 	@make delete

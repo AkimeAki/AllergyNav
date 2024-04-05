@@ -14,9 +14,8 @@
 		"format": "prettier --write './**/*.{json,js,cjs,mjs,ts,tsx,yaml,yml,html}' && prisma format",
 		"lint:fix": "npm run lint -- --fix && npm run format",
 		"tsnode": "ts-node -r tsconfig-paths/register --project ./tsconfig.node.json",
-		"migrate:dev": "prisma migrate dev --name init && prisma generate",
-		"migrate:reset": "prisma migrate reset && prisma generate",
-		"migrate:deploy": "prisma migrate deploy",
+		"prisma:push": "prisma db push && prisma generate",
+		"prisma:delete": "prisma migrate reset --skip-seed",
 		"seed": "prisma db seed"
 	},
 	"prisma": {

@@ -6,6 +6,8 @@ steps:
         "build",
         "--build-arg",
         "NEXTAUTH_SECRET=${_NEXTAUTH_SECRET}",
+        "--build-arg",
+        "DATABASE_URL=${_DATABASE_URL}",
         "-t",
         "${_IMAGE_NAME}:${COMMIT_SHA}",
         "-f",

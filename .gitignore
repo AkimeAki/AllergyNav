@@ -4,3 +4,4 @@
 .env*.local
 /prisma/db.sqlite
 /prisma/db.sqlite-journal
+.env

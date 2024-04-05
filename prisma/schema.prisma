@@ -6,12 +6,13 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "cockroachdb" // PROD
+  // provider = "postgresql" // DEV
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
+  id       BigInt  @id @default(autoincrement())
   email    String  @unique
   password String?
   role     String  @default("normal")
@@ -29,7 +30,7 @@ model User {
 }
 
 model UserIp {
-  user_id    Int
+  user_id    BigInt
   ip         String
   created_at DateTime @default(now())
 
@@ -40,12 +41,12 @@ model UserIp {
 }
 
 model Store {
-  id              Int      @id @default(autoincrement())
+  id              BigInt   @id @default(autoincrement())
   name            String
   address         String
   description     String
-  created_user_id Int
-  updated_user_id Int
+  created_user_id BigInt
+  updated_user_id BigInt
   deleted         Boolean  @default(false)
   created_at      DateTime @default(now())
   updated_at      DateTime @default(now()) @updatedAt
@@ -59,12 +60,12 @@ model Store {
 }
 
 model StoreHistory {
-  id              Int      @id @default(autoincrement())
+  id              BigInt   @id @default(autoincrement())
   name            String
-  store_id        Int
+  store_id        BigInt
   address         String
   description     String
-  updated_user_id Int
+  updated_user_id BigInt
   deleted         Boolean  @default(false)
   created_at      DateTime @default(now())
 
@@ -72,7 +73,7 @@ model StoreHistory {
 }
 
 model UserStoreGood {
-  user_id    Int      @id
+  user_id    BigInt   @id
   created_at DateTime @default(now())
 
   user User @relation(fields: [user_id], references: [id])
@@ -81,7 +82,7 @@ model UserStoreGood {
 }
 
 model UserStoreBad {
-  user_id    Int      @id
+  user_id    BigInt   @id
   created_at DateTime @default(now())
 
   user User @relation(fields: [user_id], references: [id])
@@ -90,15 +91,15 @@ model UserStoreBad {
 }
 
 model Menu {
-  id              Int      @id @default(autoincrement())
+  id              BigInt   @id @default(autoincrement())
   name            String
-  store_id        Int
+  store_id        BigInt
   description     String
   deleted         Boolean  @default(false)
   created_at      DateTime @default(now())
   updated_at      DateTime @default(now()) @updatedAt
-  created_user_id Int
-  updated_user_id Int
+  created_user_id BigInt
+  updated_user_id BigInt
 
   menu_allergens MenuAllergen[]
   store          Store          @relation(fields: [store_id], references: [id])
@@ -109,14 +110,14 @@ model Menu {
 }
 
 model MenuHistory {
-  id              Int      @id @default(autoincrement())
+  id              BigInt   @id @default(autoincrement())
   name            String
-  menu_id         Int
-  store_id        Int
+  menu_id         BigInt
+  store_id        BigInt
   description     String
   deleted         Boolean  @default(false)
   created_at      DateTime @default(now())
-  updated_user_id Int
+  updated_user_id BigInt
 
   menu_allergen_histories MenuAllergenHistory[]
 
@@ -124,10 +125,10 @@ model MenuHistory {
 }
 
 model StoreComment {
-  id         Int      @id @default(autoincrement())
+  id         BigInt   @id @default(autoincrement())
   title      String
-  store_id   Int
-  user_id    Int
+  store_id   BigInt
+  user_id    BigInt
   content    String
   deleted    Boolean  @default(false)
   created_at DateTime @default(now())
@@ -150,7 +151,7 @@ model Allergen {
 
 model MenuAllergen {
   allergen_id String
-  menu_id     Int
+  menu_id     BigInt
 
   allergen Allergen @relation(fields: [allergen_id], references: [id])
   menu     Menu     @relation(fields: [menu_id], references: [id])
@@ -160,10 +161,10 @@ model MenuAllergen {
 }
 
 model MenuAllergenHistory {
-  id              Int      @id @default(autoincrement())
-  menu_history_id Int
+  id              BigInt   @id @default(autoincrement())
+  menu_history_id BigInt
   allergen_id     String
-  menu_id         Int
+  menu_id         BigInt
   created_at      DateTime @default(now())
 
   menu_histories MenuHistory @relation(fields: [menu_history_id], references: [id])

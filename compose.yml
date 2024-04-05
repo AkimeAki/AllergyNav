@@ -1,8 +1,8 @@
 services:
   app:
     build:
-      context: ./docker/app/
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: ./docker/app/Dockerfile.dev
     tty: true
     stdin_open: true
     init: true
@@ -15,3 +15,34 @@ services:
     working_dir: /app/
     volumes:
       - ./:/app/
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    build:
+      context: .
+      dockerfile: ./docker/db/Dockerfile.dev
+    tty: true
+    stdin_open: true
+    environment:
+      TZ: Asia/Tokyo
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: allergy-navi
+    healthcheck:
+      test: psql -U root -d allergy-navi -c "select 1;" 2>&1 > /dev/null
+
+  dbtool:
+    build:
+      context: ./
+      dockerfile: ./docker/dbtool/Dockerfile.dev
+    tty: true
+    stdin_open: true
+    ports:
+      - 10112:8080
+    environment:
+      TZ: Asia/Tokyo
+    depends_on:
+      db:
+        condition: service_healthy
