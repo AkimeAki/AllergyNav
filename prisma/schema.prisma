@@ -12,7 +12,7 @@ datasource db {
 }
 
 model User {
-  id       BigInt  @id @default(autoincrement())
+  id       String  @id @default(cuid())
   email    String  @unique
   password String?
   role     String  @default("normal")
@@ -30,7 +30,7 @@ model User {
 }
 
 model UserIp {
-  user_id    BigInt
+  user_id    String
   ip         String
   created_at DateTime @default(now())
 
@@ -41,12 +41,12 @@ model UserIp {
 }
 
 model Store {
-  id              BigInt   @id @default(autoincrement())
+  id              String   @id @default(cuid())
   name            String
   address         String
   description     String
-  created_user_id BigInt
-  updated_user_id BigInt
+  created_user_id String
+  updated_user_id String
   deleted         Boolean  @default(false)
   created_at      DateTime @default(now())
   updated_at      DateTime @default(now()) @updatedAt
@@ -60,12 +60,12 @@ model Store {
 }
 
 model StoreHistory {
-  id              BigInt   @id @default(autoincrement())
+  id              String   @id @default(cuid())
   name            String
-  store_id        BigInt
+  store_id        String
   address         String
   description     String
-  updated_user_id BigInt
+  updated_user_id String
   deleted         Boolean  @default(false)
   created_at      DateTime @default(now())
 
@@ -73,7 +73,7 @@ model StoreHistory {
 }
 
 model UserStoreGood {
-  user_id    BigInt   @id
+  user_id    String   @id
   created_at DateTime @default(now())
 
   user User @relation(fields: [user_id], references: [id])
@@ -82,7 +82,7 @@ model UserStoreGood {
 }
 
 model UserStoreBad {
-  user_id    BigInt   @id
+  user_id    String   @id
   created_at DateTime @default(now())
 
   user User @relation(fields: [user_id], references: [id])
@@ -91,15 +91,15 @@ model UserStoreBad {
 }
 
 model Menu {
-  id              BigInt   @id @default(autoincrement())
+  id              String   @id @default(cuid())
   name            String
-  store_id        BigInt
+  store_id        String
   description     String
   deleted         Boolean  @default(false)
   created_at      DateTime @default(now())
   updated_at      DateTime @default(now()) @updatedAt
-  created_user_id BigInt
-  updated_user_id BigInt
+  created_user_id String
+  updated_user_id String
 
   menu_allergens MenuAllergen[]
   store          Store          @relation(fields: [store_id], references: [id])
@@ -110,14 +110,14 @@ model Menu {
 }
 
 model MenuHistory {
-  id              BigInt   @id @default(autoincrement())
+  id              String   @id @default(cuid())
   name            String
-  menu_id         BigInt
-  store_id        BigInt
+  menu_id         String
+  store_id        String
   description     String
   deleted         Boolean  @default(false)
   created_at      DateTime @default(now())
-  updated_user_id BigInt
+  updated_user_id String
 
   menu_allergen_histories MenuAllergenHistory[]
 
@@ -125,10 +125,10 @@ model MenuHistory {
 }
 
 model StoreComment {
-  id         BigInt   @id @default(autoincrement())
+  id         String   @id @default(cuid())
   title      String
-  store_id   BigInt
-  user_id    BigInt
+  store_id   String
+  user_id    String
   content    String
   deleted    Boolean  @default(false)
   created_at DateTime @default(now())
@@ -151,7 +151,7 @@ model Allergen {
 
 model MenuAllergen {
   allergen_id String
-  menu_id     BigInt
+  menu_id     String
 
   allergen Allergen @relation(fields: [allergen_id], references: [id])
   menu     Menu     @relation(fields: [menu_id], references: [id])
@@ -161,10 +161,10 @@ model MenuAllergen {
 }
 
 model MenuAllergenHistory {
-  id              BigInt   @id @default(autoincrement())
-  menu_history_id BigInt
+  id              String   @id @default(cuid())
+  menu_history_id String
   allergen_id     String
-  menu_id         BigInt
+  menu_id         String
   created_at      DateTime @default(now())
 
   menu_histories MenuHistory @relation(fields: [menu_history_id], references: [id])
