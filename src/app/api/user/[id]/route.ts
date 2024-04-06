@@ -41,6 +41,7 @@ export const GET = async (req: NextRequest, { params }: Data): Promise<Response>
 
 		status = 200;
 	} catch (e) {
+		console.error(e);
 		data = null;
 
 		if (e instanceof NotFoundError) {

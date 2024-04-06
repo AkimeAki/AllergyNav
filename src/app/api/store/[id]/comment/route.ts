@@ -55,6 +55,7 @@ export const GET = async (_: NextRequest, { params }: Data): Promise<Response> =
 
 		status = 200;
 	} catch (e) {
+		console.error(e);
 		data = null;
 
 		if (e instanceof NotFoundError) {
@@ -120,6 +121,7 @@ export const POST = async (req: NextRequest, { params }: { params: { id: string 
 
 		status = 200;
 	} catch (e) {
+		console.error(e);
 		data = null;
 
 		if (e instanceof NotFoundError) {

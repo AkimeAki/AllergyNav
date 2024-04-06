@@ -41,7 +41,8 @@ export const POST = async (req: Request): Promise<Response> => {
 
 		status = 200;
 	} catch (e) {
-		console.log(e);
+		console.error(e);
+
 		if (e instanceof NotFoundError) {
 			status = 404;
 		} else if (e instanceof ValidationError) {

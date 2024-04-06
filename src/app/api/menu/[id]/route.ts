@@ -73,7 +73,9 @@ export const GET = async (_: Request, { params }: Data): Promise<Response> => {
 
 		status = 200;
 	} catch (e) {
+		data = null;
 		console.error(e);
+
 		if (e instanceof NotFoundError) {
 			status = 404;
 		} else if (e instanceof ValidationError) {
@@ -203,7 +205,9 @@ export const PUT = async (req: NextRequest, { params }: Data): Promise<Response>
 
 		status = 200;
 	} catch (e) {
+		data = null;
 		console.error(e);
+
 		if (e instanceof NotFoundError) {
 			status = 404;
 		} else if (e instanceof ValidationError) {
