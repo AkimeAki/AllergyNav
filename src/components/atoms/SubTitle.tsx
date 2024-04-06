@@ -16,6 +16,12 @@ export default function ({ children }: Props): JSX.Element {
 				padding: 10px 20px;
 				color: white;
 				border-radius: 20px;
+
+				* {
+					font-weight: inherit;
+					font-size: inherit;
+					color: inherit;
+				}
 			`}
 		>
 			{children}

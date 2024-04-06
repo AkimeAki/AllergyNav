@@ -7,13 +7,15 @@ import Button from "@/components/atoms/Button";
 import { useSearchParams } from "next/navigation";
 import useGetAllergens from "@/hooks/useGetAllergens";
 import GoogleIcon from "@/components/atoms/GoogleIcon";
-import Image from "next/image";
+import AllergenItem from "@/components/atoms/AllergenItem";
+import AllergenSelectModal from "@/components/molecules/AllergenSelectModal";
 
 export default function (): JSX.Element {
 	const [selectAllergens, setSelectAllergens] = useState<string[]>([]);
 	const [keywords, setKeywords] = useState<string>("");
+	const [isAllergenSelectModalOpen, setIsAllergenSelectModalOpen] = useState<boolean>(false);
 	const searchParams = useSearchParams();
-	const { response: allergens, getAllergens } = useGetAllergens();
+	const { response: allergens, getAllergens, loading: getAllergensLoading } = useGetAllergens();
 
 	const params = {
 		allergens: searchParams.get("allergens"),
@@ -85,7 +87,9 @@ export default function (): JSX.Element {
 						}
 					`}
 				>
-					<SubTitle>アレルゲン選択</SubTitle>
+					<SubTitle>
+						<u>含まれない</u>アレルゲン
+					</SubTitle>
 				</div>
 				<div>
 					<div
@@ -102,90 +106,35 @@ export default function (): JSX.Element {
 							}
 						`}
 					>
-						{allergens.map((item) => {
-							const selected = selectAllergens.some((selectAllergen) => selectAllergen === item.id);
+						<AllergenSelectModal
+							selectAllergens={selectAllergens}
+							setSelectAllergens={setSelectAllergens}
+							isOpen={isAllergenSelectModalOpen}
+							setIsOpen={setIsAllergenSelectModalOpen}
+							disabled={getAllergensLoading}
+						/>
+						<div
+							className={css`
+								display: flex;
+								flex-wrap: wrap;
+							`}
+						>
+							{selectAllergens.map((item) => {
+								let name = "";
+								allergens.forEach((allergen) => {
+									if (item === allergen.id) {
+										name = allergen.name;
+									}
+								});
 
-							return (
-								<div
-									key={item.id}
-									onClick={() => {
-										setSelectAllergens((selectAllergens) => {
-											if (selected) {
-												return [...selectAllergens].filter((selectAllergen) => {
-													return selectAllergen !== item.id;
-												});
-											}
-
-											return [...selectAllergens, item.id];
-										});
-									}}
-									className={css`
-										cursor: pointer;
-										user-select: none;
-									`}
-								>
-									<div
-										className={css`
-											position: relative;
-											display: flex;
-											flex-direction: column;
-											justify-content: center;
-											align-items: center;
-										`}
-									>
-										<Image
-											className={[
-												css`
-													width: 40px;
-													height: auto;
-													aspect-ratio: 1/1;
-													object-fit: contain;
-													vertical-align: bottom;
-													transition-duration: 200ms;
-													transition-property: filter;
-													user-select: none;
-													pointer-events: none;
-
-													@media (max-width: 880px) {
-														width: 30px;
-													}
-												`,
-												selected
-													? css`
-															filter: opacity(0.4);
-														`
-													: css`
-															filter: opacity(1);
-														`
-											].join(" ")}
-											width={100}
-											height={100}
-											src={`/icons/${item.id}.png`}
-											alt={`${item.name}のアイコン`}
-										/>
-										{selected && (
-											<div
-												className={css`
-													user-select: none;
-													pointer-events: none;
-												`}
-											>
-												<div
-													className={css`
-														position: absolute;
-														top: 50%;
-														left: 50%;
-														transform: translate(-50%, -50%);
-													`}
-												>
-													<GoogleIcon name="skull" size={40} color="var(--color-red)" />
-												</div>
-											</div>
-										)}
-									</div>
-								</div>
-							);
-						})}
+								return <AllergenItem key={item} image={`/icons/${item}.png`} text={name} />;
+							})}
+						</div>
+						<div>
+							{selectAllergens.length !== 0 && (
+								<p>が含まれていないメニューが食べれるお店を検索します。</p>
+							)}
+						</div>
 					</div>
 				</div>
 				<div
@@ -224,7 +173,7 @@ export default function (): JSX.Element {
 						}
 					`}
 				>
-					<SubTitle>キーワードを入力してお店を検索</SubTitle>
+					<SubTitle>キーワード検索</SubTitle>
 				</div>
 				<div
 					className={css`

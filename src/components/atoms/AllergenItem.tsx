@@ -10,7 +10,7 @@ interface Props {
 	size?: number;
 }
 
-export default function ({ image, text, selected = false, icon, nameHidden = false, size = 50 }: Props): JSX.Element {
+export default function ({ image, text, selected = false, icon, nameHidden = false, size = 35 }: Props): JSX.Element {
 	return (
 		<div
 			style={{ width: `${size + 10}px` }}

@@ -13,15 +13,11 @@ import { useGetStores } from "@/hooks/useGetStores";
 import { SessionProvider, useSession } from "next-auth/react";
 import Modal from "@/components/molecules/Modal";
 import SubTitle from "@/components/atoms/SubTitle";
-import useGetAllergens from "@/hooks/useGetAllergens";
-import AllergenItem from "@/components/atoms/AllergenItem";
 
-const StoreList = (): JSX.Element => {
+const StoreGroupList = (): JSX.Element => {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
 	const searchParams = useSearchParams();
-	const [selectAllergens, setSelectAllergens] = useState<string[]>([]);
 	const { response: stores, loading, message, getStore } = useGetStores();
-	const { response: allergens, getAllergens, loading: getAllergensLoading } = useGetAllergens();
 	const { data: session } = useSession();
 	const params = {
 		allergens: searchParams.get("allergens") ?? "",
@@ -31,22 +27,6 @@ const StoreList = (): JSX.Element => {
 	useEffect(() => {
 		void getStore(params.allergens, params.keywords);
 	}, [searchParams]);
-
-	useEffect(() => {
-		void getAllergens();
-	}, []);
-
-	useEffect(() => {
-		if (params.allergens !== null) {
-			const queryAllergenList = params.allergens.split(",");
-			const filterdAllergenList = queryAllergenList.filter((a) => {
-				return allergens.some((b) => a === b.id);
-			});
-			setSelectAllergens(filterdAllergenList);
-		} else {
-			setSelectAllergens([]);
-		}
-	}, [searchParams, allergens]);
 
 	return (
 		<>
@@ -108,30 +88,6 @@ const StoreList = (): JSX.Element => {
 					{message !== undefined && message.type === "error" && <ErrorMessage>{message.text}</ErrorMessage>}
 					{!loading && (
 						<>
-							{!getAllergensLoading && selectAllergens.length !== 0 && (
-								<>
-									<div
-										className={css`
-											display: flex;
-											gap: 5px;
-										`}
-									>
-										{selectAllergens.map((item) => {
-											let name = "";
-											allergens.forEach((allergen) => {
-												if (item === allergen.id) {
-													name = allergen.name;
-												}
-											});
-
-											return <AllergenItem key={item} image={`/icons/${item}.png`} text={name} />;
-										})}
-									</div>
-									<div>
-										<p>が含まれていないメニューが食べれるお店を表示しています。</p>
-									</div>
-								</>
-							)}
 							{stores.length === 0 && (
 								<p
 									className={css`
@@ -263,7 +219,7 @@ const StoreList = (): JSX.Element => {
 export default function (): JSX.Element {
 	return (
 		<SessionProvider>
-			<StoreList />
+			<StoreGroupList />
 		</SessionProvider>
 	);
 }
