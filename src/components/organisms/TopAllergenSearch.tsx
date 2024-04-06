@@ -38,7 +38,7 @@ export default function (): JSX.Element {
 			>
 				<input
 					type="text"
-					placeholder="キーワードを入力して店を検索"
+					placeholder="キーワードを入力してお店を検索"
 					value={keywords}
 					onChange={(e) => {
 						setKeywords(e.target.value);
