@@ -69,12 +69,12 @@ interface AllergenResponse {
 export type GetAllergensResponse = AllergenResponse[] | null;
 
 export type AddUserResponse = {
-	id: bigint;
+	id: string;
 	email: string;
 } | null;
 
 export type GetUserResponse = {
-	id: bigint;
+	id: string;
 	email: string | 403;
 	role: string | 403;
 } | null;

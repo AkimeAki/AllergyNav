@@ -19,7 +19,7 @@ import useGetUserData from "@/hooks/useGetUserData";
 import { SessionProvider } from "next-auth/react";
 
 interface Props {
-	id: number;
+	id: bigint;
 }
 
 const StoreComment = ({ id }: Props): JSX.Element => {

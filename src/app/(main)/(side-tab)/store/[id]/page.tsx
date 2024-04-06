@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { safeNumber } from "@/libs/safe-type";
+import { safeBigInt } from "@/libs/safe-type";
 import { css } from "@kuma-ui/core";
 import Link from "next/link";
 import GoogleMap from "@/components/organisms/GoogleMap";
@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default async function ({ params }: Props): Promise<JSX.Element> {
-	const id = safeNumber(params.id);
+	const id = safeBigInt(params.id);
 
 	if (id === null) {
 		notFound();

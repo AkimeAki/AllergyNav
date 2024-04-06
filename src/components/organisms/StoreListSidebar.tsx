@@ -224,7 +224,7 @@ export default function (): JSX.Element {
 						}
 					`}
 				>
-					<SubTitle>キーワード検索</SubTitle>
+					<SubTitle>キーワードを入力して店を検索</SubTitle>
 				</div>
 				<div
 					className={css`
@@ -239,7 +239,7 @@ export default function (): JSX.Element {
 				>
 					<input
 						type="text"
-						placeholder="キーワードを入力"
+						placeholder="キーワードを入力して店を検索"
 						value={keywords}
 						onChange={(e) => {
 							setKeywords(e.target.value);

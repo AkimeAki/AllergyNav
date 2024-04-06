@@ -1,17 +1,17 @@
 import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
-import { safeNumber, safeString } from "@/libs/safe-type";
+import { safeBigInt, safeString } from "@/libs/safe-type";
 import { prisma } from "@/libs/prisma";
 
 interface ReturnType {
-	userId: number | null;
+	userId: bigint | null;
 	email: string | null;
 	role: string | null;
 }
 
 export const getUserData = async (): Promise<ReturnType> => {
 	const session = await getServerSession(nextAuthOptions);
-	const userId = safeNumber(session?.user?.id);
+	const userId = safeBigInt(session?.user?.id);
 	let role = null;
 	let email = null;
 

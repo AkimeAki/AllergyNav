@@ -16,7 +16,7 @@ import GoogleIcon from "@/components/atoms/GoogleIcon";
 import MenuHistoryModal from "@/components/organisms/MenuHistoryModal";
 
 interface Props {
-	id: number;
+	id: bigint;
 }
 
 export default function ({ id }: Props): JSX.Element {

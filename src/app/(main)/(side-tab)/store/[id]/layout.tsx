@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { safeNumber } from "@/libs/safe-type";
+import { safeBigInt } from "@/libs/safe-type";
 import type { ReactNode } from "react";
 import { css } from "@kuma-ui/core";
 import type { Metadata } from "next";
@@ -18,7 +18,7 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 	let title = "";
 
 	try {
-		const id = safeNumber(params.id);
+		const id = safeBigInt(params.id);
 		if (id === null) {
 			throw new Error();
 		}
@@ -43,7 +43,7 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 };
 
 export default async function ({ children, params }: Props): Promise<JSX.Element> {
-	const id = safeNumber(params.id);
+	const id = safeBigInt(params.id);
 
 	if (id === null) {
 		notFound();

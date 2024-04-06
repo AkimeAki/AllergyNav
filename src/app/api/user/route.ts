@@ -35,7 +35,7 @@ export const POST = async (req: Request): Promise<Response> => {
 		});
 
 		data = {
-			id: result.id,
+			id: result.id.toString(),
 			email: result.email
 		};
 

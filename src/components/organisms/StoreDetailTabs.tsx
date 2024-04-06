@@ -5,7 +5,7 @@ import SideTabWrapper from "@/components/molecules/SideTabWrapper";
 import { usePathname } from "next/navigation";
 
 interface Props {
-	storeId: number;
+	storeId: bigint;
 }
 
 export default function ({ storeId }: Props): JSX.Element {

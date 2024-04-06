@@ -1,5 +1,5 @@
 import { ForbiddenError, NotFoundError, ValidationError } from "@/definition";
-import { safeNumber } from "@/libs/safe-type";
+import { safeBigInt } from "@/libs/safe-type";
 import type { GetUserResponse } from "@/type";
 import { prisma } from "@/libs/prisma";
 import type { NextRequest } from "next/server";
@@ -18,7 +18,7 @@ export const GET = async (req: NextRequest, { params }: Data): Promise<Response>
 	let data: GetUserResponse = null;
 
 	try {
-		const userId = safeNumber(params.id);
+		const userId = safeBigInt(params.id);
 
 		if (userId === null) {
 			throw new ValidationError();
@@ -27,14 +27,14 @@ export const GET = async (req: NextRequest, { params }: Data): Promise<Response>
 		const session = await getServerSession(nextAuthOptions);
 		const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-		const authenticated = session !== null && token !== null && userId === safeNumber(session.user?.id);
+		const authenticated = session !== null && token !== null && userId === safeBigInt(session.user?.id);
 
 		const result = await prisma.user.findUniqueOrThrow({
 			where: { id: userId }
 		});
 
 		data = {
-			id: result.id,
+			id: result.id.toString(),
 			email: authenticated ? result.email : 403,
 			role: authenticated ? result.role : 403
 		};

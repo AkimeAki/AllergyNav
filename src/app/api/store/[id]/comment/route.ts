@@ -1,6 +1,6 @@
 import { ForbiddenError, NotFoundError, ValidationError } from "@/definition";
 import type { AddCommentResponse, GetCommentsResponse } from "@/type";
-import { safeNumber, safeString } from "@/libs/safe-type";
+import { safeBigInt, safeString } from "@/libs/safe-type";
 import type { NextRequest } from "next/server";
 import { isEmptyString } from "@/libs/check-string";
 import { prisma } from "@/libs/prisma";
@@ -19,7 +19,7 @@ export const GET = async (_: NextRequest, { params }: Data): Promise<Response> =
 	let status = 500;
 
 	try {
-		const storeId = safeNumber(params.id);
+		const storeId = safeBigInt(params.id);
 
 		if (storeId === null) {
 			throw new ValidationError();
@@ -85,8 +85,8 @@ export const POST = async (req: NextRequest, { params }: { params: { id: string 
 
 		const title = safeString(body.title);
 		const content = safeString(body.content);
-		const userId = safeNumber(session?.user?.id);
-		const storeId = safeNumber(params.id);
+		const userId = safeBigInt(session?.user?.id);
+		const storeId = safeBigInt(params.id);
 
 		if (title === null || content === null || storeId === null) {
 			throw new ValidationError();

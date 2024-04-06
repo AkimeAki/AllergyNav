@@ -17,3 +17,15 @@ export const safeString = (value: any): string | null => {
 
 	return String(value ?? "");
 };
+
+export const safeBigInt = (value: any): bigint | null => {
+	if (value === null || value === undefined) {
+		return null;
+	}
+
+	if (typeof value === "number" && isNaN(value)) {
+		return null;
+	}
+
+	return BigInt(value ?? "");
+};

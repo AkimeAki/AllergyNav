@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { safeNumber } from "@/libs/safe-type";
+import { safeBigInt } from "@/libs/safe-type";
 import type { ReactNode } from "react";
 import { css } from "@kuma-ui/core";
 import MainTitle from "@/components/atoms/MainTitle";
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 export default async function ({ children }: Props): Promise<JSX.Element> {
 	const session = await getServerSession(nextAuthOptions);
-	const id = safeNumber(session?.user?.id);
+	const id = safeBigInt(session?.user?.id);
 
 	if (id === null) {
 		redirect("/signin?redirect=/settings");

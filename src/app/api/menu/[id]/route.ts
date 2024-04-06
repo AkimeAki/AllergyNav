@@ -1,6 +1,6 @@
 import { ForbiddenError, NotFoundError, ValidationError } from "@/definition";
 import type { EditMenuResponse, GetMenuResponse } from "@/type";
-import { safeNumber, safeString } from "@/libs/safe-type";
+import { safeBigInt, safeString } from "@/libs/safe-type";
 import { isEmptyString } from "@/libs/check-string";
 import { prisma } from "@/libs/prisma";
 import { getServerSession } from "next-auth";
@@ -19,7 +19,7 @@ export const GET = async (_: Request, { params }: Data): Promise<Response> => {
 	let data: GetMenuResponse = null;
 
 	try {
-		const menuId = safeNumber(params.id);
+		const menuId = safeBigInt(params.id);
 
 		if (menuId === null) {
 			throw new ValidationError();
@@ -103,8 +103,8 @@ export const PUT = async (req: NextRequest, { params }: Data): Promise<Response>
 		const name = safeString(body.name);
 		const allergens = safeString(body.allergens);
 		const description = safeString(body.description);
-		const menuId = safeNumber(params.id);
-		const userId = safeNumber(session?.user?.id);
+		const menuId = safeBigInt(params.id);
+		const userId = safeBigInt(session?.user?.id);
 
 		if (name === null || allergens === null || menuId === null || description === null) {
 			throw new ValidationError();
