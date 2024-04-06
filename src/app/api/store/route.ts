@@ -1,6 +1,6 @@
 import { ForbiddenError, NotFoundError, ValidationError } from "@/definition";
 import type { AddStoreResponse, GetStoresResponse } from "@/type";
-import { safeBigInt, safeString } from "@/libs/safe-type";
+import { safeString } from "@/libs/safe-type";
 import type { NextRequest } from "next/server";
 import { isEmptyString } from "@/libs/check-string";
 import { prisma } from "@/libs/prisma";
@@ -78,7 +78,7 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 		const name = safeString(body.name);
 		const address = safeString(body.address);
 		const description = safeString(body.description);
-		const userId = safeBigInt(session?.user?.id);
+		const userId = safeString(session?.user?.id);
 
 		if (name === null || address === null || description === null) {
 			throw new ValidationError();

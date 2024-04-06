@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { safeBigInt } from "@/libs/safe-type";
+import { safeString } from "@/libs/safe-type";
 
 interface Props {
 	params: {
@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default async function ({ params }: Props): Promise<JSX.Element> {
-	const id = safeBigInt(params.id);
+	const id = safeString(params.id);
 
 	if (id === null) {
 		notFound();

@@ -6,7 +6,7 @@ interface ReturnType {
 	response: NonNullable<AddMenuResponse> | undefined;
 	loading: boolean;
 	message: Message | undefined;
-	addMenu: (storeId: bigint, name: string, description: string, allergens: string[]) => Promise<void>;
+	addMenu: (storeId: string, name: string, description: string, allergens: string[]) => Promise<void>;
 }
 
 export const useAddMenu = (): ReturnType => {
@@ -14,7 +14,7 @@ export const useAddMenu = (): ReturnType => {
 	const [message, setMessage] = useState<Message | undefined>(undefined);
 	const [response, setResponse] = useState<NonNullable<AddMenuResponse> | undefined>(undefined);
 
-	const addMenu = async (storeId: bigint, name: string, description: string, allergens: string[]): Promise<void> => {
+	const addMenu = async (storeId: string, name: string, description: string, allergens: string[]): Promise<void> => {
 		setLoading(true);
 		setMessage(undefined);
 		setResponse(undefined);

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { safeBigInt } from "@/libs/safe-type";
+import { safeString } from "@/libs/safe-type";
 import type { ReactNode } from "react";
 import { css } from "@kuma-ui/core";
 import type { Metadata } from "next";
@@ -19,7 +19,7 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 	let title = "";
 
 	try {
-		const id = safeBigInt(params.id);
+		const id = safeString(params.id);
 		if (id === null) {
 			throw new Error();
 		}
@@ -44,9 +44,9 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 };
 
 export default async function ({ children, params }: Props): Promise<JSX.Element> {
-	const pageId = safeBigInt(params.id);
+	const pageId = safeString(params.id);
 	const session = await getServerSession(nextAuthOptions);
-	const userId = safeBigInt(session?.user?.id);
+	const userId = safeString(session?.user?.id);
 
 	if (pageId === null) {
 		notFound();

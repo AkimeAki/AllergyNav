@@ -20,7 +20,7 @@ import { isEmptyString } from "@/libs/check-string";
 import useGetAllergens from "@/hooks/useGetAllergens";
 
 interface Props {
-	storeId: bigint;
+	storeId: string;
 	isOpen: boolean;
 	setIsOpen: Dispatch<SetStateAction<boolean>>;
 	reload: () => void;

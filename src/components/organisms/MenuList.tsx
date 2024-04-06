@@ -16,18 +16,18 @@ import GoogleIcon from "@/components/atoms/GoogleIcon";
 import MenuHistoryModal from "@/components/organisms/MenuHistoryModal";
 
 interface Props {
-	id: bigint;
+	id: string;
 }
 
 export default function ({ id }: Props): JSX.Element {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
-	const [openEditModalId, setOpenEditModalId] = useState<bigint>();
+	const [openEditModalId, setOpenEditModalId] = useState<string>();
 	const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
-	const [openHistoryModalId, setOpenHistoryModalId] = useState<bigint>();
+	const [openHistoryModalId, setOpenHistoryModalId] = useState<string>();
 	const [isOpenHistoryModal, setIsOpenHistoryModal] = useState<boolean>(false);
 	const searchParams = useSearchParams();
 	const { response: menus, loading, message, getMenus } = useGetMenus();
-	const [menuHoverId, setMenuHoverId] = useState<bigint>();
+	const [menuHoverId, setMenuHoverId] = useState<string>();
 	const params = {
 		allergens: searchParams.get("allergens") ?? "",
 		keywords: searchParams.get("keywords") ?? "",

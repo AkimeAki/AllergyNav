@@ -5,7 +5,7 @@ interface ReturnType {
 	response: NonNullable<GetCommentsResponse>;
 	loading: boolean;
 	message: Message | undefined;
-	getComments: (storeId: bigint) => Promise<void>;
+	getComments: (storeId: string) => Promise<void>;
 }
 
 export default function (): ReturnType {
@@ -13,7 +13,7 @@ export default function (): ReturnType {
 	const [message, setMessage] = useState<Message | undefined>(undefined);
 	const [response, setResponse] = useState<NonNullable<GetCommentsResponse>>([]);
 
-	const getComments = async (storeId: bigint): Promise<void> => {
+	const getComments = async (storeId: string): Promise<void> => {
 		setLoading(true);
 		setMessage(undefined);
 		setResponse([]);

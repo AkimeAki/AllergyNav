@@ -1,21 +1,21 @@
-import { safeBigInt, safeString } from "@/libs/safe-type";
+import { safeString } from "@/libs/safe-type";
 import type { GetUserResponse } from "@/type";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 interface ReturnType {
-	userId: bigint | null;
+	userId: string | null;
 	userRole: string | null;
 	status: "loading" | "authenticated" | "unauthenticated";
 }
 
 export default function (): ReturnType {
 	const { data: session, status: sessionStatus } = useSession();
-	const [userId, setUserId] = useState<bigint | null>(null);
+	const [userId, setUserId] = useState<string | null>(null);
 	const [userRole, setUserRole] = useState<string | null>(null);
 	const [status, setStatus] = useState<"loading" | "authenticated" | "unauthenticated">("loading");
 
-	const getUser = async (id: bigint): Promise<void> => {
+	const getUser = async (id: string): Promise<void> => {
 		try {
 			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${id}`, {
 				method: "GET",
@@ -41,7 +41,7 @@ export default function (): ReturnType {
 
 	useEffect(() => {
 		console.log(session);
-		const safeId = safeBigInt(session?.user?.id);
+		const safeId = safeString(session?.user?.id);
 
 		if (safeId !== null && sessionStatus === "authenticated") {
 			setUserId(safeId);
@@ -51,7 +51,7 @@ export default function (): ReturnType {
 	}, [session, sessionStatus]);
 
 	useEffect(() => {
-		const safeId = safeBigInt(session?.user?.id);
+		const safeId = safeString(session?.user?.id);
 		if (safeId !== null && sessionStatus === "authenticated") {
 			void getUser(safeId);
 		}

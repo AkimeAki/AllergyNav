@@ -5,7 +5,7 @@ interface ReturnType {
 	response: NonNullable<GetMenuHistoryResponse>;
 	loading: boolean;
 	message: Message | undefined;
-	getMenuHistories: (menuId: bigint) => Promise<void>;
+	getMenuHistories: (menuId: string) => Promise<void>;
 }
 
 export default function (): ReturnType {
@@ -13,7 +13,7 @@ export default function (): ReturnType {
 	const [message, setMessage] = useState<Message | undefined>(undefined);
 	const [response, setResponse] = useState<NonNullable<GetMenuHistoryResponse>>([]);
 
-	const getMenuHistories = async (menuId: bigint): Promise<void> => {
+	const getMenuHistories = async (menuId: string): Promise<void> => {
 		setLoading(true);
 		setMessage(undefined);
 		setResponse([]);

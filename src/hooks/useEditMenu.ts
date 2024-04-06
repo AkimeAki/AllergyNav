@@ -6,7 +6,7 @@ interface ReturnType {
 	response: NonNullable<EditMenuResponse> | undefined;
 	loading: boolean;
 	message: Message | undefined;
-	editMenu: (menuId: bigint, name: string, description: string, allergens: string[]) => Promise<void>;
+	editMenu: (menuId: string, name: string, description: string, allergens: string[]) => Promise<void>;
 }
 
 export default function (): ReturnType {
@@ -14,7 +14,7 @@ export default function (): ReturnType {
 	const [message, setMessage] = useState<Message | undefined>(undefined);
 	const [response, setResponse] = useState<NonNullable<EditMenuResponse> | undefined>(undefined);
 
-	const editMenu = async (menuId: bigint, name: string, description: string, allergens: string[]): Promise<void> => {
+	const editMenu = async (menuId: string, name: string, description: string, allergens: string[]): Promise<void> => {
 		setLoading(true);
 		setMessage(undefined);
 		setResponse(undefined);

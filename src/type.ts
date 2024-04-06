@@ -1,12 +1,12 @@
 interface StoreResponse {
-	id: bigint;
+	id: string;
 	name: string;
 	address: string;
 	description: string;
 	updated_at: Date;
 	created_at: Date;
-	created_user_id: bigint;
-	updated_user_id: bigint;
+	created_user_id: string;
+	updated_user_id: string;
 }
 
 export type GetStoresResponse = StoreResponse[] | null;
@@ -15,14 +15,14 @@ export type AddStoreResponse = StoreResponse | null;
 export type EditStoreResponse = StoreResponse | null;
 
 interface MenuResponse {
-	id: bigint;
+	id: string;
 	name: string;
-	store_id: bigint;
+	store_id: string;
 	description: string;
 	updated_at: Date;
 	created_at: Date;
-	created_user_id: bigint;
-	updated_user_id: bigint;
+	created_user_id: string;
+	updated_user_id: string;
 	allergens: Array<{
 		id: string;
 		name: string;
@@ -35,10 +35,10 @@ export type AddMenuResponse = MenuResponse | null;
 export type EditMenuResponse = MenuResponse | null;
 
 interface CommentResponse {
-	id: bigint;
+	id: string;
 	title: string;
 	content: string;
-	user_id: bigint;
+	user_id: string;
 	updated_at: Date;
 	created_at: Date;
 }
@@ -47,12 +47,12 @@ export type GetCommentsResponse = CommentResponse[] | null;
 export type AddCommentResponse = CommentResponse | null;
 
 interface MenuHistoryResponse {
-	id: bigint;
+	id: string;
 	name: string;
-	store_id: bigint;
+	store_id: string;
 	description: string;
 	created_at: Date;
-	updated_user_id: bigint;
+	updated_user_id: string;
 	allergens: Array<{
 		id: string;
 		name: string;

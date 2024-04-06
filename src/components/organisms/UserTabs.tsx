@@ -6,8 +6,8 @@ import SideTabLinkLogout from "@/components/atoms/SideTabLinkLogout";
 import { usePathname } from "next/navigation";
 
 interface Props {
-	pageId: bigint;
-	userId: bigint | null;
+	pageId: string;
+	userId: string | null;
 }
 
 export default function ({ pageId, userId }: Props): JSX.Element {

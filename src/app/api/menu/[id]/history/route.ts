@@ -1,5 +1,5 @@
 import { NotFoundError, ValidationError } from "@/definition";
-import { safeBigInt } from "@/libs/safe-type";
+import { safeString } from "@/libs/safe-type";
 import type { GetMenuHistoryResponse } from "@/type";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/libs/prisma";
@@ -15,7 +15,7 @@ export const GET = async (req: NextRequest, { params }: Data): Promise<Response>
 	let data: GetMenuHistoryResponse = null;
 
 	try {
-		const menuId = safeBigInt(params.id);
+		const menuId = safeString(params.id);
 
 		if (menuId === null) {
 			throw new ValidationError();

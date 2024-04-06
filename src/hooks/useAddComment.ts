@@ -6,7 +6,7 @@ interface ReturnType {
 	response: NonNullable<AddCommentResponse> | undefined;
 	loading: boolean;
 	message: Message | undefined;
-	addComment: (storeId: bigint, title: string, content: string) => Promise<void>;
+	addComment: (storeId: string, title: string, content: string) => Promise<void>;
 }
 
 export default function (): ReturnType {
@@ -14,7 +14,7 @@ export default function (): ReturnType {
 	const [message, setMessage] = useState<Message | undefined>(undefined);
 	const [response, setResponse] = useState<NonNullable<AddCommentResponse> | undefined>(undefined);
 
-	const addComment = async (storeId: bigint, title: string, content: string): Promise<void> => {
+	const addComment = async (storeId: string, title: string, content: string): Promise<void> => {
 		setLoading(true);
 		setMessage(undefined);
 		setResponse(undefined);

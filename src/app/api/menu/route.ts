@@ -1,6 +1,6 @@
 import { ForbiddenError, NotFoundError, ValidationError } from "@/definition";
 import type { AddMenuResponse, GetMenusResponse } from "@/type";
-import { safeBigInt, safeString } from "@/libs/safe-type";
+import { safeString } from "@/libs/safe-type";
 import { isEmptyString } from "@/libs/check-string";
 import { prisma } from "@/libs/prisma";
 import type { NextRequest } from "next/server";
@@ -14,7 +14,7 @@ export const GET = async (req: NextRequest): Promise<Response> => {
 
 	try {
 		const { searchParams } = new URL(req.url);
-		const storeId = safeBigInt(searchParams.get("storeId"));
+		const storeId = safeString(searchParams.get("storeId"));
 
 		const result = await prisma.menu.findMany({
 			select: {
@@ -101,9 +101,9 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 
 		const name = safeString(body.name);
 		const allergens = safeString(body.allergens);
-		const storeId = safeBigInt(body.storeId);
+		const storeId = safeString(body.storeId);
 		const description = safeString(body.description);
-		const userId = safeBigInt(session?.user?.id);
+		const userId = safeString(session?.user?.id);
 
 		if (name === null || description === null || allergens === null) {
 			throw new ValidationError();

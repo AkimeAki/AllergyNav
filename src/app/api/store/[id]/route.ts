@@ -1,5 +1,5 @@
 import { ForbiddenError, NotFoundError, ValidationError } from "@/definition";
-import { safeBigInt, safeString } from "@/libs/safe-type";
+import { safeString } from "@/libs/safe-type";
 import { isEmptyString } from "@/libs/check-string";
 import { prisma } from "@/libs/prisma";
 import type { EditStoreResponse, GetStoreResponse } from "@/type";
@@ -19,7 +19,7 @@ export const GET = async (req: NextRequest, { params }: Data): Promise<Response>
 	let data: GetStoreResponse = null;
 
 	try {
-		const storeId = safeBigInt(params.id);
+		const storeId = safeString(params.id);
 
 		if (storeId === null) {
 			throw new ValidationError();
@@ -74,8 +74,8 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
 		const name = safeString(body.name);
 		const address = safeString(body.address);
 		const description = safeString(body.description);
-		const storeId = safeBigInt(params.id);
-		const userId = safeBigInt(session?.user?.id);
+		const storeId = safeString(params.id);
+		const userId = safeString(session?.user?.id);
 
 		if (name === null || address === null || description === null || storeId === null) {
 			throw new ValidationError();
