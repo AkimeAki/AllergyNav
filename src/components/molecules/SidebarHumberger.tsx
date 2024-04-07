@@ -46,7 +46,7 @@ export default function ({ isSidebarOpen, setIsSidebarOpen }: Props): JSX.Elemen
 							backdrop-filter: blur(2px);
 							background-color: transparent;
 							cursor: pointer;
-							box-shadow: 0 0 1px 2px #d3d3d3;
+							box-shadow: 0 0 1px 2.5px var(--color-orange);
 							pointer-events: auto;
 							user-select: auto;
 
@@ -61,7 +61,7 @@ export default function ({ isSidebarOpen, setIsSidebarOpen }: Props): JSX.Elemen
 								height: calc(100% + 40px);
 								user-select: none;
 								pointer-events: none;
-								background-color: white;
+								background-color: var(--color-orange-thin);
 								transition-duration: 200ms;
 								transition-property: opacity;
 							}
