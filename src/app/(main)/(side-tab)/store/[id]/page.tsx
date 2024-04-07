@@ -84,7 +84,10 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 						<tr>
 							<th>住所</th>
 							<td>
-								<Link href={`https://www.google.com/maps/place/${storeDetail.address}`} target="_blank">
+								<Link
+									href={`https://www.google.com/maps/search/${storeDetail.address}`}
+									target="_blank"
+								>
 									{storeDetail.address}
 								</Link>
 							</td>
