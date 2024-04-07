@@ -133,7 +133,7 @@ const Sidebar = (): JSX.Element => {
 							<SidebarLink href="/store" active={pathname === "/store"}>
 								お店一覧
 							</SidebarLink>
-							<SidebarLink href="/group" active={pathname === "/store/group"}>
+							<SidebarLink href="/store/group" active={pathname === "/store/group"}>
 								グループ一覧（未実装）
 							</SidebarLink>
 							{status === "loading" && <SidebarLinkLoading />}
