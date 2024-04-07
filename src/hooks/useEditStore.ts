@@ -1,5 +1,7 @@
 import { ValidationError } from "@/definition";
+import { includePostCode } from "@/libs/check-address";
 import type { AddStoreResponse, Message } from "@/type";
+import { normalize } from "@geolonia/normalize-japanese-addresses";
 import { useState } from "react";
 
 interface ReturnType {
@@ -20,13 +22,38 @@ export const useEditStore = (): ReturnType => {
 		setResponse(undefined);
 
 		try {
+			if (includePostCode(address)) {
+				throw new ValidationError("郵便番号は除外してください");
+			}
+
+			const normalizeResult = await normalize(address);
+			switch (normalizeResult.level) {
+				case 0:
+					throw new ValidationError(
+						"都道府県の識別ができません\n\nシステムに問題がある場合はお問い合わせください"
+					);
+
+				case 1:
+					throw new ValidationError(
+						"市区町村の識別ができません\n\nシステムに問題がある場合はお問い合わせください"
+					);
+
+				case 2:
+					throw new ValidationError(
+						"町丁目の識別ができません\n\nシステムに問題がある場合はお問い合わせください"
+					);
+			}
+
+			const normalizedAddress =
+				normalizeResult.pref + normalizeResult.city + normalizeResult.town + normalizeResult.addr;
+
 			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store/${storeId}`, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
-					address,
+					addrses: normalizedAddress,
 					name,
 					description
 				})

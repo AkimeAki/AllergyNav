@@ -1,5 +1,8 @@
+import { ValidationError } from "@/definition";
+import { includePostCode } from "@/libs/check-address";
 import type { AddStoreResponse, Message } from "@/type";
 import { useState } from "react";
+import { normalize } from "@geolonia/normalize-japanese-addresses";
 
 interface ReturnType {
 	response: NonNullable<AddStoreResponse> | undefined;
@@ -19,13 +22,38 @@ export const useAddStore = (): ReturnType => {
 		setResponse(undefined);
 
 		try {
+			if (includePostCode(address)) {
+				throw new ValidationError("郵便番号は除外してください");
+			}
+
+			const normalizeResult = await normalize(address);
+			switch (normalizeResult.level) {
+				case 0:
+					throw new ValidationError(
+						"都道府県の識別ができません\n\nシステムに問題がある場合はお問い合わせください"
+					);
+
+				case 1:
+					throw new ValidationError(
+						"市区町村の識別ができません\n\nシステムに問題がある場合はお問い合わせください"
+					);
+
+				case 2:
+					throw new ValidationError(
+						"町丁目の識別ができません\n\nシステムに問題がある場合はお問い合わせください"
+					);
+			}
+
+			const normalizedAddress =
+				normalizeResult.pref + normalizeResult.city + normalizeResult.town + normalizeResult.addr;
+
 			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
-					address,
+					address: normalizedAddress,
 					name,
 					description
 				})
@@ -47,10 +75,24 @@ export const useAddStore = (): ReturnType => {
 				text: "お店を登録しました"
 			});
 		} catch (e) {
-			setMessage({
-				type: "error",
-				text: "接続エラーが発生しました"
-			});
+			if (e instanceof ValidationError) {
+				if (e.message !== undefined) {
+					setMessage({
+						type: "error",
+						text: e.message
+					});
+				} else {
+					setMessage({
+						type: "error",
+						text: "入力した値がおかしいです"
+					});
+				}
+			} else {
+				setMessage({
+					type: "error",
+					text: "接続エラーが発生しました"
+				});
+			}
 		}
 		setLoading(false);
 	};

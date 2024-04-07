@@ -42,7 +42,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 				</>
 			)}
 			{message !== undefined && message.type === "error" && (
-				<FloatMessage type="error">エラーが発生しました😿</FloatMessage>
+				<FloatMessage type="error">{message.text}</FloatMessage>
 			)}
 			{isOpen && (
 				<Modal isOpen={isOpen} setIsOpen={setIsOpen} close={!loading && store === undefined}>
@@ -74,6 +74,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 						</div>
 						<div>
 							<Label required>住所</Label>
+							<p>郵便番号は除外してください。</p>
 							<TextInput
 								disabled={loading || store !== undefined}
 								onChange={(e) => {

@@ -67,6 +67,7 @@ export default function ({ children, type, secounds = 5 }: Props): JSX.Element {
 						font-weight: bold;
 						overflow-wrap: break-word;
 						border-radius: 15px;
+						white-space: pre-line;
 						animation-iteration-count: 1;
 						animation-fill-mode: backwards;
 						animation-timing-function: linear(
