@@ -147,6 +147,7 @@ export default function ({ storeId, isOpen, setIsOpen }: Props): JSX.Element {
 								</div>
 								<div>
 									<Label required>住所</Label>
+									<p>郵便番号は除外してください。</p>
 									<TextInput
 										disabled={editStoreLoading || getStoreLoading}
 										onChange={(e) => {
