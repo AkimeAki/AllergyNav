@@ -19,7 +19,7 @@ import AllergenItem from "@/components/atoms/AllergenItem";
 const StoreList = (): JSX.Element => {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
 	const searchParams = useSearchParams();
-	const [selectAllergens, setSelectAllergens] = useState<string[]>([]);
+	const [searchAllergens, setSearchAllergens] = useState<string[]>([]);
 	const { response: stores, loading, message, getStore } = useGetStores();
 	const { response: allergens, getAllergens, loading: getAllergensLoading } = useGetAllergens();
 	const { data: session } = useSession();
@@ -42,9 +42,9 @@ const StoreList = (): JSX.Element => {
 			const filterdAllergenList = queryAllergenList.filter((a) => {
 				return allergens.some((b) => a === b.id);
 			});
-			setSelectAllergens(filterdAllergenList);
+			setSearchAllergens(filterdAllergenList);
 		} else {
-			setSelectAllergens([]);
+			setSearchAllergens([]);
 		}
 	}, [searchParams, allergens]);
 
@@ -88,6 +88,56 @@ const StoreList = (): JSX.Element => {
 					padding: 0 10px;
 				`}
 			>
+				{!loading && !getAllergensLoading && searchAllergens.length !== 0 && (
+					<div
+						className={css`
+							border: 4px solid var(--color-orange);
+							padding: 10px;
+							background-color: var(--color-orange-thin);
+							border-radius: 10px;
+							display: flex;
+							flex-direction: column;
+							gap: 5px;
+						`}
+					>
+						<div
+							className={css`
+								display: flex;
+								gap: 5px;
+								justify-content: center;
+							`}
+						>
+							{searchAllergens.map((item) => {
+								let name = "";
+								allergens.forEach((allergen) => {
+									if (item === allergen.id) {
+										name = allergen.name;
+									}
+								});
+
+								return <AllergenItem key={item} image={`/icons/${item}.png`} text={name} />;
+							})}
+						</div>
+						<div>
+							<p
+								className={css`
+									text-align: center;
+								`}
+							>
+								が
+								<span
+									className={css`
+										color: var(--color-red);
+										font-weight: bold;
+									`}
+								>
+									含まれていない
+								</span>
+								メニューが食べれるお店を表示しています。
+							</p>
+						</div>
+					</div>
+				)}
 				<section
 					className={css`
 						display: grid;
@@ -108,30 +158,6 @@ const StoreList = (): JSX.Element => {
 					{message !== undefined && message.type === "error" && <ErrorMessage>{message.text}</ErrorMessage>}
 					{!loading && (
 						<>
-							{!getAllergensLoading && selectAllergens.length !== 0 && (
-								<>
-									<div
-										className={css`
-											display: flex;
-											gap: 5px;
-										`}
-									>
-										{selectAllergens.map((item) => {
-											let name = "";
-											allergens.forEach((allergen) => {
-												if (item === allergen.id) {
-													name = allergen.name;
-												}
-											});
-
-											return <AllergenItem key={item} image={`/icons/${item}.png`} text={name} />;
-										})}
-									</div>
-									<div>
-										<p>が含まれていないメニューが食べれるお店を表示しています。</p>
-									</div>
-								</>
-							)}
 							{stores.length === 0 && (
 								<p
 									className={css`

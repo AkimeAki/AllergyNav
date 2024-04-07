@@ -60,7 +60,7 @@ export default function ({ isOpen, setIsOpen, children }: Props): JSX.Element {
 							className={css`
 								background-color: white;
 								border-radius: 20px;
-								padding: 20px 20px 60px 20px;
+								padding: 20px;
 								box-shadow: 0 0 20px -5px #969696;
 								max-height: calc(100vh - 60px);
 								overflow-y: auto;
@@ -84,7 +84,7 @@ export default function ({ isOpen, setIsOpen, children }: Props): JSX.Element {
 									font-size: 0;
 									cursor: pointer;
 									user-select: none;
-									background-color: var(--color-orange-thin);
+									background-color: var(--color-orange);
 									border-radius: 9999px;
 									padding: 5px;
 
@@ -98,7 +98,7 @@ export default function ({ isOpen, setIsOpen, children }: Props): JSX.Element {
 									setIsOpen(false);
 								}}
 							>
-								<GoogleIcon size={25} name="close" color="var(--color-black)" />
+								<GoogleIcon size={25} name="close" color="white" />
 							</div>
 						</div>
 					</div>
