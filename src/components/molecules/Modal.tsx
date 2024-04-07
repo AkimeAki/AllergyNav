@@ -9,12 +9,15 @@ interface Props {
 	isOpen: boolean;
 	setIsOpen: Dispatch<SetStateAction<boolean>>;
 	children: ReactNode;
+	close?: boolean;
 }
 
-export default function ({ isOpen, setIsOpen, children }: Props): JSX.Element {
+export default function ({ isOpen, setIsOpen, children, close = true }: Props): JSX.Element {
 	const modalElement = useClickElemenetSet<HTMLDivElement>(() => {
-		setIsOpen(false);
-	}, [isOpen]);
+		if (close) {
+			setIsOpen(false);
+		}
+	}, [isOpen, close]);
 
 	return (
 		<>
@@ -71,6 +74,7 @@ export default function ({ isOpen, setIsOpen, children }: Props): JSX.Element {
 									border-radius: 0;
 									height: 100%;
 									max-height: 100%;
+									padding-bottom: 80px;
 								}
 							`}
 							ref={modalElement}
@@ -95,7 +99,9 @@ export default function ({ isOpen, setIsOpen, children }: Props): JSX.Element {
 									}
 								`}
 								onClick={() => {
-									setIsOpen(false);
+									if (close) {
+										setIsOpen(false);
+									}
 								}}
 							>
 								<GoogleIcon size={25} name="close" color="white" />

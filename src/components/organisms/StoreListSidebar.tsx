@@ -107,15 +107,7 @@ export default function (): JSX.Element {
 						}
 					`}
 				>
-					<div
-						className={css`
-							display: flex;
-							flex-wrap: wrap;
-							width: 100%;
-							justify-content: left;
-							gap: 10px;
-						`}
-					>
+					<div>
 						<Modal isOpen={isAllergenSelectModalOpen} setIsOpen={setIsAllergenSelectModalOpen}>
 							<div
 								className={css`
@@ -212,7 +204,12 @@ export default function (): JSX.Element {
 								gap: 10px;
 							`}
 						>
-							<div>
+							<div
+								className={css`
+									display: flex;
+									flex-direction: column;
+								`}
+							>
 								<Button
 									onClick={() => {
 										setIsAllergenSelectModalOpen(true);
