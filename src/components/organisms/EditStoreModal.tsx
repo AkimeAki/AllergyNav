@@ -86,7 +86,7 @@ export default function ({ storeId, isOpen, setIsOpen }: Props): JSX.Element {
 				</>
 			)}
 			{message !== undefined && message.type === "error" && (
-				<FloatMessage type="error">エラーが発生しました😿</FloatMessage>
+				<FloatMessage type="error">{message.text}</FloatMessage>
 			)}
 			{isOpen && (
 				<>

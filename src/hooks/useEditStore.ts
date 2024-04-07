@@ -80,10 +80,17 @@ export const useEditStore = (): ReturnType => {
 			});
 		} catch (e) {
 			if (e instanceof ValidationError) {
-				setMessage({
-					type: "error",
-					text: "入力した値がおかしいです"
-				});
+				if (e.message !== undefined) {
+					setMessage({
+						type: "error",
+						text: e.message
+					});
+				} else {
+					setMessage({
+						type: "error",
+						text: "入力した値がおかしいです"
+					});
+				}
 			} else {
 				setMessage({
 					type: "error",
