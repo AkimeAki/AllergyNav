@@ -98,7 +98,7 @@ export default function (): JSX.Element {
 						}
 					`}
 				>
-					<MiniTitle>アレルゲン</MiniTitle>
+					<MiniTitle>あなたのアレルゲン</MiniTitle>
 				</div>
 				<div
 					className={css`
@@ -124,7 +124,7 @@ export default function (): JSX.Element {
 									gap: 20px;
 								`}
 							>
-								<SubTitle>含まれていないアレルゲンを選択</SubTitle>
+								<SubTitle>あなたのアレルゲンを選択</SubTitle>
 								<div
 									className={css`
 										display: flex;
