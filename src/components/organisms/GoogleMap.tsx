@@ -3,7 +3,6 @@
 import { css } from "@kuma-ui/core";
 import { useEffect, useState } from "react";
 import Loading from "@/components/atoms/Loading";
-import ErrorMessage from "../atoms/ErrorMessage";
 
 interface Props {
 	address: string;
@@ -41,16 +40,13 @@ export default function ({ address }: Props): JSX.Element {
 			{loadingCoordinate && <Loading />}
 			{coordinate !== undefined && (
 				<iframe
-					src={`http://maps.google.co.jp/maps?q=${coordinate}&output=embed&t=m&z=17`}
+					src={`https://maps.google.co.jp/maps?q=${coordinate}&output=embed&t=m&z=17`}
 					className={css`
 						border: none;
 						width: 100%;
 						height: 400px;
 					`}
 				/>
-			)}
-			{!loadingCoordinate && coordinate === undefined && (
-				<ErrorMessage>正確な住所情報を取得できませんでした。</ErrorMessage>
 			)}
 		</>
 	);
