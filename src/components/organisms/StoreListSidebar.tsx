@@ -98,7 +98,7 @@ export default function (): JSX.Element {
 						}
 					`}
 				>
-					<MiniTitle>あなたのアレルゲン</MiniTitle>
+					<MiniTitle>アレルゲン</MiniTitle>
 				</div>
 				<div
 					className={css`
@@ -124,7 +124,28 @@ export default function (): JSX.Element {
 									gap: 20px;
 								`}
 							>
-								<SubTitle>あなたのアレルゲンを選択</SubTitle>
+								<SubTitle>検索したいアレルゲンを選択</SubTitle>
+								<div>
+									<p>
+										<span
+											className={css`
+												vertical-align: sub;
+											`}
+										>
+											<GoogleIcon name="skull" size={25} color="var(--color-red)" />
+										</span>
+										で選択したアレルゲンが
+										<span
+											className={css`
+												color: var(--color-red);
+												font-weight: bold;
+											`}
+										>
+											含まれていない
+										</span>
+										メニューを食べられるお店を検索します。
+									</p>
+								</div>
 								<div
 									className={css`
 										display: flex;
