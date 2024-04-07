@@ -14,9 +14,9 @@ export default function ({ children, required = false }: Props): JSX.Element {
 				background-color: var(--color-orange-thin);
 				padding: 5px 10px;
 				border-radius: 10px;
-				user-select: text;
+				user-select: none;
 				pointer-events: auto;
-				cursor: text;
+				cursor: default;
 			`}
 		>
 			{children}

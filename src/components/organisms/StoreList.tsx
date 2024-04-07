@@ -15,6 +15,7 @@ import Modal from "@/components/molecules/Modal";
 import SubTitle from "@/components/atoms/SubTitle";
 import useGetAllergens from "@/hooks/useGetAllergens";
 import AllergenItem from "@/components/atoms/AllergenItem";
+import MiniTitle from "@/components/atoms/MiniTitle";
 
 const StoreList = (): JSX.Element => {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
@@ -138,6 +139,7 @@ const StoreList = (): JSX.Element => {
 						</div>
 					</div>
 				)}
+				{loading && <Loading />}
 				<section
 					className={css`
 						display: grid;
@@ -154,7 +156,6 @@ const StoreList = (): JSX.Element => {
 						}
 					`}
 				>
-					{loading && <Loading />}
 					{message !== undefined && message.type === "error" && <ErrorMessage>{message.text}</ErrorMessage>}
 					{!loading && (
 						<>
@@ -214,16 +215,15 @@ const StoreList = (): JSX.Element => {
 											className={css`
 												padding: 10px;
 												width: 100%;
+												display: flex;
+												flex-direction: column;
+												gap: 20px;
 											`}
 										>
-											<h3
-												className={css`
-													width: 100%;
-													font-size: 20px;
-												`}
-											>
-												{store.name}
-											</h3>
+											<div>
+												<MiniTitle>{store.name}</MiniTitle>
+											</div>
+											<div>{store.description}</div>
 										</div>
 									</div>
 									<Link

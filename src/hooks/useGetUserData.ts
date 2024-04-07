@@ -40,7 +40,6 @@ export default function (): ReturnType {
 	};
 
 	useEffect(() => {
-		console.log(session);
 		const safeId = safeString(session?.user?.id);
 
 		if (safeId !== null && sessionStatus === "authenticated") {

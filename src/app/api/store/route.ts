@@ -13,9 +13,9 @@ export const GET = async (req: NextRequest): Promise<Response> => {
 	let status = 500;
 
 	try {
-		// const { searchParams } = new URL(req.url);
-		// const allergens = safeString(searchParams.get("allergens"));
-		// const keywords = safeString(searchParams.get("keywords"));
+		const { searchParams } = new URL(req.url);
+		const allergens = (safeString(searchParams.get("allergens")) ?? "").split(",");
+		const keywords = (safeString(searchParams.get("keywords")) ?? "").replaceAll(/\s/g, " ").split(" ");
 
 		const result = await prisma.store.findMany({
 			select: {
@@ -26,22 +26,87 @@ export const GET = async (req: NextRequest): Promise<Response> => {
 				updated_at: true,
 				created_at: true,
 				created_user_id: true,
-				updated_user_id: true
+				updated_user_id: true,
+				menu: {
+					include: {
+						menu_allergens: {
+							select: {
+								allergen_id: true
+							}
+						}
+					}
+				}
+			},
+			where: {
+				OR: [
+					{
+						OR: keywords.map((keyword) => {
+							return {
+								name: {
+									contains: keyword
+								}
+							};
+						})
+					},
+					{
+						OR: keywords.map((keyword) => {
+							return {
+								description: {
+									contains: keyword
+								}
+							};
+						})
+					}
+				]
 			}
 		});
 
 		data = [];
+
+		// アレルゲンフィルター
 		for (const item of result) {
-			data.push({
-				id: item.id,
-				name: item.name,
-				address: item.address,
-				description: item.description,
-				updated_at: item.updated_at,
-				created_at: item.created_at,
-				created_user_id: item.created_user_id,
-				updated_user_id: item.updated_user_id
-			});
+			// お店の全メニューの中にアレルゲンが含まれていなかったかどうかを管理する変数
+			let menuAllergen = false;
+			for (const menu of item.menu) {
+				// メニューの中にアレルゲンが含まれているかどうかを管理する変数
+				let allergen = false;
+				const allergenIds = menu.menu_allergens.map((allergen) => {
+					return allergen.allergen_id;
+				});
+
+				for (const allergenId of allergenIds) {
+					if (allergens.includes(allergenId)) {
+						allergen = true;
+					}
+				}
+
+				// メニューの中にアレルゲンが含まれていたので次のメニューにスキップ
+				if (allergen) {
+					continue;
+				}
+
+				// ここまで処理が来れば、検索時のアレルゲンが含まれていないメニューが見つかったということ
+				menuAllergen = true;
+				continue;
+			}
+
+			if (item.menu.length === 0) {
+				menuAllergen = true;
+			}
+
+			// メニューの中にアレルゲンが含まれていなかったらお店をレスポンスに追加
+			if (menuAllergen) {
+				data.push({
+					id: item.id,
+					name: item.name,
+					address: item.address,
+					description: item.description,
+					updated_at: item.updated_at,
+					created_at: item.created_at,
+					created_user_id: item.created_user_id,
+					updated_user_id: item.updated_user_id
+				});
+			}
 		}
 
 		status = 200;

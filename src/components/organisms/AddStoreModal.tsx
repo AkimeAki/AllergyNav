@@ -98,7 +98,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 								`}
 							>
 								<div>
-									<Label required>名前</Label>
+									<Label required>お店の名前</Label>
 									<TextInput
 										disabled={loading}
 										onChange={(e) => {

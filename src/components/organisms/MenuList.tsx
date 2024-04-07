@@ -14,18 +14,23 @@ import AllergenItem from "@/components/atoms/AllergenItem";
 import Label from "@/components/atoms/Label";
 import GoogleIcon from "@/components/atoms/GoogleIcon";
 import MenuHistoryModal from "@/components/organisms/MenuHistoryModal";
+import { formatText } from "@/libs/format-text";
+import MiniTitle from "@/components/atoms/MiniTitle";
+import { SessionProvider } from "next-auth/react";
+import useGetUserData from "@/hooks/useGetUserData";
 
 interface Props {
 	id: string;
 }
 
-export default function ({ id }: Props): JSX.Element {
+const MenuList = ({ id }: Props): JSX.Element => {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
 	const [openEditModalId, setOpenEditModalId] = useState<string>();
 	const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
 	const [openHistoryModalId, setOpenHistoryModalId] = useState<string>();
 	const [isOpenHistoryModal, setIsOpenHistoryModal] = useState<boolean>(false);
 	const searchParams = useSearchParams();
+	const { status } = useGetUserData();
 	const { response: menus, loading, message, getMenus } = useGetMenus();
 	const [menuHoverId, setMenuHoverId] = useState<string>();
 	const params = {
@@ -134,36 +139,39 @@ export default function ({ id }: Props): JSX.Element {
 													right: 5px;
 													display: flex;
 													gap: 5px;
+													z-index: 99;
 												`}
 											>
-												<Button
-													size="tiny"
-													onClick={() => {
-														setOpenEditModalId(menu.id);
-														setIsOpenEditModal(true);
-													}}
-													selected={openEditModalId === menu.id && isOpenEditModal}
-												>
-													<span
-														className={css`
-															display: flex;
-															justify-content: center;
-															align-items: center;
-														`}
+												{status === "authenticated" && (
+													<Button
+														size="tiny"
+														onClick={() => {
+															setOpenEditModalId(menu.id);
+															setIsOpenEditModal(true);
+														}}
+														selected={openEditModalId === menu.id && isOpenEditModal}
 													>
-														<GoogleIcon name="edit" size={15} color="inherit" />
 														<span
 															className={css`
-																line-height: 1;
 																display: flex;
-																font-size: 13px;
-																color: inherit;
+																justify-content: center;
+																align-items: center;
 															`}
 														>
-															編集
+															<GoogleIcon name="edit" size={15} color="inherit" />
+															<span
+																className={css`
+																	line-height: 1;
+																	display: flex;
+																	font-size: 13px;
+																	color: inherit;
+																`}
+															>
+																編集
+															</span>
 														</span>
-													</span>
-												</Button>
+													</Button>
+												)}
 												<Button
 													size="tiny"
 													onClick={() => {
@@ -214,14 +222,7 @@ export default function ({ id }: Props): JSX.Element {
 												gap: 20px;
 											`}
 										>
-											<h3
-												className={css`
-													width: 100%;
-													font-size: 20px;
-												`}
-											>
-												{menu.name}
-											</h3>
+											<MiniTitle>{menu.name}</MiniTitle>
 											{menu.allergens.length !== 0 && (
 												<div
 													className={css`
@@ -230,6 +231,11 @@ export default function ({ id }: Props): JSX.Element {
 														gap: 5px;
 													`}
 												>
+													<div
+														dangerouslySetInnerHTML={{
+															__html: formatText(menu.description)
+														}}
+													/>
 													<Label>含まれるアレルゲン</Label>
 													<div
 														className={css`
@@ -275,5 +281,13 @@ export default function ({ id }: Props): JSX.Element {
 				</div>
 			</div>
 		</>
+	);
+};
+
+export default function ({ id }: Props): JSX.Element {
+	return (
+		<SessionProvider>
+			<MenuList id={id} />
+		</SessionProvider>
 	);
 }

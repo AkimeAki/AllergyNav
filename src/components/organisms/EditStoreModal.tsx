@@ -1,4 +1,5 @@
 "use client";
+
 import { css } from "@kuma-ui/core";
 import SubTitle from "@/components/atoms/SubTitle";
 import Label from "@/components/atoms/Label";
@@ -11,58 +12,81 @@ import { useEffect, useState } from "react";
 import GoogleIcon from "@/components/atoms/GoogleIcon";
 import Cursor from "@/components/atoms/Cursor";
 import FloatMessage from "@/components/atoms/FloatMessage";
-import { useAddMenu } from "@/hooks/useAddMenu";
-import AllergenSelectModal from "@/components/molecules/AllergenSelectModal";
-import ModalBackground from "@/components/atoms/ModalBackground";
+import { useEditStore } from "@/hooks/useEditStore";
 import useClickElemenetSet from "@/hooks/useClickElemenetSet";
-import AllergenItem from "@/components/atoms/AllergenItem";
+import ModalBackground from "@/components/atoms/ModalBackground";
 import { isEmptyString } from "@/libs/check-string";
-import useGetAllergens from "@/hooks/useGetAllergens";
-
+import useGetStore from "@/hooks/useGetStore";
+import { useRouter } from "next/navigation";
 interface Props {
 	storeId: string;
 	isOpen: boolean;
 	setIsOpen: Dispatch<SetStateAction<boolean>>;
-	reload: () => void;
 }
 
-export default function ({ storeId, isOpen, setIsOpen, reload }: Props): JSX.Element {
-	const [menuName, setMenuName] = useState<string>("");
-	const [menuDescription, setMenuDescription] = useState<string>("");
-	const { response: menu, loading, message, addMenu } = useAddMenu();
-	const [selectAllergens, setSelectAllergens] = useState<string[]>([]);
-	const [isAllergenSelectModalOpen, setIsAllergenSelectModalOpen] = useState<boolean>(false);
-	const { response: allergens, getAllergens } = useGetAllergens();
+export default function ({ storeId, isOpen, setIsOpen }: Props): JSX.Element {
+	const [storeName, setStoreName] = useState<string>("");
+	const [oldStoreName, setOldStoreName] = useState<string>("");
+	const [storeAddress, setStoreAddress] = useState<string>("");
+	const [oldStoreAddress, setOldStoreAddress] = useState<string>("");
+	const [storeDescription, setStoreDescription] = useState<string>("");
+	const [oldStoreDescription, setOldStoreDescription] = useState<string>("");
+	const { response: editStoreResponse, loading: editStoreLoading, message, editStore } = useEditStore();
+	const { response: getStoreResponse, loading: getStoreLoading, getStore } = useGetStore();
+	const [isChanged, setIsChanged] = useState<boolean>(false);
+	const router = useRouter();
 	const modalElement = useClickElemenetSet<HTMLDivElement>(() => {
-		if (!isAllergenSelectModalOpen) {
+		if (!editStoreLoading && !getStoreLoading) {
 			setIsOpen(false);
 		}
-	}, [isOpen, isAllergenSelectModalOpen]);
+	}, [isOpen, editStoreLoading, getStoreLoading]);
 
 	useEffect(() => {
-		void getAllergens();
-	}, []);
-
-	useEffect(() => {
-		if (menu !== undefined) {
-			setIsOpen(false);
-			setMenuDescription("");
-			setMenuName("");
-			setSelectAllergens([]);
-			reload();
+		if (isOpen) {
+			void getStore(storeId);
 		}
-	}, [menu]);
+	}, [isOpen]);
+
+	useEffect(() => {
+		if (getStoreResponse !== undefined) {
+			setStoreName(getStoreResponse.name);
+			setOldStoreName(getStoreResponse.name);
+			setStoreAddress(getStoreResponse.address);
+			setOldStoreAddress(getStoreResponse.address);
+			setStoreDescription(getStoreResponse.description);
+			setOldStoreDescription(getStoreResponse.description);
+		}
+	}, [getStoreResponse]);
+
+	useEffect(() => {
+		if (
+			oldStoreName !== storeName ||
+			oldStoreDescription !== storeDescription ||
+			oldStoreAddress !== storeAddress
+		) {
+			setIsChanged(true);
+		} else {
+			setIsChanged(false);
+		}
+	}, [storeName, storeDescription, storeAddress]);
+
+	useEffect(() => {
+		if (editStoreResponse !== undefined) {
+			router.refresh();
+			setIsOpen(false);
+		}
+	}, [editStoreResponse]);
 
 	return (
 		<>
-			{loading && (
+			{editStoreLoading && (
 				<>
 					<Cursor cursor="wait" />
 					<FloatMessage type="success">入力データを送信しています</FloatMessage>
 				</>
 			)}
 			{message !== undefined && message.type === "error" && (
-				<FloatMessage type="error">{message.text}</FloatMessage>
+				<FloatMessage type="error">エラーが発生しました😿</FloatMessage>
 			)}
 			{isOpen && (
 				<>
@@ -94,7 +118,7 @@ export default function ({ storeId, isOpen, setIsOpen, reload }: Props): JSX.Ele
 							`}
 							ref={modalElement}
 						>
-							<SubTitle>メニューを追加</SubTitle>
+							<SubTitle>お店の情報を編集</SubTitle>
 							<form
 								className={css`
 									display: flex;
@@ -112,55 +136,39 @@ export default function ({ storeId, isOpen, setIsOpen, reload }: Props): JSX.Ele
 								`}
 							>
 								<div>
-									<Label required>名前</Label>
+									<Label required>お店の名前</Label>
 									<TextInput
-										disabled={loading}
+										disabled={editStoreLoading || getStoreLoading}
 										onChange={(e) => {
-											setMenuName(e.target.value);
+											setStoreName(e.target.value);
 										}}
+										value={storeName}
+									/>
+								</div>
+								<div>
+									<Label required>住所</Label>
+									<TextInput
+										disabled={editStoreLoading || getStoreLoading}
+										onChange={(e) => {
+											setStoreAddress(e.target.value);
+										}}
+										value={storeAddress}
 									/>
 								</div>
 								<div>
 									<Label>グループ（未実装）</Label>
-									<Select value="null" disabled={true}>
+									<Select value="null" disabled>
 										<option value="null">なし</option>
 									</Select>
 								</div>
 								<div>
-									<Label>含まれるアレルゲン</Label>
-									<AllergenSelectModal
-										selectAllergens={selectAllergens}
-										setSelectAllergens={setSelectAllergens}
-										isOpen={isAllergenSelectModalOpen}
-										setIsOpen={setIsAllergenSelectModalOpen}
-										disabled={loading}
-									/>
-									<div
-										className={css`
-											display: flex;
-											flex-wrap: wrap;
-										`}
-									>
-										{selectAllergens.map((item) => {
-											let name = "";
-											allergens.forEach((allergen) => {
-												if (item === allergen.id) {
-													name = allergen.name;
-												}
-											});
-
-											return <AllergenItem key={item} image={`/icons/${item}.png`} text={name} />;
-										})}
-									</div>
-								</div>
-								<div>
-									<Label>メニューの詳細情報</Label>
+									<Label>お店の詳細情報</Label>
 									<TextArea
-										disabled={loading}
+										disabled={editStoreLoading || getStoreLoading}
 										onChange={(e) => {
-											setMenuDescription(e.target.value);
+											setStoreDescription(e.target.value);
 										}}
-										autoSize
+										value={storeDescription}
 									/>
 								</div>
 								<div
@@ -168,7 +176,7 @@ export default function ({ storeId, isOpen, setIsOpen, reload }: Props): JSX.Ele
 										position: relative;
 									`}
 								>
-									{!loading && (
+									{!editStoreLoading && !getStoreLoading && (
 										<div
 											className={css`
 												position: absolute;
@@ -194,11 +202,17 @@ export default function ({ storeId, isOpen, setIsOpen, reload }: Props): JSX.Ele
 									>
 										<Button
 											onClick={() => {
-												void addMenu(storeId, menuName, menuDescription, selectAllergens);
+												void editStore(storeId, storeName, storeAddress, storeDescription);
 											}}
-											disabled={loading || isEmptyString(menuName)}
+											disabled={
+												editStoreLoading ||
+												getStoreLoading ||
+												isEmptyString(storeName) ||
+												isEmptyString(storeAddress) ||
+												!isChanged
+											}
 										>
-											登録する
+											変更する
 										</Button>
 									</div>
 								</div>

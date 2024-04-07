@@ -4,6 +4,7 @@ import { css } from "@kuma-ui/core";
 import Link from "next/link";
 import GoogleMap from "@/components/organisms/GoogleMap";
 import { formatText } from "@/libs/format-text";
+import EditStoreButton from "@/components/organisms/EditStoreButton";
 
 interface Props {
 	params: {
@@ -99,6 +100,7 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 				/>
 			)}
 			<GoogleMap address={storeDetail.address} />
+			<EditStoreButton storeId={id} />
 		</div>
 	);
 }

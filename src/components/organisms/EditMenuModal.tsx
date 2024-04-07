@@ -198,6 +198,7 @@ export default function ({ menuId, isOpen, setIsOpen, reload }: Props): JSX.Elem
 											setMenuDescription(e.target.value);
 										}}
 										value={menuDescription}
+										autoSize
 									/>
 								</div>
 								<div
