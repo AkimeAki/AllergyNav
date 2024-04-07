@@ -46,6 +46,7 @@ export const useEditStore = (): ReturnType => {
 
 			const normalizedAddress =
 				normalizeResult.pref + normalizeResult.city + normalizeResult.town + normalizeResult.addr;
+			console.log(normalizedAddress);
 
 			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store/${storeId}`, {
 				method: "PUT",
@@ -53,7 +54,7 @@ export const useEditStore = (): ReturnType => {
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
-					addrses: normalizedAddress,
+					address: normalizedAddress,
 					name,
 					description
 				})
