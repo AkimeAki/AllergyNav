@@ -1,16 +1,25 @@
 import { ForbiddenError, NotFoundError, ValidationError } from "@/definition";
 import type { AddStoreResponse, GetStoresResponse } from "@/type";
 import { safeString } from "@/libs/safe-type";
-import type { NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { isEmptyString } from "@/libs/check-string";
 import { prisma } from "@/libs/prisma";
 import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getToken } from "next-auth/jwt";
 
-export const GET = async (req: NextRequest): Promise<Response> => {
+const headers = {
+	"Access-Control-Allow-Origin": "http://localhost:10111", // 許可するオリジン
+	"Access-Control-Allow-Methods": "GET, POST" // 許可するメソッド
+};
+
+export const GET = async (req: NextRequest): Promise<NextResponse> => {
 	let data: GetStoresResponse = null;
 	let status = 500;
+
+	// const session = await getServerSession(nextAuthOptions);
+	// const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+	console.log(req.ip);
 
 	try {
 		const { searchParams } = new URL(req.url);
@@ -121,9 +130,7 @@ export const GET = async (req: NextRequest): Promise<Response> => {
 		}
 	}
 
-	return new Response(JSON.stringify(data), {
-		status
-	});
+	return NextResponse.json(data, { status, headers });
 };
 
 export const POST = async (req: NextRequest): Promise<Response> => {
@@ -204,7 +211,5 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 		}
 	}
 
-	return new Response(JSON.stringify(data), {
-		status
-	});
+	return NextResponse.json(data, { status, headers });
 };
