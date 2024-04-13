@@ -40,6 +40,17 @@ model UserIp {
   @@map("user_ips")
 }
 
+model AccessIp {
+  ip         String
+  count      Int
+  path       String
+  block      Boolean  @default(false)
+  updated_at DateTime @default(now()) @updatedAt
+
+  @@id([ip, path])
+  @@map("access_ips")
+}
+
 model Store {
   id              String   @id @default(cuid())
   name            String
