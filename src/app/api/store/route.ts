@@ -7,6 +7,7 @@ import { prisma } from "@/libs/prisma";
 import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getToken } from "next-auth/jwt";
+import { accessCheck } from "@/libs/access-check";
 
 const headers = {
 	// "Access-Control-Allow-Origin": "http://localhost:10111", // 許可するオリジン
@@ -17,13 +18,11 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 	let data: GetStoresResponse = null;
 	let status = 500;
 
-	// const session = await getServerSession(nextAuthOptions);
-	// const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-	// console.log(token);
-	console.log(req.headers.get("cf-connecting-ip"));
-	console.log(req.headers.get("x-forwarded-for"));
-
 	try {
+		if (!(await accessCheck(req))) {
+			throw new Error();
+		}
+
 		const { searchParams } = new URL(req.url);
 		const allergens = (safeString(searchParams.get("allergens")) ?? "").split(",");
 		const keywords = (safeString(searchParams.get("keywords")) ?? "").replaceAll(/\s/g, " ").split(" ");
