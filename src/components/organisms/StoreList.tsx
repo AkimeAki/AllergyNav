@@ -10,12 +10,13 @@ import Loading from "@/components/atoms/Loading";
 import Button from "@/components/atoms/Button";
 import AddStoreModal from "@/components/organisms/AddStoreModal";
 import { useGetStores } from "@/hooks/useGetStores";
-import { SessionProvider, useSession } from "next-auth/react";
+import { SessionProvider } from "next-auth/react";
 import Modal from "@/components/molecules/Modal";
 import SubTitle from "@/components/atoms/SubTitle";
 import useGetAllergens from "@/hooks/useGetAllergens";
 import AllergenItem from "@/components/atoms/AllergenItem";
 import MiniTitle from "@/components/atoms/MiniTitle";
+import useGetUserData from "@/hooks/useGetUserData";
 
 const StoreList = (): JSX.Element => {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
@@ -23,7 +24,7 @@ const StoreList = (): JSX.Element => {
 	const [searchAllergens, setSearchAllergens] = useState<string[]>([]);
 	const { response: stores, loading, message, getStore } = useGetStores();
 	const { response: allergens, getAllergens, loading: getAllergensLoading } = useGetAllergens();
-	const { data: session } = useSession();
+	const { status } = useGetUserData();
 	const params = {
 		allergens: searchParams.get("allergens") ?? "",
 		keywords: searchParams.get("keywords") ?? ""
@@ -51,10 +52,8 @@ const StoreList = (): JSX.Element => {
 
 	return (
 		<>
-			{session?.user !== undefined && session?.user !== null && (
-				<AddStoreModal isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
-			)}
-			{session?.user === undefined && session?.user !== null && (
+			{status === "authenticated" && <AddStoreModal isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />}
+			{status === "unauthenticated" && (
 				<Modal isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal}>
 					<SubTitle>お店を追加</SubTitle>
 					<p
@@ -243,7 +242,7 @@ const StoreList = (): JSX.Element => {
 						</>
 					)}
 				</section>
-				{session !== undefined && (
+				{status !== "loading" && (
 					<div
 						className={css`
 							position: sticky;

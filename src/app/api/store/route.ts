@@ -9,7 +9,7 @@ import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getToken } from "next-auth/jwt";
 
 const headers = {
-	"Access-Control-Allow-Origin": "http://localhost:10111", // 許可するオリジン
+	// "Access-Control-Allow-Origin": "http://localhost:10111", // 許可するオリジン
 	"Access-Control-Allow-Methods": "GET, POST" // 許可するメソッド
 };
 
@@ -19,7 +19,8 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 
 	// const session = await getServerSession(nextAuthOptions);
 	// const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-	console.log(req.ip);
+	// console.log(token);
+	// console.log(req.headers.get("x-forwarded-for"));
 
 	try {
 		const { searchParams } = new URL(req.url);

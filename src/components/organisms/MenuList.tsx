@@ -18,6 +18,8 @@ import { formatText } from "@/libs/format-text";
 import MiniTitle from "@/components/atoms/MiniTitle";
 import { SessionProvider } from "next-auth/react";
 import useGetUserData from "@/hooks/useGetUserData";
+import Modal from "@/components/molecules/Modal";
+import SubTitle from "@/components/atoms/SubTitle";
 
 interface Props {
 	id: string;
@@ -45,14 +47,44 @@ const MenuList = ({ id }: Props): JSX.Element => {
 
 	return (
 		<>
-			<AddMenuModal
-				storeId={id}
-				isOpen={isOpenAddModal}
-				setIsOpen={setIsOpenAddModal}
-				reload={() => {
-					void getMenus(params.allergens, params.keywords, params.storeId);
-				}}
-			/>
+			{status === "authenticated" && (
+				<AddMenuModal
+					storeId={id}
+					isOpen={isOpenAddModal}
+					setIsOpen={setIsOpenAddModal}
+					reload={() => {
+						void getMenus(params.allergens, params.keywords, params.storeId);
+					}}
+				/>
+			)}
+			{status === "unauthenticated" && (
+				<Modal isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal}>
+					<SubTitle>お店を追加</SubTitle>
+					<p
+						className={css`
+							text-align: center;
+							margin: 30px 0;
+						`}
+					>
+						メニューを追加するには、ログインする必要があります
+					</p>
+					<div
+						className={css`
+							display: flex;
+							gap: 20px;
+							justify-content: center;
+						`}
+					>
+						<div>
+							<Button href={`/login?redirect=/store/${id}/menu`}>ログイン</Button>
+						</div>
+						<div>
+							<Button href={`/register?redirect=/store/${id}/menu`}>アカウント作成</Button>
+						</div>
+					</div>
+				</Modal>
+			)}
+
 			{menus.map((item) => {
 				return (
 					<EditMenuModal
@@ -262,23 +294,25 @@ const MenuList = ({ id }: Props): JSX.Element => {
 						</>
 					)}
 				</section>
-				<div
-					className={css`
-						position: sticky;
-						bottom: 40px;
-						text-align: right;
-						z-index: 99;
-					`}
-				>
-					<Button
-						onClick={() => {
-							setIsOpenAddModal(true);
-						}}
-						selected={isOpenAddModal}
+				{status !== "loading" && (
+					<div
+						className={css`
+							position: sticky;
+							bottom: 40px;
+							text-align: right;
+							z-index: 99;
+						`}
 					>
-						メニューを追加
-					</Button>
-				</div>
+						<Button
+							onClick={() => {
+								setIsOpenAddModal(true);
+							}}
+							selected={isOpenAddModal}
+						>
+							メニューを追加
+						</Button>
+					</div>
+				)}
 			</div>
 		</>
 	);
