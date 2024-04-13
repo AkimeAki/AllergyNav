@@ -6,6 +6,7 @@ import GoogleMap from "@/components/organisms/GoogleMap";
 import { formatText } from "@/libs/format-text";
 import EditStoreButton from "@/components/organisms/EditStoreButton";
 import { prisma } from "@/libs/prisma";
+import Image from "next/image";
 
 interface Props {
 	params: {
@@ -85,10 +86,27 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 							<th>住所</th>
 							<td>
 								<Link
+									className={css`
+										display: flex;
+										align-items: center;
+										gap: 5px;
+									`}
 									href={`https://www.google.com/maps/search/${result.address} ${result.name}`}
 									target="_blank"
 								>
-									{result.address}
+									<Image
+										width={20}
+										height={20}
+										src="/icons/google-map.svg"
+										alt="Google マップのアイコン"
+									/>
+									<span
+										className={css`
+											color: inherit;
+										`}
+									>
+										{result.address}
+									</span>
 								</Link>
 							</td>
 						</tr>
