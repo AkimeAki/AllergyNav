@@ -5,6 +5,7 @@ import Link from "next/link";
 import GoogleMap from "@/components/organisms/GoogleMap";
 import { formatText } from "@/libs/format-text";
 import EditStoreButton from "@/components/organisms/EditStoreButton";
+import { prisma } from "@/libs/prisma";
 
 interface Props {
 	params: {
@@ -19,19 +20,17 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 		notFound();
 	}
 
-	let storeDetail;
-	try {
-		const storeDetailFetchResult = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store/${id}`, {
-			method: "GET",
-			cache: "no-store"
-		});
+	const result = await prisma.store.findUnique({
+		select: {
+			address: true,
+			description: true
+		},
+		where: { id }
+	});
 
-		if (storeDetailFetchResult.status !== 200) {
-			throw new Error();
-		}
-
-		storeDetail = await storeDetailFetchResult.json();
-	} catch (e) {}
+	if (result === null) {
+		notFound();
+	}
 
 	return (
 		<div
@@ -84,25 +83,22 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 						<tr>
 							<th>住所</th>
 							<td>
-								<Link
-									href={`https://www.google.com/maps/search/${storeDetail.address}`}
-									target="_blank"
-								>
-									{storeDetail.address}
+								<Link href={`https://www.google.com/maps/search/${result.address}`} target="_blank">
+									{result.address}
 								</Link>
 							</td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
-			{storeDetail !== undefined && storeDetail.description !== "" && (
+			{result.description !== "" && (
 				<div
 					dangerouslySetInnerHTML={{
-						__html: formatText(storeDetail.description)
+						__html: formatText(result.description)
 					}}
 				/>
 			)}
-			<GoogleMap address={storeDetail.address} />
+			<GoogleMap address={result.address} />
 			<EditStoreButton storeId={id} />
 		</div>
 	);

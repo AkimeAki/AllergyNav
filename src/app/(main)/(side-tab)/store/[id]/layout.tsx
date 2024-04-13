@@ -5,7 +5,7 @@ import { css } from "@kuma-ui/core";
 import type { Metadata } from "next";
 import MainTitle from "@/components/atoms/MainTitle";
 import StoreDetailTabs from "@/components/organisms/StoreDetailTabs";
-import type { GetStoreResponse } from "@/type";
+import { prisma } from "@/libs/prisma";
 
 interface Props {
 	children: ReactNode;
@@ -23,16 +23,18 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 			throw new Error();
 		}
 
-		const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store/${id}`, {
-			method: "GET"
+		const result = await prisma.store.findUnique({
+			select: {
+				name: true
+			},
+			where: { id }
 		});
 
-		if (result.status !== 200) {
+		if (result === null) {
 			throw new Error();
 		}
 
-		const response = await result.json();
-		title = response.name;
+		title = result.name;
 	} catch (e) {
 		notFound();
 	}
@@ -49,20 +51,14 @@ export default async function ({ children, params }: Props): Promise<JSX.Element
 		notFound();
 	}
 
-	let storeDetail: GetStoreResponse = null;
-	try {
-		const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store/${id}`, {
-			method: "GET"
-		});
+	const result = await prisma.store.findUnique({
+		select: {
+			name: true
+		},
+		where: { id }
+	});
 
-		if (result.status !== 200) {
-			throw new Error();
-		}
-
-		storeDetail = (await result.json()) as GetStoreResponse;
-	} catch (e) {}
-
-	if (storeDetail === null) {
+	if (result === null) {
 		notFound();
 	}
 
@@ -76,7 +72,7 @@ export default async function ({ children, params }: Props): Promise<JSX.Element
 					gap: 30px;
 				`}
 			>
-				<MainTitle>{storeDetail.name}</MainTitle>
+				<MainTitle>{result.name}</MainTitle>
 				<div
 					className={css`
 						padding: 0 10px;

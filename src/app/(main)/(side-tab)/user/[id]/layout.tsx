@@ -24,15 +24,6 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 			throw new Error();
 		}
 
-		const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${id}`, {
-			method: "GET"
-		});
-
-		if (result.status !== 200) {
-			throw new Error();
-		}
-
-		// const response = await result.json();
 		title = "ユーザー";
 	} catch (e) {
 		notFound();
