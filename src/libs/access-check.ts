@@ -81,7 +81,8 @@ export const accessCheck = async (req: NextRequest): Promise<boolean> => {
 					}
 				},
 				data: {
-					count
+					count,
+					block: false
 				}
 			});
 		}
