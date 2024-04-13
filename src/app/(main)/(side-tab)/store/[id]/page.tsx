@@ -87,7 +87,7 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 							<td>
 								<Link
 									className={css`
-										display: flex;
+										display: inline-flex;
 										align-items: center;
 										gap: 5px;
 									`}
