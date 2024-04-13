@@ -22,6 +22,7 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 
 	const result = await prisma.store.findUnique({
 		select: {
+			name: true,
 			address: true,
 			description: true
 		},
@@ -83,7 +84,10 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 						<tr>
 							<th>住所</th>
 							<td>
-								<Link href={`https://www.google.com/maps/search/${result.address}`} target="_blank">
+								<Link
+									href={`https://www.google.com/maps/search/${result.address} ${result.name}`}
+									target="_blank"
+								>
 									{result.address}
 								</Link>
 							</td>
