@@ -1,4 +1,4 @@
-import { ForbiddenError, NotFoundError, ValidationError } from "@/definition";
+import { ForbiddenError, TooManyRequestError, ValidationError } from "@/definition";
 import type { AddStoreResponse, GetStoresResponse } from "@/type";
 import { safeString } from "@/libs/safe-type";
 import { NextResponse, type NextRequest } from "next/server";
@@ -8,6 +8,7 @@ import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getToken } from "next-auth/jwt";
 import { accessCheck } from "@/libs/access-check";
+import { getStatus } from "@/libs/get-status";
 
 const headers = {
 	// "Access-Control-Allow-Origin": "http://localhost:10111", // 許可するオリジン
@@ -20,7 +21,7 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 
 	try {
 		if (!(await accessCheck(req))) {
-			throw new Error();
+			throw new TooManyRequestError();
 		}
 
 		const { searchParams } = new URL(req.url);
@@ -124,11 +125,7 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 		console.error(e);
 		data = null;
 
-		if (e instanceof NotFoundError) {
-			status = 404;
-		} else if (e instanceof ValidationError) {
-			status = 422;
-		}
+		status = getStatus(e);
 	}
 
 	return NextResponse.json(data, { status, headers });
@@ -142,6 +139,10 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 	const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
 	try {
+		if (!(await accessCheck(req))) {
+			throw new TooManyRequestError();
+		}
+
 		if (session === null || token === null) {
 			throw new ForbiddenError();
 		}
@@ -203,13 +204,7 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 		console.error(e);
 		data = null;
 
-		if (e instanceof NotFoundError) {
-			status = 404;
-		} else if (e instanceof ValidationError) {
-			status = 422;
-		} else if (e instanceof ForbiddenError) {
-			status = 403;
-		}
+		status = getStatus(e);
 	}
 
 	return NextResponse.json(data, { status, headers });

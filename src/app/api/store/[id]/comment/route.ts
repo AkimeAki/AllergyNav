@@ -1,4 +1,4 @@
-import { ForbiddenError, NotFoundError, ValidationError } from "@/definition";
+import { ForbiddenError, TooManyRequestError, ValidationError } from "@/definition";
 import type { AddCommentResponse, GetCommentsResponse } from "@/type";
 import { safeString } from "@/libs/safe-type";
 import type { NextRequest } from "next/server";
@@ -7,6 +7,8 @@ import { prisma } from "@/libs/prisma";
 import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getToken } from "next-auth/jwt";
+import { accessCheck } from "@/libs/access-check";
+import { getStatus } from "@/libs/get-status";
 
 interface Data {
 	params: {
@@ -14,11 +16,15 @@ interface Data {
 	};
 }
 
-export const GET = async (_: NextRequest, { params }: Data): Promise<Response> => {
+export const GET = async (req: NextRequest, { params }: Data): Promise<Response> => {
 	let data: GetCommentsResponse = null;
 	let status = 500;
 
 	try {
+		if (!(await accessCheck(req))) {
+			throw new TooManyRequestError();
+		}
+
 		const storeId = safeString(params.id);
 
 		if (storeId === null) {
@@ -58,11 +64,7 @@ export const GET = async (_: NextRequest, { params }: Data): Promise<Response> =
 		console.error(e);
 		data = null;
 
-		if (e instanceof NotFoundError) {
-			status = 404;
-		} else if (e instanceof ValidationError) {
-			status = 422;
-		}
+		status = getStatus(e);
 	}
 
 	return new Response(JSON.stringify(data), {
@@ -78,6 +80,10 @@ export const POST = async (req: NextRequest, { params }: { params: { id: string 
 	const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
 	try {
+		if (!(await accessCheck(req))) {
+			throw new TooManyRequestError();
+		}
+
 		if (session === null || token === null) {
 			throw new ForbiddenError();
 		}
@@ -124,13 +130,7 @@ export const POST = async (req: NextRequest, { params }: { params: { id: string 
 		console.error(e);
 		data = null;
 
-		if (e instanceof NotFoundError) {
-			status = 404;
-		} else if (e instanceof ValidationError) {
-			status = 422;
-		} else if (e instanceof ForbiddenError) {
-			status = 403;
-		}
+		status = getStatus(e);
 	}
 
 	return new Response(JSON.stringify(data), {

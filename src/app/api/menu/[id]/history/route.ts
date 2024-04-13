@@ -1,8 +1,10 @@
-import { NotFoundError, ValidationError } from "@/definition";
+import { TooManyRequestError, ValidationError } from "@/definition";
 import { safeString } from "@/libs/safe-type";
 import type { GetMenuHistoryResponse } from "@/type";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/libs/prisma";
+import { accessCheck } from "@/libs/access-check";
+import { getStatus } from "@/libs/get-status";
 
 interface Data {
 	params: {
@@ -15,6 +17,10 @@ export const GET = async (req: NextRequest, { params }: Data): Promise<Response>
 	let data: GetMenuHistoryResponse = null;
 
 	try {
+		if (!(await accessCheck(req))) {
+			throw new TooManyRequestError();
+		}
+
 		const menuId = safeString(params.id);
 
 		if (menuId === null) {
@@ -73,11 +79,7 @@ export const GET = async (req: NextRequest, { params }: Data): Promise<Response>
 		console.error(e);
 		data = null;
 
-		if (e instanceof NotFoundError) {
-			status = 404;
-		} else if (e instanceof ValidationError) {
-			status = 422;
-		}
+		status = getStatus(e);
 	}
 
 	return new Response(JSON.stringify(data), {

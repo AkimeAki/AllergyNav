@@ -31,5 +31,12 @@ export class ForbiddenError extends Error {
 	}
 }
 
+export class TooManyRequestError extends Error {
+	constructor(message?: string) {
+		super(message);
+		this.name = "TooManyRequestError";
+	}
+}
+
 export const headerHeight = 70;
 export const viewSidebarWidth = 753;

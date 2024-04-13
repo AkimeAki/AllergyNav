@@ -53,7 +53,7 @@ export const accessCheck = async (req: NextRequest): Promise<boolean> => {
 			}
 
 			let count = oldAccessResult.count + 1;
-			if (oldAccessResult.count >= 10 && now - updatedAt <= 3) {
+			if (oldAccessResult.count >= 10 && now - updatedAt <= 5) {
 				await prisma.accessIp.update({
 					where: {
 						ip_path: {
@@ -69,7 +69,7 @@ export const accessCheck = async (req: NextRequest): Promise<boolean> => {
 				throw new Error();
 			}
 
-			if (now - updatedAt > 3) {
+			if (now - updatedAt > 5) {
 				count = 1;
 			}
 

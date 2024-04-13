@@ -1,4 +1,4 @@
-import { ForbiddenError, NotFoundError, ValidationError } from "@/definition";
+import { ForbiddenError, TooManyRequestError, ValidationError } from "@/definition";
 import type { AddMenuResponse, GetMenusResponse } from "@/type";
 import { safeString } from "@/libs/safe-type";
 import { isEmptyString } from "@/libs/check-string";
@@ -7,12 +7,18 @@ import type { NextRequest } from "next/server";
 import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getToken } from "next-auth/jwt";
+import { accessCheck } from "@/libs/access-check";
+import { getStatus } from "@/libs/get-status";
 
 export const GET = async (req: NextRequest): Promise<Response> => {
 	let status = 500;
 	let data: GetMenusResponse = null;
 
 	try {
+		if (!(await accessCheck(req))) {
+			throw new TooManyRequestError();
+		}
+
 		const { searchParams } = new URL(req.url);
 		const storeId = safeString(searchParams.get("storeId"));
 
@@ -73,11 +79,7 @@ export const GET = async (req: NextRequest): Promise<Response> => {
 		console.error(e);
 		data = null;
 
-		if (e instanceof NotFoundError) {
-			status = 404;
-		} else if (e instanceof ValidationError) {
-			status = 422;
-		}
+		status = getStatus(e);
 	}
 
 	return new Response(JSON.stringify(data), {
@@ -93,6 +95,10 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 	const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
 	try {
+		if (!(await accessCheck(req))) {
+			throw new TooManyRequestError();
+		}
+
 		if (session === null || token === null) {
 			throw new ForbiddenError();
 		}
@@ -201,13 +207,7 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 		data = null;
 		console.error(e);
 
-		if (e instanceof NotFoundError) {
-			status = 404;
-		} else if (e instanceof ValidationError) {
-			status = 422;
-		} else if (e instanceof ForbiddenError) {
-			status = 403;
-		}
+		status = getStatus(e);
 	}
 
 	return new Response(JSON.stringify(data), {

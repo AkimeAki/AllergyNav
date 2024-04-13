@@ -1,4 +1,4 @@
-import { ForbiddenError, NotFoundError, ValidationError } from "@/definition";
+import { TooManyRequestError, ValidationError } from "@/definition";
 import { safeString } from "@/libs/safe-type";
 import type { GetUserResponse } from "@/type";
 import { prisma } from "@/libs/prisma";
@@ -6,6 +6,8 @@ import type { NextRequest } from "next/server";
 import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getToken } from "next-auth/jwt";
+import { accessCheck } from "@/libs/access-check";
+import { getStatus } from "@/libs/get-status";
 
 interface Data {
 	params: {
@@ -18,6 +20,10 @@ export const GET = async (req: NextRequest, { params }: Data): Promise<Response>
 	let data: GetUserResponse = null;
 
 	try {
+		if (!(await accessCheck(req))) {
+			throw new TooManyRequestError();
+		}
+
 		const userId = safeString(params.id);
 
 		if (userId === null) {
@@ -44,13 +50,7 @@ export const GET = async (req: NextRequest, { params }: Data): Promise<Response>
 		console.error(e);
 		data = null;
 
-		if (e instanceof NotFoundError) {
-			status = 404;
-		} else if (e instanceof ValidationError) {
-			status = 422;
-		} else if (e instanceof ForbiddenError) {
-			status = 403;
-		}
+		status = getStatus(e);
 	}
 
 	return new Response(JSON.stringify(data), {
