@@ -20,7 +20,8 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 	// const session = await getServerSession(nextAuthOptions);
 	// const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 	// console.log(token);
-	// console.log(req.headers.get("x-forwarded-for"));
+	console.log(req);
+	console.log(req.headers);
 
 	try {
 		const { searchParams } = new URL(req.url);
