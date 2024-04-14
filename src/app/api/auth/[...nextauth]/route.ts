@@ -56,16 +56,15 @@ export const nextAuthOptions: NextAuthOptions = {
 				let user = null;
 
 				try {
-					user = await prisma.user.findUniqueOrThrow({
+					const findUserList = await prisma.user.findMany({
 						where: { email: credentials.email }
 					});
 
-					if (user.password === null) {
-						throw new Error();
-					}
-
-					if (!(await verifyPass(credentials.password, user.password))) {
-						throw new Error();
+					for (const findUser of findUserList) {
+						if (findUser.password !== null && (await verifyPass(credentials.password, findUser.password))) {
+							user = findUser;
+							break;
+						}
 					}
 				} catch (e) {
 					user = null;

@@ -6,6 +6,9 @@ import { useState } from "react";
 import EditStoreModal from "@/components/organisms/EditStoreModal";
 import { SessionProvider } from "next-auth/react";
 import useGetUserData from "@/hooks/useGetUserData";
+import useSendVerifyMail from "@/hooks/useSendVerifyMail";
+import Modal from "@/components/molecules/Modal";
+import SubTitle from "@/components/atoms/SubTitle";
 
 interface Props {
 	storeId: string;
@@ -13,13 +16,48 @@ interface Props {
 
 const EditStoreButton = ({ storeId }: Props): JSX.Element => {
 	const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
-	const { status } = useGetUserData();
+	const { status, userId, userVerified } = useGetUserData();
+	const { sendVerifyMail, response: verifiedResponse } = useSendVerifyMail();
 
 	return (
 		<>
 			{status === "authenticated" && (
 				<>
-					<EditStoreModal storeId={storeId} isOpen={isOpenEditModal} setIsOpen={setIsOpenEditModal} />
+					<EditStoreModal
+						storeId={storeId}
+						isOpen={isOpenEditModal && userVerified === true}
+						setIsOpen={setIsOpenEditModal}
+					/>
+					<Modal isOpen={isOpenEditModal && userVerified === false} setIsOpen={setIsOpenEditModal}>
+						<SubTitle>お店の情報を編集</SubTitle>
+						<p
+							className={css`
+								text-align: center;
+								margin: 30px 0;
+							`}
+						>
+							お店の情報を編集するには、メール認証を完了する必要があります。
+						</p>
+						<div
+							className={css`
+								display: flex;
+								justify-content: center;
+							`}
+						>
+							<div>
+								{verifiedResponse === undefined && userId !== null && (
+									<Button
+										onClick={() => {
+											void sendVerifyMail(userId);
+										}}
+									>
+										認証メールを再送信する
+									</Button>
+								)}
+								{verifiedResponse !== undefined && <Button disabled>認証メールを送信しました</Button>}
+							</div>
+						</div>
+					</Modal>
 					<div
 						className={css`
 							text-align: right;

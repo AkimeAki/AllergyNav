@@ -1,10 +1,57 @@
+"use client";
+
 import { css } from "@kuma-ui/core";
 import Link from "next/link";
 import Image from "next/image";
+import { SessionProvider } from "next-auth/react";
+import useGetUserData from "@/hooks/useGetUserData";
+import Button from "@/components/atoms/Button";
+import useSendVerifyMail from "@/hooks/useSendVerifyMail";
 
-export default function (): JSX.Element {
+const Header = (): JSX.Element => {
+	const { userId, userVerified } = useGetUserData();
+	const { sendVerifyMail, response } = useSendVerifyMail();
+
 	return (
 		<>
+			{userVerified === false && (
+				<div
+					className={css`
+						background-color: var(--color-orange);
+					`}
+				>
+					<div
+						className={css`
+							max-width: 1200px;
+							margin: 0 auto;
+							width: 100%;
+							padding: 0 30px;
+							height: 40px;
+							display: flex;
+							align-items: center;
+						`}
+					>
+						<span
+							className={css`
+								color: white;
+							`}
+						>
+							メール認証が完了していません。7日後にアカウントが削除されます。
+						</span>
+						{response === undefined && userId !== null && (
+							<Button
+								size="tiny"
+								color="var(--color-black)"
+								onClick={() => {
+									void sendVerifyMail(userId);
+								}}
+							>
+								認証メールを再送信する
+							</Button>
+						)}
+					</div>
+				</div>
+			)}
 			<header
 				className={css`
 					width: 100%;
@@ -81,5 +128,13 @@ export default function (): JSX.Element {
 				</div>
 			</header>
 		</>
+	);
+};
+
+export default function (): JSX.Element {
+	return (
+		<SessionProvider>
+			<Header />
+		</SessionProvider>
 	);
 }

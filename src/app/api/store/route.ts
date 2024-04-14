@@ -166,6 +166,19 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 			throw new ValidationError();
 		}
 
+		const userResult = await prisma.user.findFirstOrThrow({
+			select: {
+				verified: true
+			},
+			where: {
+				id: userId
+			}
+		});
+
+		if (!userResult.verified) {
+			throw new ForbiddenError();
+		}
+
 		await prisma.$transaction(async (prisma) => {
 			const storeInsertResult = await prisma.store.create({
 				data: {

@@ -20,10 +20,6 @@ export const GET = async (req: NextRequest, { params }: Data): Promise<Response>
 	let data: GetUserResponse = null;
 
 	try {
-		if (!(await accessCheck(req))) {
-			throw new TooManyRequestError();
-		}
-
 		const userId = safeString(params.id);
 
 		if (userId === null) {
@@ -35,6 +31,12 @@ export const GET = async (req: NextRequest, { params }: Data): Promise<Response>
 
 		const authenticated = session !== null && token !== null && userId === safeString(session.user?.id);
 
+		if (!authenticated) {
+			if (!(await accessCheck(req))) {
+				throw new TooManyRequestError();
+			}
+		}
+
 		const result = await prisma.user.findUniqueOrThrow({
 			where: { id: userId }
 		});
@@ -42,7 +44,8 @@ export const GET = async (req: NextRequest, { params }: Data): Promise<Response>
 		data = {
 			id: result.id.toString(),
 			email: authenticated ? result.email : 403,
-			role: authenticated ? result.role : 403
+			role: authenticated ? result.role : 403,
+			verified: authenticated ? result.verified : 403
 		};
 
 		status = 200;

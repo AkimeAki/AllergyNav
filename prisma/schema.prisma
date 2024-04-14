@@ -13,20 +13,32 @@ datasource db {
 
 model User {
   id       String  @id @default(cuid())
-  email    String  @unique
+  email    String
   password String?
   role     String  @default("normal")
+  verified Boolean @default(false)
 
   store_comments   StoreComment[]
-  created_stores   Store[]         @relation("created_user")
-  updated_stores   Store[]         @relation("updated_user")
-  created_menus    Menu[]          @relation("created_user")
-  updated_menus    Menu[]          @relation("updated_user")
+  created_stores   Store[]          @relation("created_user")
+  updated_stores   Store[]          @relation("updated_user")
+  created_menus    Menu[]           @relation("created_user")
+  updated_menus    Menu[]           @relation("updated_user")
   user_ips         UserIp[]
   user_store_goods UserStoreGood[]
   user_store_bads  UserStoreBad[]
+  user_verify_code UserVerifyCode[]
 
   @@map("users")
+}
+
+model UserVerifyCode {
+  user_id    String   @id
+  code       String   @unique @default(uuid())
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("user_verify_codes")
 }
 
 model UserIp {
@@ -34,7 +46,7 @@ model UserIp {
   ip         String
   created_at DateTime @default(now())
 
-  user User @relation(fields: [user_id], references: [id])
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@id([user_id, ip])
   @@map("user_ips")
@@ -46,6 +58,7 @@ model AccessIp {
   path       String
   block      Boolean  @default(false)
   updated_at DateTime @default(now()) @updatedAt
+  created_at DateTime @default(now())
 
   @@id([ip, path])
   @@map("access_ips")

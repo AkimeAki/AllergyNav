@@ -7,6 +7,8 @@ import { hashPass } from "@/libs/password";
 import { accessCheck } from "@/libs/access-check";
 import type { NextRequest } from "next/server";
 import { getStatus } from "@/libs/get-status";
+import { Resend } from "resend";
+import { mailBody, mailFrom, mailTitle } from "@/libs/verifiy-mail";
 
 export const POST = async (req: NextRequest): Promise<Response> => {
 	let status = 500;
@@ -34,20 +36,51 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 			throw new ValidationError();
 		}
 
-		const result = await prisma.user.create({
-			data: {
-				email,
-				password: await hashPass(password)
+		await prisma.$transaction(async (prisma) => {
+			const userResult = await prisma.user.findFirst({
+				select: { id: true },
+				where: { email, verified: true }
+			});
+
+			if (userResult !== null) {
+				throw new Error();
+			}
+
+			const addUserResult = await prisma.user.create({
+				data: {
+					email,
+					password: await hashPass(password)
+				}
+			});
+
+			data = {
+				id: addUserResult.id,
+				email: addUserResult.email
+			};
+
+			const createVerifyCodeResult = await prisma.userVerifyCode.create({
+				data: {
+					user_id: addUserResult.id
+				}
+			});
+
+			const resend = new Resend(process.env.RESEND_API_KEY ?? "");
+
+			const sendEmailResult = await resend.emails.send({
+				from: mailFrom,
+				to: email,
+				subject: mailTitle,
+				html: mailBody(createVerifyCodeResult.code)
+			});
+
+			if (sendEmailResult.data === null) {
+				throw new Error(sendEmailResult.error?.message ?? "");
 			}
 		});
 
-		data = {
-			id: result.id.toString(),
-			email: result.email
-		};
-
 		status = 200;
 	} catch (e) {
+		data = null;
 		console.error(e);
 
 		status = getStatus(e);

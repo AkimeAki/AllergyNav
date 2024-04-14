@@ -17,6 +17,7 @@ import { formatText } from "@/libs/format-text";
 import { usePathname } from "next/navigation";
 import useGetUserData from "@/hooks/useGetUserData";
 import { SessionProvider } from "next-auth/react";
+import useSendVerifyMail from "@/hooks/useSendVerifyMail";
 
 interface Props {
 	id: string;
@@ -28,7 +29,8 @@ const StoreComment = ({ id }: Props): JSX.Element => {
 	const { response: comments, loading: getLoading, getComments } = useGetComments();
 	const { response: addedComment, loading: addLoading, message: addMessage, addComment } = useAddComment();
 	const pathname = usePathname();
-	const { status } = useGetUserData();
+	const { status, userId, userVerified } = useGetUserData();
+	const { sendVerifyMail, response: verifiedResponse } = useSendVerifyMail();
 
 	useEffect(() => {
 		void getComments(id);
@@ -109,6 +111,68 @@ const StoreComment = ({ id }: Props): JSX.Element => {
 								</div>
 								<div>
 									<Button href={`/register?redirect=${pathname}`}>アカウント作成</Button>
+								</div>
+							</div>
+						</div>
+					</div>
+				)}
+				{status === "authenticated" && userVerified === false && (
+					<div
+						className={css`
+							position: absolute;
+							top: 0;
+							left: 0;
+							width: 100%;
+							height: 100%;
+							opacity: 0;
+							transition-duration: 200ms;
+							transition-property: opacity;
+							background-color: white;
+							border-radius: 30px;
+							display: flex;
+							justify-content: center;
+							align-items: center;
+							box-shadow: 0 0 10px -5px #969696;
+
+							&:hover {
+								opacity: 0.9;
+							}
+						`}
+					>
+						<div
+							className={css`
+								display: flex;
+								flex-direction: column;
+								gap: 30px;
+							`}
+						>
+							<p
+								className={css`
+									text-align: center;
+								`}
+							>
+								コメントを書くには、メール認証を完了する必要があります。
+							</p>
+							<div
+								className={css`
+									display: flex;
+									gap: 20px;
+									justify-content: center;
+								`}
+							>
+								<div>
+									{verifiedResponse === undefined && userId !== null && (
+										<Button
+											onClick={() => {
+												void sendVerifyMail(userId);
+											}}
+										>
+											認証メールを再送信する
+										</Button>
+									)}
+									{verifiedResponse !== undefined && (
+										<Button disabled>認証メールを送信しました</Button>
+									)}
 								</div>
 							</div>
 						</div>

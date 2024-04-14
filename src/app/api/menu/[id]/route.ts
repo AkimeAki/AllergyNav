@@ -126,6 +126,19 @@ export const PUT = async (req: NextRequest, { params }: Data): Promise<Response>
 			throw new ValidationError();
 		}
 
+		const userResult = await prisma.user.findFirstOrThrow({
+			select: {
+				verified: true
+			},
+			where: {
+				id: userId
+			}
+		});
+
+		if (!userResult.verified) {
+			throw new ForbiddenError();
+		}
+
 		await prisma.$transaction(async (prisma): Promise<void> => {
 			const menuUpdateResult = await prisma.menu.update({
 				data: {

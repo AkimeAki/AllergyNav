@@ -17,6 +17,7 @@ import useGetAllergens from "@/hooks/useGetAllergens";
 import AllergenItem from "@/components/atoms/AllergenItem";
 import MiniTitle from "@/components/atoms/MiniTitle";
 import useGetUserData from "@/hooks/useGetUserData";
+import useSendVerifyMail from "@/hooks/useSendVerifyMail";
 
 const StoreList = (): JSX.Element => {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
@@ -24,7 +25,8 @@ const StoreList = (): JSX.Element => {
 	const [searchAllergens, setSearchAllergens] = useState<string[]>([]);
 	const { response: stores, loading, message, getStore } = useGetStores();
 	const { response: allergens, getAllergens, loading: getAllergensLoading } = useGetAllergens();
-	const { status } = useGetUserData();
+	const { status, userId, userVerified } = useGetUserData();
+	const { sendVerifyMail, response: verifiedResponse } = useSendVerifyMail();
 	const params = {
 		allergens: searchParams.get("allergens") ?? "",
 		keywords: searchParams.get("keywords") ?? ""
@@ -52,34 +54,68 @@ const StoreList = (): JSX.Element => {
 
 	return (
 		<>
-			{status === "authenticated" && <AddStoreModal isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />}
-			{status === "unauthenticated" && (
-				<Modal isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal}>
-					<SubTitle>お店を追加</SubTitle>
-					<p
-						className={css`
-							text-align: center;
-							margin: 30px 0;
-						`}
-					>
-						メニューを追加するには、ログインする必要があります
-					</p>
-					<div
-						className={css`
-							display: flex;
-							gap: 20px;
-							justify-content: center;
-						`}
-					>
-						<div>
-							<Button href="/login?redirect=/store">ログイン</Button>
-						</div>
-						<div>
-							<Button href="/register?redirect=/store">アカウント作成</Button>
-						</div>
+			<AddStoreModal
+				isOpen={isOpenAddModal && status === "authenticated" && userVerified === true}
+				setIsOpen={setIsOpenAddModal}
+			/>
+			<Modal
+				isOpen={isOpenAddModal && status === "authenticated" && userVerified === false}
+				setIsOpen={setIsOpenAddModal}
+			>
+				<SubTitle>お店を追加</SubTitle>
+				<p
+					className={css`
+						text-align: center;
+						margin: 30px 0;
+					`}
+				>
+					メニューを追加するには、メール認証を完了する必要があります。
+				</p>
+				<div
+					className={css`
+						display: flex;
+						justify-content: center;
+					`}
+				>
+					<div>
+						{verifiedResponse === undefined && userId !== null && (
+							<Button
+								onClick={() => {
+									void sendVerifyMail(userId);
+								}}
+							>
+								認証メールを再送信する
+							</Button>
+						)}
+						{verifiedResponse !== undefined && <Button disabled>認証メールを送信しました</Button>}
 					</div>
-				</Modal>
-			)}
+				</div>
+			</Modal>
+			<Modal isOpen={isOpenAddModal && status === "unauthenticated"} setIsOpen={setIsOpenAddModal}>
+				<SubTitle>お店を追加</SubTitle>
+				<p
+					className={css`
+						text-align: center;
+						margin: 30px 0;
+					`}
+				>
+					メニューを追加するには、ログインする必要があります
+				</p>
+				<div
+					className={css`
+						display: flex;
+						gap: 20px;
+						justify-content: center;
+					`}
+				>
+					<div>
+						<Button href="/login?redirect=/store">ログイン</Button>
+					</div>
+					<div>
+						<Button href="/register?redirect=/store">アカウント作成</Button>
+					</div>
+				</div>
+			</Modal>
 			<div
 				className={css`
 					display: flex;

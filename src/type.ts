@@ -77,6 +77,7 @@ export type GetUserResponse = {
 	id: string;
 	email: string | 403;
 	role: string | 403;
+	verified: boolean | 403;
 } | null;
 
 export interface Message {

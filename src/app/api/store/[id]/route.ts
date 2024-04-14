@@ -95,6 +95,19 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
 			throw new ValidationError();
 		}
 
+		const userResult = await prisma.user.findFirstOrThrow({
+			select: {
+				verified: true
+			},
+			where: {
+				id: userId
+			}
+		});
+
+		if (!userResult.verified) {
+			throw new ForbiddenError();
+		}
+
 		await prisma.$transaction(async (prisma) => {
 			const storeInsertResult = await prisma.store.update({
 				where: { id: storeId },

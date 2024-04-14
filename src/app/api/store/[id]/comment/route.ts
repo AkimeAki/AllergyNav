@@ -107,6 +107,19 @@ export const POST = async (req: NextRequest, { params }: { params: { id: string 
 			throw new ValidationError();
 		}
 
+		const userResult = await prisma.user.findFirstOrThrow({
+			select: {
+				verified: true
+			},
+			where: {
+				id: userId
+			}
+		});
+
+		if (!userResult.verified) {
+			throw new ForbiddenError();
+		}
+
 		const result = await prisma.storeComment.create({
 			data: {
 				title,

@@ -20,6 +20,7 @@ import { SessionProvider } from "next-auth/react";
 import useGetUserData from "@/hooks/useGetUserData";
 import Modal from "@/components/molecules/Modal";
 import SubTitle from "@/components/atoms/SubTitle";
+import useSendVerifyMail from "@/hooks/useSendVerifyMail";
 
 interface Props {
 	id: string;
@@ -32,9 +33,10 @@ const MenuList = ({ id }: Props): JSX.Element => {
 	const [openHistoryModalId, setOpenHistoryModalId] = useState<string>();
 	const [isOpenHistoryModal, setIsOpenHistoryModal] = useState<boolean>(false);
 	const searchParams = useSearchParams();
-	const { status } = useGetUserData();
 	const { response: menus, loading, message, getMenus } = useGetMenus();
 	const [menuHoverId, setMenuHoverId] = useState<string>();
+	const { status, userId, userVerified } = useGetUserData();
+	const { sendVerifyMail, response: verifiedResponse } = useSendVerifyMail();
 	const params = {
 		allergens: searchParams.get("allergens") ?? "",
 		keywords: searchParams.get("keywords") ?? "",
@@ -47,50 +49,108 @@ const MenuList = ({ id }: Props): JSX.Element => {
 
 	return (
 		<>
-			{status === "authenticated" && (
-				<AddMenuModal
-					storeId={id}
-					isOpen={isOpenAddModal}
-					setIsOpen={setIsOpenAddModal}
-					reload={() => {
-						void getMenus(params.allergens, params.keywords, params.storeId);
-					}}
-				/>
-			)}
-			{status === "unauthenticated" && (
-				<Modal isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal}>
-					<SubTitle>お店を追加</SubTitle>
-					<p
-						className={css`
-							text-align: center;
-							margin: 30px 0;
-						`}
-					>
-						メニューを追加するには、ログインする必要があります
-					</p>
-					<div
-						className={css`
-							display: flex;
-							gap: 20px;
-							justify-content: center;
-						`}
-					>
-						<div>
-							<Button href={`/login?redirect=/store/${id}/menu`}>ログイン</Button>
-						</div>
-						<div>
-							<Button href={`/register?redirect=/store/${id}/menu`}>アカウント作成</Button>
-						</div>
+			<AddMenuModal
+				storeId={id}
+				isOpen={isOpenAddModal && status === "authenticated" && userVerified === true}
+				setIsOpen={setIsOpenAddModal}
+				reload={() => {
+					void getMenus(params.allergens, params.keywords, params.storeId);
+				}}
+			/>
+			<Modal
+				isOpen={isOpenAddModal && status === "authenticated" && userVerified === false}
+				setIsOpen={setIsOpenAddModal}
+			>
+				<SubTitle>メニューを追加</SubTitle>
+				<p
+					className={css`
+						text-align: center;
+						margin: 30px 0;
+					`}
+				>
+					メニューを追加するには、メール認証を完了する必要があります。
+				</p>
+				<div
+					className={css`
+						display: flex;
+						justify-content: center;
+					`}
+				>
+					<div>
+						{verifiedResponse === undefined && userId !== null && (
+							<Button
+								onClick={() => {
+									void sendVerifyMail(userId);
+								}}
+							>
+								認証メールを再送信する
+							</Button>
+						)}
+						{verifiedResponse !== undefined && <Button disabled>認証メールを送信しました</Button>}
 					</div>
-				</Modal>
-			)}
-
+				</div>
+			</Modal>
+			<Modal isOpen={isOpenAddModal && status === "unauthenticated"} setIsOpen={setIsOpenAddModal}>
+				<SubTitle>お店を追加</SubTitle>
+				<p
+					className={css`
+						text-align: center;
+						margin: 30px 0;
+					`}
+				>
+					メニューを追加するには、ログインする必要があります
+				</p>
+				<div
+					className={css`
+						display: flex;
+						gap: 20px;
+						justify-content: center;
+					`}
+				>
+					<div>
+						<Button href={`/login?redirect=/store/${id}/menu`}>ログイン</Button>
+					</div>
+					<div>
+						<Button href={`/register?redirect=/store/${id}/menu`}>アカウント作成</Button>
+					</div>
+				</div>
+			</Modal>
+			<Modal isOpen={isOpenEditModal && userVerified === false} setIsOpen={setIsOpenEditModal}>
+				<SubTitle>メニューを編集</SubTitle>
+				<p
+					className={css`
+						text-align: center;
+						margin: 30px 0;
+					`}
+				>
+					メニューを編集するには、メール認証を完了する必要があります。
+				</p>
+				<div
+					className={css`
+						display: flex;
+						justify-content: center;
+					`}
+				>
+					<div>
+						{verifiedResponse === undefined && userId !== null && (
+							<Button
+								onClick={() => {
+									void sendVerifyMail(userId);
+								}}
+							>
+								認証メールを再送信する
+							</Button>
+						)}
+						{verifiedResponse !== undefined && <Button disabled>認証メールを送信しました</Button>}
+					</div>
+				</div>
+			</Modal>
 			{menus.map((item) => {
 				return (
 					<EditMenuModal
 						key={item.id}
 						menuId={item.id}
-						isOpen={isOpenEditModal && openEditModalId === item.id}
+						isOpen={userVerified === true && isOpenEditModal && openEditModalId === item.id}
 						setIsOpen={setIsOpenEditModal}
 						reload={() => {
 							void getMenus(params.allergens, params.keywords, params.storeId);
