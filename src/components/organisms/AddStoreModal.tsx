@@ -92,6 +92,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 							<Label>お店の詳細情報</Label>
 							<TextArea
 								disabled={loading || store !== undefined}
+								autoSize
 								onChange={(e) => {
 									setStoreDescription(e.target.value);
 								}}

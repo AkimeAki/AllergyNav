@@ -29,6 +29,7 @@ export default function ({ value, onChange, disabled = false, autoSize = false }
 
 	useEffect(() => {
 		window.addEventListener("resize", adjustHeight, false);
+		adjustHeight();
 	}, []);
 
 	return (
