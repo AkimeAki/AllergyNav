@@ -59,7 +59,7 @@ export default async function ({ searchParams }: Props): Promise<JSX.Element> {
 			}
 
 			// ユーザーを認証済みにする
-			const verifiedUserResult = await prisma.user.update({
+			await prisma.user.update({
 				data: {
 					verified: true
 				},
@@ -69,11 +69,6 @@ export default async function ({ searchParams }: Props): Promise<JSX.Element> {
 			// 認証したユーザーの認証コードを削除
 			await prisma.userVerifyCode.delete({
 				where: { user_id: userId }
-			});
-
-			// 認証したユーザーのメールアドレスと一致する、認証していないユーザーのメールアドレスを削除
-			await prisma.user.deleteMany({
-				where: { email: verifiedUserResult.email, NOT: { id: userId } }
 			});
 		});
 

@@ -13,10 +13,11 @@ datasource db {
 
 model User {
   id       String  @id @default(cuid())
-  email    String
+  email    String  @unique
   password String?
   role     String  @default("normal")
   verified Boolean @default(false)
+  deleted  Boolean @default(false)
 
   store_comments   StoreComment[]
   created_stores   Store[]          @relation("created_user")
