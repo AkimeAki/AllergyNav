@@ -86,13 +86,16 @@ export default async function ({ searchParams }: Props): Promise<JSX.Element> {
 				margin: 0 auto;
 			`}
 		>
-			<div>{text}</div>
+			<p>{text}</p>
 			{verified && (
-				<Script id="redirect-top">
-					{`setTimeout(() => {
+				<>
+					<p>5秒後にトップページに自動でリダイレクトします。</p>
+					<Script id="redirect-top">
+						{`setTimeout(() => {
 					window.location.href = '/';
 				}, 5000);`}
-				</Script>
+					</Script>
+				</>
 			)}
 		</div>
 	);
