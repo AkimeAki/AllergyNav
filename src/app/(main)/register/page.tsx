@@ -1,4 +1,4 @@
-import RegisterForm from "@/components/organisms/RegisterForm";
+import RegisterForm from "@/components/templates/RegisterForm";
 import { css } from "@kuma-ui/core";
 import type { Metadata } from "next";
 

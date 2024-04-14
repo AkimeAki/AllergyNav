@@ -17,7 +17,7 @@ interface Props {
 const EditStoreButton = ({ storeId }: Props): JSX.Element => {
 	const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
 	const { status, userId, userVerified } = useGetUserData();
-	const { sendVerifyMail, response: verifiedResponse } = useSendVerifyMail();
+	const { sendVerifyMail, response: verifiedResponse, loading: sendVerifyLoading } = useSendVerifyMail();
 
 	return (
 		<>
@@ -45,7 +45,7 @@ const EditStoreButton = ({ storeId }: Props): JSX.Element => {
 							`}
 						>
 							<div>
-								{verifiedResponse === undefined && userId !== null && (
+								{!sendVerifyLoading && verifiedResponse === undefined && userId !== null && (
 									<Button
 										onClick={() => {
 											void sendVerifyMail(userId);
@@ -54,7 +54,10 @@ const EditStoreButton = ({ storeId }: Props): JSX.Element => {
 										認証メールを再送信する
 									</Button>
 								)}
-								{verifiedResponse !== undefined && <Button disabled>認証メールを送信しました</Button>}
+								{sendVerifyLoading && <Button disabled>送信中</Button>}
+								{!sendVerifyLoading && verifiedResponse !== undefined && (
+									<Button disabled>認証メールを送信しました</Button>
+								)}
 							</div>
 						</div>
 					</Modal>

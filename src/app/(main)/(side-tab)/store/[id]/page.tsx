@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { safeString } from "@/libs/safe-type";
 import { css } from "@kuma-ui/core";
 import Link from "next/link";
-import GoogleMap from "@/components/organisms/GoogleMap";
+import GoogleMap from "@/components/molecules/GoogleMap";
 import { formatText } from "@/libs/format-text";
 import EditStoreButton from "@/components/organisms/EditStoreButton";
 import { prisma } from "@/libs/prisma";

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { safeString } from "@/libs/safe-type";
 import { css } from "@kuma-ui/core";
-import StoreComment from "@/components/organisms/StoreComment";
+import StoreComment from "@/components/templates/StoreComment";
 
 interface Props {
 	params: {

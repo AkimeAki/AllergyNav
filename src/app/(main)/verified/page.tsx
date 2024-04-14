@@ -92,8 +92,8 @@ export default async function ({ searchParams }: Props): Promise<JSX.Element> {
 					<p>5秒後にトップページに自動でリダイレクトします。</p>
 					<Script id="redirect-top">
 						{`setTimeout(() => {
-					window.location.href = '/';
-				}, 5000);`}
+							window.location.href = '/';
+						}, 5000);`}
 					</Script>
 				</>
 			)}

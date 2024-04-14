@@ -18,6 +18,7 @@ import { usePathname } from "next/navigation";
 import useGetUserData from "@/hooks/useGetUserData";
 import { SessionProvider } from "next-auth/react";
 import useSendVerifyMail from "@/hooks/useSendVerifyMail";
+import StoreCommentBarrier from "@/components/molecules/StoreCommentBarrier";
 
 interface Props {
 	id: string;
@@ -30,7 +31,7 @@ const StoreComment = ({ id }: Props): JSX.Element => {
 	const { response: addedComment, loading: addLoading, message: addMessage, addComment } = useAddComment();
 	const pathname = usePathname();
 	const { status, userId, userVerified } = useGetUserData();
-	const { sendVerifyMail, response: verifiedResponse } = useSendVerifyMail();
+	const { sendVerifyMail, response: verifiedResponse, loading: sendVerifyLoading } = useSendVerifyMail();
 
 	useEffect(() => {
 		void getComments(id);
@@ -63,120 +64,63 @@ const StoreComment = ({ id }: Props): JSX.Element => {
 				`}
 			>
 				{status === "unauthenticated" && (
-					<div
-						className={css`
-							position: absolute;
-							top: 0;
-							left: 0;
-							width: 100%;
-							height: 100%;
-							opacity: 0;
-							transition-duration: 200ms;
-							transition-property: opacity;
-							background-color: white;
-							border-radius: 30px;
-							display: flex;
-							justify-content: center;
-							align-items: center;
-							box-shadow: 0 0 10px -5px #969696;
-
-							&:hover {
-								opacity: 0.9;
-							}
-						`}
-					>
+					<StoreCommentBarrier>
+						<p
+							className={css`
+								text-align: center;
+							`}
+						>
+							コメントを書くには、ログインする必要があります
+						</p>
 						<div
 							className={css`
 								display: flex;
-								flex-direction: column;
-								gap: 30px;
+								gap: 20px;
+								justify-content: center;
 							`}
 						>
-							<p
-								className={css`
-									text-align: center;
-								`}
-							>
-								コメントを書くには、ログインする必要があります
-							</p>
-							<div
-								className={css`
-									display: flex;
-									gap: 20px;
-									justify-content: center;
-								`}
-							>
-								<div>
-									<Button href={`/login?redirect=${pathname}`}>ログイン</Button>
-								</div>
-								<div>
-									<Button href={`/register?redirect=${pathname}`}>アカウント作成</Button>
-								</div>
+							<div>
+								<Button href={`/login?redirect=${pathname}`}>ログイン</Button>
+							</div>
+							<div>
+								<Button href={`/register?redirect=${pathname}`}>アカウント作成</Button>
 							</div>
 						</div>
-					</div>
+					</StoreCommentBarrier>
 				)}
 				{status === "authenticated" && userVerified === false && (
-					<div
-						className={css`
-							position: absolute;
-							top: 0;
-							left: 0;
-							width: 100%;
-							height: 100%;
-							opacity: 0;
-							transition-duration: 200ms;
-							transition-property: opacity;
-							background-color: white;
-							border-radius: 30px;
-							display: flex;
-							justify-content: center;
-							align-items: center;
-							box-shadow: 0 0 10px -5px #969696;
-
-							&:hover {
-								opacity: 0.9;
-							}
-						`}
-					>
+					<StoreCommentBarrier>
+						<p
+							className={css`
+								text-align: center;
+							`}
+						>
+							コメントを書くには、メール認証を完了する必要があります。
+						</p>
 						<div
 							className={css`
 								display: flex;
-								flex-direction: column;
-								gap: 30px;
+								gap: 20px;
+								justify-content: center;
 							`}
 						>
-							<p
-								className={css`
-									text-align: center;
-								`}
-							>
-								コメントを書くには、メール認証を完了する必要があります。
-							</p>
-							<div
-								className={css`
-									display: flex;
-									gap: 20px;
-									justify-content: center;
-								`}
-							>
-								<div>
-									{verifiedResponse === undefined && userId !== null && (
-										<Button
-											onClick={() => {
-												void sendVerifyMail(userId);
-											}}
-										>
-											認証メールを再送信する
-										</Button>
-									)}
-									{verifiedResponse !== undefined && (
-										<Button disabled>認証メールを送信しました</Button>
-									)}
-								</div>
+							<div>
+								{!sendVerifyLoading && verifiedResponse === undefined && userId !== null && (
+									<Button
+										onClick={() => {
+											void sendVerifyMail(userId);
+										}}
+									>
+										認証メールを再送信する
+									</Button>
+								)}
+								{sendVerifyLoading && <Button disabled>送信中</Button>}
+								{!sendVerifyLoading && verifiedResponse !== undefined && (
+									<Button disabled>認証メールを送信しました</Button>
+								)}
 							</div>
 						</div>
-					</div>
+					</StoreCommentBarrier>
 				)}
 
 				<div

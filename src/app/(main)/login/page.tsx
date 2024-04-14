@@ -1,4 +1,4 @@
-import LoginForm from "@/components/organisms/LoginForm";
+import LoginForm from "@/components/templates/LoginForm";
 import { css } from "@kuma-ui/core";
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth/next";

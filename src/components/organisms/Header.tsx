@@ -10,7 +10,7 @@ import useSendVerifyMail from "@/hooks/useSendVerifyMail";
 
 const Header = (): JSX.Element => {
 	const { userId, userVerified } = useGetUserData();
-	const { sendVerifyMail, response } = useSendVerifyMail();
+	const { sendVerifyMail, response: verifiedResponse, loading: sendVerifyLoading } = useSendVerifyMail();
 
 	return (
 		<>
@@ -38,7 +38,7 @@ const Header = (): JSX.Element => {
 						>
 							メール認証が完了していません。7日後にアカウントが削除されます。
 						</span>
-						{response === undefined && userId !== null && (
+						{!sendVerifyLoading && verifiedResponse === undefined && userId !== null && (
 							<Button
 								size="tiny"
 								color="var(--color-black)"
@@ -47,6 +47,16 @@ const Header = (): JSX.Element => {
 								}}
 							>
 								認証メールを再送信する
+							</Button>
+						)}
+						{sendVerifyLoading && (
+							<Button size="tiny" disabled>
+								送信中
+							</Button>
+						)}
+						{!sendVerifyLoading && verifiedResponse !== undefined && (
+							<Button size="tiny" disabled>
+								認証メールを送信しました
 							</Button>
 						)}
 					</div>

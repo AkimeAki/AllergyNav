@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { safeString } from "@/libs/safe-type";
-import MenuList from "@/components/organisms/MenuList";
+import MenuList from "@/components/templates/MenuList";
 
 interface Props {
 	params: {

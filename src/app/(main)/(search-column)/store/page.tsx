@@ -1,5 +1,5 @@
 import SubTitle from "@/components/atoms/SubTitle";
-import StoreList from "@/components/organisms/StoreList";
+import StoreList from "@/components/templates/StoreList";
 import { css } from "@kuma-ui/core";
 import type { Metadata } from "next";
 
