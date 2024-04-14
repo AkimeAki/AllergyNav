@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 import MainTitle from "@/components/atoms/MainTitle";
 import UserTabs from "@/components/organisms/UserTabs";
 import { getServerSession } from "next-auth";
-import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
+import { nextAuthOptions } from "@/libs/auth";
 
 interface Props {
 	children: ReactNode;

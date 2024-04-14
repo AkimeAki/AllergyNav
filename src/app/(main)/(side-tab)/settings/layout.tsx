@@ -5,7 +5,7 @@ import { css } from "@kuma-ui/core";
 import MainTitle from "@/components/atoms/MainTitle";
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
-import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
+import { nextAuthOptions } from "@/libs/auth";
 import UserTabs from "@/components/organisms/UserTabs";
 
 interface Props {

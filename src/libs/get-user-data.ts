@@ -1,4 +1,4 @@
-import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
+import { nextAuthOptions } from "@/libs/auth";
 import { getServerSession } from "next-auth";
 import { safeString } from "@/libs/safe-type";
 import { prisma } from "@/libs/prisma";

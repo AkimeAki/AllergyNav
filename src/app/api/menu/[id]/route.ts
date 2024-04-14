@@ -4,7 +4,7 @@ import { safeString } from "@/libs/safe-type";
 import { isEmptyString } from "@/libs/check-string";
 import { prisma } from "@/libs/prisma";
 import { getServerSession } from "next-auth";
-import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
+import { nextAuthOptions } from "@/libs/auth";
 import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
 import { accessCheck } from "@/libs/access-check";

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { prisma } from "@/libs/prisma";
 import { safeString } from "@/libs/safe-type";
 import { getServerSession } from "next-auth";
-import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
+import { nextAuthOptions } from "@/libs/auth";
 import Script from "next/script";
 
 export const metadata: Metadata = {

@@ -8,6 +8,8 @@ steps:
         "NEXTAUTH_SECRET=${_NEXTAUTH_SECRET}",
         "--build-arg",
         "DATABASE_URL=${_DATABASE_URL}",
+        "--build-arg",
+        "RESEND_API_KEY=${_RESEND_API_KEY}",
         "-t",
         "${_IMAGE_NAME}:${COMMIT_SHA}",
         "-f",

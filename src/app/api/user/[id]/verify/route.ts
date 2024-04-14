@@ -3,7 +3,7 @@ import { safeString } from "@/libs/safe-type";
 import { prisma } from "@/libs/prisma";
 import type { NextRequest } from "next/server";
 import { getServerSession } from "next-auth";
-import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
+import { nextAuthOptions } from "@/libs/auth";
 import { getToken } from "next-auth/jwt";
 import { accessCheck } from "@/libs/access-check";
 import { getStatus } from "@/libs/get-status";
