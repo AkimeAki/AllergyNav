@@ -90,7 +90,7 @@ export default function ({ storeId, menuId, isOpen, setIsOpen, callback }: Props
 										setPictureData(files[0]);
 									}
 								}}
-								accept=".png"
+								accept=".png, .jpg, .jpeg, .gif, .webp"
 							/>
 						</div>
 						<div>
