@@ -65,10 +65,11 @@ export default function ({ isSidebarOpen, setIsSidebarOpen }: Props): JSX.Elemen
 								transition-duration: 200ms;
 								transition-property: opacity;
 							}
-
-							&:hover {
-								&:before {
-									opacity: 1;
+							@media (hover: hover) {
+								&:hover {
+									&:before {
+										opacity: 1;
+									}
 								}
 							}
 						`,

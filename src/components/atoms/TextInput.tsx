@@ -33,6 +33,8 @@ export default function ({ onChange, value, disabled = false, password = false, 
 					border-radius: 20px;
 					transition-duration: 200ms;
 					transition-property: box-shadow;
+					background-color: var(--color-white);
+					color: var(--color-black);
 
 					&[disabled] {
 						background-color: #dbdbdb;

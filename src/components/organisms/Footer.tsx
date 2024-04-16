@@ -8,6 +8,11 @@ export default function (): JSX.Element {
 				background-color: var(--color-theme-thin);
 				height: 200px;
 				color: var(--color-white);
+
+				@media (max-width: 880px) {
+					height: 270px;
+					padding-bottom: 70px;
+				}
 			`}
 		>
 			<div

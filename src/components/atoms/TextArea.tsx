@@ -54,6 +54,7 @@ export default function ({ value, onChange, disabled = false, autoSize = false }
 					transition-duration: 200ms;
 					transition-property: border-color, box-shadow;
 					overflow-y: scroll;
+					background-color: var(--color-white);
 
 					&:focus {
 						box-shadow: 0 0 0 1px var(--color-theme);
