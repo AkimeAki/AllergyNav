@@ -61,8 +61,8 @@ export default function ({ isOpen, setIsOpen, children, close = true }: Props): 
 					>
 						<div
 							className={css`
-								background-color: white;
-								border-radius: 20px;
+								background-color: var(--color-white);
+								border-radius: 15px;
 								padding: 20px;
 								box-shadow: 0 0 20px -5px #969696;
 								max-height: calc(100vh - 60px);
@@ -88,7 +88,7 @@ export default function ({ isOpen, setIsOpen, children, close = true }: Props): 
 									font-size: 0;
 									cursor: pointer;
 									user-select: none;
-									background-color: var(--color-orange);
+									background-color: var(--color-theme);
 									border-radius: 9999px;
 									padding: 5px;
 
@@ -104,7 +104,7 @@ export default function ({ isOpen, setIsOpen, children, close = true }: Props): 
 									}
 								}}
 							>
-								<GoogleIcon size={25} name="close" color="white" />
+								<GoogleIcon size={25} name="close" color="var(--color-white)" />
 							</div>
 						</div>
 					</div>

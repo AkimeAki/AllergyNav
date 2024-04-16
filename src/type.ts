@@ -14,6 +14,16 @@ export type GetStoreResponse = StoreResponse | null;
 export type AddStoreResponse = StoreResponse | null;
 export type EditStoreResponse = StoreResponse | null;
 
+interface PictureResponse {
+	id: string;
+	url: string;
+	updated_at: Date;
+	created_at: Date;
+}
+
+export type GetPicturesResponse = PictureResponse[] | null;
+export type AddPictureResponse = PictureResponse | null;
+
 interface MenuResponse {
 	id: string;
 	name: string;

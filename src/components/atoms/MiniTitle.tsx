@@ -28,7 +28,7 @@ export default function ({ children }: Props): JSX.Element {
 					left: 0;
 					width: 100%;
 					height: 4px;
-					background-color: var(--color-orange);
+					background-color: var(--color-theme);
 					border-radius: 20px;
 				}
 			`}

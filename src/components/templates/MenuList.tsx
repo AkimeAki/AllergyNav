@@ -5,7 +5,6 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import ErrorMessage from "@/components/atoms/ErrorMessage";
-import Loading from "@/components/atoms/Loading";
 import Button from "@/components/atoms/Button";
 import AddMenuModal from "@/components/organisms/AddMenuModal";
 import EditMenuModal from "@/components/organisms/EditMenuModal";
@@ -21,6 +20,8 @@ import useGetUserData from "@/hooks/useGetUserData";
 import Modal from "@/components/molecules/Modal";
 import SubTitle from "@/components/atoms/SubTitle";
 import useSendVerifyMail from "@/hooks/useSendVerifyMail";
+import Loading from "@/components/atoms/Loading";
+import { useFloatMessage } from "@/hooks/useFloatMessage";
 
 interface Props {
 	id: string;
@@ -33,10 +34,11 @@ const MenuList = ({ id }: Props): JSX.Element => {
 	const [openHistoryModalId, setOpenHistoryModalId] = useState<string>();
 	const [isOpenHistoryModal, setIsOpenHistoryModal] = useState<boolean>(false);
 	const searchParams = useSearchParams();
-	const { response: menus, loading, message, getMenus } = useGetMenus();
+	const { response: menus, message, getMenus } = useGetMenus();
 	const [menuHoverId, setMenuHoverId] = useState<string>();
 	const { status, userId, userVerified } = useGetUserData();
 	const { sendVerifyMail, response: verifiedResponse, loading: sendVerifyLoading } = useSendVerifyMail();
+	const { addMessage } = useFloatMessage();
 	const params = {
 		allergens: searchParams.get("allergens") ?? "",
 		keywords: searchParams.get("keywords") ?? "",
@@ -53,7 +55,9 @@ const MenuList = ({ id }: Props): JSX.Element => {
 				storeId={id}
 				isOpen={isOpenAddModal && status === "authenticated" && userVerified === true}
 				setIsOpen={setIsOpenAddModal}
-				reload={() => {
+				callback={() => {
+					setIsOpenAddModal(false);
+					addMessage("メニューを追加しました！", "success", 3);
 					void getMenus(params.allergens, params.keywords, params.storeId);
 				}}
 			/>
@@ -151,20 +155,22 @@ const MenuList = ({ id }: Props): JSX.Element => {
 					</div>
 				</div>
 			</Modal>
-			{menus.map((item) => {
+			{menus?.map((item) => {
 				return (
 					<EditMenuModal
 						key={item.id}
 						menuId={item.id}
 						isOpen={userVerified === true && isOpenEditModal && openEditModalId === item.id}
 						setIsOpen={setIsOpenEditModal}
-						reload={() => {
+						callback={() => {
+							setIsOpenEditModal(false);
+							addMessage("メニューを編集しました！", "success", 3);
 							void getMenus(params.allergens, params.keywords, params.storeId);
 						}}
 					/>
 				);
 			})}
-			{menus.map((item) => {
+			{menus?.map((item) => {
 				return (
 					<MenuHistoryModal
 						key={item.id}
@@ -179,7 +185,6 @@ const MenuList = ({ id }: Props): JSX.Element => {
 					display: flex;
 					flex-direction: column;
 					gap: 20px;
-					padding: 0 10px;
 				`}
 			>
 				<section
@@ -190,175 +195,175 @@ const MenuList = ({ id }: Props): JSX.Element => {
 					`}
 				>
 					{message !== undefined && message.type === "error" && <ErrorMessage>{message.text}</ErrorMessage>}
-					{loading && <Loading />}
-					{!loading && (
-						<>
-							{menus.length === 0 && (
-								<p
-									className={css`
-										text-align: center;
-									`}
-								>
-									メニューが無いようです😿
-								</p>
-							)}
-							{[...menus].reverse().map((menu) => (
-								<div
-									key={menu.id}
-									className={css`
-										transition-duration: 200ms;
-										transition-property: box-shadow;
-										overflow: hidden;
-										border-radius: 7px;
-										border-width: 2px;
-										border-style: solid;
-										border-color: #f3f3f3;
-									`}
-								>
+					{menus === undefined && <Loading />}
+					{menus !== undefined && menus.length === 0 && (
+						<p
+							className={css`
+								text-align: center;
+							`}
+						>
+							メニューが無いようです😿
+						</p>
+					)}
+					{[...(menus ?? [])].reverse().map((menu) => (
+						<div
+							key={menu.id}
+							className={css`
+								transition-duration: 200ms;
+								transition-property: box-shadow;
+								overflow: hidden;
+								border-radius: 7px;
+								border-width: 2px;
+								border-style: solid;
+								border-color: #f3f3f3;
+
+								&:hover {
+									box-shadow: 0px 0px 15px -10px #777777;
+								}
+							`}
+						>
+							<div
+								className={css`
+									position: relative;
+									display: flex;
+								`}
+								onMouseEnter={() => {
+									setMenuHoverId(menu.id);
+								}}
+								onMouseLeave={() => {
+									setMenuHoverId(undefined);
+								}}
+							>
+								{(menuHoverId === menu.id ||
+									(openEditModalId === menu.id && isOpenEditModal) ||
+									(openHistoryModalId === menu.id && isOpenHistoryModal)) && (
 									<div
 										className={css`
-											position: relative;
+											position: absolute;
+											top: 5px;
+											right: 5px;
 											display: flex;
+											gap: 5px;
+											z-index: 99;
 										`}
-										onMouseEnter={() => {
-											setMenuHoverId(menu.id);
-										}}
-										onMouseLeave={() => {
-											setMenuHoverId(undefined);
-										}}
 									>
-										{(menuHoverId === menu.id ||
-											(openEditModalId === menu.id && isOpenEditModal) ||
-											(openHistoryModalId === menu.id && isOpenHistoryModal)) && (
-											<div
-												className={css`
-													position: absolute;
-													top: 5px;
-													right: 5px;
-													display: flex;
-													gap: 5px;
-													z-index: 99;
-												`}
+										{status === "authenticated" && (
+											<Button
+												size="tiny"
+												onClick={() => {
+													setOpenEditModalId(menu.id);
+													setIsOpenEditModal(true);
+												}}
+												selected={openEditModalId === menu.id && isOpenEditModal}
 											>
-												{status === "authenticated" && (
-													<Button
-														size="tiny"
-														onClick={() => {
-															setOpenEditModalId(menu.id);
-															setIsOpenEditModal(true);
-														}}
-														selected={openEditModalId === menu.id && isOpenEditModal}
-													>
-														<span
-															className={css`
-																display: flex;
-																justify-content: center;
-																align-items: center;
-															`}
-														>
-															<GoogleIcon name="edit" size={15} color="inherit" />
-															<span
-																className={css`
-																	line-height: 1;
-																	display: flex;
-																	font-size: 13px;
-																	color: inherit;
-																`}
-															>
-																編集
-															</span>
-														</span>
-													</Button>
-												)}
-												<Button
-													size="tiny"
-													onClick={() => {
-														setOpenHistoryModalId(menu.id);
-														setIsOpenHistoryModal(true);
-													}}
-													selected={openHistoryModalId === menu.id && isOpenHistoryModal}
-													color="var(--color-green)"
-												>
-													<span
-														className={css`
-															display: flex;
-															justify-content: center;
-															align-items: center;
-														`}
-													>
-														<GoogleIcon name="history" size={15} color="inherit" />
-														<span
-															className={css`
-																line-height: 1;
-																display: flex;
-																font-size: 13px;
-																color: inherit;
-															`}
-														>
-															履歴
-														</span>
-													</span>
-												</Button>
-											</div>
-										)}
-										<Image
-											className={css`
-												aspect-ratio: 1/1;
-												width: 100px;
-											`}
-											src="/no-image.png"
-											width={100}
-											height={100}
-											alt="メニューの画像"
-										/>
-										<div
-											className={css`
-												padding: 10px;
-												width: 100%;
-												display: flex;
-												flex-direction: column;
-												gap: 20px;
-											`}
-										>
-											<MiniTitle>{menu.name}</MiniTitle>
-											{menu.allergens.length !== 0 && (
-												<div
+												<span
 													className={css`
 														display: flex;
-														flex-direction: column;
-														gap: 5px;
+														justify-content: center;
+														align-items: center;
 													`}
 												>
-													<div
-														dangerouslySetInnerHTML={{
-															__html: formatText(menu.description)
-														}}
-													/>
-													<Label>含まれるアレルゲン</Label>
-													<div
+													<GoogleIcon name="edit" size={15} color="inherit" />
+													<span
 														className={css`
+															line-height: 1;
 															display: flex;
-															flex-wrap: wrap;
+															font-size: 13px;
+															color: inherit;
 														`}
 													>
-														{menu.allergens.map((item) => {
-															return (
-																<AllergenItem
-																	key={item.id}
-																	image={`/icons/${item.id}.png`}
-																	text={item.name}
-																/>
-															);
-														})}
-													</div>
-												</div>
-											)}
-										</div>
+														編集
+													</span>
+												</span>
+											</Button>
+										)}
+										<Button
+											size="tiny"
+											onClick={() => {
+												setOpenHistoryModalId(menu.id);
+												setIsOpenHistoryModal(true);
+											}}
+											selected={openHistoryModalId === menu.id && isOpenHistoryModal}
+											color="var(--color-green)"
+										>
+											<span
+												className={css`
+													display: flex;
+													justify-content: center;
+													align-items: center;
+												`}
+											>
+												<GoogleIcon name="history" size={15} color="inherit" />
+												<span
+													className={css`
+														line-height: 1;
+														display: flex;
+														font-size: 13px;
+														color: inherit;
+													`}
+												>
+													履歴
+												</span>
+											</span>
+										</Button>
 									</div>
+								)}
+								<Image
+									className={css`
+										aspect-ratio: 1/1;
+										width: 100px;
+									`}
+									src="/no-image.png"
+									width={100}
+									height={100}
+									alt="メニューの画像"
+								/>
+								<div
+									className={css`
+										padding: 10px;
+										width: 100%;
+										display: flex;
+										flex-direction: column;
+										gap: 20px;
+									`}
+								>
+									<MiniTitle>{menu.name}</MiniTitle>
+									{menu.allergens.length !== 0 && (
+										<div
+											className={css`
+												display: flex;
+												flex-direction: column;
+												gap: 5px;
+											`}
+										>
+											<div
+												dangerouslySetInnerHTML={{
+													__html: formatText(menu.description)
+												}}
+											/>
+											<Label>含まれるアレルゲン</Label>
+											<div
+												className={css`
+													display: flex;
+													flex-wrap: wrap;
+												`}
+											>
+												{menu.allergens.map((item) => {
+													return (
+														<AllergenItem
+															key={item.id}
+															image={`/icons/${item.id}.png`}
+															text={item.name}
+														/>
+													);
+												})}
+											</div>
+										</div>
+									)}
 								</div>
-							))}
-						</>
-					)}
+							</div>
+						</div>
+					))}
 				</section>
 				{status !== "loading" && (
 					<div

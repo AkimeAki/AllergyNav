@@ -2,21 +2,21 @@ import type { GetMenuHistoryResponse, Message } from "@/type";
 import { useState } from "react";
 
 interface ReturnType {
-	response: NonNullable<GetMenuHistoryResponse>;
+	response: NonNullable<GetMenuHistoryResponse> | undefined;
 	loading: boolean;
 	message: Message | undefined;
 	getMenuHistories: (menuId: string) => Promise<void>;
 }
 
 export default function (): ReturnType {
-	const [loading, setLoading] = useState<boolean>(true);
+	const [loading, setLoading] = useState<boolean>(false);
 	const [message, setMessage] = useState<Message | undefined>(undefined);
-	const [response, setResponse] = useState<NonNullable<GetMenuHistoryResponse>>([]);
+	const [response, setResponse] = useState<NonNullable<GetMenuHistoryResponse> | undefined>(undefined);
 
 	const getMenuHistories = async (menuId: string): Promise<void> => {
 		setLoading(true);
 		setMessage(undefined);
-		setResponse([]);
+		setResponse(undefined);
 
 		try {
 			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu/${menuId}/history`, {
@@ -42,6 +42,8 @@ export default function (): ReturnType {
 				text: "メニューの履歴を取得しました"
 			});
 		} catch (e) {
+			setResponse(undefined);
+
 			setMessage({
 				type: "error",
 				text: "接続エラーが発生しました。"

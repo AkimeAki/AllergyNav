@@ -5,9 +5,9 @@ export default function (): JSX.Element {
 	return (
 		<footer
 			className={css`
-				background-color: var(--color-orange-thin);
+				background-color: var(--color-theme-thin);
 				height: 200px;
-				color: white;
+				color: var(--color-white);
 			`}
 		>
 			<div

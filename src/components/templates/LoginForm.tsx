@@ -9,34 +9,41 @@ import SubTitle from "@/components/atoms/SubTitle";
 import Link from "next/link";
 import useLogin from "@/hooks/useLogin";
 import Cursor from "@/components/atoms/Cursor";
-import FloatMessage from "@/components/atoms/FloatMessage";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useFloatMessage } from "@/hooks/useFloatMessage";
+import { isEmptyString } from "@/libs/check-string";
 
 export default function (): JSX.Element {
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
-	const { response, loading, message, login } = useLogin();
+	const { response: loginResponse, loading: loginLoading, message: loginMessage, login } = useLogin();
 	const searchParams = useSearchParams();
 	const redirectPath = searchParams.get("redirect") ?? "/";
 	const router = useRouter();
+	const { addMessage } = useFloatMessage();
 
 	useEffect(() => {
-		if (response !== undefined && response) {
+		if (loginResponse === true) {
+			addMessage("ログインに成功しました！", "success", 3);
 			router.push(redirectPath);
 		}
-	}, [response]);
+	}, [loginResponse]);
+
+	useEffect(() => {
+		if (loginLoading) {
+			addMessage("ログインしています", "success");
+		}
+	}, [loginLoading]);
+
+	useEffect(() => {
+		if (loginMessage !== undefined && loginMessage.type === "error") {
+			addMessage(loginMessage.text, "error");
+		}
+	}, [loginMessage]);
 
 	return (
 		<>
-			{loading && (
-				<>
-					<Cursor cursor="wait" />
-					<FloatMessage type="success">ログインしています</FloatMessage>
-				</>
-			)}
-			{message !== undefined && message.type === "error" && (
-				<FloatMessage type="error">{message.text}</FloatMessage>
-			)}
+			{(loginLoading || loginResponse === true) && <Cursor cursor="wait" />}
 			<div
 				className={css`
 					display: flex;
@@ -74,7 +81,7 @@ export default function (): JSX.Element {
 								onChange={(e) => {
 									setEmail(e.target.value);
 								}}
-								disabled={loading}
+								disabled={loginLoading || loginResponse === true}
 							/>
 						</div>
 						<div>
@@ -84,14 +91,19 @@ export default function (): JSX.Element {
 									setPassword(e.target.value);
 								}}
 								password
-								disabled={loading}
+								disabled={loginLoading || loginResponse === true}
 							/>
 						</div>
 						<Button
 							onClick={() => {
 								void login(email, password);
 							}}
-							disabled={loading}
+							disabled={
+								loginLoading ||
+								loginResponse === true ||
+								isEmptyString(email) ||
+								isEmptyString(password)
+							}
 						>
 							ログイン
 						</Button>

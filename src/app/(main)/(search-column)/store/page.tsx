@@ -1,4 +1,4 @@
-import SubTitle from "@/components/atoms/SubTitle";
+import MainTitle from "@/components/atoms/MainTitle";
 import StoreList from "@/components/templates/StoreList";
 import { css } from "@kuma-ui/core";
 import type { Metadata } from "next";
@@ -17,7 +17,7 @@ export default function (): JSX.Element {
 				gap: 20px;
 			`}
 		>
-			<SubTitle>お店一覧</SubTitle>
+			<MainTitle>お店一覧</MainTitle>
 			<StoreList />
 		</div>
 	);

@@ -76,10 +76,11 @@ model Store {
   created_at      DateTime @default(now())
   updated_at      DateTime @default(now()) @updatedAt
 
-  created_user    User           @relation("created_user", fields: [created_user_id], references: [id])
-  updated_user    User           @relation("updated_user", fields: [updated_user_id], references: [id])
-  store_commentss StoreComment[]
-  menu            Menu[]
+  created_user   User           @relation("created_user", fields: [created_user_id], references: [id])
+  updated_user   User           @relation("updated_user", fields: [updated_user_id], references: [id])
+  store_comments StoreComment[]
+  menus          Menu[]
+  pictures       Picture[]
 
   @@map("stores")
 }
@@ -130,6 +131,7 @@ model Menu {
   store          Store          @relation(fields: [store_id], references: [id])
   created_user   User           @relation("created_user", fields: [created_user_id], references: [id])
   updated_user   User           @relation("updated_user", fields: [updated_user_id], references: [id])
+  pictures       MenuPicture[]
 
   @@map("menus")
 }
@@ -147,6 +149,26 @@ model MenuHistory {
   menu_allergen_histories MenuAllergenHistory[]
 
   @@map("menu_histories")
+}
+
+model Picture {
+  id         String   @id @default(cuid())
+  url        String
+  store_id   String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+  deleted    Boolean  @default(false)
+
+  menu_picture MenuPicture?
+  store        Store        @relation(fields: [store_id], references: [id])
+}
+
+model MenuPicture {
+  id      String @id
+  menu_id String
+
+  picture Picture @relation(fields: [id], references: [id])
+  menu    Menu    @relation(fields: [menu_id], references: [id])
 }
 
 model StoreComment {

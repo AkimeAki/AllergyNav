@@ -19,9 +19,17 @@
 	--color-black: #656565;
 	--color-gray: #c0c0c0;
 	--color-red: #d2374f;
-	--color-orange: #ff8a65;
+	--color-theme: #ff8a65;
 	--color-green: #43a047;
-	--color-orange-thin: #fff3f0;
+	--color-theme-thin: #fff3f0;
+	--color-white: white;
+
+	@media (prefers-color-scheme: dark) {
+		--color-theme: #00ba7c;
+		--color-theme-thin: #2c5547;
+		--color-black: white;
+		--color-white: #333333;
+	}
 }
 
 *:focus {
@@ -29,7 +37,7 @@
 }
 
 :root {
-	background-color: white;
+	background-color: var(--color-white);
 }
 
 html,

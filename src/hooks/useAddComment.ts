@@ -51,6 +51,8 @@ export default function (): ReturnType {
 				text: "コメントを登録しました"
 			});
 		} catch (e) {
+			setResponse(undefined);
+
 			if (e instanceof ValidationError) {
 				setMessage({
 					type: "error",

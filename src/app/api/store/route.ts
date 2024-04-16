@@ -38,7 +38,7 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 				created_at: true,
 				created_user_id: true,
 				updated_user_id: true,
-				menu: {
+				menus: {
 					include: {
 						menu_allergens: {
 							select: {
@@ -78,7 +78,7 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 		for (const item of result) {
 			// お店の全メニューの中にアレルゲンが含まれていなかったかどうかを管理する変数
 			let menuAllergen = false;
-			for (const menu of item.menu) {
+			for (const menu of item.menus) {
 				// メニューの中にアレルゲンが含まれているかどうかを管理する変数
 				let allergen = false;
 				const allergenIds = menu.menu_allergens.map((allergen) => {
@@ -101,7 +101,7 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 				continue;
 			}
 
-			if (item.menu.length === 0) {
+			if (item.menus.length === 0) {
 				menuAllergen = true;
 			}
 

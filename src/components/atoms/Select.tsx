@@ -20,7 +20,7 @@ export default function ({ value, disabled = false, onChange, onClick, children 
 			className={css`
 				border: none;
 				border-bottom-style: solid;
-				border-bottom-color: var(--color-orange);
+				border-bottom-color: var(--color-theme);
 				border-bottom-width: 2px;
 				padding: 10px 20px 10px 10px;
 				cursor: pointer;

@@ -22,10 +22,12 @@
 		"seed": "npm run tsnode -- prisma/seed.ts"
 	},
 	"dependencies": {
+		"@aws-sdk/client-s3": "^3.554.0",
 		"@geolonia/normalize-japanese-addresses": "^2.10.1",
 		"@kuma-ui/core": "^1.5.4",
 		"@kuma-ui/next-plugin": "^1.1.14",
 		"@next-auth/prisma-adapter": "^1.0.7",
+		"@paralleldrive/cuid2": "^2.2.2",
 		"@prisma/client": "^5.11.0",
 		"@types/bcrypt": "^5.0.1",
 		"@types/node": "^20.7.1",
@@ -40,6 +42,7 @@
 		"react-dom": "^18.2.0",
 		"resend": "^3.2.0",
 		"sanitize-html": "^2.11.0",
+		"sharp": "^0.33.3",
 		"ts-node": "^10.9.2",
 		"tsconfig-paths": "^4.2.0",
 		"typescript": "^5.0.2"

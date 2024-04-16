@@ -3,12 +3,12 @@ import { css } from "@kuma-ui/core";
 import SubTitle from "@/components/atoms/SubTitle";
 import type { Dispatch, SetStateAction } from "react";
 import { useEffect } from "react";
-import FloatMessage from "@/components/atoms/FloatMessage";
 import useGetMenuHistories from "@/hooks/useGetMenuHistories";
 import Label from "@/components/atoms/Label";
 import AllergenItem from "@/components/atoms/AllergenItem";
 import Loading from "@/components/atoms/Loading";
 import Modal from "@/components/molecules/Modal";
+import { useFloatMessage } from "@/hooks/useFloatMessage";
 
 interface Props {
 	menuId: string;
@@ -18,6 +18,7 @@ interface Props {
 
 export default function ({ menuId, isOpen, setIsOpen }: Props): JSX.Element {
 	const { response: menuHistories, loading, message, getMenuHistories } = useGetMenuHistories();
+	const { addMessage } = useFloatMessage();
 
 	useEffect(() => {
 		if (isOpen) {
@@ -25,12 +26,15 @@ export default function ({ menuId, isOpen, setIsOpen }: Props): JSX.Element {
 		}
 	}, [isOpen]);
 
+	useEffect(() => {
+		if (message !== undefined && message.type === "error") {
+			addMessage(message.text, "error");
+		}
+	}, [message]);
+
 	return (
 		<>
-			{message !== undefined && message.type === "error" && (
-				<FloatMessage type="error">{message.text}</FloatMessage>
-			)}
-			<Modal isOpen={isOpen} setIsOpen={setIsOpen} close={!loading}>
+			<Modal isOpen={isOpen} setIsOpen={setIsOpen}>
 				<SubTitle>メニューの変更履歴</SubTitle>
 				<div
 					className={css`
@@ -38,7 +42,6 @@ export default function ({ menuId, isOpen, setIsOpen }: Props): JSX.Element {
 						flex-direction: column;
 						gap: 20px;
 						margin-top: 30px;
-						padding: 0 10px;
 
 						& > div {
 							display: flex;
@@ -54,7 +57,7 @@ export default function ({ menuId, isOpen, setIsOpen }: Props): JSX.Element {
 						</div>
 					)}
 					<div>
-						{[...menuHistories].reverse().map((menu) => {
+						{[...(menuHistories ?? [])].reverse().map((menu) => {
 							return (
 								<div
 									key={menu.id}

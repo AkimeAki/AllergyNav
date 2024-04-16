@@ -42,7 +42,7 @@ export default function ({ selectAllergens, setSelectAllergens, position = "left
 					`
 			].join(" ")}
 		>
-			{allergens.map((item) => {
+			{allergens?.map((item) => {
 				const selected = selectAllergens.some((selectAllergen) => selectAllergen === item.id);
 
 				return (

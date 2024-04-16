@@ -48,14 +48,14 @@ export default function (): JSX.Element {
 						width: 100%;
 						padding: 10px 20px;
 						border-style: solid;
-						border-color: var(--color-orange);
+						border-color: var(--color-theme);
 						border-width: 1px;
 						border-radius: 9999px;
 						transition-duration: 200ms;
 						transition-property: box-shadow;
 
 						&:focus {
-							box-shadow: 0 0 0 1px var(--color-orange);
+							box-shadow: 0 0 0 1px var(--color-theme);
 						}
 					`}
 				/>

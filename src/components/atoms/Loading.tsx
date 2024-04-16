@@ -34,24 +34,24 @@ export default function ({
 					animation-duration: 1.5s;
 					animation-iteration-count: infinite;
 					animation-timing-function: linear;
-					color: var(--color-orange-thin);
+					color: var(--color-theme-thin);
 					font-weight: bold;
 				}
 
 				@keyframes loading-animation {
 					0% {
 						content: "";
-						color: var(--color-orange-thin);
+						color: var(--color-theme-thin);
 					}
 
 					25% {
 						content: "・";
-						color: var(--color-orange-thin);
+						color: var(--color-theme-thin);
 					}
 
 					50% {
 						content: "・・";
-						color: var(--color-orange);
+						color: var(--color-theme);
 					}
 
 					75% {
@@ -61,7 +61,7 @@ export default function ({
 
 					100% {
 						content: "";
-						color: var(--color-orange-thin);
+						color: var(--color-theme-thin);
 					}
 				}
 			`}

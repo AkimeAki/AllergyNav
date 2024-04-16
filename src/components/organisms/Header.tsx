@@ -17,7 +17,7 @@ const Header = (): JSX.Element => {
 			{userVerified === false && (
 				<div
 					className={css`
-						background-color: var(--color-orange);
+						background-color: var(--color-theme);
 					`}
 				>
 					<div
@@ -33,7 +33,7 @@ const Header = (): JSX.Element => {
 					>
 						<span
 							className={css`
-								color: white;
+								color: var(--color-white);
 							`}
 						>
 							メール認証が完了していません。7日後にアカウントが削除されます。

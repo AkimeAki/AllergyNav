@@ -10,7 +10,6 @@ import Button from "@/components/atoms/Button";
 import type { Dispatch, SetStateAction } from "react";
 import { useEffect, useState } from "react";
 import Cursor from "@/components/atoms/Cursor";
-import FloatMessage from "@/components/atoms/FloatMessage";
 import useEditMenu from "@/hooks/useEditMenu";
 import useGetMenu from "@/hooks/useGetMenu";
 import AllergenSelectModal from "@/components/molecules/AllergenSelectModal";
@@ -18,15 +17,16 @@ import AllergenItem from "@/components/atoms/AllergenItem";
 import { isEmptyString } from "@/libs/check-string";
 import useGetAllergens from "@/hooks/useGetAllergens";
 import Modal from "@/components/molecules/Modal";
+import { useFloatMessage } from "@/hooks/useFloatMessage";
 
 interface Props {
 	menuId: string;
 	isOpen: boolean;
 	setIsOpen: Dispatch<SetStateAction<boolean>>;
-	reload: () => void;
+	callback?: () => void;
 }
 
-export default function ({ menuId, isOpen, setIsOpen, reload }: Props): JSX.Element {
+export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.Element {
 	const [menuName, setMenuName] = useState<string>("");
 	const [oldMenuName, setOldMenuName] = useState<string>("");
 	const [menuDescription, setMenuDescription] = useState<string>("");
@@ -38,6 +38,7 @@ export default function ({ menuId, isOpen, setIsOpen, reload }: Props): JSX.Elem
 	const [isChanged, setIsChanged] = useState<boolean>(false);
 	const [isAllergenSelectModalOpen, setIsAllergenSelectModalOpen] = useState<boolean>(false);
 	const { response: allergens, getAllergens } = useGetAllergens();
+	const { addMessage } = useFloatMessage();
 
 	useEffect(() => {
 		if (isOpen) {
@@ -61,9 +62,8 @@ export default function ({ menuId, isOpen, setIsOpen, reload }: Props): JSX.Elem
 	}, [menu]);
 
 	useEffect(() => {
-		if (editedMenu !== undefined) {
-			setIsOpen(false);
-			reload();
+		if (editedMenu !== undefined && callback !== undefined) {
+			callback();
 		}
 	}, [editedMenu]);
 
@@ -79,25 +79,28 @@ export default function ({ menuId, isOpen, setIsOpen, reload }: Props): JSX.Elem
 		}
 	}, [menuName, menuDescription, selectAllergens]);
 
+	useEffect(() => {
+		if (editLoading) {
+			addMessage("入力データを送信しています", "success");
+		}
+	}, [editLoading]);
+
+	useEffect(() => {
+		if (getMessage !== undefined && getMessage.type === "error") {
+			addMessage(getMessage.text, "error");
+		}
+	}, [getMessage]);
+
+	useEffect(() => {
+		if (editMessage !== undefined && editMessage.type === "error") {
+			addMessage(editMessage.text, "error");
+		}
+	}, [editMessage]);
+
 	return (
 		<>
-			{editLoading && (
-				<>
-					<Cursor cursor="wait" />
-					<FloatMessage type="success">入力データを送信しています</FloatMessage>
-				</>
-			)}
-			{getMessage !== undefined && getMessage.type === "error" && (
-				<FloatMessage type="error">{getMessage.text}</FloatMessage>
-			)}
-			{editMessage !== undefined && editMessage.type === "error" && (
-				<FloatMessage type="error">{editMessage.text}</FloatMessage>
-			)}
-			<Modal
-				isOpen={isOpen}
-				setIsOpen={setIsOpen}
-				close={!getLoading && !editLoading && !isAllergenSelectModalOpen}
-			>
+			{editLoading && <Cursor cursor="wait" />}
+			<Modal isOpen={isOpen} setIsOpen={setIsOpen} close={!editLoading && !isAllergenSelectModalOpen}>
 				<SubTitle>メニューを編集</SubTitle>
 				<form
 					className={css`
@@ -105,7 +108,6 @@ export default function ({ menuId, isOpen, setIsOpen, reload }: Props): JSX.Elem
 						flex-direction: column;
 						gap: 20px;
 						margin-top: 30px;
-						padding: 0 10px;
 
 						& > div {
 							display: flex;
@@ -148,7 +150,7 @@ export default function ({ menuId, isOpen, setIsOpen, reload }: Props): JSX.Elem
 						>
 							{selectAllergens.map((item) => {
 								let name = "";
-								allergens.forEach((allergen) => {
+								allergens?.forEach((allergen) => {
 									if (item === allergen.id) {
 										name = allergen.name;
 									}

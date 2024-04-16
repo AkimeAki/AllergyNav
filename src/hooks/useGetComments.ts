@@ -2,21 +2,21 @@ import type { GetCommentsResponse, Message } from "@/type";
 import { useState } from "react";
 
 interface ReturnType {
-	response: NonNullable<GetCommentsResponse>;
+	response: NonNullable<GetCommentsResponse> | undefined;
 	loading: boolean;
 	message: Message | undefined;
 	getComments: (storeId: string) => Promise<void>;
 }
 
 export default function (): ReturnType {
-	const [loading, setLoading] = useState<boolean>(true);
+	const [loading, setLoading] = useState<boolean>(false);
 	const [message, setMessage] = useState<Message | undefined>(undefined);
-	const [response, setResponse] = useState<NonNullable<GetCommentsResponse>>([]);
+	const [response, setResponse] = useState<NonNullable<GetCommentsResponse> | undefined>(undefined);
 
 	const getComments = async (storeId: string): Promise<void> => {
 		setLoading(true);
 		setMessage(undefined);
-		setResponse([]);
+		setResponse(undefined);
 
 		try {
 			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store/${storeId}/comment`, {
@@ -42,6 +42,8 @@ export default function (): ReturnType {
 				text: "コメントを取得しました🐥"
 			});
 		} catch (e) {
+			setResponse(undefined);
+
 			setMessage({
 				type: "error",
 				text: "接続エラーが発生しました😿"

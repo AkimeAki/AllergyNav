@@ -2,21 +2,21 @@ import type { GetMenusResponse, Message } from "@/type";
 import { useState } from "react";
 
 interface ReturnType {
-	response: NonNullable<GetMenusResponse>;
+	response: NonNullable<GetMenusResponse> | undefined;
 	loading: boolean;
 	message: Message | undefined;
 	getMenus: (allergens: string, keywords: string, storeId: string) => Promise<void>;
 }
 
 export const useGetMenus = (): ReturnType => {
-	const [loading, setLoading] = useState<boolean>(true);
+	const [loading, setLoading] = useState<boolean>(false);
 	const [message, setMessage] = useState<Message | undefined>(undefined);
-	const [response, setResponse] = useState<NonNullable<GetMenusResponse>>([]);
+	const [response, setResponse] = useState<NonNullable<GetMenusResponse> | undefined>(undefined);
 
 	const getMenus = async (allergens: string, keywords: string, storeId: string): Promise<void> => {
 		setLoading(true);
 		setMessage(undefined);
-		setResponse([]);
+		setResponse(undefined);
 
 		try {
 			const result = await fetch(
@@ -45,6 +45,8 @@ export const useGetMenus = (): ReturnType => {
 				text: "メニューを取得しました"
 			});
 		} catch (e) {
+			setResponse(undefined);
+
 			setMessage({
 				type: "error",
 				text: "接続エラーが発生しました。"

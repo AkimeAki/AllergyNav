@@ -1,13 +1,10 @@
-import { notFound } from "next/navigation";
-import { safeString } from "@/libs/safe-type";
 import { css } from "@kuma-ui/core";
 import Link from "next/link";
 import GoogleMap from "@/components/molecules/GoogleMap";
 import { formatText } from "@/libs/format-text";
 import EditStoreButton from "@/components/organisms/EditStoreButton";
-import { prisma } from "@/libs/prisma";
 import Image from "next/image";
-
+import { getStore } from "@/libs/server-fetch";
 interface Props {
 	params: {
 		id: string;
@@ -15,24 +12,7 @@ interface Props {
 }
 
 export default async function ({ params }: Props): Promise<JSX.Element> {
-	const id = safeString(params.id);
-
-	if (id === null) {
-		notFound();
-	}
-
-	const result = await prisma.store.findUnique({
-		select: {
-			name: true,
-			address: true,
-			description: true
-		},
-		where: { id }
-	});
-
-	if (result === null) {
-		notFound();
-	}
+	const storeDetail = await getStore(params.id);
 
 	return (
 		<div
@@ -46,8 +26,8 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 			<div
 				className={css`
 					display: table;
-					border-top-left-radius: 20px;
-					border-bottom-left-radius: 20px;
+					border-top-left-radius: 7px;
+					border-bottom-left-radius: 7px;
 					overflow: hidden;
 				`}
 			>
@@ -61,13 +41,13 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 							padding: 15px 10px;
 							border-width: 2px;
 							border-style: solid;
-							border-color: var(--color-orange);
+							border-color: var(--color-theme);
 						}
 
 						th {
 							text-align: left;
-							background-color: var(--color-orange);
-							color: white;
+							background-color: var(--color-theme);
+							color: var(--color-white);
 							font-weight: bold;
 							padding-left: 20px;
 							padding-right: 20px;
@@ -91,7 +71,7 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 										align-items: center;
 										gap: 5px;
 									`}
-									href={`https://www.google.com/maps/search/${result.address} ${result.name}`}
+									href={`https://www.google.com/maps/search/${storeDetail.address} ${storeDetail.name}`}
 									target="_blank"
 								>
 									<Image
@@ -105,7 +85,7 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 											color: inherit;
 										`}
 									>
-										{result.address}
+										{storeDetail.address}
 									</span>
 								</Link>
 							</td>
@@ -113,15 +93,15 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 					</tbody>
 				</table>
 			</div>
-			{result.description !== "" && (
+			{storeDetail.description !== "" && (
 				<div
 					dangerouslySetInnerHTML={{
-						__html: formatText(result.description)
+						__html: formatText(storeDetail.description)
 					}}
 				/>
 			)}
-			<GoogleMap address={result.address} />
-			<EditStoreButton storeId={id} />
+			<GoogleMap address={storeDetail.address} />
+			<EditStoreButton storeId={storeDetail.id} />
 		</div>
 	);
 }

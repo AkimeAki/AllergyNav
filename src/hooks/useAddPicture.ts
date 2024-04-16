@@ -1,35 +1,37 @@
 import { ValidationError } from "@/definition";
-import type { AddMenuResponse, Message } from "@/type";
+import type { AddPictureResponse, Message } from "@/type";
 import { useState } from "react";
 
 interface ReturnType {
-	response: NonNullable<AddMenuResponse> | undefined;
+	response: NonNullable<AddPictureResponse> | undefined;
 	loading: boolean;
 	message: Message | undefined;
-	addMenu: (storeId: string, name: string, description: string, allergens: string[]) => Promise<void>;
+	addPicture: (storeId: string, file: File, description: string, menuId?: string) => Promise<void>;
 }
 
-export const useAddMenu = (): ReturnType => {
+export const useAddPicture = (): ReturnType => {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [message, setMessage] = useState<Message | undefined>(undefined);
-	const [response, setResponse] = useState<NonNullable<AddMenuResponse> | undefined>(undefined);
+	const [response, setResponse] = useState<NonNullable<AddPictureResponse> | undefined>(undefined);
 
-	const addMenu = async (storeId: string, name: string, description: string, allergens: string[]): Promise<void> => {
+	const addPicture = async (storeId: string, file: File, description: string, menuId?: string): Promise<void> => {
 		setLoading(true);
 		setMessage(undefined);
 		setResponse(undefined);
 
 		try {
-			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/menu`, {
+			const buffer = Buffer.from(await file.arrayBuffer());
+
+			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/picture`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
 					storeId,
-					name,
+					arrayBuffer: JSON.stringify(buffer),
 					description,
-					allergens: JSON.stringify(allergens)
+					menuId
 				})
 			});
 
@@ -41,7 +43,7 @@ export const useAddMenu = (): ReturnType => {
 				throw new Error();
 			}
 
-			const response = (await result.json()) as AddMenuResponse;
+			const response = (await result.json()) as AddPictureResponse;
 
 			if (response === null) {
 				throw new Error();
@@ -50,11 +52,9 @@ export const useAddMenu = (): ReturnType => {
 			setResponse(response);
 			setMessage({
 				type: "success",
-				text: "メニューを登録しました。"
+				text: "写真を登録しました。"
 			});
 		} catch (e) {
-			setResponse(undefined);
-
 			if (e instanceof ValidationError) {
 				setMessage({
 					type: "error",
@@ -70,5 +70,5 @@ export const useAddMenu = (): ReturnType => {
 		setLoading(false);
 	};
 
-	return { response, loading, message, addMenu };
+	return { response, loading, message, addPicture };
 };

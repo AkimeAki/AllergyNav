@@ -23,7 +23,11 @@ export default function ({ storeId }: Props): JSX.Element {
 			>
 				メニュー
 			</SideTabLink>
-			<SideTabLink href={`/store/${storeId}/image`} active={pathname === `/store/${storeId}/image`} icon="image">
+			<SideTabLink
+				href={`/store/${storeId}/picture`}
+				active={pathname === `/store/${storeId}/picture`}
+				icon="image"
+			>
 				写真
 			</SideTabLink>
 			<SideTabLink

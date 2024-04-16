@@ -24,18 +24,18 @@ export default function ({ href, onClick, children, active = false }: Props): JS
 			text-align: left;
 
 			&:hover {
-				background-color: var(--color-orange-thin);
+				background-color: var(--color-theme-thin);
 				cursor: pointer;
 			}
 		`,
 		active
 			? css`
-					background-color: var(--color-orange);
-					color: white;
+					background-color: var(--color-theme);
+					color: var(--color-white);
 
 					&:hover {
-						background-color: var(--color-orange);
-						color: white;
+						background-color: var(--color-theme);
+						color: var(--color-white);
 					}
 				`
 			: css`

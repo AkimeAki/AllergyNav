@@ -2,21 +2,21 @@ import type { GetAllergensResponse, Message } from "@/type";
 import { useState } from "react";
 
 interface ReturnType {
-	response: NonNullable<GetAllergensResponse>;
+	response: NonNullable<GetAllergensResponse> | undefined;
 	loading: boolean;
 	message: Message | undefined;
 	getAllergens: () => Promise<void>;
 }
 
 export default function (): ReturnType {
-	const [loading, setLoading] = useState<boolean>(true);
+	const [loading, setLoading] = useState<boolean>(false);
 	const [message, setMessage] = useState<Message | undefined>(undefined);
-	const [response, setResponse] = useState<NonNullable<GetAllergensResponse>>([]);
+	const [response, setResponse] = useState<NonNullable<GetAllergensResponse> | undefined>(undefined);
 
 	const getAllergens = async (): Promise<void> => {
 		setLoading(true);
 		setMessage(undefined);
-		setResponse([]);
+		setResponse(undefined);
 
 		try {
 			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/allergen`, {
@@ -42,6 +42,8 @@ export default function (): ReturnType {
 				text: "アレルゲンを取得しました"
 			});
 		} catch (e) {
+			setResponse(undefined);
+
 			setMessage({
 				type: "error",
 				text: "接続エラーが発生しました。"

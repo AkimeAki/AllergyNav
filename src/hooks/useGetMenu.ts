@@ -9,7 +9,7 @@ interface ReturnType {
 }
 
 export default function (): ReturnType {
-	const [loading, setLoading] = useState<boolean>(true);
+	const [loading, setLoading] = useState<boolean>(false);
 	const [message, setMessage] = useState<Message | undefined>(undefined);
 	const [response, setResponse] = useState<NonNullable<GetMenuResponse> | undefined>(undefined);
 
@@ -42,6 +42,8 @@ export default function (): ReturnType {
 				text: "メニューを取得しました"
 			});
 		} catch (e) {
+			setResponse(undefined);
+
 			setMessage({
 				type: "error",
 				text: "接続エラーが発生しました。"

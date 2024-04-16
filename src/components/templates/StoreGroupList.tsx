@@ -17,7 +17,7 @@ import SubTitle from "@/components/atoms/SubTitle";
 const StoreGroupList = (): JSX.Element => {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
 	const searchParams = useSearchParams();
-	const { response: stores, loading, message, getStore } = useGetStores();
+	const { response: stores, loading, message, getStores } = useGetStores();
 	const { data: session } = useSession();
 	const params = {
 		allergens: searchParams.get("allergens") ?? "",
@@ -25,7 +25,7 @@ const StoreGroupList = (): JSX.Element => {
 	};
 
 	useEffect(() => {
-		void getStore(params.allergens, params.keywords);
+		void getStores(params.allergens, params.keywords);
 	}, [searchParams]);
 
 	return (
@@ -88,7 +88,7 @@ const StoreGroupList = (): JSX.Element => {
 					{message !== undefined && message.type === "error" && <ErrorMessage>{message.text}</ErrorMessage>}
 					{!loading && (
 						<>
-							{stores.length === 0 && (
+							{stores?.length === 0 && (
 								<p
 									className={css`
 										text-align: center;
@@ -97,7 +97,7 @@ const StoreGroupList = (): JSX.Element => {
 									お店が無いようです😿
 								</p>
 							)}
-							{stores.map((store) => (
+							{stores?.map((store) => (
 								<div
 									key={store.id}
 									className={css`

@@ -29,7 +29,7 @@ export default function ({ onChange, value, disabled = false, password = false, 
 					padding: 5px 20px;
 					border-style: solid;
 					border-width: 1px;
-					border-color: var(--color-orange);
+					border-color: var(--color-theme);
 					border-radius: 20px;
 					transition-duration: 200ms;
 					transition-property: box-shadow;
@@ -41,7 +41,7 @@ export default function ({ onChange, value, disabled = false, password = false, 
 					}
 
 					&:focus {
-						box-shadow: 0 0 0 1px var(--color-orange);
+						box-shadow: 0 0 0 1px var(--color-theme);
 					}
 				`}
 			/>

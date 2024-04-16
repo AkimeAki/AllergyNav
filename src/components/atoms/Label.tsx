@@ -11,7 +11,7 @@ export default function ({ children, required = false }: Props): JSX.Element {
 		<label
 			className={css`
 				display: flex;
-				background-color: var(--color-orange-thin);
+				background-color: var(--color-theme-thin);
 				padding: 5px 10px;
 				border-radius: 10px;
 				user-select: none;

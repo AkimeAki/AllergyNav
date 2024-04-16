@@ -108,7 +108,7 @@ const Sidebar = (): JSX.Element => {
 									flex-direction: column;
 									gap: 10px;
 									padding: 25px;
-									background-color: white;
+									background-color: var(--color-white);
 									box-shadow: 0px 0px 20px -5px #969696;
 									border-radius: 20px;
 									transition-duration: 200ms;

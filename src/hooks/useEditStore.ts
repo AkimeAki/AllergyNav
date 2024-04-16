@@ -80,6 +80,8 @@ export const useEditStore = (): ReturnType => {
 				text: "お店を登録しました"
 			});
 		} catch (e) {
+			setResponse(undefined);
+
 			if (e instanceof ValidationError) {
 				if (e.message !== undefined) {
 					setMessage({

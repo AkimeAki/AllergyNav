@@ -1,25 +1,25 @@
-import type { GetStoreResponse, Message } from "@/type";
+import type { GetPicturesResponse, Message } from "@/type";
 import { useState } from "react";
 
 interface ReturnType {
-	response: NonNullable<GetStoreResponse> | undefined;
+	response: NonNullable<GetPicturesResponse> | undefined;
 	loading: boolean;
 	message: Message | undefined;
-	getStore: (storeId: string) => Promise<void>;
+	getPictures: (storeId: string) => Promise<void>;
 }
 
-export default function (): ReturnType {
+export const useGetPictures = (): ReturnType => {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [message, setMessage] = useState<Message | undefined>(undefined);
-	const [response, setResponse] = useState<NonNullable<GetStoreResponse> | undefined>(undefined);
+	const [response, setResponse] = useState<NonNullable<GetPicturesResponse> | undefined>(undefined);
 
-	const getStore = async (storeId: string): Promise<void> => {
+	const getPictures = async (storeId: string): Promise<void> => {
 		setLoading(true);
 		setMessage(undefined);
 		setResponse(undefined);
 
 		try {
-			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store/${storeId}`, {
+			const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/picture?storeId=${storeId}`, {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json"
@@ -30,7 +30,7 @@ export default function (): ReturnType {
 				throw new Error();
 			}
 
-			const response = (await result.json()) as GetStoreResponse;
+			const response = (await result.json()) as GetPicturesResponse;
 
 			if (response === null) {
 				throw new Error();
@@ -39,7 +39,7 @@ export default function (): ReturnType {
 			setResponse(response);
 			setMessage({
 				type: "success",
-				text: "お店を取得しました"
+				text: "写真を取得しました"
 			});
 		} catch (e) {
 			setResponse(undefined);
@@ -52,5 +52,5 @@ export default function (): ReturnType {
 		setLoading(false);
 	};
 
-	return { response, loading, message, getStore };
-}
+	return { response, loading, message, getPictures };
+};

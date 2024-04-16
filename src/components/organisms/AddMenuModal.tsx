@@ -9,56 +9,62 @@ import Button from "@/components/atoms/Button";
 import type { Dispatch, SetStateAction } from "react";
 import { useEffect, useState } from "react";
 import Cursor from "@/components/atoms/Cursor";
-import FloatMessage from "@/components/atoms/FloatMessage";
 import { useAddMenu } from "@/hooks/useAddMenu";
 import AllergenSelectModal from "@/components/molecules/AllergenSelectModal";
 import AllergenItem from "@/components/atoms/AllergenItem";
 import { isEmptyString } from "@/libs/check-string";
 import useGetAllergens from "@/hooks/useGetAllergens";
 import Modal from "@/components/molecules/Modal";
+import { useFloatMessage } from "@/hooks/useFloatMessage";
 
 interface Props {
 	storeId: string;
 	isOpen: boolean;
 	setIsOpen: Dispatch<SetStateAction<boolean>>;
-	reload: () => void;
+	callback?: () => void;
 }
 
-export default function ({ storeId, isOpen, setIsOpen, reload }: Props): JSX.Element {
+export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.Element {
 	const [menuName, setMenuName] = useState<string>("");
 	const [menuDescription, setMenuDescription] = useState<string>("");
-	const { response: menu, loading, message, addMenu } = useAddMenu();
+	const { response: addedMenu, loading, message: addedMenuMessage, addMenu } = useAddMenu();
 	const [selectAllergens, setSelectAllergens] = useState<string[]>([]);
 	const [isAllergenSelectModalOpen, setIsAllergenSelectModalOpen] = useState<boolean>(false);
 	const { response: allergens, getAllergens } = useGetAllergens();
+	const { addMessage } = useFloatMessage();
 
 	useEffect(() => {
 		void getAllergens();
 	}, []);
 
 	useEffect(() => {
-		if (menu !== undefined) {
-			setIsOpen(false);
+		if (addedMenu !== undefined) {
 			setMenuDescription("");
 			setMenuName("");
 			setSelectAllergens([]);
-			reload();
+			if (callback !== undefined) {
+				callback();
+			}
 		}
-	}, [menu]);
+	}, [addedMenu]);
+
+	useEffect(() => {
+		if (loading) {
+			addMessage("入力データを送信しています", "success");
+		}
+	}, [loading]);
+
+	useEffect(() => {
+		if (addedMenuMessage !== undefined && addedMenuMessage.type === "error") {
+			addMessage(addedMenuMessage.text, "error");
+		}
+	}, [addedMenuMessage]);
 
 	return (
 		<>
-			{loading && (
-				<>
-					<Cursor cursor="wait" />
-					<FloatMessage type="success">入力データを送信しています</FloatMessage>
-				</>
-			)}
-			{message !== undefined && message.type === "error" && (
-				<FloatMessage type="error">{message.text}</FloatMessage>
-			)}
+			{loading && <Cursor cursor="wait" />}
 			{isOpen && (
-				<Modal isOpen={isOpen} setIsOpen={setIsOpen} close={!loading && menu === undefined}>
+				<Modal isOpen={isOpen} setIsOpen={setIsOpen} close={!loading}>
 					<SubTitle>メニューを追加</SubTitle>
 					<form
 						className={css`
@@ -66,7 +72,6 @@ export default function ({ storeId, isOpen, setIsOpen, reload }: Props): JSX.Ele
 							flex-direction: column;
 							gap: 20px;
 							margin-top: 30px;
-							padding: 0 10px;
 
 							& > div {
 								display: flex;
@@ -79,7 +84,7 @@ export default function ({ storeId, isOpen, setIsOpen, reload }: Props): JSX.Ele
 						<div>
 							<Label required>名前</Label>
 							<TextInput
-								disabled={loading || menu !== undefined}
+								disabled={loading}
 								onChange={(e) => {
 									setMenuName(e.target.value);
 								}}
@@ -98,7 +103,7 @@ export default function ({ storeId, isOpen, setIsOpen, reload }: Props): JSX.Ele
 								setSelectAllergens={setSelectAllergens}
 								isOpen={isAllergenSelectModalOpen}
 								setIsOpen={setIsAllergenSelectModalOpen}
-								disabled={loading || menu !== undefined}
+								disabled={loading}
 							/>
 							<div
 								className={css`
@@ -108,7 +113,7 @@ export default function ({ storeId, isOpen, setIsOpen, reload }: Props): JSX.Ele
 							>
 								{selectAllergens.map((item) => {
 									let name = "";
-									allergens.forEach((allergen) => {
+									allergens?.forEach((allergen) => {
 										if (item === allergen.id) {
 											name = allergen.name;
 										}
@@ -139,7 +144,7 @@ export default function ({ storeId, isOpen, setIsOpen, reload }: Props): JSX.Ele
 									onClick={() => {
 										void addMenu(storeId, menuName, menuDescription, selectAllergens);
 									}}
-									disabled={loading || menu !== undefined || isEmptyString(menuName)}
+									disabled={loading || isEmptyString(menuName)}
 								>
 									登録する
 								</Button>

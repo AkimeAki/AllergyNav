@@ -3,6 +3,13 @@ import { safeString } from "@/libs/safe-type";
 import { prisma } from "@/libs/prisma";
 
 export const accessCheck = async (req: NextRequest): Promise<boolean> => {
+	const serverApiKey = safeString(process.env.SERVER_API_KEY);
+	const authorization = safeString(req.headers.get("Authorization"));
+
+	if (serverApiKey !== null && authorization !== null && authorization === `Bearer: ${serverApiKey}`) {
+		return true;
+	}
+
 	let error = true;
 
 	try {

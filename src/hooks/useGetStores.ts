@@ -2,21 +2,21 @@ import type { GetStoresResponse, Message } from "@/type";
 import { useState } from "react";
 
 interface ReturnType {
-	response: NonNullable<GetStoresResponse>;
+	response: NonNullable<GetStoresResponse> | undefined;
 	loading: boolean;
 	message: Message | undefined;
-	getStore: (allergens: string, keywords: string) => Promise<void>;
+	getStores: (allergens: string, keywords: string) => Promise<void>;
 }
 
 export const useGetStores = (): ReturnType => {
-	const [loading, setLoading] = useState<boolean>(true);
+	const [loading, setLoading] = useState<boolean>(false);
 	const [message, setMessage] = useState<Message | undefined>(undefined);
-	const [response, setResponse] = useState<NonNullable<GetStoresResponse>>([]);
+	const [response, setResponse] = useState<NonNullable<GetStoresResponse> | undefined>(undefined);
 
-	const getStore = async (allergens: string, keywords: string): Promise<void> => {
+	const getStores = async (allergens: string, keywords: string): Promise<void> => {
 		setLoading(true);
 		setMessage(undefined);
-		setResponse([]);
+		setResponse(undefined);
 
 		try {
 			const result = await fetch(
@@ -43,6 +43,8 @@ export const useGetStores = (): ReturnType => {
 				text: "お店を取得しました"
 			});
 		} catch (e) {
+			setResponse(undefined);
+
 			setMessage({
 				type: "error",
 				text: "接続エラーが発生しました。"
@@ -51,5 +53,5 @@ export const useGetStores = (): ReturnType => {
 		setLoading(false);
 	};
 
-	return { response, loading, message, getStore };
+	return { response, loading, message, getStores };
 };

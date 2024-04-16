@@ -21,14 +21,14 @@ export default function ({
 	onClick,
 	disabled = false,
 	selected = false,
-	color = "var(--color-orange)"
+	color = "var(--color-theme)"
 }: Props): JSX.Element {
 	const buttonStyle = [
 		css`
 			display: inline-block;
 			text-decoration: none;
 			cursor: pointer;
-			background-color: white;
+			background-color: var(--color-white);
 			border-style: solid;
 			border-color: var(--button-color);
 			color: var(--button-color);
@@ -47,17 +47,17 @@ export default function ({
 			* {
 				transition-duration: 200ms;
 				transition-property: color, border-color, background-color;
-				background-color: white;
+				background-color: var(--color-white);
 				color: var(--button-color);
 			}
 
 			&:hover {
 				background-color: var(--button-color);
-				color: white;
+				color: var(--color-white);
 
 				* {
 					background-color: var(--button-color);
-					color: white;
+					color: var(--color-white);
 				}
 			}
 		`,
@@ -82,11 +82,11 @@ export default function ({
 		selected &&
 			css`
 				background-color: var(--button-color);
-				color: white;
+				color: var(--color-white);
 
 				* {
 					background-color: var(--button-color);
-					color: white;
+					color: var(--color-white);
 				}
 			`,
 		disabled
@@ -95,21 +95,21 @@ export default function ({
 					color: var(--color-gray);
 					user-select: none;
 					cursor: not-allowed;
-					background-color: white;
+					background-color: var(--color-white);
 
 					* {
-						background-color: white;
+						background-color: var(--color-white);
 						border-color: var(--color-gray);
 						color: var(--color-gray);
 					}
 
 					&:hover {
-						background-color: white;
+						background-color: var(--color-white);
 						color: var(--color-gray);
 						box-shadow: none;
 
 						* {
-							background-color: white;
+							background-color: var(--color-white);
 							box-shadow: none;
 							color: var(--color-gray);
 						}

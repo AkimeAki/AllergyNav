@@ -1,11 +1,9 @@
-import { notFound } from "next/navigation";
-import { safeString } from "@/libs/safe-type";
 import type { ReactNode } from "react";
 import { css } from "@kuma-ui/core";
 import type { Metadata } from "next";
 import MainTitle from "@/components/atoms/MainTitle";
 import StoreDetailTabs from "@/components/organisms/StoreDetailTabs";
-import { prisma } from "@/libs/prisma";
+import { getStore } from "@/libs/server-fetch";
 
 interface Props {
 	children: ReactNode;
@@ -15,56 +13,19 @@ interface Props {
 }
 
 export const generateMetadata = async ({ params }: Props): Promise<Metadata> => {
-	let title = "";
-
-	try {
-		const id = safeString(params.id);
-		if (id === null) {
-			throw new Error();
-		}
-
-		const result = await prisma.store.findUnique({
-			select: {
-				name: true
-			},
-			where: { id }
-		});
-
-		if (result === null) {
-			throw new Error();
-		}
-
-		title = result.name;
-	} catch (e) {
-		notFound();
-	}
+	const storeDetail = await getStore(params.id);
 
 	return {
-		title
+		title: storeDetail.name
 	};
 };
 
 export default async function ({ children, params }: Props): Promise<JSX.Element> {
-	const id = safeString(params.id);
-
-	if (id === null) {
-		notFound();
-	}
-
-	const result = await prisma.store.findUnique({
-		select: {
-			name: true
-		},
-		where: { id }
-	});
-
-	if (result === null) {
-		notFound();
-	}
+	const storeDetail = await getStore(params.id);
 
 	return (
 		<>
-			<StoreDetailTabs storeId={id} />
+			<StoreDetailTabs storeId={storeDetail.id} />
 			<div
 				className={css`
 					display: flex;
@@ -72,14 +33,8 @@ export default async function ({ children, params }: Props): Promise<JSX.Element
 					gap: 30px;
 				`}
 			>
-				<MainTitle>{result.name}</MainTitle>
-				<div
-					className={css`
-						padding: 0 10px;
-					`}
-				>
-					{children}
-				</div>
+				<MainTitle>{storeDetail.name}</MainTitle>
+				<div>{children}</div>
 			</div>
 		</>
 	);

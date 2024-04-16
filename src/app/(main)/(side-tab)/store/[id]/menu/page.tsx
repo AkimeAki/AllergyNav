@@ -1,6 +1,5 @@
-import { notFound } from "next/navigation";
-import { safeString } from "@/libs/safe-type";
 import MenuList from "@/components/templates/MenuList";
+import { getStore } from "@/libs/server-fetch";
 
 interface Props {
 	params: {
@@ -9,11 +8,7 @@ interface Props {
 }
 
 export default async function ({ params }: Props): Promise<JSX.Element> {
-	const id = safeString(params.id);
+	const store = await getStore(params.id);
 
-	if (id === null) {
-		notFound();
-	}
-
-	return <MenuList id={id} />;
+	return <MenuList id={store.id} />;
 }

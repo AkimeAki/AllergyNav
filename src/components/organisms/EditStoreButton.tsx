@@ -9,6 +9,7 @@ import useGetUserData from "@/hooks/useGetUserData";
 import useSendVerifyMail from "@/hooks/useSendVerifyMail";
 import Modal from "@/components/molecules/Modal";
 import SubTitle from "@/components/atoms/SubTitle";
+import { useRouter } from "next/navigation";
 
 interface Props {
 	storeId: string;
@@ -18,6 +19,7 @@ const EditStoreButton = ({ storeId }: Props): JSX.Element => {
 	const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
 	const { status, userId, userVerified } = useGetUserData();
 	const { sendVerifyMail, response: verifiedResponse, loading: sendVerifyLoading } = useSendVerifyMail();
+	const router = useRouter();
 
 	return (
 		<>
@@ -27,6 +29,10 @@ const EditStoreButton = ({ storeId }: Props): JSX.Element => {
 						storeId={storeId}
 						isOpen={isOpenEditModal && userVerified === true}
 						setIsOpen={setIsOpenEditModal}
+						callback={() => {
+							router.refresh();
+							setIsOpenEditModal(false);
+						}}
 					/>
 					<Modal isOpen={isOpenEditModal && userVerified === false} setIsOpen={setIsOpenEditModal}>
 						<SubTitle>お店の情報を編集</SubTitle>

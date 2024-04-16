@@ -11,8 +11,8 @@ import useAddUser from "@/hooks/useAddUser";
 import { isEmailString, isEmptyString } from "@/libs/check-string";
 import { useSearchParams, redirect } from "next/navigation";
 import Cursor from "@/components/atoms/Cursor";
-import FloatMessage from "@/components/atoms/FloatMessage";
 import useLogin from "@/hooks/useLogin";
+import { useFloatMessage } from "@/hooks/useFloatMessage";
 
 export default function (): JSX.Element {
 	const [email, setEmail] = useState<string>("");
@@ -22,6 +22,7 @@ export default function (): JSX.Element {
 	const { response: loginResponse, loading: loginLoading, login } = useLogin();
 	const searchParams = useSearchParams();
 	const redirectPath = searchParams.get("redirect") ?? "";
+	const { addMessage } = useFloatMessage();
 
 	useEffect(() => {
 		if (addUserResponse !== undefined && addUserResponse !== null) {
@@ -35,16 +36,27 @@ export default function (): JSX.Element {
 		}
 	}, [loginResponse]);
 
+	useEffect(() => {
+		if (addUserLoading) {
+			addMessage("入力データを送信しています", "success");
+		}
+	}, [addUserLoading]);
+
+	useEffect(() => {
+		if (loginResponse !== undefined && !loginResponse) {
+			addMessage("アカウント作成処理に失敗しました", "error");
+		}
+	}, [loginResponse]);
+
+	useEffect(() => {
+		if (addUserMessage !== undefined && addUserMessage.type === "error") {
+			addMessage(addUserMessage.text, "error");
+		}
+	}, [addUserMessage]);
+
 	return (
 		<>
-			{addUserLoading && <FloatMessage type="success">入力データを送信しています</FloatMessage>}
 			{(addUserLoading || loginLoading) && <Cursor cursor="wait" />}
-			{addUserMessage !== undefined && addUserMessage.type === "error" && (
-				<FloatMessage type="error">{addUserMessage.text}</FloatMessage>
-			)}
-			{loginResponse !== undefined && !loginResponse && (
-				<FloatMessage type="error">アカウント作成処理に失敗しました</FloatMessage>
-			)}
 			<div
 				className={css`
 					display: flex;

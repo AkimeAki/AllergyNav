@@ -8,7 +8,6 @@ import Label from "@/components/atoms/Label";
 import TextInput from "@/components/atoms/TextInput";
 import TextArea from "@/components/atoms/TextArea";
 import Button from "@/components/atoms/Button";
-import FloatMessage from "@/components/atoms/FloatMessage";
 import Cursor from "@/components/atoms/Cursor";
 import useGetComments from "@/hooks/useGetComments";
 import useAddComment from "@/hooks/useAddComment";
@@ -19,6 +18,7 @@ import useGetUserData from "@/hooks/useGetUserData";
 import { SessionProvider } from "next-auth/react";
 import useSendVerifyMail from "@/hooks/useSendVerifyMail";
 import StoreCommentBarrier from "@/components/molecules/StoreCommentBarrier";
+import { useFloatMessage } from "@/hooks/useFloatMessage";
 
 interface Props {
 	id: string;
@@ -27,11 +27,17 @@ interface Props {
 const StoreComment = ({ id }: Props): JSX.Element => {
 	const [newCommentContent, setNewCommentContent] = useState<string>("");
 	const [newCommentTitle, setNewCommentTitle] = useState<string>("");
-	const { response: comments, loading: getLoading, getComments } = useGetComments();
-	const { response: addedComment, loading: addLoading, message: addMessage, addComment } = useAddComment();
+	const { response: comments, loading: getCommentsLoading, getComments } = useGetComments();
+	const {
+		response: addedComment,
+		loading: addCommentsLoading,
+		message: addCommentsMessage,
+		addComment
+	} = useAddComment();
 	const pathname = usePathname();
 	const { status, userId, userVerified } = useGetUserData();
 	const { sendVerifyMail, response: verifiedResponse, loading: sendVerifyLoading } = useSendVerifyMail();
+	const { addMessage } = useFloatMessage();
 
 	useEffect(() => {
 		void getComments(id);
@@ -45,17 +51,19 @@ const StoreComment = ({ id }: Props): JSX.Element => {
 		}
 	}, [addedComment]);
 
+	useEffect(() => {
+		if (addCommentsMessage !== undefined && addCommentsMessage.type === "error") {
+			addMessage(addCommentsMessage.text, "error");
+		}
+
+		if (addCommentsMessage !== undefined && addCommentsMessage.type === "success") {
+			addMessage("コメントを登録しました！", "success", 3);
+		}
+	}, [addCommentsMessage]);
+
 	return (
 		<>
-			{addLoading && <Cursor cursor="wait" />}
-			{addMessage !== undefined && addMessage.type === "error" && (
-				<FloatMessage type="error">{addMessage.text}</FloatMessage>
-			)}
-			{addMessage !== undefined && addMessage.type === "success" && (
-				<FloatMessage type="success" secounds={1.5}>
-					{addMessage.text}
-				</FloatMessage>
-			)}
+			{addCommentsLoading && <Cursor cursor="wait" />}
 			<SubTitle>コメントを書く</SubTitle>
 			<form
 				className={css`
@@ -146,7 +154,7 @@ const StoreComment = ({ id }: Props): JSX.Element => {
 									setNewCommentTitle(e.target.value);
 								}
 							}}
-							disabled={getLoading || addLoading || status === "loading"}
+							disabled={getCommentsLoading || addCommentsLoading || status === "loading"}
 						/>
 					</div>
 					<div>
@@ -159,7 +167,7 @@ const StoreComment = ({ id }: Props): JSX.Element => {
 									setNewCommentContent(e.target.value);
 								}
 							}}
-							disabled={getLoading || addLoading || status === "loading"}
+							disabled={getCommentsLoading || addCommentsLoading || status === "loading"}
 						/>
 					</div>
 					<div>
@@ -176,10 +184,10 @@ const StoreComment = ({ id }: Props): JSX.Element => {
 									}
 								}}
 								disabled={
-									getLoading ||
+									getCommentsLoading ||
 									isEmptyString(newCommentTitle) ||
 									isEmptyString(newCommentContent) ||
-									addLoading ||
+									addCommentsLoading ||
 									status === "loading" ||
 									status === "unauthenticated"
 								}
@@ -199,10 +207,10 @@ const StoreComment = ({ id }: Props): JSX.Element => {
 					padding: 0 10px;
 				`}
 			>
-				{getLoading && <Loading />}
-				{!getLoading && (
+				{getCommentsLoading && <Loading />}
+				{!getCommentsLoading && (
 					<>
-						{comments.length === 0 && (
+						{comments?.length === 0 && (
 							<p
 								className={css`
 									text-align: center;
@@ -211,7 +219,7 @@ const StoreComment = ({ id }: Props): JSX.Element => {
 								コメントが無いようです😿
 							</p>
 						)}
-						{[...comments].reverse().map((item) => (
+						{[...(comments ?? [])].reverse().map((item) => (
 							<div
 								key={item.id}
 								className={css`
@@ -229,7 +237,7 @@ const StoreComment = ({ id }: Props): JSX.Element => {
 										font-weight: 700;
 										border-bottom-style: solid;
 										border-bottom-width: 2px;
-										border-bottom-color: var(--color-orange);
+										border-bottom-color: var(--color-theme);
 										margin-bottom: 20px;
 										padding: 5px 0;
 									`}

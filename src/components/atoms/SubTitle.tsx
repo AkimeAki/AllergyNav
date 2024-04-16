@@ -12,10 +12,10 @@ export default function ({ children }: Props): JSX.Element {
 				width: 100%;
 				font-weight: 700;
 				font-size: 18px;
-				background-color: var(--color-orange);
+				background-color: var(--color-theme);
 				padding: 10px 20px;
-				color: white;
-				border-radius: 20px;
+				color: var(--color-white);
+				border-radius: 7px;
 
 				* {
 					font-weight: inherit;

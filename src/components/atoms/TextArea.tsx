@@ -46,7 +46,7 @@ export default function ({ value, onChange, disabled = false, autoSize = false }
 					resize: none;
 					border-style: solid;
 					border-width: 1px;
-					border-color: var(--color-orange);
+					border-color: var(--color-theme);
 					padding: 10px 20px;
 					border-radius: 5px;
 					line-height: 20px;
@@ -56,7 +56,7 @@ export default function ({ value, onChange, disabled = false, autoSize = false }
 					overflow-y: scroll;
 
 					&:focus {
-						box-shadow: 0 0 0 1px var(--color-orange);
+						box-shadow: 0 0 0 1px var(--color-theme);
 					}
 
 					&[disabled] {
@@ -65,7 +65,7 @@ export default function ({ value, onChange, disabled = false, autoSize = false }
 						cursor: not-allowed;
 
 						&:focus {
-							border-color: var(--color-orange);
+							border-color: var(--color-theme);
 						}
 					}
 				`,

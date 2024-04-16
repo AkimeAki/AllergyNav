@@ -2,7 +2,7 @@ import type { AddUserResponse, Message } from "@/type";
 import { useState } from "react";
 
 interface ReturnType {
-	response: AddUserResponse | undefined;
+	response: NonNullable<AddUserResponse> | undefined;
 	loading: boolean;
 	message: Message | undefined;
 	addUser: (email: string, password: string) => Promise<void>;
@@ -11,7 +11,7 @@ interface ReturnType {
 export default function (): ReturnType {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [message, setMessage] = useState<Message | undefined>(undefined);
-	const [response, setResponse] = useState<AddUserResponse | undefined>(undefined);
+	const [response, setResponse] = useState<NonNullable<AddUserResponse> | undefined>(undefined);
 
 	const addUser = async (email: string, password: string): Promise<void> => {
 		setLoading(true);
@@ -34,13 +34,20 @@ export default function (): ReturnType {
 				throw new Error();
 			}
 
-			const response = await result.json();
+			const response = (await result.json()) as AddUserResponse;
+
+			if (response === null) {
+				throw new Error();
+			}
+
 			setResponse(response);
 			setMessage({
 				type: "success",
 				text: "ユーザーを登録できました"
 			});
 		} catch (e) {
+			setResponse(undefined);
+
 			setMessage({
 				type: "error",
 				text: "エラーが発生しました"

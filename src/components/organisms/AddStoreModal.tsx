@@ -10,10 +10,10 @@ import type { Dispatch, SetStateAction } from "react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Cursor from "@/components/atoms/Cursor";
-import FloatMessage from "@/components/atoms/FloatMessage";
 import { useAddStore } from "@/hooks/useAddStore";
 import { isEmptyString } from "@/libs/check-string";
 import Modal from "@/components/molecules/Modal";
+import { useFloatMessage } from "@/hooks/useFloatMessage";
 
 interface Props {
 	isOpen: boolean;
@@ -25,104 +25,106 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 	const [storeAddress, setStoreAddress] = useState<string>("");
 	const [storeDescription, setStoreDescription] = useState<string>("");
 	const router = useRouter();
-	const { response: store, loading, message, addStore } = useAddStore();
+	const { response: addedStore, loading, message, addStore } = useAddStore();
+	const { addMessage } = useFloatMessage();
 
 	useEffect(() => {
-		if (store !== undefined) {
-			router.push(`/store/${store.id}`);
+		if (addedStore !== undefined) {
+			router.push(`/store/${addedStore.id}`);
 		}
-	}, [store]);
+	}, [addedStore]);
+
+	useEffect(() => {
+		if (loading) {
+			addMessage("入力データを送信しています", "success", "path");
+		}
+	}, [loading]);
+
+	useEffect(() => {
+		if (message !== undefined && message.type === "error") {
+			addMessage(message.text, "error");
+		}
+	}, [message]);
 
 	return (
 		<>
-			{(loading || store !== undefined) && (
-				<>
-					<Cursor cursor="wait" />
-					<FloatMessage type="success">入力データを送信しています</FloatMessage>
-				</>
-			)}
-			{message !== undefined && message.type === "error" && (
-				<FloatMessage type="error">{message.text}</FloatMessage>
-			)}
-			{isOpen && (
-				<Modal isOpen={isOpen} setIsOpen={setIsOpen} close={!loading && store === undefined}>
-					<SubTitle>お店を追加</SubTitle>
-					<form
-						className={css`
-							display: flex;
-							flex-direction: column;
-							gap: 20px;
-							margin-top: 30px;
-							padding: 0 10px;
+			{(loading || addedStore !== undefined) && <Cursor cursor="wait" />}
+			<Modal isOpen={isOpen} setIsOpen={setIsOpen} close={!loading && addedStore === undefined}>
+				<SubTitle>お店を追加</SubTitle>
+				<form
+					className={css`
+						display: flex;
+						flex-direction: column;
+						gap: 20px;
+						margin-top: 30px;
 
-							& > div {
-								display: flex;
-								align-items: flex-start;
-								flex-direction: column;
-								gap: 10px;
-							}
-						`}
-					>
-						<div>
-							<Label required>お店の名前</Label>
-							<TextInput
-								disabled={loading || store !== undefined}
-								onChange={(e) => {
-									setStoreName(e.target.value);
+						& > div {
+							display: flex;
+							align-items: flex-start;
+							flex-direction: column;
+							gap: 10px;
+						}
+					`}
+				>
+					<div>
+						<Label required>お店の名前</Label>
+						<TextInput
+							disabled={loading || addedStore !== undefined}
+							onChange={(e) => {
+								setStoreName(e.target.value);
+							}}
+						/>
+					</div>
+					<div>
+						<Label required>住所</Label>
+						<p>郵便番号は除外してください。</p>
+						<TextInput
+							disabled={loading || addedStore !== undefined}
+							onChange={(e) => {
+								setStoreAddress(e.target.value);
+							}}
+						/>
+					</div>
+					<div>
+						<Label>グループ（未実装）</Label>
+						<Select value="null" disabled>
+							<option value="null">なし</option>
+						</Select>
+					</div>
+					<div>
+						<Label>お店の詳細情報</Label>
+						<TextArea
+							disabled={loading || addedStore !== undefined}
+							autoSize
+							onChange={(e) => {
+								setStoreDescription(e.target.value);
+							}}
+						/>
+					</div>
+					<div>
+						<div
+							className={css`
+								width: 100%;
+								text-align: right;
+							`}
+						>
+							<Button
+								onClick={() => {
+									void addStore(storeName, storeAddress, storeDescription);
 								}}
-							/>
-						</div>
-						<div>
-							<Label required>住所</Label>
-							<p>郵便番号は除外してください。</p>
-							<TextInput
-								disabled={loading || store !== undefined}
-								onChange={(e) => {
-									setStoreAddress(e.target.value);
-								}}
-							/>
-						</div>
-						<div>
-							<Label>グループ（未実装）</Label>
-							<Select value="null" disabled>
-								<option value="null">なし</option>
-							</Select>
-						</div>
-						<div>
-							<Label>お店の詳細情報</Label>
-							<TextArea
-								disabled={loading || store !== undefined}
-								autoSize
-								onChange={(e) => {
-									setStoreDescription(e.target.value);
-								}}
-							/>
-						</div>
-						<div>
-							<div
-								className={css`
-									width: 100%;
-									text-align: right;
-								`}
+								disabled={
+									loading ||
+									addedStore !== undefined ||
+									isEmptyString(storeName) ||
+									isEmptyString(storeAddress)
+								}
 							>
-								<Button
-									onClick={() => {
-										void addStore(storeName, storeAddress, storeDescription);
-									}}
-									disabled={
-										loading ||
-										store !== undefined ||
-										isEmptyString(storeName) ||
-										isEmptyString(storeAddress)
-									}
-								>
-									登録する
-								</Button>
-							</div>
+								登録する
+							</Button>
 						</div>
-					</form>
-				</Modal>
-			)}
+					</div>
+				</form>
+			</Modal>
 		</>
 	);
 }

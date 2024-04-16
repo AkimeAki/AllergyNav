@@ -32,7 +32,7 @@ export default function (): JSX.Element {
 		if (params.allergens !== null) {
 			const queryAllergenList = params.allergens.split(",");
 			const filterdAllergenList = queryAllergenList.filter((a) => {
-				return allergens.some((b) => a === b.id);
+				return allergens?.some((b) => a === b.id);
 			});
 			setSelectAllergens(filterdAllergenList);
 		} else {
@@ -53,7 +53,7 @@ export default function (): JSX.Element {
 					position: sticky;
 					top: 0;
 					z-index: 99;
-					background-color: white;
+					background-color: var(--color-white);
 					border-bottom: 2px solid #d3d3d3;
 					padding: 5px 10px;
 					width: calc(100% + 30px + 30px);
@@ -146,7 +146,7 @@ export default function (): JSX.Element {
 										width: 100%;
 									`}
 								>
-									{allergens.map((item) => {
+									{allergens?.map((item) => {
 										const selected = selectAllergens.some(
 											(selectAllergen) => selectAllergen === item.id
 										);
@@ -229,7 +229,7 @@ export default function (): JSX.Element {
 							>
 								{selectAllergens.map((item) => {
 									let name = "";
-									allergens.forEach((allergen) => {
+									allergens?.forEach((allergen) => {
 										if (item === allergen.id) {
 											name = allergen.name;
 										}
@@ -259,7 +259,7 @@ export default function (): JSX.Element {
 					>
 						{selectAllergens.map((item) => {
 							let name = "";
-							allergens.forEach((allergen) => {
+							allergens?.forEach((allergen) => {
 								if (item === allergen.id) {
 									name = allergen.name;
 								}
@@ -301,7 +301,7 @@ export default function (): JSX.Element {
 						}
 					`}
 				>
-					<GoogleIcon name="page_info" size={25} color="var(--color-orange)" />
+					<GoogleIcon name="page_info" size={25} color="var(--color-theme)" />
 				</div>
 			</div>
 			<div
@@ -343,7 +343,7 @@ export default function (): JSX.Element {
 							width: 100%;
 							padding: 5px 20px;
 							border-style: solid;
-							border-color: var(--color-orange);
+							border-color: var(--color-theme);
 							border-width: 1px;
 							border-radius: 30px;
 							transition-duration: 200ms;
@@ -351,7 +351,7 @@ export default function (): JSX.Element {
 							font-size: 15px;
 
 							&:focus {
-								box-shadow: 0 0 0 1px var(--color-orange);
+								box-shadow: 0 0 0 1px var(--color-theme);
 							}
 						`}
 					/>
@@ -401,7 +401,7 @@ export default function (): JSX.Element {
 								width: 100%;
 							`}
 						>
-							{allergens.map((item) => {
+							{allergens?.map((item) => {
 								const selected = selectAllergens.some((selectAllergen) => selectAllergen === item.id);
 
 								return (

@@ -42,13 +42,13 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 							padding: 15px 10px;
 							border-width: 2px;
 							border-style: solid;
-							border-color: var(--color-orange);
+							border-color: var(--color-theme);
 						}
 
 						th {
 							text-align: left;
-							background-color: var(--color-orange);
-							color: white;
+							background-color: var(--color-theme);
+							color: var(--color-white);
 							font-weight: bold;
 							padding-left: 20px;
 							padding-right: 20px;

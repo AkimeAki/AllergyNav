@@ -52,6 +52,8 @@ export default function (): ReturnType {
 				text: "メニューを登録しました"
 			});
 		} catch (e) {
+			setResponse(undefined);
+
 			if (e instanceof ValidationError) {
 				setMessage({
 					type: "error",

@@ -5,6 +5,16 @@ const nextConfig = {
 	reactStrictMode: true,
 	experimental: {
 		missingSuspenseWithCSRBailout: false
+	},
+	images: {
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "files.allergy-navi.com",
+				port: "",
+				pathname: "**"
+			}
+		]
 	}
 };
 

@@ -23,7 +23,7 @@ const StoreList = (): JSX.Element => {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
 	const searchParams = useSearchParams();
 	const [searchAllergens, setSearchAllergens] = useState<string[]>([]);
-	const { response: stores, loading, message, getStore } = useGetStores();
+	const { response: stores, loading: getStoresLoading, message, getStores } = useGetStores();
 	const { response: allergens, getAllergens, loading: getAllergensLoading } = useGetAllergens();
 	const { status, userId, userVerified } = useGetUserData();
 	const { sendVerifyMail, response: verifiedResponse, loading: sendVerifyLoading } = useSendVerifyMail();
@@ -33,7 +33,7 @@ const StoreList = (): JSX.Element => {
 	};
 
 	useEffect(() => {
-		void getStore(params.allergens, params.keywords);
+		void getStores(params.allergens, params.keywords);
 	}, [searchParams]);
 
 	useEffect(() => {
@@ -44,7 +44,7 @@ const StoreList = (): JSX.Element => {
 		if (params.allergens !== null) {
 			const queryAllergenList = params.allergens.split(",");
 			const filterdAllergenList = queryAllergenList.filter((a) => {
-				return allergens.some((b) => a === b.id);
+				return allergens?.some((b) => a === b.id);
 			});
 			setSearchAllergens(filterdAllergenList);
 		} else {
@@ -124,15 +124,14 @@ const StoreList = (): JSX.Element => {
 					display: flex;
 					flex-direction: column;
 					gap: 20px;
-					padding: 0 10px;
 				`}
 			>
-				{!loading && !getAllergensLoading && searchAllergens.length !== 0 && (
+				{!getStoresLoading && !getAllergensLoading && searchAllergens.length !== 0 && (
 					<div
 						className={css`
-							border: 4px solid var(--color-orange);
+							border: 4px solid var(--color-theme);
 							padding: 10px;
-							background-color: var(--color-orange-thin);
+							background-color: var(--color-theme-thin);
 							border-radius: 10px;
 							display: flex;
 							flex-direction: column;
@@ -148,7 +147,7 @@ const StoreList = (): JSX.Element => {
 						>
 							{searchAllergens.map((item) => {
 								let name = "";
-								allergens.forEach((allergen) => {
+								allergens?.forEach((allergen) => {
 									if (item === allergen.id) {
 										name = allergen.name;
 									}
@@ -177,7 +176,7 @@ const StoreList = (): JSX.Element => {
 						</div>
 					</div>
 				)}
-				{loading && <Loading />}
+				{getStoresLoading && <Loading />}
 				<section
 					className={css`
 						display: grid;
@@ -195,9 +194,9 @@ const StoreList = (): JSX.Element => {
 					`}
 				>
 					{message !== undefined && message.type === "error" && <ErrorMessage>{message.text}</ErrorMessage>}
-					{!loading && (
+					{!getStoresLoading && (
 						<>
-							{stores.length === 0 && (
+							{stores?.length === 0 && (
 								<p
 									className={css`
 										text-align: center;
@@ -206,7 +205,7 @@ const StoreList = (): JSX.Element => {
 									お店が無いようです😿
 								</p>
 							)}
-							{stores.map((store) => (
+							{stores?.map((store) => (
 								<div
 									key={store.id}
 									className={css`

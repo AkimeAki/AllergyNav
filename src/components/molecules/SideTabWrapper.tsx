@@ -39,11 +39,17 @@ export default function ({ children }: Props): JSX.Element {
 		};
 
 		const enter = (): void => {
-			stopScroll();
+			const mediaQuery = window.matchMedia("(max-width: 880px)");
+			if (mediaQuery.matches) {
+				stopScroll();
+			}
 		};
 
 		const leave = (): void => {
-			startScroll();
+			const mediaQuery = window.matchMedia("(max-width: 880px)");
+			if (mediaQuery.matches) {
+				startScroll();
+			}
 		};
 
 		const touchStart = (): void => {
@@ -81,7 +87,7 @@ export default function ({ children }: Props): JSX.Element {
 			className={css`
 				display: flex;
 				flex-direction: column;
-				border-radius: 15px;
+				border-radius: 7px;
 				overflow: hidden;
 
 				@media (max-width: 880px) {
