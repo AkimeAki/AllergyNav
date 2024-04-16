@@ -85,6 +85,17 @@ const StoreComment = ({ id }: Props): JSX.Element => {
 								display: flex;
 								gap: 20px;
 								justify-content: center;
+
+								@media (max-width: 500px) {
+									flex-direction: column;
+									align-items: center;
+
+									& > div {
+										display: flex;
+										flex-direction: column;
+										width: 100%;
+									}
+								}
 							`}
 						>
 							<div>
@@ -110,6 +121,11 @@ const StoreComment = ({ id }: Props): JSX.Element => {
 								display: flex;
 								gap: 20px;
 								justify-content: center;
+
+								@media (max-width: 500px) {
+									flex-direction: column;
+									align-items: center;
+								}
 							`}
 						>
 							<div>

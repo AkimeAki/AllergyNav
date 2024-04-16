@@ -18,11 +18,15 @@ export default function ({ children }: Props): JSX.Element {
 				transition-duration: 200ms;
 				transition-property: opacity;
 				background-color: var(--color-white);
-				border-radius: 30px;
+				border-radius: 15px;
 				display: flex;
 				justify-content: center;
 				align-items: center;
 				box-shadow: 0 0 10px -5px #969696;
+
+				@media (max-width: 880px) {
+					opacity: 0.9;
+				}
 
 				&:hover {
 					opacity: 0.9;
@@ -34,6 +38,7 @@ export default function ({ children }: Props): JSX.Element {
 					display: flex;
 					flex-direction: column;
 					gap: 30px;
+					padding: 0 20px;
 				`}
 			>
 				{children}
