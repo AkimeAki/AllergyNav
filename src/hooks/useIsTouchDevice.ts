@@ -17,7 +17,7 @@ export default function () {
 			setIsTouch(false);
 		}
 
-		if (e.pointerType === "touch") {
+		if (e.pointerType === "touch" || e.pointerType === "pen") {
 			setIsTouch(true);
 		}
 	};
