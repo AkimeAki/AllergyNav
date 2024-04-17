@@ -12,17 +12,23 @@ export default function () {
 		setIsTouch(true);
 	};
 
-	const mousemoved = (): void => {
-		setIsTouch(false);
+	const move = (e: PointerEvent): void => {
+		if (e.pointerType === "mouse") {
+			setIsTouch(false);
+		}
+
+		if (e.pointerType === "touch") {
+			setIsTouch(true);
+		}
 	};
 
 	useEffect(() => {
 		window.addEventListener("touchstart", touched, false);
-		window.addEventListener("mousemove", mousemoved, false);
+		window.addEventListener("pointermove", move, false);
 
 		return () => {
 			window.removeEventListener("touchstart", touched);
-			window.removeEventListener("mousemove", mousemoved);
+			window.removeEventListener("pointermove", move);
 		};
 	}, []);
 
