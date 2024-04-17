@@ -104,7 +104,7 @@ export default function ({ href, children, onClick, disabled = false, loading = 
 			) : (
 				<Link
 					onClick={() => {
-						if (!disabled && onClick !== undefined) {
+						if (onClick !== undefined) {
 							onClick();
 						}
 					}}
