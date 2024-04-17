@@ -63,13 +63,14 @@ export default function ({ href, children, onClick, disabled = false, loading = 
 				}
 
 				&:hover {
-					background-color: var(--color-black);
+					background-color: var(--color-white);
 					box-shadow: none;
+					color: var(--color-gray);
 
 					* {
 						background-color: inherit;
-						box-shadow: none;
-						color: var(--color-gray);
+						box-shadow: inherit;
+						color: inherit;
 					}
 				}
 			`
@@ -88,7 +89,7 @@ export default function ({ href, children, onClick, disabled = false, loading = 
 				<button
 					type="button"
 					onClick={() => {
-						if (!disabled && onClick !== undefined) {
+						if (onClick !== undefined) {
 							onClick();
 						}
 					}}
