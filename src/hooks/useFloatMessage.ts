@@ -7,7 +7,8 @@ const style = css`
 	left: 50%;
 	transform: translateX(-50%) translateY(calc(-100% - var(--top-margin)));
 	z-index: calc(infinity);
-	width: 500px;
+	max-width: 500px;
+	width: calc(100% - 40px);
 	padding: 10px;
 	border-width: 4px;
 	border-style: solid;

@@ -6,12 +6,11 @@ export default function (): JSX.Element {
 		<footer
 			className={css`
 				background-color: var(--color-theme-thin);
-				height: 200px;
 				color: var(--color-white);
+				padding: 60px 0;
 
 				@media (max-width: 880px) {
-					height: 270px;
-					padding-bottom: 70px;
+					padding-bottom: 140px;
 				}
 			`}
 		>

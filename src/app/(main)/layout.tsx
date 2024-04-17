@@ -11,27 +11,33 @@ interface Props {
 export default function ({ children }: Props): JSX.Element {
 	return (
 		<>
-			<Header />
-			<Sidebar />
-			<main
+			<div
 				className={css`
-					width: 100%;
+					flex: 1;
 				`}
 			>
-				<div
+				<Header />
+				<Sidebar />
+				<main
 					className={css`
-						max-width: 1200px;
-						margin: 0 auto;
-						padding: 0 30px 90px 30px;
-
-						@media (max-width: 600px) {
-							padding: 0 20px 90px 20px;
-						}
+						width: 100%;
 					`}
 				>
-					{children}
-				</div>
-			</main>
+					<div
+						className={css`
+							max-width: 1200px;
+							margin: 0 auto;
+							padding: 0 30px 90px 30px;
+
+							@media (max-width: 600px) {
+								padding: 0 20px 90px 20px;
+							}
+						`}
+					>
+						{children}
+					</div>
+				</main>
+			</div>
 			<Footer />
 		</>
 	);

@@ -10,6 +10,10 @@ export const accessCheck = async (req: NextRequest): Promise<boolean> => {
 		return true;
 	}
 
+	if (process.env.NODE_ENV === "development") {
+		return true;
+	}
+
 	let error = true;
 
 	try {

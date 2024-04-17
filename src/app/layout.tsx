@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-page-custom-font */
+import { css } from "@kuma-ui/core";
 import "@/globals.css";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
@@ -32,7 +33,12 @@ export default function ({ children }: Props): JSX.Element {
 				/>
 				<link rel="icon" href="/favicon.png"></link>
 			</head>
-			<body>
+			<body
+				className={css`
+					display: flex;
+					flex-direction: column;
+				`}
+			>
 				<KumaRegistry>{children}</KumaRegistry>
 			</body>
 		</html>
