@@ -235,28 +235,34 @@ const MenuList = ({ id }: Props): JSX.Element => {
 								isOpen={isOpenTouchMenuModal && openTouchMenuModalId === menu.id}
 								setIsOpen={setIsOpenTouchMenuModal}
 							>
-								<MiniModalButton
-									disabled={status !== "authenticated"}
-									loading={status !== "loading"}
-									onClick={() => {
-										if (status === "authenticated") {
-											setOpenEditModalId(menu.id);
-											setIsOpenEditModal(true);
+								<div
+									className={css`
+										padding: 6px 0;
+									`}
+								>
+									<MiniModalButton
+										disabled={status !== "authenticated"}
+										loading={status === "loading"}
+										onClick={() => {
+											if (status === "authenticated") {
+												setOpenEditModalId(menu.id);
+												setIsOpenEditModal(true);
+												setIsOpenTouchMenuModal(false);
+											}
+										}}
+									>
+										編集
+									</MiniModalButton>
+									<MiniModalButton
+										onClick={() => {
+											setOpenHistoryModalId(menu.id);
+											setIsOpenHistoryModal(true);
 											setIsOpenTouchMenuModal(false);
-										}
-									}}
-								>
-									編集
-								</MiniModalButton>
-								<MiniModalButton
-									onClick={() => {
-										setOpenHistoryModalId(menu.id);
-										setIsOpenHistoryModal(true);
-										setIsOpenTouchMenuModal(false);
-									}}
-								>
-									履歴
-								</MiniModalButton>
+										}}
+									>
+										履歴
+									</MiniModalButton>
+								</div>
 							</MiniModal>
 							<div
 								className={css`
