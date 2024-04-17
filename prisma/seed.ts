@@ -16,36 +16,36 @@ const userData = [
 	}
 ];
 
-// const allergenData = [
-// 	{
-// 		id: "egg",
-// 		name: "卵"
-// 	},
-// 	{
-// 		id: "milk",
-// 		name: "乳製品"
-// 	},
-// 	{
-// 		id: "wheat",
-// 		name: "小麦"
-// 	},
-// 	{
-// 		id: "shrimp",
-// 		name: "エビ"
-// 	},
-// 	{
-// 		id: "crab",
-// 		name: "カニ"
-// 	},
-// 	{
-// 		id: "soba",
-// 		name: "そば"
-// 	},
-// 	{
-// 		id: "peanut",
-// 		name: "落花生"
-// 	}
-// ];
+const allergenData = [
+	{
+		id: "egg",
+		name: "卵"
+	},
+	{
+		id: "milk",
+		name: "乳製品"
+	},
+	{
+		id: "wheat",
+		name: "小麦"
+	},
+	{
+		id: "shrimp",
+		name: "エビ"
+	},
+	{
+		id: "crab",
+		name: "カニ"
+	},
+	{
+		id: "soba",
+		name: "そば"
+	},
+	{
+		id: "peanut",
+		name: "落花生"
+	}
+];
 
 void prisma.$transaction(async (prisma) => {
 	for (const user of userData) {
@@ -59,13 +59,13 @@ void prisma.$transaction(async (prisma) => {
 	}
 });
 
-// void prisma.$transaction(async (prisma) => {
-// 	for (const allergen of allergenData) {
-// 		await prisma.allergen.create({
-// 			data: {
-// 				id: allergen.id,
-// 				name: allergen.name
-// 			}
-// 		});
-// 	}
-// });
+void prisma.$transaction(async (prisma) => {
+	for (const allergen of allergenData) {
+		await prisma.allergen.create({
+			data: {
+				id: allergen.id,
+				name: allergen.name
+			}
+		});
+	}
+});
