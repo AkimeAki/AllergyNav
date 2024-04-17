@@ -8,9 +8,17 @@ interface Props {
 	size?: "small" | "normal";
 	password?: boolean;
 	autoComplete?: string;
+	placeholder?: string;
 }
 
-export default function ({ onChange, value, disabled = false, password = false, autoComplete }: Props): JSX.Element {
+export default function ({
+	onChange,
+	value,
+	disabled = false,
+	password = false,
+	autoComplete,
+	placeholder
+}: Props): JSX.Element {
 	return (
 		<div
 			className={css`
@@ -21,6 +29,7 @@ export default function ({ onChange, value, disabled = false, password = false, 
 				type={password ? "password" : "text"}
 				onChange={onChange}
 				value={value}
+				placeholder={placeholder}
 				disabled={disabled}
 				autoComplete={autoComplete}
 				className={css`

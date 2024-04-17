@@ -10,6 +10,7 @@ import GoogleIcon from "@/components/atoms/GoogleIcon";
 import AllergenItem from "@/components/atoms/AllergenItem";
 import Modal from "@/components/molecules/Modal";
 import MiniTitle from "@/components/atoms/MiniTitle";
+import TextInput from "@/components/atoms/TextInput";
 
 export default function (): JSX.Element {
 	const [selectAllergens, setSelectAllergens] = useState<string[]>([]);
@@ -331,29 +332,12 @@ export default function (): JSX.Element {
 						}
 					`}
 				>
-					<input
-						type="text"
+					<TextInput
 						placeholder="キーワードを入力してお店を検索"
 						value={keywords}
 						onChange={(e) => {
 							setKeywords(e.target.value);
 						}}
-						className={css`
-							display: block;
-							width: 100%;
-							padding: 5px 20px;
-							border-style: solid;
-							border-color: var(--color-theme);
-							border-width: 1px;
-							border-radius: 30px;
-							transition-duration: 200ms;
-							transition-property: box-shadow;
-							font-size: 15px;
-
-							&:focus {
-								box-shadow: 0 0 0 1px var(--color-theme);
-							}
-						`}
 					/>
 					<div
 						className={css`
