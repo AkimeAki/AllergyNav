@@ -54,10 +54,6 @@ export default function ({ storeId, menuId, isOpen, setIsOpen, callback }: Props
 		}
 	}, [addedPictureMessage]);
 
-	useEffect(() => {
-		console.log(pictureData);
-	}, [pictureData]);
-
 	return (
 		<>
 			{addPictureLoading && <Cursor cursor="wait" />}

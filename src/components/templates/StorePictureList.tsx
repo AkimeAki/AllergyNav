@@ -14,6 +14,7 @@ import Modal from "@/components/molecules/Modal";
 import SubTitle from "@/components/atoms/SubTitle";
 import useSendVerifyMail from "@/hooks/useSendVerifyMail";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
+import { formatText } from "@/libs/format-text";
 
 interface Props {
 	id: string;
@@ -30,6 +31,8 @@ const MenuList = ({ id }: Props): JSX.Element => {
 	const { status, userId, userVerified } = useGetUserData();
 	const { sendVerifyMail, response: verifiedResponse, loading: sendVerifyLoading } = useSendVerifyMail();
 	const { addMessage } = useFloatMessage();
+	const [isViewPicture, setIsViewPicture] = useState<boolean>(false);
+	const [viewPictureId, setViewPictureId] = useState<string>();
 
 	useEffect(() => {
 		void getPictures(id);
@@ -108,6 +111,71 @@ const MenuList = ({ id }: Props): JSX.Element => {
 					</div>
 				</div>
 			</Modal>
+			{pictures?.map((picture) => (
+				<Modal
+					key={picture.id}
+					isOpen={isViewPicture && viewPictureId === picture.id}
+					setIsOpen={setIsViewPicture}
+				>
+					<Image
+						className={css`
+							width: 100%;
+							height: calc(100% - 10px);
+							object-fit: contain;
+							user-select: none;
+						`}
+						src={picture.url}
+						width={1280}
+						height={1280}
+						alt="写真"
+					/>
+					{picture.description !== "" && (
+						<div
+							className={css`
+								position: absolute;
+								bottom: 0;
+								left: 0;
+								width: 100%;
+								padding: 30px;
+								user-select: none;
+								pointer-events: none;
+
+								@media (max-width: 880px) {
+									padding: 0;
+								}
+							`}
+						>
+							<div
+								className={css`
+									background-color: black;
+									padding: 10px;
+									opacity: 0.7;
+									padding: 20px;
+									max-height: 120px;
+									overflow-y: auto;
+									border-bottom-left-radius: 15px;
+									border-bottom-right-radius: 15px;
+
+									@media (max-width: 880px) {
+										border-radius: 0;
+									}
+								`}
+							>
+								<div
+									className={css`
+										color: white;
+										user-select: text;
+										pointer-events: auto;
+									`}
+									dangerouslySetInnerHTML={{
+										__html: formatText(picture.description)
+									}}
+								/>
+							</div>
+						</div>
+					)}
+				</Modal>
+			))}
 			<div
 				className={css`
 					display: flex;
@@ -139,6 +207,10 @@ const MenuList = ({ id }: Props): JSX.Element => {
 						{[...pictures].reverse().map((picture) => (
 							<div
 								key={picture.id}
+								onClick={() => {
+									setIsViewPicture(true);
+									setViewPictureId(picture.id);
+								}}
 								className={css`
 									transition-duration: 200ms;
 									transition-property: box-shadow;
@@ -161,6 +233,7 @@ const MenuList = ({ id }: Props): JSX.Element => {
 										width: 100%;
 										height: 100%;
 										object-fit: contain;
+										user-select: none;
 									`}
 									src={picture.url}
 									width={300}

@@ -30,6 +30,7 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 				id: true,
 				url: true,
 				store_id: true,
+				description: true,
 				created_at: true,
 				updated_at: true
 			},
@@ -51,6 +52,7 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 			data.push({
 				id: item.id,
 				url: item.url,
+				description: item.description,
 				store_id: item.store_id,
 				updated_at: item.updated_at,
 				created_at: item.created_at
@@ -89,7 +91,7 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
 		const userId = safeString(session?.user?.id);
 		const storeId = safeString(body.storeId);
 		const menuId = safeString(body.menuId);
-		const descrition = safeString(body.description);
+		const description = safeString(body.description);
 		const pictureBuffer = safeString(body.arrayBuffer);
 		const filesHostname = safeString(process.env.FILES_HOSTNAME);
 
@@ -97,7 +99,7 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
 			throw new Error();
 		}
 
-		if (descrition === null || pictureBuffer === null || storeId === null) {
+		if (description === null || pictureBuffer === null || storeId === null) {
 			throw new ValidationError();
 		}
 
@@ -143,6 +145,7 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
 			const addPictureResult = await prisma.picture.create({
 				data: {
 					url: `https://${filesHostname}/${filename}`,
+					description,
 					store_id: storeId,
 					menu_picture:
 						menuId === null
@@ -165,6 +168,7 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
 			data = {
 				id: addPictureResult.id,
 				url: addPictureResult.url,
+				description: addPictureResult.description,
 				store_id: addPictureResult.store_id,
 				updated_at: addPictureResult.updated_at,
 				created_at: addPictureResult.created_at
