@@ -248,6 +248,12 @@ const MenuList = ({ id }: Props): JSX.Element => {
 												setOpenEditModalId(menu.id);
 												setIsOpenEditModal(true);
 												setIsOpenTouchMenuModal(false);
+											} else if (status === "unauthenticated") {
+												addMessage(
+													"メニューを編集するには、ログインする必要があります",
+													"error",
+													3
+												);
 											}
 										}}
 									>
