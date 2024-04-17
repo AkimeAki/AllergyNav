@@ -22,6 +22,7 @@ import SubTitle from "@/components/atoms/SubTitle";
 import useSendVerifyMail from "@/hooks/useSendVerifyMail";
 import Loading from "@/components/atoms/Loading";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
+import { isTouchDevice } from "@/libs/check-touch-device";
 
 interface Props {
 	id: string;
@@ -235,6 +236,7 @@ const MenuList = ({ id }: Props): JSX.Element => {
 								}}
 							>
 								{(menuHoverId === menu.id ||
+									isTouchDevice() ||
 									(openEditModalId === menu.id && isOpenEditModal) ||
 									(openHistoryModalId === menu.id && isOpenHistoryModal)) && (
 									<div

@@ -3,6 +3,7 @@
 import { useEffect, type ReactNode, useRef, useState } from "react";
 import { css } from "@kuma-ui/core";
 import useScroll from "@/hooks/useScroll";
+import { isTouchDevice } from "@/libs/check-touch-device";
 
 interface Props {
 	children: ReactNode;
@@ -67,7 +68,9 @@ export default function ({ children }: Props): JSX.Element {
 
 		if (element.current !== null) {
 			element.current.addEventListener("click", click, false);
-			element.current.addEventListener("wheel", scroll, false);
+			if (!isTouchDevice()) {
+				element.current.addEventListener("wheel", scroll, false);
+			}
 			element.current.addEventListener("touchstart", touchStart, false);
 			element.current.addEventListener("touchend", touchEnd, false);
 			element.current.addEventListener("touchmove", move, false);
