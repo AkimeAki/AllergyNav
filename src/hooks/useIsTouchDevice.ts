@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 
 const isTouchDevice = (): boolean => {
-	return "ontouchstart" in window || navigator.maxTouchPoints > 0 || window.matchMedia("(pointer:coarse)").matches;
+	if (typeof window !== "undefined") {
+		return (
+			"ontouchstart" in window || navigator.maxTouchPoints > 0 || window.matchMedia("(pointer:coarse)").matches
+		);
+	} else {
+		return false;
+	}
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
