@@ -3,7 +3,7 @@
 import { useEffect, type ReactNode, useRef, useState } from "react";
 import { css } from "@kuma-ui/core";
 import useScroll from "@/hooks/useScroll";
-import { isTouchDevice } from "@/libs/check-touch-device";
+import useIsTouchDevice from "@/hooks/useIsTouchDevice";
 
 interface Props {
 	children: ReactNode;
@@ -13,10 +13,11 @@ export default function ({ children }: Props): JSX.Element {
 	const element = useRef<HTMLDivElement | null>(null);
 	const { stopScroll, startScroll } = useScroll();
 	const [, setTouchScrollX] = useState<number>(0);
+	const { isTouch } = useIsTouchDevice();
 
 	useEffect(() => {
 		const scroll = (e: WheelEvent): void => {
-			if (element.current !== null) {
+			if (element.current !== null && !isTouch) {
 				element.current.scrollBy({
 					top: 0,
 					left: e.deltaY / 5,
@@ -68,9 +69,7 @@ export default function ({ children }: Props): JSX.Element {
 
 		if (element.current !== null) {
 			element.current.addEventListener("click", click, false);
-			if (!isTouchDevice()) {
-				element.current.addEventListener("wheel", scroll, false);
-			}
+			element.current.addEventListener("wheel", scroll, false);
 			element.current.addEventListener("touchstart", touchStart, false);
 			element.current.addEventListener("touchend", touchEnd, false);
 			element.current.addEventListener("touchmove", move, false);
@@ -89,7 +88,7 @@ export default function ({ children }: Props): JSX.Element {
 				element.current.removeEventListener("mouseleave", leave);
 			}
 		};
-	}, []);
+	}, [isTouch]);
 
 	return (
 		<aside

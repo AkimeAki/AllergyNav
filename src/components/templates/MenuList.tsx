@@ -22,7 +22,7 @@ import SubTitle from "@/components/atoms/SubTitle";
 import useSendVerifyMail from "@/hooks/useSendVerifyMail";
 import Loading from "@/components/atoms/Loading";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
-import { isTouchDevice } from "@/libs/check-touch-device";
+import useIsTouchDevice from "@/hooks/useIsTouchDevice";
 
 interface Props {
 	id: string;
@@ -40,6 +40,7 @@ const MenuList = ({ id }: Props): JSX.Element => {
 	const { status, userId, userVerified } = useGetUserData();
 	const { sendVerifyMail, response: verifiedResponse, loading: sendVerifyLoading } = useSendVerifyMail();
 	const { addMessage } = useFloatMessage();
+	const { isTouch } = useIsTouchDevice();
 	const params = {
 		allergens: searchParams.get("allergens") ?? "",
 		keywords: searchParams.get("keywords") ?? "",
@@ -236,7 +237,7 @@ const MenuList = ({ id }: Props): JSX.Element => {
 								}}
 							>
 								{(menuHoverId === menu.id ||
-									isTouchDevice() ||
+									isTouch ||
 									(openEditModalId === menu.id && isOpenEditModal) ||
 									(openHistoryModalId === menu.id && isOpenHistoryModal)) && (
 									<div
