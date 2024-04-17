@@ -1,23 +1,27 @@
 import { css } from "@kuma-ui/core";
-import type { ChangeEventHandler } from "react";
+import type { ChangeEventHandler, InputHTMLAttributes, KeyboardEventHandler } from "react";
 
 interface Props {
 	onChange?: ChangeEventHandler<HTMLInputElement>;
+	onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
 	value?: string;
 	disabled?: boolean;
 	size?: "small" | "normal";
 	password?: boolean;
 	autoComplete?: string;
 	placeholder?: string;
+	enterKeyHint?: InputHTMLAttributes<HTMLInputElement>["enterKeyHint"];
 }
 
 export default function ({
 	onChange,
+	onKeyDown,
 	value,
 	disabled = false,
 	password = false,
 	autoComplete,
-	placeholder
+	placeholder,
+	enterKeyHint
 }: Props): JSX.Element {
 	return (
 		<div
@@ -26,8 +30,10 @@ export default function ({
 			`}
 		>
 			<input
+				enterKeyHint={enterKeyHint}
 				type={password ? "password" : "text"}
 				onChange={onChange}
+				onKeyDown={onKeyDown}
 				value={value}
 				placeholder={placeholder}
 				disabled={disabled}

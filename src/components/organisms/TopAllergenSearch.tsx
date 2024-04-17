@@ -5,10 +5,12 @@ import BadAllergenSelect from "@/components/molecules/BadAllergenSelect";
 import Button from "@/components/atoms/Button";
 import { useState } from "react";
 import TextInput from "@/components/atoms/TextInput";
+import { useRouter } from "next/navigation";
 
 export default function (): JSX.Element {
 	const [selectAllergens, setSelectAllergens] = useState<string[]>([]);
 	const [keywords, setKeywords] = useState<string>("");
+	const router = useRouter();
 
 	return (
 		<div>
@@ -39,9 +41,15 @@ export default function (): JSX.Element {
 			>
 				<TextInput
 					placeholder="キーワードを入力してお店を検索"
+					enterKeyHint="search"
 					value={keywords}
 					onChange={(e) => {
 						setKeywords(e.target.value);
+					}}
+					onKeyDown={(e) => {
+						if (e.key === "Enter") {
+							router.push(`/store?keywords=${keywords}&allergens=${selectAllergens.join(",")}`);
+						}
 					}}
 				/>
 				<div
