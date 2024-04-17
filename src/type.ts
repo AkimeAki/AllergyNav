@@ -17,6 +17,7 @@ export type EditStoreResponse = StoreResponse | null;
 interface PictureResponse {
 	id: string;
 	url: string;
+	store_id: string;
 	updated_at: Date;
 	created_at: Date;
 }

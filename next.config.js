@@ -13,6 +13,12 @@ const nextConfig = {
 				hostname: "files.allergy-navi.com",
 				port: "",
 				pathname: "**"
+			},
+			{
+				protocol: "https",
+				hostname: process.env.FILES_HOSTNAME,
+				port: "",
+				pathname: "**"
 			}
 		]
 	}

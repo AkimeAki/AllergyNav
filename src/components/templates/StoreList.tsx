@@ -18,6 +18,8 @@ import AllergenItem from "@/components/atoms/AllergenItem";
 import MiniTitle from "@/components/atoms/MiniTitle";
 import useGetUserData from "@/hooks/useGetUserData";
 import useSendVerifyMail from "@/hooks/useSendVerifyMail";
+import { useGetPictures } from "@/hooks/useGetPictures";
+import LoadingEffect from "../atoms/LoadingEffect";
 
 const StoreList = (): JSX.Element => {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
@@ -27,6 +29,7 @@ const StoreList = (): JSX.Element => {
 	const { response: allergens, getAllergens, loading: getAllergensLoading } = useGetAllergens();
 	const { status, userId, userVerified } = useGetUserData();
 	const { sendVerifyMail, response: verifiedResponse, loading: sendVerifyLoading } = useSendVerifyMail();
+	const { response: pictures, loading: getPicturesLoading, getPictures } = useGetPictures();
 	const params = {
 		allergens: searchParams.get("allergens") ?? "",
 		keywords: searchParams.get("keywords") ?? ""
@@ -51,6 +54,12 @@ const StoreList = (): JSX.Element => {
 			setSearchAllergens([]);
 		}
 	}, [searchParams, allergens]);
+
+	useEffect(() => {
+		if (stores !== undefined) {
+			void getPictures(stores.map((store) => store.id).join(","));
+		}
+	}, [stores]);
 
 	return (
 		<>
@@ -194,9 +203,9 @@ const StoreList = (): JSX.Element => {
 					`}
 				>
 					{message !== undefined && message.type === "error" && <ErrorMessage>{message.text}</ErrorMessage>}
-					{!getStoresLoading && (
+					{!getStoresLoading && stores !== undefined && (
 						<>
-							{stores?.length === 0 && (
+							{stores.length === 0 && (
 								<p
 									className={css`
 										text-align: center;
@@ -205,7 +214,7 @@ const StoreList = (): JSX.Element => {
 									お店が無いようです😿
 								</p>
 							)}
-							{stores?.map((store) => (
+							{stores.map((store) => (
 								<div
 									key={store.id}
 									className={css`
@@ -232,22 +241,52 @@ const StoreList = (): JSX.Element => {
 											}
 										`}
 									>
-										<Image
+										<div
 											className={css`
+												position: relative;
 												aspect-ratio: 1/1;
 												width: 250px;
 
 												@media (max-width: 880px) {
 													width: 100%;
 													height: 250px;
-													object-fit: contain;
 												}
 											`}
-											src="/no-image.png"
-											width={250}
-											height={250}
-											alt="お店の画像"
-										/>
+										>
+											<div
+												className={css`
+													width: 100%;
+													height: 100%;
+													position: absolute;
+													top: 0;
+													left: 0;
+													z-index: -1;
+												`}
+											>
+												<LoadingEffect />
+											</div>
+											{!getPicturesLoading && (
+												<Image
+													className={css`
+														display: block;
+														width: 100%;
+														height: 100%;
+														object-fit: cover;
+
+														@media (max-width: 880px) {
+															object-fit: cover;
+														}
+													`}
+													src={
+														pictures?.find((p) => p.store_id === store.id)?.url ??
+														"/no-image.png"
+													}
+													width={250}
+													height={250}
+													alt={`${store.name}の画像`}
+												/>
+											)}
+										</div>
 										<div
 											className={css`
 												padding: 10px;

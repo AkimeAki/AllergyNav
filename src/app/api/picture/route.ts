@@ -29,12 +29,20 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 			select: {
 				id: true,
 				url: true,
+				store_id: true,
 				created_at: true,
 				updated_at: true
 			},
 			where: {
 				deleted: false,
-				store_id: storeId ?? undefined
+				OR:
+					storeId === null
+						? undefined
+						: storeId.split(",").map((id) => {
+								return {
+									store_id: id
+								};
+							})
 			}
 		});
 
@@ -43,6 +51,7 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 			data.push({
 				id: item.id,
 				url: item.url,
+				store_id: item.store_id,
 				updated_at: item.updated_at,
 				created_at: item.created_at
 			});
@@ -82,6 +91,11 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
 		const menuId = safeString(body.menuId);
 		const descrition = safeString(body.description);
 		const pictureBuffer = safeString(body.arrayBuffer);
+		const filesHostname = safeString(process.env.FILES_HOSTNAME);
+
+		if (filesHostname === null) {
+			throw new Error();
+		}
 
 		if (descrition === null || pictureBuffer === null || storeId === null) {
 			throw new ValidationError();
@@ -128,7 +142,7 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
 
 			const addPictureResult = await prisma.picture.create({
 				data: {
-					url: `https://files.allergy-navi.com/${filename}`,
+					url: `https://${filesHostname}/${filename}`,
 					store_id: storeId,
 					menu_picture:
 						menuId === null
@@ -151,6 +165,7 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
 			data = {
 				id: addPictureResult.id,
 				url: addPictureResult.url,
+				store_id: addPictureResult.store_id,
 				updated_at: addPictureResult.updated_at,
 				created_at: addPictureResult.created_at
 			};
