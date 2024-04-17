@@ -23,6 +23,9 @@ import useSendVerifyMail from "@/hooks/useSendVerifyMail";
 import Loading from "@/components/atoms/Loading";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
 import useIsTouchDevice from "@/hooks/useIsTouchDevice";
+import MiniModal from "@/components/molecules/MiniModal";
+import MiniModalButton from "@/components/atoms/MiniModalButton";
+import LoadingCircle from "@/components/atoms/LoadingCircle";
 
 interface Props {
 	id: string;
@@ -34,6 +37,8 @@ const MenuList = ({ id }: Props): JSX.Element => {
 	const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
 	const [openHistoryModalId, setOpenHistoryModalId] = useState<string>();
 	const [isOpenHistoryModal, setIsOpenHistoryModal] = useState<boolean>(false);
+	const [isOpenTouchMenuModal, setIsOpenTouchMenuModal] = useState<boolean>(false);
+	const [openTouchMenuModalId, setOpenTouchMenuModalId] = useState<string>();
 	const searchParams = useSearchParams();
 	const { response: menus, message, getMenus } = useGetMenus();
 	const [menuHoverId, setMenuHoverId] = useState<string>();
@@ -211,6 +216,7 @@ const MenuList = ({ id }: Props): JSX.Element => {
 						<div
 							key={menu.id}
 							className={css`
+								position: relative;
 								transition-duration: 200ms;
 								transition-property: box-shadow;
 								overflow: hidden;
@@ -224,6 +230,34 @@ const MenuList = ({ id }: Props): JSX.Element => {
 								}
 							`}
 						>
+							<MiniModal
+								key={menu.id}
+								isOpen={isOpenTouchMenuModal && openTouchMenuModalId === menu.id}
+								setIsOpen={setIsOpenTouchMenuModal}
+							>
+								<MiniModalButton
+									disabled={status !== "authenticated"}
+									loading={status !== "authenticated"}
+									onClick={() => {
+										if (status === "authenticated") {
+											setOpenEditModalId(menu.id);
+											setIsOpenEditModal(true);
+											setIsOpenTouchMenuModal(false);
+										}
+									}}
+								>
+									編集
+								</MiniModalButton>
+								<MiniModalButton
+									onClick={() => {
+										setOpenHistoryModalId(menu.id);
+										setIsOpenHistoryModal(true);
+										setIsOpenTouchMenuModal(false);
+									}}
+								>
+									履歴
+								</MiniModalButton>
+							</MiniModal>
 							<div
 								className={css`
 									position: relative;
@@ -237,27 +271,76 @@ const MenuList = ({ id }: Props): JSX.Element => {
 								}}
 							>
 								{(menuHoverId === menu.id ||
-									isTouch ||
 									(openEditModalId === menu.id && isOpenEditModal) ||
-									(openHistoryModalId === menu.id && isOpenHistoryModal)) && (
-									<div
-										className={css`
-											position: absolute;
-											top: 5px;
-											right: 5px;
-											display: flex;
-											gap: 5px;
-											z-index: 99;
-										`}
-									>
-										{status === "authenticated" && (
+									(openHistoryModalId === menu.id && isOpenHistoryModal)) &&
+									!isTouch && (
+										<div
+											className={css`
+												position: absolute;
+												top: 5px;
+												right: 5px;
+												display: flex;
+												gap: 5px;
+												z-index: 99;
+											`}
+										>
+											<Button
+												size="tiny"
+												disabled={status !== "authenticated"}
+												onClick={() => {
+													if (status === "authenticated") {
+														setOpenEditModalId(menu.id);
+														setIsOpenEditModal(true);
+													}
+												}}
+												selected={openEditModalId === menu.id && isOpenEditModal}
+											>
+												<div
+													className={css`
+														position: relative;
+													`}
+												>
+													{status !== "authenticated" && (
+														<div
+															className={css`
+																position: absolute;
+																top: 50%;
+																left: 50%;
+																transform: translate(-50%, -50%);
+															`}
+														>
+															<LoadingCircle size={20} />
+														</div>
+													)}
+													<span
+														className={css`
+															display: flex;
+															justify-content: center;
+															align-items: center;
+														`}
+													>
+														<GoogleIcon name="edit" size={15} color="inherit" />
+														<span
+															className={css`
+																line-height: 1;
+																display: flex;
+																font-size: 13px;
+																color: inherit;
+															`}
+														>
+															編集
+														</span>
+													</span>
+												</div>
+											</Button>
 											<Button
 												size="tiny"
 												onClick={() => {
-													setOpenEditModalId(menu.id);
-													setIsOpenEditModal(true);
+													setOpenHistoryModalId(menu.id);
+													setIsOpenHistoryModal(true);
 												}}
-												selected={openEditModalId === menu.id && isOpenEditModal}
+												selected={openHistoryModalId === menu.id && isOpenHistoryModal}
+												color="var(--color-green)"
 											>
 												<span
 													className={css`
@@ -266,7 +349,7 @@ const MenuList = ({ id }: Props): JSX.Element => {
 														align-items: center;
 													`}
 												>
-													<GoogleIcon name="edit" size={15} color="inherit" />
+													<GoogleIcon name="history" size={15} color="inherit" />
 													<span
 														className={css`
 															line-height: 1;
@@ -275,40 +358,30 @@ const MenuList = ({ id }: Props): JSX.Element => {
 															color: inherit;
 														`}
 													>
-														編集
+														履歴
 													</span>
 												</span>
 											</Button>
-										)}
-										<Button
-											size="tiny"
-											onClick={() => {
-												setOpenHistoryModalId(menu.id);
-												setIsOpenHistoryModal(true);
-											}}
-											selected={openHistoryModalId === menu.id && isOpenHistoryModal}
-											color="var(--color-green)"
-										>
-											<span
-												className={css`
-													display: flex;
-													justify-content: center;
-													align-items: center;
-												`}
-											>
-												<GoogleIcon name="history" size={15} color="inherit" />
-												<span
-													className={css`
-														line-height: 1;
-														display: flex;
-														font-size: 13px;
-														color: inherit;
-													`}
-												>
-													履歴
-												</span>
-											</span>
-										</Button>
+										</div>
+									)}
+								{isTouch && (
+									<div
+										onClick={() => {
+											setOpenTouchMenuModalId(menu.id);
+											setIsOpenTouchMenuModal(true);
+										}}
+										className={css`
+											position: absolute;
+											top: 5px;
+											right: 5px;
+											z-index: 99;
+
+											& > div {
+												vertical-align: bottom;
+											}
+										`}
+									>
+										<GoogleIcon name="more_vert" size={23} color="var(--color-theme)" />
 									</div>
 								)}
 								<Image

@@ -47,7 +47,6 @@ export default function ({
 			* {
 				transition-duration: 200ms;
 				transition-property: color, border-color, background-color;
-				background-color: var(--color-white);
 				color: var(--button-color);
 			}
 
@@ -56,7 +55,6 @@ export default function ({
 				color: var(--color-white);
 
 				* {
-					background-color: var(--button-color);
 					color: var(--color-white);
 				}
 			}
@@ -98,7 +96,6 @@ export default function ({
 					background-color: var(--color-white);
 
 					* {
-						background-color: var(--color-white);
 						border-color: var(--color-gray);
 						color: var(--color-gray);
 					}
@@ -109,7 +106,6 @@ export default function ({
 						box-shadow: none;
 
 						* {
-							background-color: var(--color-white);
 							box-shadow: none;
 							color: var(--color-gray);
 						}
