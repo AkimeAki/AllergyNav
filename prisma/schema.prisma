@@ -152,12 +152,13 @@ model MenuHistory {
 }
 
 model Picture {
-  id         String   @id @default(cuid())
-  url        String
-  store_id   String
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now()) @updatedAt
-  deleted    Boolean  @default(false)
+  id          String   @id @default(cuid())
+  url         String
+  store_id    String
+  description String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now()) @updatedAt
+  deleted     Boolean  @default(false)
 
   menu_picture MenuPicture?
   store        Store        @relation(fields: [store_id], references: [id])
