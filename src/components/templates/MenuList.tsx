@@ -237,7 +237,7 @@ const MenuList = ({ id }: Props): JSX.Element => {
 							>
 								<MiniModalButton
 									disabled={status !== "authenticated"}
-									loading={status !== "authenticated"}
+									loading={status !== "loading"}
 									onClick={() => {
 										if (status === "authenticated") {
 											setOpenEditModalId(menu.id);
