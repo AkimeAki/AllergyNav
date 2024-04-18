@@ -3,6 +3,8 @@
 import { css } from "@kuma-ui/core";
 import { useEffect, useState } from "react";
 import Loading from "@/components/atoms/Loading";
+import { normalize } from "@geolonia/normalize-japanese-addresses";
+import { safeString } from "@/libs/safe-type";
 
 interface Props {
 	address: string;
@@ -13,21 +15,13 @@ export default function ({ address }: Props): JSX.Element {
 	const [loadingCoordinate, setLoadingCoordinate] = useState<boolean>(true);
 
 	const getCoordinate = async (): Promise<void> => {
-		try {
-			const storeAccessFetchResponse = await fetch(
-				`https://msearch.gsi.go.jp/address-search/AddressSearch?q=${address}`,
-				{
-					method: "GET"
-				}
-			);
-			const storeAccessData = await storeAccessFetchResponse.json();
+		const normalizeResult = await normalize(address);
 
-			if (storeAccessData.length === 1) {
-				setCoordinate(
-					`${storeAccessData[0].geometry.coordinates[1]},${storeAccessData[0].geometry.coordinates[0]}`
-				);
-			}
-		} catch (e) {}
+		const latitude = safeString(normalizeResult.lat);
+		const longitude = safeString(normalizeResult.lng);
+		if (latitude !== null && longitude !== null) {
+			setCoordinate(`${latitude},${longitude}`);
+		}
 		setLoadingCoordinate(false);
 	};
 

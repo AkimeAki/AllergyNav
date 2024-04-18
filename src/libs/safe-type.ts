@@ -1,6 +1,6 @@
 export const safeNumber = (value: any): number | null => {
 	if (!isNaN(parseInt(value ?? ""))) {
-		return parseInt(value ?? "");
+		return Number(value ?? "");
 	}
 
 	return null;

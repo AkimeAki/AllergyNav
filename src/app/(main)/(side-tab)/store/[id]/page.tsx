@@ -5,6 +5,7 @@ import { formatText } from "@/libs/format-text";
 import EditStoreButton from "@/components/organisms/EditStoreButton";
 import Image from "next/image";
 import { getStore } from "@/libs/server-fetch";
+import SubTitle from "@/components/atoms/SubTitle";
 interface Props {
 	params: {
 		id: string;
@@ -100,7 +101,11 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 					}}
 				/>
 			)}
-			<GoogleMap address={storeDetail.address} />
+			<div>
+				<SubTitle>マップ</SubTitle>
+				<p>住所付近のマップを表示しています。正確なマップは住所のリンクよりGoogle Mapから確認してください。</p>
+				<GoogleMap address={storeDetail.address} />
+			</div>
 			<EditStoreButton storeId={storeDetail.id} />
 		</div>
 	);

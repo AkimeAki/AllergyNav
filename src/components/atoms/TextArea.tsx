@@ -11,7 +11,7 @@ interface Props {
 	autoSize?: boolean;
 }
 
-export default function ({ value, onChange, disabled = false, autoSize = false }: Props): JSX.Element {
+export default function ({ value = "", onChange, disabled = false, autoSize = false }: Props): JSX.Element {
 	const element = useRef(null);
 
 	const adjustHeight = (): void => {

@@ -1,6 +1,6 @@
 import { ForbiddenError, TooManyRequestError, ValidationError } from "@/definition";
 import type { AddStoreResponse, GetStoresResponse } from "@/type";
-import { safeString } from "@/libs/safe-type";
+import { safeNumber, safeString } from "@/libs/safe-type";
 import { NextResponse, type NextRequest } from "next/server";
 import { isEmptyString } from "@/libs/check-string";
 import { prisma } from "@/libs/prisma";
@@ -9,6 +9,8 @@ import { nextAuthOptions } from "@/libs/auth";
 import { getToken } from "next-auth/jwt";
 import { accessCheck } from "@/libs/access-check";
 import { getStatus } from "@/libs/get-status";
+import { normalize } from "@geolonia/normalize-japanese-addresses";
+import { calcDistance } from "@/libs/calc-distance";
 
 const headers = {
 	// "Access-Control-Allow-Origin": "http://localhost:10111", // 許可するオリジン
@@ -27,6 +29,11 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 		const { searchParams } = new URL(req.url);
 		const allergens = (safeString(searchParams.get("allergens")) ?? "").split(",");
 		const keywords = (safeString(searchParams.get("keywords")) ?? "").replaceAll(/\s/g, " ").split(" ");
+		const area = !isEmptyString(safeString(searchParams.get("area")) ?? "")
+			? safeString(searchParams.get("area")) ?? "all"
+			: "all";
+		const coords = safeString(searchParams.get("coords"));
+		const radius = safeNumber(searchParams.get("radius"));
 
 		const result = await prisma.store.findMany({
 			select: {
@@ -118,6 +125,36 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 					updated_user_id: item.updated_user_id
 				});
 			}
+		}
+
+		// 現在位置情報検索フィルター
+		if (area === "location" && coords !== null && radius !== null) {
+			const filterData = [];
+			for (const item of data) {
+				const addressNormalizeResult = await normalize(item.address);
+				const latitude = safeNumber(coords.split(",")[0]);
+				const longitude = safeNumber(coords.split(",")[1]);
+
+				if (
+					addressNormalizeResult.lat !== null &&
+					addressNormalizeResult.lng !== null &&
+					latitude !== null &&
+					longitude !== null
+				) {
+					const distance = calcDistance(
+						longitude,
+						latitude,
+						addressNormalizeResult.lng,
+						addressNormalizeResult.lat
+					);
+
+					if (distance <= radius) {
+						filterData.push(item);
+					}
+				}
+			}
+
+			data = filterData;
 		}
 
 		status = 200;

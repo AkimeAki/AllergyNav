@@ -9,11 +9,11 @@ interface Props {
 	children: ReactNode;
 }
 
-export default function ({ value, disabled = false, onChange, onClick, children }: Props): JSX.Element {
+export default function ({ value = "", disabled = false, onChange, onClick, children }: Props): JSX.Element {
 	return (
 		<select
 			size={1}
-			defaultValue={value}
+			value={value}
 			disabled={disabled}
 			onChange={onChange}
 			onClick={onClick}

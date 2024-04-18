@@ -5,7 +5,7 @@ interface ReturnType {
 	response: NonNullable<GetStoresResponse> | undefined;
 	loading: boolean;
 	message: Message | undefined;
-	getStores: (allergens: string, keywords: string) => Promise<void>;
+	getStores: (allergens: string, keywords: string, area: string, coords: string, radius: string) => Promise<void>;
 }
 
 export const useGetStores = (): ReturnType => {
@@ -13,14 +13,20 @@ export const useGetStores = (): ReturnType => {
 	const [message, setMessage] = useState<Message | undefined>(undefined);
 	const [response, setResponse] = useState<NonNullable<GetStoresResponse> | undefined>(undefined);
 
-	const getStores = async (allergens: string, keywords: string): Promise<void> => {
+	const getStores = async (
+		allergens: string,
+		keywords: string,
+		area: string,
+		coords: string,
+		radius: string
+	): Promise<void> => {
 		setLoading(true);
 		setMessage(undefined);
 		setResponse(undefined);
 
 		try {
 			const result = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/store?keywords=${keywords}&allergens=${allergens}`,
+				`${process.env.NEXT_PUBLIC_API_URL}/store?keywords=${keywords}&allergens=${allergens}&area=${area}&coords=${coords}&radius=${radius}`,
 				{
 					method: "GET",
 					headers: {

@@ -4,36 +4,40 @@ import { css } from "@kuma-ui/core";
 import SubTitle from "@/components/atoms/SubTitle";
 import { useEffect, useState } from "react";
 import Button from "@/components/atoms/Button";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import useGetAllergens from "@/hooks/useGetAllergens";
 import GoogleIcon from "@/components/atoms/GoogleIcon";
 import AllergenItem from "@/components/atoms/AllergenItem";
 import Modal from "@/components/molecules/Modal";
 import MiniTitle from "@/components/atoms/MiniTitle";
 import TextInput from "@/components/atoms/TextInput";
-import { useGetStores } from "@/hooks/useGetStores";
+import Select from "@/components/atoms/Select";
+import { safeString } from "@/libs/safe-type";
+import { isEmptyString } from "@/libs/check-string";
 
 export default function (): JSX.Element {
-	const [selectAllergens, setSelectAllergens] = useState<string[]>([]);
-	const [keywords, setKeywords] = useState<string>("");
+	const [selectAllergens, setSelectAllergens] = useState<string[] | undefined>(undefined);
+	const [keywords, setKeywords] = useState<string | undefined>(undefined);
+	const [area, setArea] = useState<string | undefined>(undefined);
+	const [radius, setRadius] = useState<string | undefined>(undefined);
 	const [isAllergenSelectModalOpen, setIsAllergenSelectModalOpen] = useState<boolean>(false);
 	const [isSpModalOpen, setIsSpModalOpen] = useState<boolean>(false);
 	const searchParams = useSearchParams();
 	const { response: allergens, getAllergens, loading: getAllergensLoading } = useGetAllergens();
-	const { response: stores, getStores } = useGetStores();
+	const router = useRouter();
 
 	const params = {
 		allergens: searchParams.get("allergens") ?? "",
-		keywords: searchParams.get("keywords") ?? ""
+		keywords: searchParams.get("keywords") ?? "",
+		area: isEmptyString(safeString(searchParams.get("area")) ?? "")
+			? "all"
+			: safeString(searchParams.get("area")) ?? "all",
+		radius: safeString(searchParams.get("radius")) ?? ""
 	};
 
 	useEffect(() => {
 		void getAllergens();
 	}, []);
-
-	useEffect(() => {
-		void getStores(params.allergens, params.keywords);
-	}, [searchParams]);
 
 	useEffect(() => {
 		if (params.allergens !== null) {
@@ -45,9 +49,33 @@ export default function (): JSX.Element {
 		} else {
 			setSelectAllergens([]);
 		}
-
-		setKeywords(params.keywords ?? "");
 	}, [searchParams, allergens]);
+
+	useEffect(() => {
+		setKeywords(params.keywords);
+		setArea(params.area);
+		setRadius(params.radius);
+	}, [searchParams]);
+
+	useEffect(() => {
+		if (area !== undefined) {
+			if (area === "location" && params.radius === "") {
+				setRadius("2.5");
+			}
+
+			if (area !== "location") {
+				setRadius("");
+			}
+		}
+	}, [area]);
+
+	const search = (): void => {
+		if (keywords !== undefined && selectAllergens !== undefined && area !== undefined && radius !== undefined) {
+			router.push(
+				`/store?keywords=${keywords}&allergens=${selectAllergens.join(",")}&area=${area}&radius=${radius}`
+			);
+		}
+	};
 
 	return (
 		<>
@@ -90,7 +118,9 @@ export default function (): JSX.Element {
 						`}
 					>
 						{allergens?.map((item) => {
-							const selected = selectAllergens.some((selectAllergen) => selectAllergen === item.id);
+							const selected = (selectAllergens ?? []).some(
+								(selectAllergen) => selectAllergen === item.id
+							);
 
 							return (
 								<div
@@ -98,12 +128,12 @@ export default function (): JSX.Element {
 									onClick={() => {
 										setSelectAllergens((selectAllergens) => {
 											if (selected) {
-												return [...selectAllergens].filter((selectAllergen) => {
+												return [...(selectAllergens ?? [])].filter((selectAllergen) => {
 													return selectAllergen !== item.id;
 												});
 											}
 
-											return [...selectAllergens, item.id];
+											return [...(selectAllergens ?? []), item.id];
 										});
 									}}
 									className={css`
@@ -132,6 +162,50 @@ export default function (): JSX.Element {
 							);
 						})}
 					</div>
+					<SubTitle>エリア選択</SubTitle>
+					<div
+						className={css`
+							display: flex;
+							flex-direction: column;
+						`}
+					>
+						<Select
+							value={area}
+							disabled={area === undefined}
+							onChange={(e) => {
+								setArea(e.target.value);
+							}}
+						>
+							<option value="all">全エリア</option>
+							<option value="location">現在位置</option>
+						</Select>
+					</div>
+					{area === "location" && (
+						<div
+							className={css`
+								display: flex;
+								flex-direction: column;
+							`}
+						>
+							<Select
+								value={radius}
+								disabled={radius === undefined}
+								onChange={(e) => {
+									setRadius(e.target.value);
+								}}
+							>
+								<option value="0.3">300m</option>
+								<option value="0.5">500m</option>
+								<option value="1">1km</option>
+								<option value="1.5">1.5km</option>
+								<option value="2">2km</option>
+								<option value="2.5">2.5km</option>
+								<option value="3">3km</option>
+								<option value="5">5km</option>
+								<option value="10">10km</option>
+							</Select>
+						</div>
+					)}
 				</div>
 			</Modal>
 			<Modal isOpen={isAllergenSelectModalOpen} setIsOpen={setIsAllergenSelectModalOpen}>
@@ -173,7 +247,9 @@ export default function (): JSX.Element {
 						`}
 					>
 						{allergens?.map((item) => {
-							const selected = selectAllergens.some((selectAllergen) => selectAllergen === item.id);
+							const selected = (selectAllergens ?? []).some(
+								(selectAllergen) => selectAllergen === item.id
+							);
 
 							return (
 								<div
@@ -181,12 +257,12 @@ export default function (): JSX.Element {
 									onClick={() => {
 										setSelectAllergens((selectAllergens) => {
 											if (selected) {
-												return [...selectAllergens].filter((selectAllergen) => {
+												return [...(selectAllergens ?? [])].filter((selectAllergen) => {
 													return selectAllergen !== item.id;
 												});
 											}
 
-											return [...selectAllergens, item.id];
+											return [...(selectAllergens ?? []), item.id];
 										});
 									}}
 									className={css`
@@ -221,111 +297,178 @@ export default function (): JSX.Element {
 				className={css`
 					display: flex;
 					flex-direction: column;
-					gap: 30px;
+					gap: 10px;
 
 					@media (max-width: 880px) {
 						display: none;
 					}
-
-					& > div {
-						display: flex;
-						flex-direction: column;
-						gap: 10px;
-					}
 				`}
 			>
+				<div>
+					<SubTitle>検索</SubTitle>
+				</div>
 				<div
 					className={css`
-						position: relative;
+						display: flex;
+						flex-direction: column;
+						gap: 20px;
 					`}
 				>
-					<div>
-						<SubTitle>検索</SubTitle>
-					</div>
-					<div>
-						<MiniTitle>アレルゲン</MiniTitle>
-					</div>
-					<div>
+					<div
+						className={css`
+							display: flex;
+							flex-direction: column;
+							gap: 10px;
+						`}
+					>
 						<div>
-							<div
-								className={css`
-									display: flex;
-									flex-direction: column;
-									gap: 10px;
-								`}
-							>
+							<MiniTitle>アレルゲン</MiniTitle>
+						</div>
+						<div>
+							<div>
 								<div
 									className={css`
 										display: flex;
 										flex-direction: column;
+										gap: 10px;
 									`}
 								>
-									<Button
-										onClick={() => {
-											setIsAllergenSelectModalOpen(true);
-										}}
-										size="small"
-										selected={isAllergenSelectModalOpen}
-										disabled={getAllergensLoading}
+									<div
+										className={css`
+											display: flex;
+											flex-direction: column;
+										`}
 									>
-										選択する
-									</Button>
-								</div>
-								<div
-									className={css`
-										display: flex;
-										flex-wrap: wrap;
-									`}
-								>
-									{selectAllergens.map((item) => {
-										let name = "";
-										allergens?.forEach((allergen) => {
-											if (item === allergen.id) {
-												name = allergen.name;
-											}
-										});
+										<Button
+											onClick={() => {
+												setIsAllergenSelectModalOpen(true);
+											}}
+											size="small"
+											selected={isAllergenSelectModalOpen}
+											disabled={getAllergensLoading || selectAllergens === undefined}
+										>
+											選択する
+										</Button>
+									</div>
+									<div
+										className={css`
+											display: flex;
+											flex-wrap: wrap;
+										`}
+									>
+										{selectAllergens?.map((item) => {
+											let name = "";
+											allergens?.forEach((allergen) => {
+												if (item === allergen.id) {
+													name = allergen.name;
+												}
+											});
 
-										return <AllergenItem key={item} image={`/icons/${item}.png`} text={name} />;
-									})}
+											return <AllergenItem key={item} image={`/icons/${item}.png`} text={name} />;
+										})}
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-				<div>
-					<div>
-						<MiniTitle>キーワード検索</MiniTitle>
 					</div>
 					<div
 						className={css`
 							display: flex;
 							flex-direction: column;
-							gap: 5px;
+							gap: 10px;
 						`}
 					>
-						<TextInput
-							placeholder="キーワードを入力してお店を検索"
-							value={keywords}
-							onChange={(e) => {
-								setKeywords(e.target.value);
-							}}
-						/>
+						<div>
+							<MiniTitle>エリア選択</MiniTitle>
+						</div>
 						<div
 							className={css`
 								display: flex;
 								flex-direction: column;
-
-								@media (max-width: 880px) {
-									display: block;
-								}
 							`}
 						>
-							<Button
-								size="small"
-								href={`/store?keywords=${keywords}&allergens=${selectAllergens.join(",")}`}
+							<Select
+								value={area}
+								disabled={area === undefined}
+								onChange={(e) => {
+									setArea(e.target.value);
+								}}
 							>
-								検索
-							</Button>
+								<option value="all">全エリア</option>
+								<option value="location">現在位置</option>
+							</Select>
+						</div>
+						{area === "location" && (
+							<div
+								className={css`
+									display: flex;
+									flex-direction: column;
+								`}
+							>
+								<Select
+									value={radius}
+									disabled={radius === undefined}
+									onChange={(e) => {
+										setRadius(e.target.value);
+									}}
+								>
+									<option value="0.3">300m</option>
+									<option value="0.5">500m</option>
+									<option value="1">1km</option>
+									<option value="1.5">1.5km</option>
+									<option value="2">2km</option>
+									<option value="2.5">2.5km</option>
+									<option value="3">3km</option>
+									<option value="5">5km</option>
+									<option value="10">10km</option>
+								</Select>
+							</div>
+						)}
+					</div>
+					<div
+						className={css`
+							display: flex;
+							flex-direction: column;
+							gap: 10px;
+						`}
+					>
+						<div>
+							<MiniTitle>キーワード検索</MiniTitle>
+						</div>
+						<div
+							className={css`
+								display: flex;
+								flex-direction: column;
+								gap: 10px;
+							`}
+						>
+							<TextInput
+								placeholder="キーワードを入力してお店を検索"
+								value={keywords}
+								disabled={keywords === undefined}
+								onChange={(e) => {
+									setKeywords(e.target.value);
+								}}
+							/>
+							<div
+								className={css`
+									display: flex;
+									flex-direction: column;
+
+									@media (max-width: 880px) {
+										display: block;
+									}
+								`}
+							>
+								<Button
+									size="small"
+									onClick={() => {
+										search();
+									}}
+								>
+									検索
+								</Button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -377,7 +520,9 @@ export default function (): JSX.Element {
 						>
 							<Button
 								size="small"
-								href={`/store?keywords=${keywords}&allergens=${selectAllergens.join(",")}`}
+								onClick={() => {
+									search();
+								}}
 							>
 								検索
 							</Button>
@@ -392,18 +537,16 @@ export default function (): JSX.Element {
 					`}
 				>
 					<div>
-						{stores !== undefined && (
-							<div
-								className={css`
-									display: flex;
-									flex-wrap: wrap;
-									align-items: center;
-									height: 100%;
-								`}
-							>
-								件数：{stores.length}件
-							</div>
-						)}
+						<div
+							className={css`
+								display: flex;
+								flex-wrap: wrap;
+								align-items: center;
+								height: 100%;
+							`}
+						>
+							検索条件：{area === "location" && "エリア"}
+						</div>
 					</div>
 					<div
 						className={css`

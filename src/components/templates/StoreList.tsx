@@ -20,24 +20,41 @@ import useGetUserData from "@/hooks/useGetUserData";
 import useSendVerifyMail from "@/hooks/useSendVerifyMail";
 import { useGetPictures } from "@/hooks/useGetPictures";
 import LoadingEffect from "../atoms/LoadingEffect";
+import { safeString } from "@/libs/safe-type";
+import { isEmptyString } from "@/libs/check-string";
+import { useFloatMessage } from "@/hooks/useFloatMessage";
 
 const StoreList = (): JSX.Element => {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
 	const searchParams = useSearchParams();
 	const [searchAllergens, setSearchAllergens] = useState<string[]>([]);
+	const [currentLatitude, setCurrentLatitude] = useState<number | undefined | null>(undefined);
+	const [currentLongitude, setCurrentLongitude] = useState<number | undefined | null>(undefined);
 	const { response: stores, loading: getStoresLoading, message, getStores } = useGetStores();
 	const { response: allergens, getAllergens, loading: getAllergensLoading } = useGetAllergens();
 	const { status, userId, userVerified } = useGetUserData();
 	const { sendVerifyMail, response: verifiedResponse, loading: sendVerifyLoading } = useSendVerifyMail();
 	const { response: pictures, loading: getPicturesLoading, getPictures } = useGetPictures();
+	const { addMessage } = useFloatMessage();
 	const params = {
 		allergens: searchParams.get("allergens") ?? "",
-		keywords: searchParams.get("keywords") ?? ""
+		keywords: searchParams.get("keywords") ?? "",
+		area: isEmptyString(safeString(searchParams.get("area")) ?? "")
+			? "all"
+			: safeString(searchParams.get("area")) ?? "all",
+		radius: safeString(searchParams.get("radius")) ?? ""
 	};
 
 	useEffect(() => {
-		void getStores(params.allergens, params.keywords);
-	}, [searchParams]);
+		if (
+			currentLatitude !== null &&
+			currentLongitude !== null &&
+			!(params.area === "location" && currentLatitude === undefined && currentLongitude === undefined)
+		) {
+			const coords = (safeString(currentLatitude) ?? "") + "," + (safeString(currentLongitude) ?? "");
+			void getStores(params.allergens, params.keywords, params.area, coords, params.radius);
+		}
+	}, [searchParams, currentLatitude, currentLongitude]);
 
 	useEffect(() => {
 		void getAllergens();
@@ -60,6 +77,48 @@ const StoreList = (): JSX.Element => {
 			void getPictures(stores.map((store) => store.id).join(","));
 		}
 	}, [stores]);
+
+	useEffect(() => {
+		if (params.area === "location") {
+			if ("geolocation" in navigator) {
+				navigator.geolocation.getCurrentPosition(
+					(position) => {
+						setCurrentLatitude(position.coords.latitude);
+						setCurrentLongitude(position.coords.longitude);
+					},
+					(e) => {
+						setCurrentLatitude(null);
+						setCurrentLongitude(null);
+
+						switch (e.code) {
+							case 1:
+								addMessage("位置情報が許可されていません", "error");
+								break;
+
+							case 2:
+								addMessage("位置情報が判定できませんでした", "error");
+								break;
+
+							case 3:
+								addMessage("位置情報の取得に時間がかかりすぎました", "error");
+								break;
+						}
+					},
+					{
+						enableHighAccuracy: true,
+						timeout: 10000,
+						maximumAge: 0
+					}
+				);
+			} else {
+				setCurrentLatitude(null);
+				setCurrentLongitude(null);
+			}
+		} else {
+			setCurrentLatitude(null);
+			setCurrentLongitude(null);
+		}
+	}, [searchParams]);
 
 	return (
 		<>
@@ -171,16 +230,7 @@ const StoreList = (): JSX.Element => {
 									text-align: center;
 								`}
 							>
-								が
-								<span
-									className={css`
-										color: var(--color-red);
-										font-weight: bold;
-									`}
-								>
-									含まれていない
-								</span>
-								メニューを食べられるお店を表示しています。
+								上記成分のアレルギーをお持ちの方が食べに行けるお店を表示しています。
 							</p>
 						</div>
 					</div>
