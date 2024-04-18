@@ -26,6 +26,7 @@ export default function ({ value = "", disabled = false, onChange, onClick, chil
 				cursor: pointer;
 				border-top-left-radius: 5px;
 				border-top-right-radius: 5px;
+				background-color: var(--color-white);
 
 				&[disabled] {
 					background-color: #e4e4e4;
