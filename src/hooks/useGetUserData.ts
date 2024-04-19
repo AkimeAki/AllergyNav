@@ -57,6 +57,7 @@ export default function (): ReturnType {
 
 	useEffect(() => {
 		const safeId = safeString(session?.user?.id);
+		console.log(safeId, sessionStatus);
 		if (safeId !== null && sessionStatus === "authenticated") {
 			void getUser(safeId);
 		}
