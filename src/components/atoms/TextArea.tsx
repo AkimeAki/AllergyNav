@@ -22,6 +22,7 @@ export default function ({ value = "", onChange, disabled = false, autoSize = fa
 				resolve((textarea.style.height = "auto"));
 			});
 			void resetHeight.then(() => {
+				console.log("aaa");
 				textarea.style.height = textarea.scrollHeight + "px";
 			});
 		}
@@ -29,8 +30,11 @@ export default function ({ value = "", onChange, disabled = false, autoSize = fa
 
 	useEffect(() => {
 		window.addEventListener("resize", adjustHeight, false);
-		adjustHeight();
 	}, []);
+
+	useEffect(() => {
+		adjustHeight();
+	}, [value]);
 
 	return (
 		<textarea
