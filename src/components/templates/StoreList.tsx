@@ -45,10 +45,6 @@ export default function (): JSX.Element {
 	};
 
 	useEffect(() => {
-		console.log(status, userId, userVerified);
-	}, [status, userId, userVerified]);
-
-	useEffect(() => {
 		if (
 			currentLatitude !== null &&
 			currentLongitude !== null &&
@@ -122,10 +118,6 @@ export default function (): JSX.Element {
 			setCurrentLongitude(null);
 		}
 	}, [searchParams]);
-
-	useEffect(() => {
-		console.log(status, userId, userVerified);
-	}, [status, userId, userVerified]);
 
 	return (
 		<>

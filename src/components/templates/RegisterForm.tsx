@@ -9,7 +9,7 @@ import SubTitle from "@/components/atoms/SubTitle";
 import Link from "next/link";
 import useAddUser from "@/hooks/useAddUser";
 import { isEmailString, isEmptyString } from "@/libs/check-string";
-import { useSearchParams, redirect } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Cursor from "@/components/atoms/Cursor";
 import useLogin from "@/hooks/useLogin";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
@@ -32,7 +32,7 @@ export default function (): JSX.Element {
 
 	useEffect(() => {
 		if (loginResponse !== undefined && loginResponse) {
-			redirect(redirectPath);
+			window.location.href = redirectPath;
 		}
 	}, [loginResponse]);
 

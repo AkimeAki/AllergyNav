@@ -9,7 +9,7 @@ import SubTitle from "@/components/atoms/SubTitle";
 import Link from "next/link";
 import useLogin from "@/hooks/useLogin";
 import Cursor from "@/components/atoms/Cursor";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
 import { isEmptyString } from "@/libs/check-string";
 
@@ -19,13 +19,12 @@ export default function (): JSX.Element {
 	const { response: loginResponse, loading: loginLoading, message: loginMessage, login } = useLogin();
 	const searchParams = useSearchParams();
 	const redirectPath = searchParams.get("redirect") ?? "/";
-	const router = useRouter();
 	const { addMessage } = useFloatMessage();
 
 	useEffect(() => {
 		if (loginResponse === true) {
 			addMessage("ログインに成功しました！", "success", 3);
-			router.push(redirectPath);
+			window.location.href = redirectPath;
 		}
 	}, [loginResponse]);
 
