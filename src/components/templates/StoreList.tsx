@@ -263,7 +263,7 @@ export default function (): JSX.Element {
 									お店が無いようです😿
 								</p>
 							)}
-							{stores.map((store) => (
+							{[...stores].reverse().map((store) => (
 								<div
 									key={store.id}
 									className={css`
