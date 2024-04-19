@@ -120,6 +120,10 @@ const StoreList = (): JSX.Element => {
 		}
 	}, [searchParams]);
 
+	useEffect(() => {
+		console.log(status, userId, userVerified);
+	}, [status, userId, userVerified]);
+
 	return (
 		<>
 			<AddStoreModal
