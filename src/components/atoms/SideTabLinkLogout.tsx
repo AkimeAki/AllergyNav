@@ -1,6 +1,6 @@
 "use client";
 
-import { SessionProvider, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import SideTabLink from "@/components/atoms/SideTabLink";
 import type { ReactNode } from "react";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
@@ -10,7 +10,7 @@ interface Props {
 	redirect?: string;
 }
 
-const SideTabLinkLogout = ({ children, redirect = "/" }: Props): JSX.Element => {
+export default function ({ children, redirect = "/" }: Props): JSX.Element {
 	const { addMessage } = useFloatMessage();
 
 	return (
@@ -27,13 +27,5 @@ const SideTabLinkLogout = ({ children, redirect = "/" }: Props): JSX.Element => 
 		>
 			{children}
 		</SideTabLink>
-	);
-};
-
-export default function ({ children, redirect }: Props): JSX.Element {
-	return (
-		<SessionProvider>
-			<SideTabLinkLogout redirect={redirect}>{children}</SideTabLinkLogout>
-		</SessionProvider>
 	);
 }

@@ -10,7 +10,6 @@ import Loading from "@/components/atoms/Loading";
 import Button from "@/components/atoms/Button";
 import AddStoreModal from "@/components/organisms/AddStoreModal";
 import { useGetStores } from "@/hooks/useGetStores";
-import { SessionProvider } from "next-auth/react";
 import Modal from "@/components/molecules/Modal";
 import SubTitle from "@/components/atoms/SubTitle";
 import useGetAllergens from "@/hooks/useGetAllergens";
@@ -24,7 +23,7 @@ import { safeString } from "@/libs/safe-type";
 import { isEmptyString } from "@/libs/check-string";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
 
-const StoreList = (): JSX.Element => {
+export default function (): JSX.Element {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
 	const searchParams = useSearchParams();
 	const [searchAllergens, setSearchAllergens] = useState<string[]>([]);
@@ -44,6 +43,10 @@ const StoreList = (): JSX.Element => {
 			: safeString(searchParams.get("area")) ?? "all",
 		radius: safeString(searchParams.get("radius")) ?? ""
 	};
+
+	useEffect(() => {
+		console.log(status, userId, userVerified);
+	}, [status, userId, userVerified]);
 
 	useEffect(() => {
 		if (
@@ -413,13 +416,5 @@ const StoreList = (): JSX.Element => {
 				)}
 			</div>
 		</>
-	);
-};
-
-export default function (): JSX.Element {
-	return (
-		<SessionProvider>
-			<StoreList />
-		</SessionProvider>
 	);
 }

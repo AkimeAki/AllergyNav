@@ -15,7 +15,6 @@ import GoogleIcon from "@/components/atoms/GoogleIcon";
 import MenuHistoryModal from "@/components/organisms/MenuHistoryModal";
 import { formatText } from "@/libs/format-text";
 import MiniTitle from "@/components/atoms/MiniTitle";
-import { SessionProvider } from "next-auth/react";
 import useGetUserData from "@/hooks/useGetUserData";
 import Modal from "@/components/molecules/Modal";
 import SubTitle from "@/components/atoms/SubTitle";
@@ -31,7 +30,7 @@ interface Props {
 	id: string;
 }
 
-const MenuList = ({ id }: Props): JSX.Element => {
+export default function ({ id }: Props): JSX.Element {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
 	const [openEditModalId, setOpenEditModalId] = useState<string>();
 	const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
@@ -482,13 +481,5 @@ const MenuList = ({ id }: Props): JSX.Element => {
 				)}
 			</div>
 		</>
-	);
-};
-
-export default function ({ id }: Props): JSX.Element {
-	return (
-		<SessionProvider>
-			<MenuList id={id} />
-		</SessionProvider>
 	);
 }

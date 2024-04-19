@@ -91,6 +91,7 @@ export default function (): JSX.Element {
 						<div>
 							<Label>メールアドレス</Label>
 							<TextInput
+								value={email}
 								disabled={addUserLoading || loginLoading}
 								onChange={(e) => {
 									setEmail(e.target.value);
@@ -101,6 +102,7 @@ export default function (): JSX.Element {
 							<Label>パスワード</Label>
 							<TextInput
 								password
+								value={password}
 								disabled={addUserLoading || loginLoading}
 								onChange={(e) => {
 									setPassword(e.target.value);
@@ -111,6 +113,7 @@ export default function (): JSX.Element {
 							<Label>パスワード（確認）</Label>
 							<TextInput
 								password
+								value={confirmPassword}
 								disabled={addUserLoading || loginLoading}
 								onChange={(e) => {
 									setConfirmPassword(e.target.value);

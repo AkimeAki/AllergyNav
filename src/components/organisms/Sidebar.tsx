@@ -4,13 +4,12 @@ import { css } from "@kuma-ui/core";
 import SidebarLink from "@/components/atoms/SidebarLink";
 import SidebarHumberger from "@/components/molecules/SidebarHumberger";
 import { useEffect, useRef, useState } from "react";
-import { SessionProvider } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import useGetUserData from "@/hooks/useGetUserData";
 import SidebarLinkLoading from "@/components/atoms/SidebarLinkLoading";
 import useScroll from "@/hooks/useScroll";
 
-const Sidebar = (): JSX.Element => {
+export default function (): JSX.Element {
 	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 	const sidebarRef = useRef(null);
 	const pathname = usePathname();
@@ -171,13 +170,5 @@ const Sidebar = (): JSX.Element => {
 			</div>
 			<SidebarHumberger isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 		</>
-	);
-};
-
-export default function (): JSX.Element {
-	return (
-		<SessionProvider>
-			<Sidebar />
-		</SessionProvider>
 	);
 }

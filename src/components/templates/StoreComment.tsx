@@ -15,7 +15,6 @@ import { isEmptyString } from "@/libs/check-string";
 import { formatText } from "@/libs/format-text";
 import { usePathname } from "next/navigation";
 import useGetUserData from "@/hooks/useGetUserData";
-import { SessionProvider } from "next-auth/react";
 import useSendVerifyMail from "@/hooks/useSendVerifyMail";
 import StoreCommentBarrier from "@/components/molecules/StoreCommentBarrier";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
@@ -24,7 +23,7 @@ interface Props {
 	id: string;
 }
 
-const StoreComment = ({ id }: Props): JSX.Element => {
+export default function ({ id }: Props): JSX.Element {
 	const [newCommentContent, setNewCommentContent] = useState<string>("");
 	const [newCommentTitle, setNewCommentTitle] = useState<string>("");
 	const { response: comments, loading: getCommentsLoading, getComments } = useGetComments();
@@ -271,13 +270,5 @@ const StoreComment = ({ id }: Props): JSX.Element => {
 				)}
 			</div>
 		</>
-	);
-};
-
-export default function ({ id }: Props): JSX.Element {
-	return (
-		<SessionProvider>
-			<StoreComment id={id} />
-		</SessionProvider>
 	);
 }

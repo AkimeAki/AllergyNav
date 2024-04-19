@@ -8,7 +8,6 @@ import Loading from "@/components/atoms/Loading";
 import Button from "@/components/atoms/Button";
 import AddPictureModal from "@/components/organisms/AddPictureModal";
 import { useGetPictures } from "@/hooks/useGetPictures";
-import { SessionProvider } from "next-auth/react";
 import useGetUserData from "@/hooks/useGetUserData";
 import Modal from "@/components/molecules/Modal";
 import SubTitle from "@/components/atoms/SubTitle";
@@ -20,7 +19,7 @@ interface Props {
 	id: string;
 }
 
-const MenuList = ({ id }: Props): JSX.Element => {
+export default function ({ id }: Props): JSX.Element {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
 	const {
 		response: pictures,
@@ -273,13 +272,5 @@ const MenuList = ({ id }: Props): JSX.Element => {
 				)}
 			</div>
 		</>
-	);
-};
-
-export default function ({ id }: Props): JSX.Element {
-	return (
-		<SessionProvider>
-			<MenuList id={id} />
-		</SessionProvider>
 	);
 }

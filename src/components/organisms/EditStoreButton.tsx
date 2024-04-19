@@ -4,7 +4,6 @@ import { css } from "@kuma-ui/core";
 import Button from "@/components/atoms/Button";
 import { useState } from "react";
 import EditStoreModal from "@/components/organisms/EditStoreModal";
-import { SessionProvider } from "next-auth/react";
 import useGetUserData from "@/hooks/useGetUserData";
 import useSendVerifyMail from "@/hooks/useSendVerifyMail";
 import Modal from "@/components/molecules/Modal";
@@ -15,7 +14,7 @@ interface Props {
 	storeId: string;
 }
 
-const EditStoreButton = ({ storeId }: Props): JSX.Element => {
+export default function ({ storeId }: Props): JSX.Element {
 	const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
 	const { status, userId, userVerified } = useGetUserData();
 	const { sendVerifyMail, response: verifiedResponse, loading: sendVerifyLoading } = useSendVerifyMail();
@@ -104,13 +103,5 @@ const EditStoreButton = ({ storeId }: Props): JSX.Element => {
 				</>
 			)}
 		</>
-	);
-};
-
-export default function ({ storeId }: Props): JSX.Element {
-	return (
-		<SessionProvider>
-			<EditStoreButton storeId={storeId} />
-		</SessionProvider>
 	);
 }

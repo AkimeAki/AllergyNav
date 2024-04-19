@@ -69,6 +69,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 					<div>
 						<Label required>お店の名前</Label>
 						<TextInput
+							value={storeName}
 							disabled={loading || addedStore !== undefined}
 							onChange={(e) => {
 								setStoreName(e.target.value);
@@ -79,6 +80,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 						<Label required>住所</Label>
 						<p>郵便番号は除外してください。</p>
 						<TextInput
+							value={storeAddress}
 							disabled={loading || addedStore !== undefined}
 							onChange={(e) => {
 								setStoreAddress(e.target.value);
@@ -94,6 +96,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 					<div>
 						<Label>お店の詳細情報</Label>
 						<TextArea
+							value={storeDescription}
 							disabled={loading || addedStore !== undefined}
 							autoSize
 							onChange={(e) => {

@@ -98,6 +98,7 @@ export default function ({ storeId, menuId, isOpen, setIsOpen, callback }: Props
 						<div>
 							<Label>写真の情報</Label>
 							<TextArea
+								value={pictureDescription}
 								disabled={addPictureLoading}
 								onChange={(e) => {
 									setPictureDescription(e.target.value);

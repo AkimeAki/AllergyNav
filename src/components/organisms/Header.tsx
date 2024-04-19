@@ -3,12 +3,11 @@
 import { css } from "@kuma-ui/core";
 import Link from "next/link";
 import Image from "next/image";
-import { SessionProvider } from "next-auth/react";
 import useGetUserData from "@/hooks/useGetUserData";
 import Button from "@/components/atoms/Button";
 import useSendVerifyMail from "@/hooks/useSendVerifyMail";
 
-const Header = (): JSX.Element => {
+export default function (): JSX.Element {
 	const { userId, userVerified } = useGetUserData();
 	const { sendVerifyMail, response: verifiedResponse, loading: sendVerifyLoading } = useSendVerifyMail();
 
@@ -138,13 +137,5 @@ const Header = (): JSX.Element => {
 				</div>
 			</header>
 		</>
-	);
-};
-
-export default function (): JSX.Element {
-	return (
-		<SessionProvider>
-			<Header />
-		</SessionProvider>
 	);
 }

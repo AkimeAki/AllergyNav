@@ -78,6 +78,7 @@ export default function (): JSX.Element {
 						<div>
 							<Label>メールアドレス</Label>
 							<TextInput
+								value={email}
 								onChange={(e) => {
 									setEmail(e.target.value);
 								}}
@@ -87,6 +88,7 @@ export default function (): JSX.Element {
 						<div>
 							<Label>パスワード</Label>
 							<TextInput
+								value={password}
 								onChange={(e) => {
 									setPassword(e.target.value);
 								}}

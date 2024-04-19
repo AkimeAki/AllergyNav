@@ -84,6 +84,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						<div>
 							<Label required>名前</Label>
 							<TextInput
+								value={menuName}
 								disabled={loading}
 								onChange={(e) => {
 									setMenuName(e.target.value);
@@ -126,6 +127,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						<div>
 							<Label>メニューの詳細情報</Label>
 							<TextArea
+								value={menuDescription}
 								disabled={loading}
 								onChange={(e) => {
 									setMenuDescription(e.target.value);

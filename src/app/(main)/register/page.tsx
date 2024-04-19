@@ -1,12 +1,21 @@
 import RegisterForm from "@/components/templates/RegisterForm";
 import { css } from "@kuma-ui/core";
 import type { Metadata } from "next";
+import { getServerSession } from "next-auth/next";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
 	title: "アカウント作成"
 };
 
-export default function (): JSX.Element {
+export default async function (): Promise<JSX.Element> {
+	const session = await getServerSession();
+	const user = session?.user;
+
+	if (user?.email !== undefined && user.email !== null) {
+		redirect("/");
+	}
+
 	return (
 		<div
 			className={css`
