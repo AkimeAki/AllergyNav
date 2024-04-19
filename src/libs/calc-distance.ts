@@ -5,7 +5,7 @@ const degToRad = (deg: number): number => {
 // 何この計算意味分からん 測地線航海算法っていうらしい
 export const calcDistance = (x1: number, y1: number, x2: number, y2: number): number => {
 	const rx = 6378.137; // 回転楕円体の長半径（赤道半径）[km]
-	const ry = 6356.752; // 回転楕円体の短半径（極半径) [km]
+	const ry = 6356.752; // 回転楕円体の短半径（極半径）[km]
 
 	const p1 = Math.atan((ry / rx) * Math.tan(degToRad(y1))); // 地点Aの化成緯度
 	const p2 = Math.atan((ry / rx) * Math.tan(degToRad(y2))); // 地点Bの化成緯度

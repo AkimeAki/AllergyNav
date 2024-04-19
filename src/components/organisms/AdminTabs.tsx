@@ -14,14 +14,14 @@ export default function (): JSX.Element {
 				トップ
 			</SideTabLink>
 			<SideTabLink
-				href="/admin/user"
+				href="/admin/store"
 				active={pathname === "/admin/store" || pathname.startsWith("/admin/store/")}
 				icon="store"
 			>
 				お店管理
 			</SideTabLink>
 			<SideTabLink
-				href="/admin/user"
+				href="/admin/group"
 				active={pathname === "/admin/group" || pathname.startsWith("/admin/group/")}
 				icon="storefront"
 			>
