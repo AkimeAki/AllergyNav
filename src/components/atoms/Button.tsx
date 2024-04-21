@@ -28,7 +28,7 @@ export default function ({
 			display: inline-block;
 			text-decoration: none;
 			cursor: pointer;
-			background-color: var(--color-white);
+			background-color: var(--color-secondary);
 			border-style: solid;
 			border-color: var(--button-color);
 			color: var(--button-color);
@@ -52,10 +52,10 @@ export default function ({
 
 			&:hover {
 				background-color: var(--button-color);
-				color: var(--color-white);
+				color: var(--color-secondary);
 
 				* {
-					color: var(--color-white);
+					color: var(--color-secondary);
 				}
 			}
 		`,
@@ -80,34 +80,34 @@ export default function ({
 		selected &&
 			css`
 				background-color: var(--button-color);
-				color: var(--color-white);
+				color: var(--color-secondary);
 
 				* {
 					background-color: var(--button-color);
-					color: var(--color-white);
+					color: var(--color-secondary);
 				}
 			`,
 		disabled
 			? css`
-					border-color: var(--color-gray);
-					color: var(--color-gray);
+					border-color: var(--color-hide);
+					color: var(--color-hide);
 					user-select: none;
 					cursor: not-allowed;
-					background-color: var(--color-white);
+					background-color: var(--color-secondary);
 
 					* {
-						border-color: var(--color-gray);
-						color: var(--color-gray);
+						border-color: var(--color-hide);
+						color: var(--color-hide);
 					}
 
 					&:hover {
-						background-color: var(--color-white);
-						color: var(--color-gray);
+						background-color: var(--color-secondary);
+						color: var(--color-hide);
 						box-shadow: none;
 
 						* {
 							box-shadow: none;
-							color: var(--color-gray);
+							color: var(--color-hide);
 						}
 					}
 				`

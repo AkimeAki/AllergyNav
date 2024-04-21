@@ -58,14 +58,14 @@ export default function ({ value = "", onChange, disabled = false, autoSize = fa
 					transition-duration: 200ms;
 					transition-property: border-color, box-shadow;
 					overflow-y: scroll;
-					background-color: var(--color-white);
+					background-color: var(--color-secondary);
 
 					&:focus {
 						box-shadow: 0 0 0 1px var(--color-theme);
 					}
 
 					&[disabled] {
-						background-color: #dbdbdb;
+						background-color: var(--color-hide);
 						user-select: none;
 						cursor: not-allowed;
 

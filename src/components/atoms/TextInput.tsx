@@ -48,11 +48,11 @@ export default function ({
 					border-radius: 20px;
 					transition-duration: 200ms;
 					transition-property: box-shadow;
-					background-color: var(--color-white);
-					color: var(--color-black);
+					background-color: var(--color-secondary);
+					color: var(--color-primary);
 
 					&[disabled] {
-						background-color: #dbdbdb;
+						background-color: var(--color-hide);
 						user-select: none;
 						cursor: not-allowed;
 					}

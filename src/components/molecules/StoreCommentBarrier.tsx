@@ -17,7 +17,7 @@ export default function ({ children }: Props): JSX.Element {
 				opacity: 0;
 				transition-duration: 200ms;
 				transition-property: opacity;
-				background-color: var(--color-white);
+				background-color: var(--color-secondary);
 				border-radius: 15px;
 				display: flex;
 				justify-content: center;

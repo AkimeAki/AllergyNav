@@ -55,16 +55,16 @@ export default function ({ href, onClick, children, active = false, icon = "pend
 		active
 			? css`
 					background-color: var(--color-theme);
-					color: var(--color-white);
+					color: var(--color-secondary);
 
 					&:hover {
 						background-color: var(--color-theme);
-						color: var(--color-white);
+						color: var(--color-secondary);
 					}
 				`
 			: css`
 					background-color: var(--color-theme-thin);
-					color: var(--color-black);
+					color: var(--color-primary);
 
 					@media (max-width: 880px) {
 						font-weight: normal;

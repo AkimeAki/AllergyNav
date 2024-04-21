@@ -32,7 +32,7 @@ export default function (): JSX.Element {
 					>
 						<span
 							className={css`
-								color: var(--color-white);
+								color: white;
 							`}
 						>
 							メール認証が完了していません。7日後にアカウントが削除されます。
@@ -40,7 +40,7 @@ export default function (): JSX.Element {
 						{!sendVerifyLoading && verifiedResponse === undefined && userId !== null && (
 							<Button
 								size="tiny"
-								color="var(--color-black)"
+								color="var(--color-primary)"
 								onClick={() => {
 									void sendVerifyMail(userId);
 								}}

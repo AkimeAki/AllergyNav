@@ -102,7 +102,7 @@ export default function ({ isSidebarOpen, setIsSidebarOpen }: Props): JSX.Elemen
 									position: absolute;
 									content: "";
 									display: block;
-									background-color: var(--color-black);
+									background-color: var(--color-primary);
 									transition-duration: 200ms;
 									transition-property: top, width, transform, height;
 								}

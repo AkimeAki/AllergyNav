@@ -26,10 +26,10 @@ export default function ({ value = "", disabled = false, onChange, onClick, chil
 				cursor: pointer;
 				border-top-left-radius: 5px;
 				border-top-right-radius: 5px;
-				background-color: var(--color-white);
+				background-color: var(--color-secondary);
 
 				&[disabled] {
-					background-color: #e4e4e4;
+					background-color: var(--color-hide);
 					user-select: none;
 					cursor: not-allowed;
 				}

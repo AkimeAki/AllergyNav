@@ -351,7 +351,7 @@ export default function ({ id }: Props): JSX.Element {
 													setIsOpenHistoryModal(true);
 												}}
 												selected={openHistoryModalId === menu.id && isOpenHistoryModal}
-												color="var(--color-green)"
+												color="var(--color-sub)"
 											>
 												<span
 													className={css`

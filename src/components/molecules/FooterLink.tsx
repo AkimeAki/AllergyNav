@@ -20,7 +20,7 @@ export default function ({ href, name }: Props): JSX.Element {
 				aspect-ratio: 1/1;
 				font-size: 0;
 				border-radius: 50%;
-				background-color: var(--color-white);
+				background-color: var(--color-secondary);
 				overflow: hidden;
 				transition-duration: 200ms;
 				transition-property: box-shadow;

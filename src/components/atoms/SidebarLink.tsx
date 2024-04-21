@@ -31,16 +31,16 @@ export default function ({ href, onClick, children, active = false }: Props): JS
 		active
 			? css`
 					background-color: var(--color-theme);
-					color: var(--color-white);
+					color: var(--color-secondary);
 
 					&:hover {
 						background-color: var(--color-theme);
-						color: var(--color-white);
+						color: var(--color-secondary);
 					}
 				`
 			: css`
 					background-color: transparent;
-					color: var(--color-black);
+					color: var(--color-primary);
 				`
 	].join(" ");
 

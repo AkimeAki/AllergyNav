@@ -482,7 +482,7 @@ export default function (): JSX.Element {
 						position: sticky;
 						top: 0;
 						z-index: 99;
-						background-color: var(--color-white);
+						background-color: var(--color-secondary);
 						border-bottom: 2px solid #d3d3d3;
 						padding: 0 10px;
 						width: calc(100% + 30px + 30px);

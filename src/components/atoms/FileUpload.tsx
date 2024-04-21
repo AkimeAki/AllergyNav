@@ -25,7 +25,7 @@ export default function ({ onChange, disabled = false, accept = undefined }: Pro
 						margin-bottom: 5px;
 						text-decoration: none;
 						cursor: pointer;
-						background-color: var(--color-white);
+						background-color: var(--color-secondary);
 						border-style: solid;
 						border-color: var(--color-theme);
 						color: var(--color-theme);
@@ -42,7 +42,7 @@ export default function ({ onChange, disabled = false, accept = undefined }: Pro
 
 						&:hover {
 							background-color: var(--color-theme);
-							color: var(--color-white);
+							color: var(--color-secondary);
 						}
 					}
 

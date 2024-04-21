@@ -10,6 +10,7 @@ const style = css`
 	max-width: 500px;
 	width: calc(100% - 40px);
 	padding: 10px;
+	color: #656565;
 	border-width: 4px;
 	border-style: solid;
 	font-weight: bold;

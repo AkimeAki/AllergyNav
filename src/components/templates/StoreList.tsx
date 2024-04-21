@@ -114,8 +114,8 @@ export default function (): JSX.Element {
 				setCurrentLongitude(null);
 			}
 		} else {
-			setCurrentLatitude(null);
-			setCurrentLongitude(null);
+			setCurrentLatitude(undefined);
+			setCurrentLongitude(undefined);
 		}
 	}, [searchParams]);
 

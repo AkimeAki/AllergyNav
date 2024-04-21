@@ -23,7 +23,7 @@ export default function (): JSX.Element {
 
 	useEffect(() => {
 		if (loginResponse === true) {
-			addMessage("ログインに成功しました！", "success", 3);
+			addMessage("ログインに成功しました！", "success", "path");
 			window.location.href = redirectPath;
 		}
 	}, [loginResponse]);

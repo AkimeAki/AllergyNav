@@ -6,7 +6,6 @@ export default function (): JSX.Element {
 		<footer
 			className={css`
 				background-color: var(--color-theme-thin);
-				color: var(--color-white);
 				padding: 60px 0;
 
 				@media (max-width: 880px) {
@@ -28,6 +27,7 @@ export default function (): JSX.Element {
 					className={css`
 						display: inline-block;
 						text-align: center;
+						color: var(--color-primary);
 					`}
 				>
 					Created by 彩季

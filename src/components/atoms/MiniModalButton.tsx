@@ -20,8 +20,8 @@ export default function ({ href, children, onClick, disabled = false, loading = 
 			display: block;
 			text-decoration: none;
 			cursor: pointer;
-			background-color: var(--color-white);
-			color: var(--color-black);
+			background-color: var(--color-secondary);
+			color: var(--color-primary);
 			border: none;
 			font-weight: 700;
 			overflow: hidden;
@@ -36,13 +36,13 @@ export default function ({ href, children, onClick, disabled = false, loading = 
 			* {
 				transition-duration: 200ms;
 				transition-property: color, border-color, background-color;
-				background-color: var(--color-white);
+				background-color: var(--color-secondary);
 				color: inherit;
 			}
 
 			&:hover {
 				background-color: var(--color-theme-thin);
-				color: var(--color-black);
+				color: var(--color-primary);
 
 				* {
 					background-color: inherit;
@@ -52,10 +52,10 @@ export default function ({ href, children, onClick, disabled = false, loading = 
 		`,
 		disabled &&
 			css`
-				color: var(--color-gray);
+				color: var(--color-hide);
 				user-select: none;
 				cursor: not-allowed;
-				background-color: var(--color-white);
+				background-color: var(--color-secondary);
 
 				* {
 					background-color: inherit;
@@ -63,9 +63,9 @@ export default function ({ href, children, onClick, disabled = false, loading = 
 				}
 
 				&:hover {
-					background-color: var(--color-white);
+					background-color: var(--color-secondary);
 					box-shadow: none;
-					color: var(--color-gray);
+					color: var(--color-hide);
 
 					* {
 						background-color: inherit;

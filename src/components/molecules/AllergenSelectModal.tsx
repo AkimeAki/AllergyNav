@@ -61,7 +61,7 @@ export default function ({
 						<div
 							ref={modalElement}
 							className={css`
-								background-color: var(--color-white);
+								background-color: var(--color-secondary);
 								border-radius: 5px;
 								padding: 20px;
 								box-shadow: 0 0 20px -5px #969696;

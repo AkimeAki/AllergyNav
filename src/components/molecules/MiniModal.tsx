@@ -48,7 +48,7 @@ export default function ({ isOpen, setIsOpen, children, close = true }: Props): 
 					>
 						<div
 							className={css`
-								background-color: var(--color-white);
+								background-color: var(--color-secondary);
 								border-radius: 5px;
 								box-shadow: 0 0 20px -5px #969696;
 								max-height: calc(100vh - 60px);

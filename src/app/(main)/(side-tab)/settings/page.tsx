@@ -34,7 +34,7 @@ export default async function (): Promise<JSX.Element> {
 						th {
 							text-align: left;
 							background-color: var(--color-theme);
-							color: var(--color-white);
+							color: var(--color-secondary);
 							font-weight: bold;
 							padding-left: 20px;
 							padding-right: 20px;
