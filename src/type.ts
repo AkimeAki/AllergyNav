@@ -96,3 +96,5 @@ export interface Message {
 	type: "error" | "success";
 	text: string;
 }
+
+export type FetchStatus = "successed" | "failed" | "yet" | "loading";

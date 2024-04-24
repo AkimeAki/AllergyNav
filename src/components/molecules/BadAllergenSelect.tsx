@@ -4,7 +4,7 @@ import { css } from "@kuma-ui/core";
 import { useEffect, type Dispatch, type SetStateAction } from "react";
 import AllergenItem from "@/components/atoms/AllergenItem";
 import GoogleIcon from "@/components/atoms/GoogleIcon";
-import useGetAllergens from "@/hooks/useGetAllergens";
+import useGetAllergens from "@/hooks/fetch-api/useGetAllergens";
 
 interface Props {
 	selectAllergens: string[];
@@ -13,10 +13,10 @@ interface Props {
 }
 
 export default function ({ selectAllergens, setSelectAllergens, position = "left" }: Props): JSX.Element {
-	const { response: allergens, getAllergens } = useGetAllergens();
+	const { getAllergensResponse, getAllergens } = useGetAllergens();
 
 	useEffect(() => {
-		void getAllergens();
+		getAllergens();
 	}, []);
 
 	return (
@@ -42,7 +42,7 @@ export default function ({ selectAllergens, setSelectAllergens, position = "left
 					`
 			].join(" ")}
 		>
-			{allergens?.map((item) => {
+			{getAllergensResponse?.map((item) => {
 				const selected = selectAllergens.some((selectAllergen) => selectAllergen === item.id);
 
 				return (

@@ -5,23 +5,21 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import ErrorMessage from "@/components/atoms/ErrorMessage";
-import Loading from "@/components/atoms/Loading";
 import Button from "@/components/atoms/Button";
-import AddStoreModal from "@/components/organisms/AddStoreModal";
-import { useGetStores } from "@/hooks/useGetStores";
-import Modal from "@/components/molecules/Modal";
-import SubTitle from "@/components/atoms/SubTitle";
-import useGetAllergens from "@/hooks/useGetAllergens";
+import AddStoreModal from "@/components/organisms/modal/AddStoreModal";
+import useGetStores from "@/hooks/fetch-api/useGetStores";
+import useGetAllergens from "@/hooks/fetch-api/useGetAllergens";
 import AllergenItem from "@/components/atoms/AllergenItem";
 import MiniTitle from "@/components/atoms/MiniTitle";
 import useGetUserData from "@/hooks/useGetUserData";
-import useSendVerifyMail from "@/hooks/useSendVerifyMail";
-import { useGetPictures } from "@/hooks/useGetPictures";
+import useGetPictures from "@/hooks/fetch-api/useGetPictures";
 import LoadingEffect from "../atoms/LoadingEffect";
 import { safeString } from "@/libs/safe-type";
 import { isEmptyString } from "@/libs/check-string";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
+import NotVerifiedModal from "@/components/molecules/NotVerifiedModal";
+import NotLoginedModal from "@/components/molecules/NotLoginedModal";
+import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
 
 export default function (): JSX.Element {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
@@ -29,11 +27,10 @@ export default function (): JSX.Element {
 	const [searchAllergens, setSearchAllergens] = useState<string[]>([]);
 	const [currentLatitude, setCurrentLatitude] = useState<number | undefined | null>(undefined);
 	const [currentLongitude, setCurrentLongitude] = useState<number | undefined | null>(undefined);
-	const { response: stores, loading: getStoresLoading, message, getStores } = useGetStores();
-	const { response: allergens, getAllergens, loading: getAllergensLoading } = useGetAllergens();
-	const { status, userId, userVerified } = useGetUserData();
-	const { sendVerifyMail, response: verifiedResponse, loading: sendVerifyLoading } = useSendVerifyMail();
-	const { response: pictures, loading: getPicturesLoading, getPictures } = useGetPictures();
+	const { getStoresResponse, getStoresStatus, getStores } = useGetStores();
+	const { getAllergensResponse, getAllergens, getAllergensStatus } = useGetAllergens();
+	const { userStatus, userId, userVerified } = useGetUserData();
+	const { getPicturesResponse, getPicturesStatus, getPictures } = useGetPictures();
 	const { addMessage } = useFloatMessage();
 	const params = {
 		allergens: searchParams.get("allergens") ?? "",
@@ -51,31 +48,31 @@ export default function (): JSX.Element {
 			!(params.area === "location" && currentLatitude === undefined && currentLongitude === undefined)
 		) {
 			const coords = (safeString(currentLatitude) ?? "") + "," + (safeString(currentLongitude) ?? "");
-			void getStores(params.allergens, params.keywords, params.area, coords, params.radius);
+			getStores(params.allergens, params.keywords, params.area, coords, params.radius);
 		}
 	}, [searchParams, currentLatitude, currentLongitude]);
 
 	useEffect(() => {
-		void getAllergens();
+		getAllergens();
 	}, []);
 
 	useEffect(() => {
-		if (params.allergens !== null) {
-			const queryAllergenList = params.allergens.split(",");
-			const filterdAllergenList = queryAllergenList.filter((a) => {
-				return allergens?.some((b) => a === b.id);
+		if (getAllergensResponse !== undefined) {
+			const queryAllergens = params.allergens.split(",");
+			const filterdAllergens = queryAllergens.filter((a) => {
+				return getAllergensResponse.some((b) => a === b.id);
 			});
-			setSearchAllergens(filterdAllergenList);
+			setSearchAllergens(filterdAllergens);
 		} else {
 			setSearchAllergens([]);
 		}
-	}, [searchParams, allergens]);
+	}, [searchParams, getAllergensResponse]);
 
 	useEffect(() => {
-		if (stores !== undefined) {
-			void getPictures(stores.map((store) => store.id).join(","));
+		if (getStoresStatus === "successed" && getStoresResponse !== undefined) {
+			getPictures(getStoresResponse.map((store) => store.id).join(","));
 		}
-	}, [stores]);
+	}, [getStoresStatus]);
 
 	useEffect(() => {
 		if (params.area === "location") {
@@ -121,71 +118,16 @@ export default function (): JSX.Element {
 
 	return (
 		<>
-			<AddStoreModal
-				isOpen={isOpenAddModal && status === "authenticated" && userVerified === true}
+			<AddStoreModal isOpen={isOpenAddModal && userVerified === true} setIsOpen={setIsOpenAddModal} />
+			<NotVerifiedModal
+				isOpen={isOpenAddModal && userVerified === false}
+				setIsOpen={setIsOpenAddModal}
+				userId={userId ?? ""}
+			/>
+			<NotLoginedModal
+				isOpen={isOpenAddModal && userStatus === "unauthenticated"}
 				setIsOpen={setIsOpenAddModal}
 			/>
-			<Modal
-				isOpen={isOpenAddModal && status === "authenticated" && userVerified === false}
-				setIsOpen={setIsOpenAddModal}
-			>
-				<SubTitle>お店を追加</SubTitle>
-				<p
-					className={css`
-						text-align: center;
-						margin: 30px 0;
-					`}
-				>
-					メニューを追加するには、メール認証を完了する必要があります。
-				</p>
-				<div
-					className={css`
-						display: flex;
-						justify-content: center;
-					`}
-				>
-					<div>
-						{!sendVerifyLoading && verifiedResponse === undefined && userId !== null && (
-							<Button
-								onClick={() => {
-									void sendVerifyMail(userId);
-								}}
-							>
-								認証メールを再送信する
-							</Button>
-						)}
-						{sendVerifyLoading && <Button disabled>送信中</Button>}
-						{!sendVerifyLoading && verifiedResponse !== undefined && (
-							<Button disabled>認証メールを送信しました</Button>
-						)}
-					</div>
-				</div>
-			</Modal>
-			<Modal isOpen={isOpenAddModal && status === "unauthenticated"} setIsOpen={setIsOpenAddModal}>
-				<SubTitle>お店を追加</SubTitle>
-				<p
-					className={css`
-						text-align: center;
-						margin: 30px 0;
-					`}
-				>
-					メニューを追加するには、ログインする必要があります
-				</p>
-				<div
-					className={css`
-						display: flex;
-						gap: 20px;
-						justify-content: center;
-					`}
-				>
-					<div>
-						<Button href="/login?redirect=/store">ログイン</Button>
-					</div>
-					<div>
-						<Button href="/register?redirect=/store">アカウント作成</Button>
-					</div>
-				</div>
-			</Modal>
 			<div
 				className={css`
 					display: flex;
@@ -193,48 +135,50 @@ export default function (): JSX.Element {
 					gap: 20px;
 				`}
 			>
-				{!getStoresLoading && !getAllergensLoading && searchAllergens.length !== 0 && (
-					<div
-						className={css`
-							border: 4px solid var(--color-theme);
-							padding: 10px;
-							background-color: var(--color-theme-thin);
-							border-radius: 10px;
-							display: flex;
-							flex-direction: column;
-							gap: 5px;
-						`}
-					>
+				{getAllergensStatus === "successed" &&
+					getAllergensResponse !== undefined &&
+					searchAllergens.length !== 0 && (
 						<div
 							className={css`
+								border: 4px solid var(--color-theme);
+								padding: 10px;
+								background-color: var(--color-theme-thin);
+								border-radius: 10px;
 								display: flex;
+								flex-direction: column;
 								gap: 5px;
-								justify-content: center;
 							`}
 						>
-							{searchAllergens.map((item) => {
-								let name = "";
-								allergens?.forEach((allergen) => {
-									if (item === allergen.id) {
-										name = allergen.name;
-									}
-								});
-
-								return <AllergenItem key={item} image={`/icons/${item}.png`} text={name} />;
-							})}
-						</div>
-						<div>
-							<p
+							<div
 								className={css`
-									text-align: center;
+									display: flex;
+									gap: 5px;
+									justify-content: center;
 								`}
 							>
-								上記成分のアレルギーをお持ちの方が食べに行けるお店を表示しています。
-							</p>
+								{searchAllergens.map((item) => {
+									let name = "";
+									getAllergensResponse.forEach((allergen) => {
+										if (item === allergen.id) {
+											name = allergen.name;
+										}
+									});
+
+									return <AllergenItem key={item} image={`/icons/${item}.png`} text={name} />;
+								})}
+							</div>
+							<div>
+								<p
+									className={css`
+										text-align: center;
+									`}
+								>
+									上記成分のアレルギーをお持ちの方が食べに行けるお店を表示しています。
+								</p>
+							</div>
 						</div>
-					</div>
-				)}
-				{getStoresLoading && <Loading />}
+					)}
+				{(getAllergensStatus === "loading" || getAllergensStatus === "yet") && <LoadingCircleCenter />}
 				<section
 					className={css`
 						display: grid;
@@ -251,10 +195,9 @@ export default function (): JSX.Element {
 						}
 					`}
 				>
-					{message !== undefined && message.type === "error" && <ErrorMessage>{message.text}</ErrorMessage>}
-					{!getStoresLoading && stores !== undefined && (
+					{getStoresStatus === "successed" && getStoresResponse !== undefined && (
 						<>
-							{stores.length === 0 && (
+							{getStoresResponse.length === 0 && (
 								<p
 									className={css`
 										text-align: center;
@@ -263,7 +206,7 @@ export default function (): JSX.Element {
 									お店が無いようです😿
 								</p>
 							)}
-							{[...stores].reverse().map((store) => (
+							{[...getStoresResponse].reverse().map((store) => (
 								<div
 									key={store.id}
 									className={css`
@@ -314,7 +257,7 @@ export default function (): JSX.Element {
 											>
 												<LoadingEffect />
 											</div>
-											{!getPicturesLoading && (
+											{getPicturesStatus === "successed" && (
 												<Image
 													className={css`
 														display: block;
@@ -327,8 +270,8 @@ export default function (): JSX.Element {
 														}
 													`}
 													src={
-														pictures?.find((p) => p.store_id === store.id)?.url ??
-														"/no-image.png"
+														getPicturesResponse?.find((p) => p.store_id === store.id)
+															?.url ?? "/no-image.png"
 													}
 													width={250}
 													height={250}
@@ -368,44 +311,44 @@ export default function (): JSX.Element {
 						</>
 					)}
 				</section>
-				{status !== "loading" && (
-					<div
-						className={css`
-							position: sticky;
-							bottom: 40px;
-							text-align: right;
-							z-index: 99;
-							animation-name: addStoreButtonFadeIn;
-							opacity: 0;
-							animation-iteration-count: 1;
-							animation-duration: 200ms;
-							animation-fill-mode: forwards;
+				<div
+					className={css`
+						position: sticky;
+						bottom: 40px;
+						text-align: right;
+						z-index: 99;
+						animation-name: addStoreButtonFadeIn;
+						opacity: 0;
+						animation-iteration-count: 1;
+						animation-duration: 200ms;
+						animation-fill-mode: forwards;
 
-							@keyframes addStoreButtonFadeIn {
-								0% {
-									opacity: 0;
-								}
-
-								100% {
-									opacity: 1;
-								}
+						@keyframes addStoreButtonFadeIn {
+							0% {
+								opacity: 0;
 							}
 
-							@media (max-width: 600px) {
-								bottom: 20px;
+							100% {
+								opacity: 1;
 							}
-						`}
+						}
+
+						@media (max-width: 600px) {
+							bottom: 20px;
+						}
+					`}
+				>
+					<Button
+						onClick={() => {
+							setIsOpenAddModal(true);
+						}}
+						disabled={userStatus === "loading"}
+						loading={userStatus === "loading"}
+						selected={isOpenAddModal}
 					>
-						<Button
-							onClick={() => {
-								setIsOpenAddModal(true);
-							}}
-							selected={isOpenAddModal}
-						>
-							お店を追加
-						</Button>
-					</div>
-				)}
+						お店を追加
+					</Button>
+				</div>
 			</div>
 		</>
 	);

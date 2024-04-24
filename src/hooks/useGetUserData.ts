@@ -6,18 +6,18 @@ import { useEffect, useState } from "react";
 interface ReturnType {
 	userId: string | null;
 	userRole: string | null;
-	status: "loading" | "authenticated" | "unauthenticated";
-	userVerified: boolean | 403 | null;
+	userStatus: "loading" | "authenticated" | "unauthenticated";
+	userVerified: boolean | null;
 }
 
 export default function (): ReturnType {
 	const [userId, setUserId] = useState<string | null>(null);
 	const [userRole, setUserRole] = useState<string | null>(null);
 	const [userVerified, setUserVerified] = useState<boolean | null>(null);
-	const [status, setStatus] = useState<"loading" | "authenticated" | "unauthenticated">("loading");
+	const [userStatus, setUserStatus] = useState<"loading" | "authenticated" | "unauthenticated">("loading");
 
 	const getUser = async (): Promise<void> => {
-		setStatus("loading");
+		setUserStatus("loading");
 		setUserRole(null);
 		setUserVerified(null);
 		setUserId(null);
@@ -26,7 +26,7 @@ export default function (): ReturnType {
 			const session = await getSession();
 
 			if (session === null) {
-				setStatus("unauthenticated");
+				setUserStatus("unauthenticated");
 			} else {
 				const id = safeString(session.user?.id);
 
@@ -67,9 +67,9 @@ export default function (): ReturnType {
 
 	useEffect(() => {
 		if (userId !== null && userRole !== null && userVerified !== null) {
-			setStatus("authenticated");
+			setUserStatus("authenticated");
 		} else {
-			setStatus("unauthenticated");
+			setUserStatus("unauthenticated");
 		}
 	}, [userId, userRole, userVerified]);
 
@@ -77,5 +77,5 @@ export default function (): ReturnType {
 		void getUser();
 	}, []);
 
-	return { userId, userRole, userVerified, status };
+	return { userId, userRole, userVerified, userStatus };
 }

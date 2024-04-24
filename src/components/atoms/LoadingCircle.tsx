@@ -26,7 +26,7 @@ export default function ({ size }: Props): JSX.Element {
 					}
 				}
 
-				& > div {
+				& > span {
 					display: block;
 				}
 			`}

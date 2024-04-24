@@ -39,7 +39,7 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 					をお願いします。
 				</p>
 			</div>
-			<StoreComment id={id} />
+			<StoreComment storeId={id} />
 		</div>
 	);
 }

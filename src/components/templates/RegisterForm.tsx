@@ -7,7 +7,7 @@ import { css } from "@kuma-ui/core";
 import { useEffect, useState } from "react";
 import SubTitle from "@/components/atoms/SubTitle";
 import Link from "next/link";
-import useAddUser from "@/hooks/useAddUser";
+import useAddUser from "@/hooks/fetch-api/useAddUser";
 import { isEmailString, isEmptyString } from "@/libs/check-string";
 import { useSearchParams } from "next/navigation";
 import Cursor from "@/components/atoms/Cursor";
@@ -18,7 +18,7 @@ export default function (): JSX.Element {
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 	const [confirmPassword, setConfirmPassword] = useState<string>("");
-	const { response: addUserResponse, loading: addUserLoading, message: addUserMessage, addUser } = useAddUser();
+	const { addUserResponse, addUserStatus, addUser } = useAddUser();
 	const { response: loginResponse, loading: loginLoading, login } = useLogin();
 	const searchParams = useSearchParams();
 	const redirectPath = searchParams.get("redirect") ?? "";
@@ -37,26 +37,18 @@ export default function (): JSX.Element {
 	}, [loginResponse]);
 
 	useEffect(() => {
-		if (addUserLoading) {
+		if (addUserStatus === "loading") {
 			addMessage("入力データを送信しています", "success");
 		}
-	}, [addUserLoading]);
 
-	useEffect(() => {
-		if (loginResponse !== undefined && !loginResponse) {
+		if (addUserStatus === "failed") {
 			addMessage("アカウント作成処理に失敗しました", "error");
 		}
-	}, [loginResponse]);
-
-	useEffect(() => {
-		if (addUserMessage !== undefined && addUserMessage.type === "error") {
-			addMessage(addUserMessage.text, "error");
-		}
-	}, [addUserMessage]);
+	}, [addUserStatus]);
 
 	return (
 		<>
-			{(addUserLoading || loginLoading) && <Cursor cursor="wait" />}
+			{(addUserStatus === "loading" || loginLoading) && <Cursor cursor="wait" />}
 			<div
 				className={css`
 					display: flex;
@@ -92,7 +84,8 @@ export default function (): JSX.Element {
 							<Label>メールアドレス</Label>
 							<TextInput
 								value={email}
-								disabled={addUserLoading || loginLoading}
+								disabled={addUserStatus === "loading" || loginLoading}
+								loading={addUserStatus === "loading" || loginLoading}
 								onChange={(e) => {
 									setEmail(e.target.value);
 								}}
@@ -103,7 +96,8 @@ export default function (): JSX.Element {
 							<TextInput
 								password
 								value={password}
-								disabled={addUserLoading || loginLoading}
+								disabled={addUserStatus === "loading" || loginLoading}
+								loading={addUserStatus === "loading" || loginLoading}
 								onChange={(e) => {
 									setPassword(e.target.value);
 								}}
@@ -114,7 +108,8 @@ export default function (): JSX.Element {
 							<TextInput
 								password
 								value={confirmPassword}
-								disabled={addUserLoading || loginLoading}
+								disabled={addUserStatus === "loading" || loginLoading}
+								loading={addUserStatus === "loading" || loginLoading}
 								onChange={(e) => {
 									setConfirmPassword(e.target.value);
 								}}
@@ -122,13 +117,20 @@ export default function (): JSX.Element {
 						</div>
 						<Button
 							onClick={() => {
-								void addUser(email, password);
+								addUser(email, password);
 							}}
 							disabled={
 								password !== confirmPassword ||
 								isEmptyString(password) ||
 								!isEmailString(email) ||
-								addUserLoading ||
+								addUserStatus === "loading" ||
+								loginLoading
+							}
+							loading={
+								password !== confirmPassword ||
+								isEmptyString(password) ||
+								!isEmailString(email) ||
+								addUserStatus === "loading" ||
 								loginLoading
 							}
 						>

@@ -1,41 +1,78 @@
 import { css } from "@kuma-ui/core";
 import type { ChangeEventHandler, MouseEventHandler, ReactNode } from "react";
+import LoadingCircle from "@/components/atoms/LoadingCircle";
 
 interface Props {
 	value?: string;
 	disabled?: boolean;
+	loading?: boolean;
 	onChange?: ChangeEventHandler<HTMLSelectElement>;
 	onClick?: MouseEventHandler<HTMLSelectElement>;
 	children: ReactNode;
 }
 
-export default function ({ value = "", disabled = false, onChange, onClick, children }: Props): JSX.Element {
+export default function ({
+	value = "",
+	disabled = false,
+	loading = false,
+	onChange,
+	onClick,
+	children
+}: Props): JSX.Element {
 	return (
-		<select
-			size={1}
-			value={value}
-			disabled={disabled}
-			onChange={onChange}
-			onClick={onClick}
+		<div
+			data-disabled={disabled}
+			data-loading={loading}
 			className={css`
-				border: none;
+				position: relative;
+				display: table;
+				cursor: pointer;
 				border-bottom-style: solid;
 				border-bottom-color: var(--color-theme);
 				border-bottom-width: 2px;
-				padding: 10px 20px 10px 10px;
-				cursor: pointer;
 				border-top-left-radius: 5px;
 				border-top-right-radius: 5px;
 				background-color: var(--color-secondary);
 
-				&[disabled] {
+				&[data-disabled="true"] {
 					background-color: var(--color-hide);
-					user-select: none;
 					cursor: not-allowed;
+					user-select: none;
+				}
+
+				&[data-loading="true"] {
+					cursor: progress;
 				}
 			`}
 		>
-			{children}
-		</select>
+			<select
+				size={1}
+				value={value}
+				disabled={disabled}
+				onChange={onChange}
+				onClick={onClick}
+				className={css`
+					border: none;
+					padding: 10px 20px 10px 10px;
+					background-color: inherit;
+					width: 100%;
+					cursor: inherit;
+				`}
+			>
+				{children}
+			</select>
+			{loading && (
+				<div
+					className={css`
+						position: absolute;
+						top: 50%;
+						left: 50%;
+						transform: translate(-50%, -50%);
+					`}
+				>
+					<LoadingCircle size={20} />
+				</div>
+			)}
+		</div>
 	);
 }

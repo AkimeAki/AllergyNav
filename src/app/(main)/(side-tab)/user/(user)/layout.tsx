@@ -3,10 +3,10 @@ import { safeString } from "@/libs/safe-type";
 import type { ReactNode } from "react";
 import { css } from "@kuma-ui/core";
 import MainTitle from "@/components/atoms/MainTitle";
-import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "@/libs/auth";
 import UserTabs from "@/components/organisms/UserTabs";
+import type { Metadata } from "next";
 
 interface Props {
 	children: ReactNode;
@@ -16,7 +16,11 @@ interface Props {
 }
 
 export const metadata: Metadata = {
-	title: "設定"
+	title: {
+		default: "マイページ",
+		template: "%s｜マイページ｜アレルギーナビ"
+	},
+	description: ""
 };
 
 export default async function ({ children }: Props): Promise<JSX.Element> {
@@ -38,13 +42,7 @@ export default async function ({ children }: Props): Promise<JSX.Element> {
 				`}
 			>
 				<MainTitle>ユーザー</MainTitle>
-				<div
-					className={css`
-						padding: 0 10px;
-					`}
-				>
-					{children}
-				</div>
+				<div>{children}</div>
 			</div>
 		</>
 	);

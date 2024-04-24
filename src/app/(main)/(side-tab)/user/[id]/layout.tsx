@@ -54,13 +54,7 @@ export default async function ({ children, params }: Props): Promise<JSX.Element
 				`}
 			>
 				<MainTitle>ユーザー</MainTitle>
-				<div
-					className={css`
-						padding: 0 10px;
-					`}
-				>
-					{children}
-				</div>
+				<div>{children}</div>
 			</div>
 		</>
 	);

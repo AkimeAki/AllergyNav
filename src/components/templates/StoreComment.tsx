@@ -2,67 +2,57 @@
 
 import { css } from "@kuma-ui/core";
 import { useEffect, useState } from "react";
-import Loading from "@/components/atoms/Loading";
 import SubTitle from "@/components/atoms/SubTitle";
 import Label from "@/components/atoms/Label";
 import TextInput from "@/components/atoms/TextInput";
 import TextArea from "@/components/atoms/TextArea";
 import Button from "@/components/atoms/Button";
 import Cursor from "@/components/atoms/Cursor";
-import useGetComments from "@/hooks/useGetComments";
-import useAddComment from "@/hooks/useAddComment";
+import useGetComments from "@/hooks/fetch-api/useGetComments";
+import useAddComment from "@/hooks/fetch-api/useAddComment";
 import { isEmptyString } from "@/libs/check-string";
 import { formatText } from "@/libs/format-text";
 import { usePathname } from "next/navigation";
 import useGetUserData from "@/hooks/useGetUserData";
-import useSendVerifyMail from "@/hooks/useSendVerifyMail";
+import useSendVerifyMail from "@/hooks/fetch-api/useSendVerifyMail";
 import StoreCommentBarrier from "@/components/molecules/StoreCommentBarrier";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
+import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
 
 interface Props {
-	id: string;
+	storeId: string;
 }
 
-export default function ({ id }: Props): JSX.Element {
+export default function ({ storeId }: Props): JSX.Element {
 	const [newCommentContent, setNewCommentContent] = useState<string>("");
 	const [newCommentTitle, setNewCommentTitle] = useState<string>("");
-	const { response: comments, loading: getCommentsLoading, getComments } = useGetComments();
-	const {
-		response: addedComment,
-		loading: addCommentsLoading,
-		message: addCommentsMessage,
-		addComment
-	} = useAddComment();
+	const { getCommentsResponse, getCommentsStatus, getComments } = useGetComments();
+	const { addCommentStatus, addComment } = useAddComment();
 	const pathname = usePathname();
-	const { status, userId, userVerified } = useGetUserData();
-	const { sendVerifyMail, response: verifiedResponse, loading: sendVerifyLoading } = useSendVerifyMail();
+	const { userStatus, userId, userVerified } = useGetUserData();
+	const { sendVerifyMail, sendVerifyMailStatus } = useSendVerifyMail();
 	const { addMessage } = useFloatMessage();
 
 	useEffect(() => {
-		void getComments(id);
+		getComments(storeId);
 	}, []);
 
 	useEffect(() => {
-		if (addedComment !== undefined) {
-			void getComments(id);
+		if (addCommentStatus === "successed") {
+			addMessage("コメントを登録しました！", "success");
+			getComments(storeId);
 			setNewCommentTitle("");
 			setNewCommentContent("");
 		}
-	}, [addedComment]);
 
-	useEffect(() => {
-		if (addCommentsMessage !== undefined && addCommentsMessage.type === "error") {
-			addMessage(addCommentsMessage.text, "error");
+		if (addCommentStatus === "failed") {
+			addMessage("送信に失敗しました", "error");
 		}
-
-		if (addCommentsMessage !== undefined && addCommentsMessage.type === "success") {
-			addMessage("コメントを登録しました！", "success", 3);
-		}
-	}, [addCommentsMessage]);
+	}, [addCommentStatus]);
 
 	return (
 		<>
-			{addCommentsLoading && <Cursor cursor="wait" />}
+			{addCommentStatus === "loading" && <Cursor cursor="wait" />}
 			<SubTitle>コメントを書く</SubTitle>
 			<form
 				className={css`
@@ -70,7 +60,7 @@ export default function ({ id }: Props): JSX.Element {
 					position: relative;
 				`}
 			>
-				{status === "unauthenticated" && (
+				{userStatus === "unauthenticated" && (
 					<StoreCommentBarrier>
 						<p
 							className={css`
@@ -106,7 +96,7 @@ export default function ({ id }: Props): JSX.Element {
 						</div>
 					</StoreCommentBarrier>
 				)}
-				{status === "authenticated" && userVerified === false && (
+				{userStatus === "authenticated" && userVerified === false && (
 					<StoreCommentBarrier>
 						<p
 							className={css`
@@ -128,17 +118,17 @@ export default function ({ id }: Props): JSX.Element {
 							`}
 						>
 							<div>
-								{!sendVerifyLoading && verifiedResponse === undefined && userId !== null && (
+								{sendVerifyMailStatus === "yet" && (
 									<Button
 										onClick={() => {
-											void sendVerifyMail(userId);
+											sendVerifyMail(userId ?? "");
 										}}
 									>
 										認証メールを再送信する
 									</Button>
 								)}
-								{sendVerifyLoading && <Button disabled>送信中</Button>}
-								{!sendVerifyLoading && verifiedResponse !== undefined && (
+								{sendVerifyMailStatus === "loading" && <Button disabled>送信中</Button>}
+								{sendVerifyMailStatus === "successed" && (
 									<Button disabled>認証メールを送信しました</Button>
 								)}
 							</div>
@@ -165,11 +155,18 @@ export default function ({ id }: Props): JSX.Element {
 						<TextInput
 							value={newCommentTitle}
 							onChange={(e) => {
-								if (status === "authenticated") {
-									setNewCommentTitle(e.target.value);
-								}
+								setNewCommentTitle(e.target.value);
 							}}
-							disabled={getCommentsLoading || addCommentsLoading || status === "loading"}
+							disabled={
+								getCommentsStatus !== "successed" ||
+								addCommentStatus === "loading" ||
+								userStatus === "loading"
+							}
+							loading={
+								getCommentsStatus !== "successed" ||
+								addCommentStatus === "loading" ||
+								userStatus === "loading"
+							}
 						/>
 					</div>
 					<div>
@@ -178,11 +175,18 @@ export default function ({ id }: Props): JSX.Element {
 							autoSize
 							value={newCommentContent}
 							onChange={(e) => {
-								if (status === "authenticated") {
-									setNewCommentContent(e.target.value);
-								}
+								setNewCommentContent(e.target.value);
 							}}
-							disabled={getCommentsLoading || addCommentsLoading || status === "loading"}
+							disabled={
+								getCommentsStatus !== "successed" ||
+								addCommentStatus === "loading" ||
+								userStatus === "loading"
+							}
+							loading={
+								getCommentsStatus !== "successed" ||
+								addCommentStatus === "loading" ||
+								userStatus === "loading"
+							}
 						/>
 					</div>
 					<div>
@@ -194,17 +198,19 @@ export default function ({ id }: Props): JSX.Element {
 						>
 							<Button
 								onClick={() => {
-									if (status === "authenticated") {
-										void addComment(id, newCommentTitle, newCommentContent);
-									}
+									addComment(storeId, newCommentTitle, newCommentContent);
 								}}
 								disabled={
-									getCommentsLoading ||
+									getCommentsStatus !== "successed" ||
 									isEmptyString(newCommentTitle) ||
 									isEmptyString(newCommentContent) ||
-									addCommentsLoading ||
-									status === "loading" ||
-									status === "unauthenticated"
+									addCommentStatus === "loading" ||
+									userStatus !== "authenticated"
+								}
+								loading={
+									getCommentsStatus !== "successed" ||
+									addCommentStatus === "loading" ||
+									userStatus !== "authenticated"
 								}
 							>
 								送信する
@@ -222,10 +228,10 @@ export default function ({ id }: Props): JSX.Element {
 					padding: 0 10px;
 				`}
 			>
-				{getCommentsLoading && <Loading />}
-				{!getCommentsLoading && (
+				{(getCommentsStatus === "loading" || getCommentsStatus === "yet") && <LoadingCircleCenter />}
+				{getCommentsStatus === "successed" && (
 					<>
-						{comments?.length === 0 && (
+						{getCommentsResponse?.length === 0 && (
 							<p
 								className={css`
 									text-align: center;
@@ -234,7 +240,7 @@ export default function ({ id }: Props): JSX.Element {
 								コメントが無いようです😿
 							</p>
 						)}
-						{[...(comments ?? [])].reverse().map((item) => (
+						{[...(getCommentsResponse ?? [])].reverse().map((item) => (
 							<div
 								key={item.id}
 								className={css`

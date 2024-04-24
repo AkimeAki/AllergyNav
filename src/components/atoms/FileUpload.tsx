@@ -1,15 +1,21 @@
 import { css } from "@kuma-ui/core";
 import type { ChangeEventHandler } from "react";
+import LoadingCircle from "@/components/atoms/LoadingCircle";
 
 interface Props {
 	onChange?: ChangeEventHandler<HTMLInputElement>;
 	disabled?: boolean;
+	loading?: boolean;
 	accept?: string;
 }
 
-export default function ({ onChange, disabled = false, accept = undefined }: Props): JSX.Element {
+export default function ({ onChange, disabled = false, loading = false, accept = undefined }: Props): JSX.Element {
 	return (
-		<div>
+		<div
+			className={css`
+				position: relative;
+			`}
+		>
 			<input
 				type="file"
 				onChange={onChange}
@@ -56,6 +62,18 @@ export default function ({ onChange, disabled = false, accept = undefined }: Pro
 					}
 				`}
 			/>
+			{loading && (
+				<div
+					className={css`
+						position: absolute;
+						top: 50%;
+						left: 50%;
+						transform: translate(-50%, -50%);
+					`}
+				>
+					<LoadingCircle size={20} />
+				</div>
+			)}
 		</div>
 	);
 }

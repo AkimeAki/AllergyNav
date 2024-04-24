@@ -5,14 +5,13 @@ import SubTitle from "@/components/atoms/SubTitle";
 import { useEffect, useState } from "react";
 import Button from "@/components/atoms/Button";
 import { useSearchParams, useRouter } from "next/navigation";
-import useGetAllergens from "@/hooks/useGetAllergens";
+import useGetAllergens from "@/hooks/fetch-api/useGetAllergens";
 import GoogleIcon from "@/components/atoms/GoogleIcon";
 import AllergenItem from "@/components/atoms/AllergenItem";
 import Modal from "@/components/molecules/Modal";
 import MiniTitle from "@/components/atoms/MiniTitle";
 import TextInput from "@/components/atoms/TextInput";
 import Select from "@/components/atoms/Select";
-import { safeString } from "@/libs/safe-type";
 import { isEmptyString } from "@/libs/check-string";
 
 export default function (): JSX.Element {
@@ -23,33 +22,31 @@ export default function (): JSX.Element {
 	const [isAllergenSelectModalOpen, setIsAllergenSelectModalOpen] = useState<boolean>(false);
 	const [isSpModalOpen, setIsSpModalOpen] = useState<boolean>(false);
 	const searchParams = useSearchParams();
-	const { response: allergens, getAllergens, loading: getAllergensLoading } = useGetAllergens();
+	const { getAllergensResponse, getAllergens, getAllergensStatus } = useGetAllergens();
 	const router = useRouter();
 
 	const params = {
 		allergens: searchParams.get("allergens") ?? "",
 		keywords: searchParams.get("keywords") ?? "",
-		area: isEmptyString(safeString(searchParams.get("area")) ?? "")
-			? "all"
-			: safeString(searchParams.get("area")) ?? "all",
-		radius: safeString(searchParams.get("radius")) ?? ""
+		area: isEmptyString(searchParams.get("area") ?? "") ? "all" : searchParams.get("area") ?? "all",
+		radius: searchParams.get("radius") ?? ""
 	};
 
 	useEffect(() => {
-		void getAllergens();
+		getAllergens();
 	}, []);
 
 	useEffect(() => {
-		if (params.allergens !== null) {
-			const queryAllergenList = params.allergens.split(",");
-			const filterdAllergenList = queryAllergenList.filter((a) => {
-				return allergens?.some((b) => a === b.id);
+		if (getAllergensStatus === "successed") {
+			const queryAllergens = params.allergens.split(",");
+			const filterdAllergens = queryAllergens.filter((a) => {
+				return getAllergensResponse?.some((b) => a === b.id);
 			});
-			setSelectAllergens(filterdAllergenList);
+			setSelectAllergens(filterdAllergens);
 		} else {
 			setSelectAllergens([]);
 		}
-	}, [searchParams, allergens]);
+	}, [searchParams, getAllergensStatus]);
 
 	useEffect(() => {
 		setKeywords(params.keywords);
@@ -117,7 +114,7 @@ export default function (): JSX.Element {
 							width: 100%;
 						`}
 					>
-						{allergens?.map((item) => {
+						{getAllergensResponse?.map((item) => {
 							const selected = (selectAllergens ?? []).some(
 								(selectAllergen) => selectAllergen === item.id
 							);
@@ -246,7 +243,7 @@ export default function (): JSX.Element {
 							width: 100%;
 						`}
 					>
-						{allergens?.map((item) => {
+						{getAllergensResponse?.map((item) => {
 							const selected = (selectAllergens ?? []).some(
 								(selectAllergen) => selectAllergen === item.id
 							);
@@ -345,7 +342,14 @@ export default function (): JSX.Element {
 											}}
 											size="small"
 											selected={isAllergenSelectModalOpen}
-											disabled={getAllergensLoading || selectAllergens === undefined}
+											disabled={
+												getAllergensStatus !== "successed" || selectAllergens === undefined
+											}
+											loading={
+												getAllergensStatus === "loading" ||
+												getAllergensStatus === "yet" ||
+												selectAllergens === undefined
+											}
 										>
 											選択する
 										</Button>
@@ -358,7 +362,7 @@ export default function (): JSX.Element {
 									>
 										{selectAllergens?.map((item) => {
 											let name = "";
-											allergens?.forEach((allergen) => {
+											getAllergensResponse?.forEach((allergen) => {
 												if (item === allergen.id) {
 													name = allergen.name;
 												}
@@ -390,6 +394,7 @@ export default function (): JSX.Element {
 							<Select
 								value={area}
 								disabled={area === undefined}
+								loading={area === undefined}
 								onChange={(e) => {
 									setArea(e.target.value);
 								}}
@@ -465,6 +470,20 @@ export default function (): JSX.Element {
 									onClick={() => {
 										search();
 									}}
+									disabled={
+										getAllergensStatus === "loading" ||
+										selectAllergens === undefined ||
+										setKeywords === undefined ||
+										setArea === undefined ||
+										setRadius === undefined
+									}
+									loading={
+										getAllergensStatus === "loading" ||
+										selectAllergens === undefined ||
+										setKeywords === undefined ||
+										setArea === undefined ||
+										setRadius === undefined
+									}
 								>
 									検索
 								</Button>
@@ -523,6 +542,20 @@ export default function (): JSX.Element {
 								onClick={() => {
 									search();
 								}}
+								disabled={
+									getAllergensStatus === "loading" ||
+									selectAllergens === undefined ||
+									setKeywords === undefined ||
+									setArea === undefined ||
+									setRadius === undefined
+								}
+								loading={
+									getAllergensStatus === "loading" ||
+									selectAllergens === undefined ||
+									setKeywords === undefined ||
+									setArea === undefined ||
+									setRadius === undefined
+								}
 							>
 								検索
 							</Button>

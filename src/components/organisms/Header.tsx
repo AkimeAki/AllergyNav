@@ -5,11 +5,11 @@ import Link from "next/link";
 import Image from "next/image";
 import useGetUserData from "@/hooks/useGetUserData";
 import Button from "@/components/atoms/Button";
-import useSendVerifyMail from "@/hooks/useSendVerifyMail";
+import useSendVerifyMail from "@/hooks/fetch-api/useSendVerifyMail";
 
 export default function (): JSX.Element {
 	const { userId, userVerified } = useGetUserData();
-	const { sendVerifyMail, response: verifiedResponse, loading: sendVerifyLoading } = useSendVerifyMail();
+	const { sendVerifyMail, sendVerifyMailStatus } = useSendVerifyMail();
 
 	return (
 		<>
@@ -37,23 +37,23 @@ export default function (): JSX.Element {
 						>
 							メール認証が完了していません。7日後にアカウントが削除されます。
 						</span>
-						{!sendVerifyLoading && verifiedResponse === undefined && userId !== null && (
+						{sendVerifyMailStatus === "yet" && (
 							<Button
 								size="tiny"
 								color="var(--color-primary)"
 								onClick={() => {
-									void sendVerifyMail(userId);
+									sendVerifyMail(userId ?? "");
 								}}
 							>
 								認証メールを再送信する
 							</Button>
 						)}
-						{sendVerifyLoading && (
+						{sendVerifyMailStatus === "loading" && (
 							<Button size="tiny" disabled>
 								送信中
 							</Button>
 						)}
-						{!sendVerifyLoading && verifiedResponse !== undefined && (
+						{sendVerifyMailStatus === "successed" && (
 							<Button size="tiny" disabled>
 								認証メールを送信しました
 							</Button>

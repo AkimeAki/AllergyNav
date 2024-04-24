@@ -15,12 +15,18 @@ export default function ({ pageId, userId }: Props): JSX.Element {
 
 	return (
 		<SideTabWrapper>
-			<SideTabLink href={`/user/${pageId}`} active={pathname === `/user/${pageId}`}>
+			<SideTabLink icon="person" href={`/user/${pageId}`} active={pathname === `/user/${pageId}`}>
 				ユーザー情報
 			</SideTabLink>
 			{pageId === userId && (
 				<>
-					<SideTabLink href="/settings" active={pathname === "/settings"}>
+					<SideTabLink icon="favorite" href="/user/favorites" active={pathname === "/user/favorites"}>
+						お気に入り
+					</SideTabLink>
+					<SideTabLink icon="history" href="/user/histories" active={pathname === "/user/histories"}>
+						履歴
+					</SideTabLink>
+					<SideTabLink icon="settings" href="/user/settings" active={pathname === "/user/settings"}>
 						設定
 					</SideTabLink>
 					<SideTabLinkLogout redirect="/">ログアウト</SideTabLinkLogout>

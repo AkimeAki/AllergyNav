@@ -15,5 +15,5 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 		notFound();
 	}
 
-	return <StorePictureList id={id} />;
+	return <StorePictureList storeId={id} />;
 }

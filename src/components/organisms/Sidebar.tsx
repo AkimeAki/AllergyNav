@@ -13,7 +13,7 @@ export default function (): JSX.Element {
 	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 	const sidebarRef = useRef(null);
 	const pathname = usePathname();
-	const { status, userId, userRole } = useGetUserData();
+	const { userStatus, userId, userRole } = useGetUserData();
 	const { stopScroll, startScroll, isScroll } = useScroll();
 	const [isSizeSp, setIsSizeSp] = useState<boolean>(false);
 
@@ -135,8 +135,8 @@ export default function (): JSX.Element {
 							<SidebarLink href="/store/group" active={pathname === "/store/group"}>
 								グループ一覧（未実装）
 							</SidebarLink>
-							{status === "loading" && <SidebarLinkLoading />}
-							{status === "authenticated" && userId !== null && (
+							{userStatus === "loading" && <SidebarLinkLoading />}
+							{userStatus === "authenticated" && userId !== null && (
 								<SidebarLink
 									href={`/user/${userId}`}
 									active={
@@ -148,7 +148,7 @@ export default function (): JSX.Element {
 									マイページ
 								</SidebarLink>
 							)}
-							{status === "authenticated" && userRole === "admin" && (
+							{userStatus === "authenticated" && userRole === "admin" && (
 								<SidebarLink
 									href="/admin"
 									active={pathname === "/admin" || pathname.startsWith("/admin/")}
@@ -156,7 +156,7 @@ export default function (): JSX.Element {
 									管理画面
 								</SidebarLink>
 							)}
-							{status === "unauthenticated" && (
+							{userStatus === "unauthenticated" && (
 								<SidebarLink
 									href={`/login?redirect=${pathname}`}
 									active={pathname === "/login" || pathname === "/register"}

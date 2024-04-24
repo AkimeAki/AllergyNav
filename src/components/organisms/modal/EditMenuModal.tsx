@@ -10,12 +10,12 @@ import Button from "@/components/atoms/Button";
 import type { Dispatch, SetStateAction } from "react";
 import { useEffect, useState } from "react";
 import Cursor from "@/components/atoms/Cursor";
-import useEditMenu from "@/hooks/useEditMenu";
-import useGetMenu from "@/hooks/useGetMenu";
+import useEditMenu from "@/hooks/fetch-api/useEditMenu";
+import useGetMenu from "@/hooks/fetch-api/useGetMenu";
 import AllergenSelectModal from "@/components/molecules/AllergenSelectModal";
 import AllergenItem from "@/components/atoms/AllergenItem";
 import { isEmptyString } from "@/libs/check-string";
-import useGetAllergens from "@/hooks/useGetAllergens";
+import useGetAllergens from "@/hooks/fetch-api/useGetAllergens";
 import Modal from "@/components/molecules/Modal";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
 
@@ -31,41 +31,52 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 	const [oldMenuName, setOldMenuName] = useState<string>("");
 	const [menuDescription, setMenuDescription] = useState<string>("");
 	const [oldMenuDescription, setOldMenuDescription] = useState<string>("");
-	const { response: editedMenu, loading: editLoading, message: editMessage, editMenu } = useEditMenu();
-	const { response: menu, loading: getLoading, message: getMessage, getMenu } = useGetMenu();
+	const { editMenuStatus, editMenu } = useEditMenu();
+	const { getMenuResponse, getMenuStatus, getMenu } = useGetMenu();
 	const [selectAllergens, setSelectAllergens] = useState<string[]>([]);
 	const [oldSelectAllergens, setOldSelectAllergens] = useState<string[]>([]);
 	const [isChanged, setIsChanged] = useState<boolean>(false);
 	const [isAllergenSelectModalOpen, setIsAllergenSelectModalOpen] = useState<boolean>(false);
-	const { response: allergens, getAllergens } = useGetAllergens();
+	const { getAllergens, getAllergensResponse } = useGetAllergens();
 	const { addMessage } = useFloatMessage();
 
 	useEffect(() => {
 		if (isOpen) {
-			void getMenu(menuId);
+			getMenu(menuId);
 		}
 	}, [isOpen]);
 
 	useEffect(() => {
-		void getAllergens();
+		getAllergens();
 	}, []);
 
 	useEffect(() => {
-		if (menu !== undefined) {
-			setMenuName(menu.name);
-			setOldMenuName(menu.name);
-			setMenuDescription(menu.description);
-			setOldMenuDescription(menu.description);
-			setSelectAllergens(menu.allergens.map((allergen) => allergen.id));
-			setOldSelectAllergens(menu.allergens.map((allergen) => allergen.id));
+		if (getMenuStatus === "successed" && getMenuResponse !== undefined) {
+			setMenuName(getMenuResponse.name);
+			setOldMenuName(getMenuResponse.name);
+			setMenuDescription(getMenuResponse.description);
+			setOldMenuDescription(getMenuResponse.description);
+			setSelectAllergens(getMenuResponse.allergens.map((allergen) => allergen.id));
+			setOldSelectAllergens(getMenuResponse.allergens.map((allergen) => allergen.id));
 		}
-	}, [menu]);
+	}, [getMenuStatus, getMenuResponse]);
 
 	useEffect(() => {
-		if (editedMenu !== undefined && callback !== undefined) {
-			callback();
+		if (editMenuStatus === "successed") {
+			addMessage("メニューを更新しました！", "success");
+			if (callback !== undefined) {
+				callback();
+			}
 		}
-	}, [editedMenu]);
+
+		if (editMenuStatus === "loading") {
+			addMessage("入力データを送信しています", "success");
+		}
+
+		if (editMenuStatus === "failed") {
+			addMessage("メニューの編集に失敗しました", "error");
+		}
+	}, [editMenuStatus]);
 
 	useEffect(() => {
 		if (
@@ -79,28 +90,14 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 		}
 	}, [menuName, menuDescription, selectAllergens]);
 
-	useEffect(() => {
-		if (editLoading) {
-			addMessage("入力データを送信しています", "success");
-		}
-	}, [editLoading]);
-
-	useEffect(() => {
-		if (getMessage !== undefined && getMessage.type === "error") {
-			addMessage(getMessage.text, "error");
-		}
-	}, [getMessage]);
-
-	useEffect(() => {
-		if (editMessage !== undefined && editMessage.type === "error") {
-			addMessage(editMessage.text, "error");
-		}
-	}, [editMessage]);
-
 	return (
 		<>
-			{editLoading && <Cursor cursor="wait" />}
-			<Modal isOpen={isOpen} setIsOpen={setIsOpen} close={!editLoading && !isAllergenSelectModalOpen}>
+			{editMenuStatus === "loading" && <Cursor cursor="wait" />}
+			<Modal
+				isOpen={isOpen}
+				setIsOpen={setIsOpen}
+				close={editMenuStatus !== "loading" && !isAllergenSelectModalOpen}
+			>
 				<SubTitle>メニューを編集</SubTitle>
 				<form
 					className={css`
@@ -120,7 +117,8 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 					<div>
 						<Label required>名前</Label>
 						<TextInput
-							disabled={getLoading || editLoading}
+							disabled={editMenuStatus === "loading" || getMenuStatus === "loading"}
+							loading={editMenuStatus === "loading" || getMenuStatus === "loading"}
 							onChange={(e) => {
 								setMenuName(e.target.value);
 							}}
@@ -140,7 +138,7 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 							setSelectAllergens={setSelectAllergens}
 							isOpen={isAllergenSelectModalOpen}
 							setIsOpen={setIsAllergenSelectModalOpen}
-							disabled={getLoading || editLoading}
+							disabled={editMenuStatus === "loading" || getMenuStatus === "loading"}
 						/>
 						<div
 							className={css`
@@ -150,7 +148,7 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 						>
 							{selectAllergens.map((item) => {
 								let name = "";
-								allergens?.forEach((allergen) => {
+								getAllergensResponse?.forEach((allergen) => {
 									if (item === allergen.id) {
 										name = allergen.name;
 									}
@@ -163,7 +161,8 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 					<div>
 						<Label>メニューの詳細情報</Label>
 						<TextArea
-							disabled={getLoading || editLoading}
+							disabled={editMenuStatus === "loading" || getMenuStatus === "loading"}
+							loading={editMenuStatus === "loading" || getMenuStatus === "loading"}
 							onChange={(e) => {
 								setMenuDescription(e.target.value);
 							}}
@@ -180,9 +179,15 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 						>
 							<Button
 								onClick={() => {
-									void editMenu(menuId, menuName, menuDescription, selectAllergens);
+									editMenu(menuId, menuName, menuDescription, selectAllergens);
 								}}
-								disabled={getLoading || editLoading || isEmptyString(menuName) || !isChanged}
+								disabled={
+									editMenuStatus === "loading" ||
+									getMenuStatus === "loading" ||
+									isEmptyString(menuName) ||
+									!isChanged
+								}
+								loading={editMenuStatus === "loading" || getMenuStatus === "loading"}
 							>
 								登録する
 							</Button>

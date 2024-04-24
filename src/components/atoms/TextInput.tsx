@@ -1,11 +1,13 @@
 import { css } from "@kuma-ui/core";
 import type { ChangeEventHandler, InputHTMLAttributes, KeyboardEventHandler } from "react";
+import LoadingCircle from "@/components/atoms/LoadingCircle";
 
 interface Props {
 	onChange?: ChangeEventHandler<HTMLInputElement>;
 	onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
 	value?: string;
 	disabled?: boolean;
+	loading?: boolean;
 	size?: "small" | "normal";
 	password?: boolean;
 	autoComplete?: string;
@@ -18,6 +20,7 @@ export default function ({
 	onKeyDown,
 	value = "",
 	disabled = false,
+	loading = false,
 	password = false,
 	autoComplete,
 	placeholder,
@@ -26,6 +29,7 @@ export default function ({
 	return (
 		<div
 			className={css`
+				position: relative;
 				width: 100%;
 			`}
 		>
@@ -62,6 +66,18 @@ export default function ({
 					}
 				`}
 			/>
+			{loading && (
+				<div
+					className={css`
+						position: absolute;
+						top: 50%;
+						left: 50%;
+						transform: translate(-50%, -50%);
+					`}
+				>
+					<LoadingCircle size={20} />
+				</div>
+			)}
 		</div>
 	);
 }

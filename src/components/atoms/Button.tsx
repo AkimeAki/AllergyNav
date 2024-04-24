@@ -3,6 +3,7 @@
 import { css } from "@kuma-ui/core";
 import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
+import LoadingCircle from "@/components/atoms/LoadingCircle";
 
 interface Props {
 	href?: string;
@@ -10,9 +11,33 @@ interface Props {
 	size?: "normal" | "small" | "tiny";
 	onClick?: () => void;
 	disabled?: boolean;
+	disabledClick?: boolean;
 	selected?: boolean;
+	loading?: boolean;
 	color?: string;
 }
+interface InnerProps {
+	loading: boolean;
+}
+
+const ButtonInner = ({ loading }: InnerProps): JSX.Element => {
+	return (
+		<>
+			{loading && (
+				<div
+					className={css`
+						position: absolute;
+						top: 50%;
+						left: 50%;
+						transform: translate(-50%, -50%);
+					`}
+				>
+					<LoadingCircle size={20} />
+				</div>
+			)}
+		</>
+	);
+};
 
 export default function ({
 	href,
@@ -20,11 +45,14 @@ export default function ({
 	size = "normal",
 	onClick,
 	disabled = false,
+	disabledClick = false,
 	selected = false,
+	loading = false,
 	color = "var(--color-theme)"
 }: Props): JSX.Element {
 	const buttonStyle = [
 		css`
+			position: relative;
 			display: inline-block;
 			text-decoration: none;
 			cursor: pointer;
@@ -87,32 +115,43 @@ export default function ({
 					color: var(--color-secondary);
 				}
 			`,
-		disabled
-			? css`
+		disabled &&
+			css`
+				border-color: var(--color-hide);
+				color: var(--color-hide);
+				user-select: none;
+				cursor: not-allowed;
+				background-color: var(--color-secondary);
+
+				* {
 					border-color: var(--color-hide);
 					color: var(--color-hide);
-					user-select: none;
-					cursor: not-allowed;
+				}
+
+				&:hover {
 					background-color: var(--color-secondary);
+					color: var(--color-hide);
+					box-shadow: none;
 
 					* {
-						border-color: var(--color-hide);
-						color: var(--color-hide);
-					}
-
-					&:hover {
-						background-color: var(--color-secondary);
-						color: var(--color-hide);
 						box-shadow: none;
-
-						* {
-							box-shadow: none;
-							color: var(--color-hide);
-						}
+						color: var(--color-hide);
 					}
-				`
-			: ""
+				}
+			`,
+		loading &&
+			css`
+				cursor: progress;
+			`
 	].join(" ");
+
+	const click = (): void => {
+		if (onClick !== undefined) {
+			if (!disabled || (disabled && disabledClick)) {
+				onClick();
+			}
+		}
+	};
 
 	return (
 		<>
@@ -120,28 +159,26 @@ export default function ({
 				<button
 					type="button"
 					onClick={() => {
-						if (!disabled && onClick !== undefined) {
-							onClick();
-						}
+						click();
 					}}
 					className={buttonStyle}
 					// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 					style={{ "--button-color": color } as CSSProperties}
 				>
+					<ButtonInner loading={loading} />
 					{children}
 				</button>
 			) : (
 				<Link
 					onClick={() => {
-						if (!disabled && onClick !== undefined) {
-							onClick();
-						}
+						click();
 					}}
 					href={href}
 					className={buttonStyle}
 					// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 					style={{ "--button-color": color } as CSSProperties}
 				>
+					<ButtonInner loading={loading} />
 					{children}
 				</Link>
 			)}
