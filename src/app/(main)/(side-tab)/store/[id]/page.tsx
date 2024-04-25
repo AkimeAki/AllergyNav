@@ -103,8 +103,7 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 			)}
 			<div>
 				<SubTitle>マップ</SubTitle>
-				<p>住所付近のマップを表示しています。正確なマップは住所のリンクよりGoogle Mapから確認してください。</p>
-				<GoogleMap address={storeDetail.address} />
+				<GoogleMap search={`${storeDetail.address} ${storeDetail.name}`} />
 			</div>
 			<EditStoreButton storeId={storeDetail.id} />
 		</div>
