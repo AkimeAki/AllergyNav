@@ -11,19 +11,17 @@ export default function (): ReturnType {
 
 	const stopScroll = (): void => {
 		const root = document.querySelector("#root") as HTMLDivElement;
-		const html = document.querySelector("html") as HTMLHtmlElement;
 		const scrollTop = root.scrollTop;
 		root.style.overflowY = "hidden";
-		html.style.overflowY = "scroll";
+		document.body.style.overflowY = "scroll";
 		root.dataset.scrollY = String(scrollTop);
 		setIsScroll(false);
 	};
 
 	const startScroll = (): void => {
 		const root = document.querySelector("#root") as HTMLDivElement;
-		const html = document.querySelector("html") as HTMLHtmlElement;
 		root.style.overflowY = "";
-		html.style.overflowY = "";
+		document.body.style.overflowY = "";
 		root.scrollTo(0, Number(root.dataset.scrollY));
 		setIsScroll(true);
 	};
