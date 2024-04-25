@@ -14,7 +14,7 @@ export default function ({ href, onClick, children, active = false }: Props): JS
 		css`
 			text-decoration: none;
 			height: 100%;
-			padding: 13px 15px;
+			padding: 13px 15px 16px;
 			display: block;
 			border-radius: 9999px;
 			font-weight: bold;

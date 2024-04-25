@@ -6,7 +6,7 @@ export default function (): JSX.Element {
 			className={css`
 				text-decoration: none;
 				height: 44px;
-				padding: 13px 15px;
+				padding: 13px 15px 16px;
 				display: block;
 				border-radius: 9999px;
 				font-weight: bold;

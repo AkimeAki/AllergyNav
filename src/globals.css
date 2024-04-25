@@ -1,13 +1,8 @@
-@font-face {
-	font-family: "GenJyuuGothicL";
-	src: url(/GenJyuuGothicL-Medium.ttf);
-}
-
 * {
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
-	font-family: "GenJyuuGothicL";
+	font-family: "Noto Sans JP";
 	font-size: 18px;
 	font-weight: 400;
 	line-height: 1;
