@@ -13,6 +13,7 @@ export default function ({ children }: Props): JSX.Element {
 		<div
 			id="root"
 			className={css`
+				position: relative;
 				width: 100%;
 				height: 100svh;
 				overflow-y: scroll;
