@@ -101,7 +101,13 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 					}}
 				/>
 			)}
-			<div>
+			<div
+				className={css`
+					display: flex;
+					flex-direction: column;
+					gap: 25px;
+				`}
+			>
 				<SubTitle>マップ</SubTitle>
 				<GoogleMap search={`${storeDetail.address} ${storeDetail.name}`} />
 			</div>
