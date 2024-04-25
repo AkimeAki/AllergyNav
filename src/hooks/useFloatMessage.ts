@@ -98,7 +98,8 @@ export const useFloatMessage = () => {
 	const addMessage = (text: string, type: "success" | "error", secounds: number | "path" = 5): void => {
 		deleteOldMessage();
 
-		document.body.insertAdjacentHTML(
+		const root = document.querySelector("#root") as HTMLDivElement;
+		root.insertAdjacentHTML(
 			"afterbegin",
 			/* html */ `
 				<div class="float-message ${style} ${type === "success" ? successStyle : errorStyle}">${text}</div>
@@ -127,7 +128,7 @@ export const useFloatMessage = () => {
 				}
 			});
 
-			observer.observe(document.body, { childList: true, subtree: true });
+			observer.observe(root, { childList: true, subtree: true });
 		}
 	};
 

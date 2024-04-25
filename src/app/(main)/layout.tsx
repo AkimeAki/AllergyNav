@@ -10,7 +10,19 @@ interface Props {
 
 export default function ({ children }: Props): JSX.Element {
 	return (
-		<>
+		<div
+			id="root"
+			className={css`
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100svh;
+				overflow-y: scroll;
+				display: flex;
+				flex-direction: column;
+			`}
+		>
 			<div
 				className={css`
 					flex: 1;
@@ -39,6 +51,6 @@ export default function ({ children }: Props): JSX.Element {
 				</main>
 			</div>
 			<Footer />
-		</>
+		</div>
 	);
 }

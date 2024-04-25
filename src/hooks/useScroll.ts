@@ -10,21 +10,21 @@ export default function (): ReturnType {
 	const [isScroll, setIsScroll] = useState<boolean>(true);
 
 	const stopScroll = (): void => {
+		const root = document.querySelector("#root") as HTMLDivElement;
 		const html = document.querySelector("html") as HTMLHtmlElement;
-		const scrollTop = html.scrollTop;
+		const scrollTop = root.scrollTop;
+		root.style.overflowY = "hidden";
 		html.style.overflowY = "scroll";
-		html.style.top = `-${scrollTop}px`;
-		html.style.position = "fixed";
-		html.dataset.scrollY = String(scrollTop);
+		root.dataset.scrollY = String(scrollTop);
 		setIsScroll(false);
 	};
 
 	const startScroll = (): void => {
+		const root = document.querySelector("#root") as HTMLDivElement;
 		const html = document.querySelector("html") as HTMLHtmlElement;
+		root.style.overflowY = "";
 		html.style.overflowY = "";
-		html.style.top = "";
-		html.style.position = "";
-		html.scrollTo(0, Number(html.dataset.scrollY));
+		root.scrollTo(0, Number(root.dataset.scrollY));
 		setIsScroll(true);
 	};
 
