@@ -12,6 +12,9 @@
 	font-weight: 400;
 	line-height: 1;
 	color: var(--color-primary);
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	word-break: break-word;
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
