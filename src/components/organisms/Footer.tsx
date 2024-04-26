@@ -1,5 +1,6 @@
 import { css } from "@kuma-ui/core";
-import FooterLink from "../molecules/FooterLink";
+import FooterLink from "@/components/molecules/FooterLink";
+import InstallAppButton from "@/components/atoms/InstallAppButton";
 
 export default function (): JSX.Element {
 	return (
@@ -43,6 +44,14 @@ export default function (): JSX.Element {
 					<FooterLink href="https://twitter.com/Akime_Aki" name="twitter" />
 					<FooterLink href="https://twitter.com/Akime_Aki" name="x" />
 					<FooterLink href="https://github.com/AkimeAki/AllergyNav" name="github" />
+				</div>
+				<div
+					className={css`
+						display: flex;
+						justify-content: center;
+					`}
+				>
+					<InstallAppButton>アプリとしてインストール</InstallAppButton>
 				</div>
 			</div>
 		</footer>
