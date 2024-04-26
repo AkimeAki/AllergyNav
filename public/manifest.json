@@ -1,0 +1,22 @@
+{
+	"name": "アレルギーナビ",
+	"short_name": "アレナビ",
+	"theme_color": "#fc9e82",
+	"background_color": "#6e8334",
+	"display": "standalone",
+	"scope": "/",
+	"start_url": "/",
+	"description": "アレルギーの方向けの飲食店情報アプリ",
+	"icons": [
+		{
+			"src": "/icon192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		},
+		{
+			"src": "/icon512.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		}
+	]
+}

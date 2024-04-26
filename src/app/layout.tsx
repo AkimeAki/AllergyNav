@@ -20,6 +20,8 @@ export default function ({ children }: Props): JSX.Element {
 	return (
 		<html lang="ja">
 			<head>
+				<link rel="manifest" href="/manifest.json" />
+				<meta name="theme-color" content="#fc9e82" />
 				<link rel="preconnect" href="https://fonts.googleapis.com" />
 				<link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
 				<link
