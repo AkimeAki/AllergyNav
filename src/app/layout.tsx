@@ -6,8 +6,8 @@ import { KumaRegistry } from "@kuma-ui/next-plugin/registry";
 
 export const metadata: Metadata = {
 	title: {
-		default: "アレルギーナビ",
-		template: "%s｜アレルギーナビ"
+		default: "アレルギーナビ｜アレルギーの方向けの飲食店情報サービス",
+		template: "%s｜アレルギーナビ｜アレルギーの方向けの飲食店情報サービス"
 	},
 	description: ""
 };

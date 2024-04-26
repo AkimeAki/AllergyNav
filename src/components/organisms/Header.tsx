@@ -6,10 +6,18 @@ import Image from "next/image";
 import useGetUserData from "@/hooks/useGetUserData";
 import Button from "@/components/atoms/Button";
 import useSendVerifyMail from "@/hooks/fetch-api/useSendVerifyMail";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 
 export default function (): JSX.Element {
 	const { userId, userVerified } = useGetUserData();
 	const { sendVerifyMail, sendVerifyMailStatus } = useSendVerifyMail();
+	const pathname = usePathname();
+
+	useEffect(() => {
+		const root = document.querySelector("#root") as HTMLDivElement;
+		root.scrollTo(0, 0);
+	}, [pathname]);
 
 	return (
 		<>

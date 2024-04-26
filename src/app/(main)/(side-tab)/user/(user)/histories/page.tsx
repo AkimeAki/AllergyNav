@@ -2,7 +2,7 @@ import { css } from "@kuma-ui/core";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-	title: "履歴"
+	title: "閲覧履歴"
 };
 
 export default async function (): Promise<JSX.Element> {

@@ -6,7 +6,6 @@ import MainTitle from "@/components/atoms/MainTitle";
 import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "@/libs/auth";
 import UserTabs from "@/components/organisms/UserTabs";
-import type { Metadata } from "next";
 
 interface Props {
 	children: ReactNode;
@@ -14,14 +13,6 @@ interface Props {
 		id: string;
 	};
 }
-
-export const metadata: Metadata = {
-	title: {
-		default: "マイページ",
-		template: "%s｜マイページ｜アレルギーナビ"
-	},
-	description: ""
-};
 
 export default async function ({ children }: Props): Promise<JSX.Element> {
 	const session = await getServerSession(nextAuthOptions);
