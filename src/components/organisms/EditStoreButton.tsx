@@ -7,6 +7,7 @@ import EditStoreModal from "@/components/organisms/modal/EditStoreModal";
 import useGetUserData from "@/hooks/useGetUserData";
 import { useRouter } from "next/navigation";
 import NotVerifiedModal from "@/components/molecules/NotVerifiedModal";
+import NotLoginedModal from "@/components/molecules/NotLoginedModal";
 
 interface Props {
 	storeId: string;
@@ -33,6 +34,10 @@ export default function ({ storeId }: Props): JSX.Element {
 					isOpen={isOpenEditModal && userVerified === false}
 					setIsOpen={setIsOpenEditModal}
 					userId={userId ?? ""}
+				/>
+				<NotLoginedModal
+					isOpen={isOpenEditModal && userStatus === "unauthenticated"}
+					setIsOpen={setIsOpenEditModal}
 				/>
 				<div
 					className={css`
