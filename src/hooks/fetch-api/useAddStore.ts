@@ -2,7 +2,16 @@ import useFetchApi from "@/hooks/useFetchApi";
 import type { FetchStatus, AddStoreResponse } from "@/type";
 
 interface ReturnType {
-	addStore: (name: string, address: string, description: string) => void;
+	addStore: (
+		name: string,
+		address: string,
+		description: string,
+		url: string,
+		allergyMenuUrl: string,
+		tabelogUrl: string,
+		gurunaviUrl: string,
+		hotpepperUrl: string
+	) => void;
 	addStoreResponse: NonNullable<AddStoreResponse> | undefined;
 	addStoreStatus: FetchStatus;
 	addStoreResponseStatus: number | undefined;
@@ -16,14 +25,28 @@ export default function (): ReturnType {
 		responseStatus: addStoreResponseStatus
 	} = useFetchApi<AddStoreResponse>();
 
-	const addStore = (name: string, address: string, description: string): void => {
+	const addStore = (
+		name: string,
+		address: string,
+		description: string,
+		url: string,
+		allergyMenuUrl: string,
+		tabelogUrl: string,
+		gurunaviUrl: string,
+		hotpepperUrl: string
+	): void => {
 		void fetchData(
 			"addStore",
 			{},
 			{
 				address,
 				name,
-				description
+				description,
+				url,
+				allergyMenuUrl,
+				tabelogUrl,
+				gurunaviUrl,
+				hotpepperUrl
 			}
 		);
 	};

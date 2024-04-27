@@ -41,6 +41,11 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 				name: true,
 				address: true,
 				description: true,
+				url: true,
+				allergy_menu_url: true,
+				tabelog_url: true,
+				gurunavi_url: true,
+				hotpepper_url: true,
 				updated_at: true,
 				created_at: true,
 				created_user_id: true,
@@ -119,6 +124,11 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 					name: item.name,
 					address: item.address,
 					description: item.description,
+					url: item.url,
+					allergy_menu_url: item.allergy_menu_url,
+					tabelog_url: item.tabelog_url,
+					gurunavi_url: item.gurunavi_url,
+					hotpepper_url: item.hotpepper_url,
 					updated_at: item.updated_at,
 					created_at: item.created_at,
 					created_user_id: item.created_user_id,
@@ -189,6 +199,17 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 		const name = safeString(body.name);
 		const address = safeString(body.address);
 		const description = safeString(body.description);
+		const url = isEmptyString(safeString(body.url) ?? "") ? null : safeString(body.url) ?? "";
+		const allergyMenuUrl = isEmptyString(safeString(body.allergyMenuUrl) ?? "")
+			? null
+			: safeString(body.allergyMenuUrl) ?? "";
+		const tabelogUrl = isEmptyString(safeString(body.tabelogUrl) ?? "") ? null : safeString(body.tabelogUrl) ?? "";
+		const gurunaviUrl = isEmptyString(safeString(body.gurunaviUrl) ?? "")
+			? null
+			: safeString(body.gurunaviUrl) ?? "";
+		const hotpepperUrl = isEmptyString(safeString(body.hotpepperUrl) ?? "")
+			? null
+			: safeString(body.hotpepperUrl) ?? "";
 		const userId = safeString(session?.user?.id);
 
 		if (name === null || address === null || description === null) {
@@ -223,7 +244,12 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 					address,
 					description,
 					created_user_id: userId,
-					updated_user_id: userId
+					updated_user_id: userId,
+					url,
+					allergy_menu_url: allergyMenuUrl,
+					tabelog_url: tabelogUrl,
+					gurunavi_url: gurunaviUrl,
+					hotpepper_url: hotpepperUrl
 				}
 			});
 
@@ -232,6 +258,11 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 				name: storeInsertResult.name,
 				address: storeInsertResult.address,
 				description: storeInsertResult.description,
+				url: storeInsertResult.url,
+				allergy_menu_url: storeInsertResult.allergy_menu_url,
+				tabelog_url: storeInsertResult.tabelog_url,
+				gurunavi_url: storeInsertResult.gurunavi_url,
+				hotpepper_url: storeInsertResult.hotpepper_url,
 				created_at: storeInsertResult.created_at,
 				updated_at: storeInsertResult.updated_at,
 				created_user_id: storeInsertResult.created_user_id,
@@ -244,6 +275,11 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 					name,
 					address,
 					description,
+					url,
+					allergy_menu_url: allergyMenuUrl,
+					tabelog_url: tabelogUrl,
+					gurunavi_url: gurunaviUrl,
+					hotpepper_url: hotpepperUrl,
 					updated_user_id: storeInsertResult.updated_user_id
 				}
 			});

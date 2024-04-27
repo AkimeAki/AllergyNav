@@ -31,6 +31,16 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 	const [oldStoreAddress, setOldStoreAddress] = useState<string>("");
 	const [storeDescription, setStoreDescription] = useState<string>("");
 	const [oldStoreDescription, setOldStoreDescription] = useState<string>("");
+	const [storeUrl, setStoreUrl] = useState<string>("");
+	const [oldStoreUrl, setOldStoreUrl] = useState<string>("");
+	const [allergyMenuUrl, setAllergyMenuUrl] = useState<string>("");
+	const [oldAllergyMenuUrl, setOldAllergyMenuUrl] = useState<string>("");
+	const [tabelogUrl, setTabelogUrl] = useState<string>("");
+	const [oldTabelogUrl, setOldTabelogUrl] = useState<string>("");
+	const [gurunaviUrl, setGurunaviUrl] = useState<string>("");
+	const [oldGurunaviUrl, setOldGurunaviUrl] = useState<string>("");
+	const [hotpepperUrl, setHotpepperUrl] = useState<string>("");
+	const [oldHotpepperUrl, setOldHotpepperUrl] = useState<string>("");
 	const { editStoreStatus, editStore } = useEditStore();
 	const { getStoreResponse, getStoreStatus, getStore } = useGetStore();
 	const [isChanged, setIsChanged] = useState<boolean>(false);
@@ -60,7 +70,17 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 		const normalizedAddress =
 			normalizeResult.pref + normalizeResult.city + normalizeResult.town + normalizeResult.addr;
 
-		editStore(storeId, storeName, normalizedAddress, storeDescription);
+		editStore(
+			storeId,
+			storeName,
+			normalizedAddress,
+			storeDescription,
+			storeUrl,
+			allergyMenuUrl,
+			tabelogUrl,
+			gurunaviUrl,
+			hotpepperUrl
+		);
 	};
 
 	useEffect(() => {
@@ -77,6 +97,16 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 			setOldStoreAddress(getStoreResponse.address);
 			setStoreDescription(getStoreResponse.description);
 			setOldStoreDescription(getStoreResponse.description);
+			setStoreUrl(getStoreResponse.url ?? "");
+			setOldStoreUrl(getStoreResponse.url ?? "");
+			setAllergyMenuUrl(getStoreResponse.allergy_menu_url ?? "");
+			setOldAllergyMenuUrl(getStoreResponse.allergy_menu_url ?? "");
+			setTabelogUrl(getStoreResponse.tabelog_url ?? "");
+			setOldTabelogUrl(getStoreResponse.tabelog_url ?? "");
+			setGurunaviUrl(getStoreResponse.gurunavi_url ?? "");
+			setOldGurunaviUrl(getStoreResponse.gurunavi_url ?? "");
+			setHotpepperUrl(getStoreResponse.hotpepper_url ?? "");
+			setOldHotpepperUrl(getStoreResponse.hotpepper_url ?? "");
 		}
 	}, [getStoreResponse]);
 
@@ -84,13 +114,35 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 		if (
 			oldStoreName !== storeName ||
 			oldStoreDescription !== storeDescription ||
-			oldStoreAddress !== storeAddress
+			oldStoreAddress !== storeAddress ||
+			oldStoreUrl !== storeUrl ||
+			oldAllergyMenuUrl !== allergyMenuUrl ||
+			oldGurunaviUrl !== gurunaviUrl ||
+			oldHotpepperUrl !== hotpepperUrl ||
+			oldTabelogUrl !== tabelogUrl
 		) {
 			setIsChanged(true);
 		} else {
 			setIsChanged(false);
 		}
-	}, [storeName, storeDescription, storeAddress]);
+	}, [
+		storeName,
+		oldStoreName,
+		storeDescription,
+		oldStoreDescription,
+		storeAddress,
+		oldStoreAddress,
+		storeUrl,
+		oldStoreUrl,
+		allergyMenuUrl,
+		oldAllergyMenuUrl,
+		gurunaviUrl,
+		oldGurunaviUrl,
+		hotpepperUrl,
+		oldHotpepperUrl,
+		tabelogUrl,
+		oldTabelogUrl
+	]);
 
 	useEffect(() => {
 		if (editStoreStatus === "successed") {
@@ -160,6 +212,31 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						</Select>
 					</div>
 					<div>
+						<Label>公式サイトURL</Label>
+						<TextInput
+							value={storeUrl}
+							disabled={editStoreStatus === "loading" || getStoreStatus === "loading"}
+							loading={editStoreStatus === "loading" || getStoreStatus === "loading"}
+							onChange={(e) => {
+								setStoreUrl(e.target.value);
+							}}
+						/>
+					</div>
+					<div>
+						<Label>アレルギー成分表URL</Label>
+						<p>
+							アレルギー表がPDFで提供されている場合などは、更新されるごとにURLが変わる可能性があるため、URLに設定するのはおすすめしません。
+						</p>
+						<TextInput
+							value={allergyMenuUrl}
+							disabled={editStoreStatus === "loading" || getStoreStatus === "loading"}
+							loading={editStoreStatus === "loading" || getStoreStatus === "loading"}
+							onChange={(e) => {
+								setAllergyMenuUrl(e.target.value);
+							}}
+						/>
+					</div>
+					<div>
 						<Label>お店の詳細情報</Label>
 						<TextArea
 							autoSize
@@ -169,6 +246,39 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 								setStoreDescription(e.target.value);
 							}}
 							value={storeDescription}
+						/>
+					</div>
+					<div>
+						<Label>食べログURL</Label>
+						<TextInput
+							value={tabelogUrl}
+							disabled={editStoreStatus === "loading" || getStoreStatus === "loading"}
+							loading={editStoreStatus === "loading" || getStoreStatus === "loading"}
+							onChange={(e) => {
+								setTabelogUrl(e.target.value);
+							}}
+						/>
+					</div>
+					<div>
+						<Label>ぐるなびURL</Label>
+						<TextInput
+							value={gurunaviUrl}
+							disabled={editStoreStatus === "loading" || getStoreStatus === "loading"}
+							loading={editStoreStatus === "loading" || getStoreStatus === "loading"}
+							onChange={(e) => {
+								setGurunaviUrl(e.target.value);
+							}}
+						/>
+					</div>
+					<div>
+						<Label>ホットペッパーグルメURL</Label>
+						<TextInput
+							value={hotpepperUrl}
+							disabled={editStoreStatus === "loading" || getStoreStatus === "loading"}
+							loading={editStoreStatus === "loading" || getStoreStatus === "loading"}
+							onChange={(e) => {
+								setHotpepperUrl(e.target.value);
+							}}
 						/>
 					</div>
 					<div>

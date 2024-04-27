@@ -43,6 +43,14 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 							border-width: 2px;
 							border-style: solid;
 							border-color: var(--color-theme);
+
+							@media (max-width: 600px) {
+								font-size: 15px;
+
+								* {
+									font-size: inherit;
+								}
+							}
 						}
 
 						th {
@@ -52,16 +60,19 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 							font-weight: bold;
 							padding-left: 20px;
 							padding-right: 20px;
-							width: 120px;
+							width: 210px;
+
+							@media (max-width: 600px) {
+								width: 160px;
+								font-size: 15px;
+							}
 						}
 					`}
 				>
 					<tbody>
 						<tr>
 							<th>グループ</th>
-							<td>
-								<span>（未実装）</span>
-							</td>
+							<td>（未実装）</td>
 						</tr>
 						<tr>
 							<th>住所</th>
@@ -91,6 +102,56 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 								</Link>
 							</td>
 						</tr>
+						{storeDetail.url !== null && (
+							<tr>
+								<th>公式サイト</th>
+								<td>
+									<a href={storeDetail.url} target="_blank">
+										{storeDetail.url}
+									</a>
+								</td>
+							</tr>
+						)}
+						{storeDetail.allergy_menu_url !== null && (
+							<tr>
+								<th>公式アレルギー成分表</th>
+								<td>
+									<a href={storeDetail.allergy_menu_url} target="_blank">
+										{storeDetail.allergy_menu_url}
+									</a>
+								</td>
+							</tr>
+						)}
+						{storeDetail.tabelog_url !== null && (
+							<tr>
+								<th>食べログ</th>
+								<td>
+									<a href={storeDetail.tabelog_url} target="_blank">
+										{storeDetail.tabelog_url}
+									</a>
+								</td>
+							</tr>
+						)}
+						{storeDetail.gurunavi_url !== null && (
+							<tr>
+								<th>ぐるなび</th>
+								<td>
+									<a href={storeDetail.gurunavi_url} target="_blank">
+										{storeDetail.gurunavi_url}
+									</a>
+								</td>
+							</tr>
+						)}
+						{storeDetail.hotpepper_url !== null && (
+							<tr>
+								<th>ホットペッパーグルメ</th>
+								<td>
+									<a href={storeDetail.hotpepper_url} target="_blank">
+										{storeDetail.hotpepper_url}
+									</a>
+								</td>
+							</tr>
+						)}
 					</tbody>
 				</table>
 			</div>

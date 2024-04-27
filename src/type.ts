@@ -3,6 +3,11 @@ interface StoreResponse {
 	name: string;
 	address: string;
 	description: string;
+	allergy_menu_url: string | null;
+	url: string | null;
+	tabelog_url: string | null;
+	gurunavi_url: string | null;
+	hotpepper_url: string | null;
 	updated_at: Date;
 	created_at: Date;
 	created_user_id: string;
