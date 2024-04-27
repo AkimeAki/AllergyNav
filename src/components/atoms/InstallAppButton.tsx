@@ -18,7 +18,6 @@ export default function ({ children }: Props): JSX.Element {
 		}
 
 		const eventCustom = (event: Event): void => {
-			console.log("beforeinstallprompt", event);
 			event.preventDefault();
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-expect-error
