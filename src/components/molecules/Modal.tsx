@@ -55,7 +55,7 @@ export default function ({ isOpen, setIsOpen, children, close = true }: Props): 
 							@media (max-width: 880px) {
 								padding: 0;
 								max-width: 100%;
-								height: 100svh;
+								height: 100%;
 							}
 						`}
 					>
