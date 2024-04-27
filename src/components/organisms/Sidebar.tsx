@@ -14,7 +14,7 @@ export default function (): JSX.Element {
 	const sidebarRef = useRef(null);
 	const pathname = usePathname();
 	const { userStatus, userId, userRole } = useGetUserData();
-	const { stopScroll, startScroll } = useScroll();
+	const { stopScroll, startScroll, isScroll } = useScroll();
 	const [isSizeSp, setIsSizeSp] = useState<boolean>(false);
 
 	const sidebarCloseAreaClick = (event: MouseEvent): void => {
@@ -45,7 +45,7 @@ export default function (): JSX.Element {
 	useEffect(() => {
 		if (isSidebarOpen && isSizeSp) {
 			stopScroll();
-		} else {
+		} else if (!isScroll) {
 			startScroll();
 		}
 	}, [isSizeSp, isSidebarOpen]);
