@@ -178,7 +178,7 @@ export default function (): JSX.Element {
 							</div>
 						</div>
 					)}
-				{(getAllergensStatus === "loading" || getAllergensStatus === "yet") && <LoadingCircleCenter />}
+				{(getStoresStatus === "loading" || getStoresStatus === "yet") && <LoadingCircleCenter />}
 				<section
 					className={css`
 						display: grid;
