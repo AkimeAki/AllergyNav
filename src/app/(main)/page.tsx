@@ -1,8 +1,25 @@
+"use client";
+
 import { css } from "@kuma-ui/core";
 import GoogleIcon from "@/components/atoms/GoogleIcon";
-import TopAllergenSearch from "@/components/organisms/TopAllergenSearch";
+import TextInput from "@/components/atoms/TextInput";
+import Button from "@/components/atoms/Button";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import AllergenItem from "@/components/atoms/AllergenItem";
+import useGetAllergens from "@/hooks/fetch-api/useGetAllergens";
+import LoadingCircle from "@/components/atoms/LoadingCircle";
 
 export default function (): JSX.Element {
+	const [selectAllergens, setSelectAllergens] = useState<string[]>([]);
+	const [keywords, setKeywords] = useState<string>("");
+	const router = useRouter();
+	const { getAllergensResponse, getAllergens, getAllergensStatus } = useGetAllergens();
+
+	useEffect(() => {
+		getAllergens();
+	}, []);
+
 	return (
 		<div
 			className={css`
@@ -35,7 +52,115 @@ export default function (): JSX.Element {
 					</span>
 					マークを付けてください。
 				</div>
-				<TopAllergenSearch />
+				<div>
+					<div
+						className={css`
+							padding: 30px 0;
+						`}
+					>
+						{(getAllergensStatus === "yet" || getAllergensStatus === "loading") && (
+							<div
+								className={css`
+									display: flex;
+									justify-content: center;
+								`}
+							>
+								<LoadingCircle size={30} />
+							</div>
+						)}
+						<div
+							className={css`
+								display: flex;
+								flex-wrap: wrap;
+								gap: 20px;
+								width: 100%;
+								justify-content: center;
+							`}
+						>
+							{getAllergensResponse?.map((item) => {
+								const selected = selectAllergens.some((selectAllergen) => selectAllergen === item.id);
+
+								return (
+									<div
+										key={item.id}
+										onClick={() => {
+											setSelectAllergens((selectAllergens) => {
+												if (selected) {
+													return [...selectAllergens].filter((selectAllergen) => {
+														return selectAllergen !== item.id;
+													});
+												}
+
+												return [...selectAllergens, item.id];
+											});
+										}}
+										className={css`
+											cursor: pointer;
+											user-select: none;
+										`}
+									>
+										<AllergenItem
+											image={`/icons/${item.id}.png`}
+											text={item.name}
+											selected={selected}
+											icon={
+												<div
+													className={css`
+														position: absolute;
+														top: 50%;
+														left: 50%;
+														transform: translate(-50%, -50%);
+													`}
+												>
+													<GoogleIcon name="skull" size={40} color="var(--color-red)" />
+												</div>
+											}
+										/>
+									</div>
+								);
+							})}
+						</div>
+					</div>
+					<div
+						className={css`
+							display: grid;
+							grid-template-columns: 1fr 100px;
+							place-content: center;
+							place-items: center;
+							gap: 20px;
+							align-items: center;
+
+							@media screen and (max-width: 600px) {
+								grid-template-columns: 1fr;
+							}
+						`}
+					>
+						<TextInput
+							placeholder="キーワードを入力してお店を検索"
+							enterKeyHint="search"
+							value={keywords}
+							onChange={(e) => {
+								setKeywords(e.target.value);
+							}}
+							onKeyDown={(e) => {
+								if (e.key === "Enter") {
+									router.push(`/store?keywords=${keywords}&allergens=${selectAllergens.join(",")}`);
+								}
+							}}
+						/>
+						<div
+							className={css`
+								@media screen and (max-width: 600px) {
+									display: none;
+								}
+							`}
+						>
+							<Button href={`/store?keywords=${keywords}&allergens=${selectAllergens.join(",")}`}>
+								検索
+							</Button>
+						</div>
+					</div>
+				</div>
 			</section>
 			<div
 				className={css`

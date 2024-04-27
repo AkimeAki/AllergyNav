@@ -45,11 +45,11 @@ export default function ({
 				className={css`
 					display: block;
 					width: 100%;
-					padding: 5px 20px;
+					padding: 12px 15px;
 					border-style: solid;
 					border-width: 1px;
 					border-color: var(--color-theme);
-					border-radius: 20px;
+					border-radius: 30px;
 					transition-duration: 200ms;
 					transition-property: box-shadow;
 					background-color: var(--color-secondary);

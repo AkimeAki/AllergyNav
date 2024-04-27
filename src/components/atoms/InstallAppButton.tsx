@@ -77,7 +77,7 @@ export default function ({ children }: Props): JSX.Element {
 				white-space: nowrap;
 				user-select: none;
 				text-align: center;
-				padding: 12px 30px 15px;
+				padding: 12px 30px;
 				font-size: 18px;
 
 				* {
@@ -87,11 +87,7 @@ export default function ({ children }: Props): JSX.Element {
 				}
 			`}
 		>
-			<div
-				className={css`
-					transform: translateY(2px);
-				`}
-			>
+			<div>
 				<GoogleIcon name="install_mobile" size={25} color="var(--color-theme)" />
 			</div>
 			<div>{children}</div>

@@ -69,7 +69,7 @@ export default function ({
 			white-space: nowrap;
 			user-select: none;
 			text-align: center;
-			padding: 12px 30px 15px;
+			padding: 12px 30px;
 			font-size: 18px;
 
 			* {
@@ -89,7 +89,7 @@ export default function ({
 		`,
 		size === "small" &&
 			css`
-				padding: 10px 20px 13px;
+				padding: 10px 20px;
 				font-size: 15px;
 
 				* {
@@ -98,7 +98,7 @@ export default function ({
 			`,
 		size === "tiny" &&
 			css`
-				padding: 3px 5px 5px;
+				padding: 3px 5px;
 				font-size: 13px;
 
 				* {

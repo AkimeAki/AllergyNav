@@ -13,7 +13,7 @@ export default function ({ children }: Props): JSX.Element {
 				font-weight: 700;
 				font-size: 18px;
 				background-color: var(--color-theme);
-				padding: 10px 20px 13px;
+				padding: 10px 20px;
 				color: var(--color-secondary);
 				border-radius: 7px;
 
