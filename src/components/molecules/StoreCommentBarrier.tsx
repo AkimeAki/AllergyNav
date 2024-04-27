@@ -23,6 +23,7 @@ export default function ({ children }: Props): JSX.Element {
 				justify-content: center;
 				align-items: center;
 				box-shadow: 0 0 10px -5px #969696;
+				z-index: 10;
 
 				@media (max-width: 880px) {
 					opacity: 0.9;

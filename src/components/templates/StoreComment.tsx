@@ -210,7 +210,7 @@ export default function ({ storeId }: Props): JSX.Element {
 								loading={
 									getCommentsStatus !== "successed" ||
 									addCommentStatus === "loading" ||
-									userStatus !== "authenticated"
+									userStatus === "loading"
 								}
 							>
 								送信する
