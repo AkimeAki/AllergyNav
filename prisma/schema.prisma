@@ -66,15 +66,20 @@ model AccessIp {
 }
 
 model Store {
-  id              String   @id @default(cuid())
-  name            String
-  address         String
-  description     String
-  created_user_id String
-  updated_user_id String
-  deleted         Boolean  @default(false)
-  created_at      DateTime @default(now())
-  updated_at      DateTime @default(now()) @updatedAt
+  id               String   @id @default(cuid())
+  name             String
+  address          String
+  description      String
+  created_user_id  String
+  updated_user_id  String
+  url              String?
+  allergy_menu_url String?
+  tabelog_url      String?
+  gurunavi_url     String?
+  hotpepper_url    String?
+  deleted          Boolean  @default(false)
+  created_at       DateTime @default(now())
+  updated_at       DateTime @default(now()) @updatedAt
 
   created_user   User           @relation("created_user", fields: [created_user_id], references: [id])
   updated_user   User           @relation("updated_user", fields: [updated_user_id], references: [id])
@@ -86,14 +91,19 @@ model Store {
 }
 
 model StoreHistory {
-  id              String   @id @default(cuid())
-  name            String
-  store_id        String
-  address         String
-  description     String
-  updated_user_id String
-  deleted         Boolean  @default(false)
-  created_at      DateTime @default(now())
+  id               String   @id @default(cuid())
+  name             String
+  store_id         String
+  address          String
+  description      String
+  updated_user_id  String
+  url              String?
+  allergy_menu_url String?
+  tabelog_url      String?
+  gurunavi_url     String?
+  hotpepper_url    String?
+  deleted          Boolean  @default(false)
+  created_at       DateTime @default(now())
 
   @@map("store_histories")
 }
