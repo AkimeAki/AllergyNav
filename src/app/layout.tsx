@@ -37,6 +37,11 @@ export default function ({ children }: Props): JSX.Element {
 					href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap"
 				/>
 				<link rel="icon" href="/favicon.png"></link>
+				<script
+					async
+					src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6914867149724943"
+					crossOrigin="anonymous"
+				/>
 			</head>
 			<body>
 				<KumaRegistry>{children}</KumaRegistry>
