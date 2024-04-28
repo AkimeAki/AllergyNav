@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import AllergenItem from "@/components/atoms/AllergenItem";
 import useGetAllergens from "@/hooks/fetch-api/useGetAllergens";
-import LoadingCircle from "@/components/atoms/LoadingCircle";
+import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
 
 export default function (): JSX.Element {
 	const [selectAllergens, setSelectAllergens] = useState<string[]>([]);
@@ -58,16 +58,7 @@ export default function (): JSX.Element {
 							padding: 30px 0;
 						`}
 					>
-						{(getAllergensStatus === "yet" || getAllergensStatus === "loading") && (
-							<div
-								className={css`
-									display: flex;
-									justify-content: center;
-								`}
-							>
-								<LoadingCircle size={30} />
-							</div>
-						)}
+						{(getAllergensStatus === "yet" || getAllergensStatus === "loading") && <LoadingCircleCenter />}
 						<div
 							className={css`
 								display: flex;

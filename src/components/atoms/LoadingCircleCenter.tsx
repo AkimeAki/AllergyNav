@@ -17,7 +17,7 @@ export default function (): JSX.Element {
 					transform: translate(-50%, -50%);
 				`}
 			>
-				<LoadingCircle size={35} />
+				<LoadingCircle size={36} />
 			</div>
 		</div>
 	);

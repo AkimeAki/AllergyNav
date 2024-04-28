@@ -4,7 +4,7 @@ import { css } from "@kuma-ui/core";
 import GoogleIcon from "@/components/atoms/GoogleIcon";
 
 interface Props {
-	size: number;
+	size: 4 | 8 | 12 | 16 | 20 | 24 | 28 | 32 | 36 | 40 | 44 | 48 | 52 | 56 | 60;
 }
 
 export default function ({ size }: Props): JSX.Element {
@@ -13,7 +13,7 @@ export default function ({ size }: Props): JSX.Element {
 			className={css`
 				animation-name: loadingCircleRotate;
 				animation-iteration-count: infinite;
-				animation-duration: 500ms;
+				animation-duration: 700ms;
 				animation-timing-function: linear;
 
 				@keyframes loadingCircleRotate {
