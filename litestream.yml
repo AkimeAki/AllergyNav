@@ -1,4 +1,0 @@
-dbs:
-  - path: ./prisma/db.sqlite
-    replicas:
-      - url: gcs://allergynav-db/replicas
