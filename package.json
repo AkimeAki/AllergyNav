@@ -16,7 +16,7 @@
 		"tsnode": "ts-node -r tsconfig-paths/register --project ./tsconfig.node.json",
 		"prisma:push": "prisma db push && prisma generate",
 		"prisma:delete": "prisma migrate reset --skip-seed",
-		"seed": "prisma db seed"
+		"prisma:seed": "prisma db seed"
 	},
 	"prisma": {
 		"seed": "npm run tsnode -- prisma/seed.ts"
