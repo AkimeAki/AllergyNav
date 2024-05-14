@@ -476,11 +476,6 @@ export default function (): JSX.Element {
 							}
 						`}
 					>
-						<script
-							async
-							src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6914867149724943"
-							crossOrigin="anonymous"
-						/>
 						<ins
 							className="adsbygoogle"
 							style={{ display: "block" }}
