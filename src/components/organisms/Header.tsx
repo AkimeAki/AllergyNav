@@ -20,6 +20,7 @@ export default function (): JSX.Element {
 	}, [pathname]);
 
 	useEffect(() => {
+		console.log("aaaa");
 		try {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-expect-error
