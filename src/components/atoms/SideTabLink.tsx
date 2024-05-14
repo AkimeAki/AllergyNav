@@ -18,7 +18,7 @@ export default function ({ href, onClick, children, active = false, icon = "pend
 		css`
 			text-decoration: none;
 			height: 48px;
-			padding: 15px 15px 18px;
+			padding: 15px;
 			display: block;
 			transition-duration: 200ms;
 			transition-property: filter;

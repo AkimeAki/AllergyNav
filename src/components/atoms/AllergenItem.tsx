@@ -1,26 +1,49 @@
 import { css } from "@kuma-ui/core";
 import Image from "next/image";
+import GoogleIcon from "@/components/atoms/GoogleIcon";
+import type { AllergenItemStatus } from "@/type";
 
 interface Props {
 	image: string;
 	text: string;
-	selected?: boolean;
-	icon?: React.ReactNode;
 	nameHidden?: boolean;
 	size?: number;
+	status?: AllergenItemStatus;
+	clickable?: boolean;
+	onClick?: () => void;
 }
 
-export default function ({ image, text, selected = false, icon, nameHidden = false, size = 35 }: Props): JSX.Element {
+export default function ({
+	image,
+	text,
+	nameHidden = false,
+	size = 35,
+	status = "normal",
+	clickable = false,
+	onClick
+}: Props): JSX.Element {
 	return (
 		<div
+			onClick={() => {
+				if (onClick !== undefined) {
+					onClick();
+				}
+			}}
 			style={{ width: `${size + 10}px` }}
-			className={css`
-				position: relative;
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-				align-items: center;
-			`}
+			className={[
+				css`
+					position: relative;
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+					align-items: center;
+					user-select: none;
+				`,
+				clickable &&
+					css`
+						cursor: pointer;
+					`
+			].join(" ")}
 		>
 			<Image
 				style={{ width: `${size}px` }}
@@ -35,13 +58,10 @@ export default function ({ image, text, selected = false, icon, nameHidden = fal
 						user-select: none;
 						pointer-events: none;
 					`,
-					selected
-						? css`
-								filter: opacity(0.4);
-							`
-						: css`
-								filter: opacity(1);
-							`
+					status !== "normal" &&
+						css`
+							filter: opacity(0.4);
+						`
 				].join(" ")}
 				width={100}
 				height={100}
@@ -63,14 +83,46 @@ export default function ({ image, text, selected = false, icon, nameHidden = fal
 					{text}
 				</div>
 			)}
-			{selected && icon !== undefined && (
+			{status === "unkown" && (
 				<div
 					className={css`
+						position: absolute;
+						top: 50%;
+						left: 50%;
+						transform: translate(-50%, -50%);
 						user-select: none;
 						pointer-events: none;
 					`}
 				>
-					{icon}
+					<GoogleIcon color="rgba(0, 0, 0, 0.6)" name="question_mark" size={30} />
+				</div>
+			)}
+			{status === "check" && (
+				<div
+					className={css`
+						position: absolute;
+						top: 50%;
+						left: 50%;
+						transform: translate(-50%, -50%);
+						user-select: none;
+						pointer-events: none;
+					`}
+				>
+					<GoogleIcon color="rgba(255, 0, 0, 0.8)" name="check_small" size={30} />
+				</div>
+			)}
+			{status === "skull" && (
+				<div
+					className={css`
+						position: absolute;
+						top: 50%;
+						left: 50%;
+						transform: translate(-50%, -50%);
+						user-select: none;
+						pointer-events: none;
+					`}
+				>
+					<GoogleIcon color="rgba(255, 0, 0, 0.8)" name="skull" size={30} />
 				</div>
 			)}
 		</div>

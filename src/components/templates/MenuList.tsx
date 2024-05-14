@@ -23,6 +23,8 @@ import useGetMenus from "@/hooks/fetch-api/useGetMenus";
 import NotVerifiedModal from "@/components/molecules/NotVerifiedModal";
 import NotLoginedModal from "@/components/molecules/NotLoginedModal";
 import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
+import useGetAllergens from "@/hooks/fetch-api/useGetAllergens";
+import type { AllergenItemStatus } from "@/type";
 
 interface Props {
 	storeId: string;
@@ -42,11 +44,16 @@ export default function ({ storeId }: Props): JSX.Element {
 	const { getMenus, getMenusResponse, getMenusStatus } = useGetMenus();
 	const { addMessage } = useFloatMessage();
 	const { isTouch } = useIsTouchDevice();
+	const { getAllergensResponse, getAllergens } = useGetAllergens();
 
 	const params = {
 		allergens: searchParams.get("allergens") ?? "",
 		keywords: searchParams.get("keywords") ?? ""
 	};
+
+	useEffect(() => {
+		getAllergens();
+	}, []);
 
 	useEffect(() => {
 		getMenus(params.keywords, params.allergens, storeId);
@@ -333,7 +340,7 @@ export default function ({ storeId }: Props): JSX.Element {
 											`}
 										>
 											<MiniTitle>{menu.name}</MiniTitle>
-											{menu.allergens.length !== 0 && (
+											{Object.keys(menu.allergens).length !== 0 && (
 												<div
 													className={css`
 														display: flex;
@@ -353,12 +360,26 @@ export default function ({ storeId }: Props): JSX.Element {
 															flex-wrap: wrap;
 														`}
 													>
-														{menu.allergens.map((item) => {
+														{getAllergensResponse?.map((allergen) => {
+															let status: AllergenItemStatus = "unkown";
+															if (menu.allergens[allergen.id] === "unkown") {
+																status = "unkown";
+															} else if (menu.allergens[allergen.id] === "contain") {
+																status = "normal";
+															} else if (
+																menu.allergens[allergen.id] === "not contained"
+															) {
+																return "";
+															} else if (menu.allergens[allergen.id] === "removable") {
+																status = "check";
+															}
+
 															return (
 																<AllergenItem
-																	key={item.id}
-																	image={`/icons/${item.id}.png`}
-																	text={item.name}
+																	key={allergen.id}
+																	image={`/icons/${allergen.id}.png`}
+																	text={allergen.name}
+																	status={status}
 																/>
 															);
 														})}

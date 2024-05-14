@@ -90,36 +90,79 @@ export default function ({ children }: Props): JSX.Element {
 		};
 	}, [isTouch]);
 
+	useEffect(() => {
+		try {
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-expect-error
+			// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+			(adsbygoogle = window.adsbygoogle || []).push({});
+		} catch (e) {}
+	}, []);
+
 	return (
-		<aside
-			ref={element}
+		<div
 			className={css`
 				display: flex;
 				flex-direction: column;
-				border-radius: 7px;
-				overflow: hidden;
-
-				@media (max-width: 880px) {
-					flex-direction: row;
-					position: fixed;
-					z-index: 9999;
-					bottom: 40px;
-					right: 15px;
-					height: 60px;
-					width: calc(100% - 130px);
-					align-items: center;
-					white-space: nowrap;
-					box-shadow: 0 0 10px -5px #969696;
-					border: 2px solid #797979;
-				}
-
-				@media (max-width: 600px) {
-					bottom: 20px;
-					width: calc(100% - 110px);
-				}
+				gap: 30px;
 			`}
 		>
-			{children}
-		</aside>
+			<aside
+				ref={element}
+				className={css`
+					display: flex;
+					flex-direction: column;
+					border-radius: 7px;
+					overflow: hidden;
+
+					@media (max-width: 880px) {
+						flex-direction: row;
+						position: fixed;
+						z-index: 9999;
+						bottom: 40px;
+						right: 15px;
+						height: 60px;
+						width: calc(100% - 130px);
+						align-items: center;
+						white-space: nowrap;
+						box-shadow: 0 0 10px -5px #969696;
+						border: 2px solid #797979;
+					}
+
+					@media (max-width: 600px) {
+						bottom: 20px;
+						width: calc(100% - 110px);
+					}
+				`}
+			>
+				{children}
+			</aside>
+			<div
+				className={css`
+					* {
+						width: 100% !important;
+						max-height: 600px !important;
+					}
+
+					@media (max-width: 880px) {
+						display: none;
+					}
+				`}
+			>
+				<script
+					async
+					src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6914867149724943"
+					crossOrigin="anonymous"
+				/>
+				<ins
+					className="adsbygoogle"
+					style={{ display: "block" }}
+					data-ad-client="ca-pub-6914867149724943"
+					data-ad-slot="7661038914"
+					data-ad-format="auto"
+					data-full-width-responsive="true"
+				/>
+			</div>
+		</div>
 	);
 }

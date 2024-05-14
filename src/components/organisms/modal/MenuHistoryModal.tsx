@@ -9,6 +9,9 @@ import AllergenItem from "@/components/atoms/AllergenItem";
 import Modal from "@/components/molecules/Modal";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
 import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
+import { formatText } from "@/libs/format-text";
+import type { AllergenItemStatus } from "@/type";
+import useGetAllergens from "@/hooks/fetch-api/useGetAllergens";
 
 interface Props {
 	menuId: string;
@@ -18,6 +21,7 @@ interface Props {
 
 export default function ({ menuId, isOpen, setIsOpen }: Props): JSX.Element {
 	const { getMenuHistoriesResponse, getMenuHistoriesStatus, getMenuHistories } = useGetMenuHistories();
+	const { getAllergensResponse, getAllergens } = useGetAllergens();
 	const { addMessage } = useFloatMessage();
 
 	useEffect(() => {
@@ -31,6 +35,10 @@ export default function ({ menuId, isOpen, setIsOpen }: Props): JSX.Element {
 			addMessage("履歴の取得に失敗しました", "error");
 		}
 	}, [getMenuHistoriesStatus]);
+
+	useEffect(() => {
+		getAllergens();
+	}, []);
 
 	return (
 		<Modal isOpen={isOpen} setIsOpen={setIsOpen}>
@@ -79,7 +87,7 @@ export default function ({ menuId, isOpen, setIsOpen }: Props): JSX.Element {
 								>
 									{menu.name}
 								</h3>
-								{menu.allergens.length !== 0 && (
+								{Object.keys(menu.allergens).length !== 0 && (
 									<div
 										className={css`
 											display: flex;
@@ -87,6 +95,11 @@ export default function ({ menuId, isOpen, setIsOpen }: Props): JSX.Element {
 											gap: 5px;
 										`}
 									>
+										<div
+											dangerouslySetInnerHTML={{
+												__html: formatText(menu.description)
+											}}
+										/>
 										<Label>含まれるアレルゲン</Label>
 										<div
 											className={css`
@@ -94,12 +107,24 @@ export default function ({ menuId, isOpen, setIsOpen }: Props): JSX.Element {
 												flex-wrap: wrap;
 											`}
 										>
-											{menu.allergens.map((item) => {
+											{getAllergensResponse?.map((allergen) => {
+												let status: AllergenItemStatus = "unkown";
+												if (menu.allergens[allergen.id] === "unkown") {
+													status = "unkown";
+												} else if (menu.allergens[allergen.id] === "contain") {
+													status = "normal";
+												} else if (menu.allergens[allergen.id] === "not contained") {
+													return "";
+												} else if (menu.allergens[allergen.id] === "removable") {
+													status = "check";
+												}
+
 												return (
 													<AllergenItem
-														key={item.id}
-														image={`/icons/${item.id}.png`}
-														text={item.name}
+														key={allergen.id}
+														image={`/icons/${allergen.id}.png`}
+														text={allergen.name}
+														status={status}
 													/>
 												);
 											})}

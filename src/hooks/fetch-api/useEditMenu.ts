@@ -1,8 +1,13 @@
 import useFetchApi from "@/hooks/useFetchApi";
-import type { FetchStatus, EditMenuResponse } from "@/type";
+import type { FetchStatus, EditMenuResponse, AllergenStatusValue } from "@/type";
 
 interface ReturnType {
-	editMenu: (menuId: string, name: string, description: string, allergens: string[]) => void;
+	editMenu: (
+		menuId: string,
+		name: string,
+		description: string,
+		allergens: Record<string, AllergenStatusValue>
+	) => void;
 	editMenuResponse: NonNullable<EditMenuResponse> | undefined;
 	editMenuStatus: FetchStatus;
 	editMenuResponseStatus: number | undefined;
@@ -16,7 +21,12 @@ export default function (): ReturnType {
 		responseStatus: editMenuResponseStatus
 	} = useFetchApi<EditMenuResponse>();
 
-	const editMenu = (menuId: string, name: string, description: string, allergens: string[]): void => {
+	const editMenu = (
+		menuId: string,
+		name: string,
+		description: string,
+		allergens: Record<string, AllergenStatusValue>
+	): void => {
 		void fetchData(
 			"editMenu",
 			{

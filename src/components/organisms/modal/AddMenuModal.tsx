@@ -10,12 +10,13 @@ import type { Dispatch, SetStateAction } from "react";
 import { useEffect, useState } from "react";
 import Cursor from "@/components/atoms/Cursor";
 import useAddMenu from "@/hooks/fetch-api/useAddMenu";
-import AllergenSelectModal from "@/components/molecules/AllergenSelectModal";
 import AllergenItem from "@/components/atoms/AllergenItem";
 import { isEmptyString } from "@/libs/check-string";
 import useGetAllergens from "@/hooks/fetch-api/useGetAllergens";
 import Modal from "@/components/molecules/Modal";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
+import SelectAllergenModal from "@/components/organisms/modal/SelectAllergenModal";
+import type { AllergenItemStatus, AllergenStatusValue } from "@/type";
 
 interface Props {
 	storeId: string;
@@ -28,20 +29,31 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 	const [menuName, setMenuName] = useState<string>("");
 	const [menuDescription, setMenuDescription] = useState<string>("");
 	const { addMenuStatus, addMenu } = useAddMenu();
-	const [selectAllergens, setSelectAllergens] = useState<string[]>([]);
-	const [isAllergenSelectModalOpen, setIsAllergenSelectModalOpen] = useState<boolean>(false);
-	const { getAllergensResponse, getAllergens } = useGetAllergens();
+	const [allergenStatus, setAllergenStatus] = useState<Record<string, AllergenStatusValue>>({});
+	const { getAllergensResponse, getAllergens, getAllergensStatus } = useGetAllergens();
 	const { addMessage } = useFloatMessage();
+	const [isSelectAllergenModalOpen, setIsSelectAllergenModalOpen] = useState<boolean>(false);
 
 	useEffect(() => {
 		getAllergens();
 	}, []);
 
 	useEffect(() => {
+		if (getAllergensStatus === "successed" && getAllergensResponse !== undefined) {
+			const initAllergenStatus: Record<string, AllergenStatusValue> = {};
+			getAllergensResponse.forEach((allergen) => {
+				initAllergenStatus[allergen.id] = "unkown";
+			});
+
+			setAllergenStatus(initAllergenStatus);
+		}
+	}, [getAllergensStatus, getAllergensResponse]);
+
+	useEffect(() => {
 		if (addMenuStatus === "successed") {
 			setMenuDescription("");
 			setMenuName("");
-			setSelectAllergens([]);
+			setAllergenStatus({});
 			if (callback !== undefined) {
 				callback();
 			}
@@ -95,12 +107,18 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 					</div>
 					<div>
 						<Label>含まれるアレルゲン</Label>
-						<AllergenSelectModal
-							selectAllergens={selectAllergens}
-							setSelectAllergens={setSelectAllergens}
-							isOpen={isAllergenSelectModalOpen}
-							setIsOpen={setIsAllergenSelectModalOpen}
-							disabled={addMenuStatus === "loading"}
+						<Button
+							onClick={() => {
+								setIsSelectAllergenModalOpen(true);
+							}}
+						>
+							選択する
+						</Button>
+						<SelectAllergenModal
+							isOpen={isSelectAllergenModalOpen}
+							setIsOpen={setIsSelectAllergenModalOpen}
+							allergenStatus={allergenStatus}
+							setAllergenStatus={setAllergenStatus}
 						/>
 						<div
 							className={css`
@@ -108,15 +126,26 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 								flex-wrap: wrap;
 							`}
 						>
-							{selectAllergens.map((item) => {
-								let name = "";
-								getAllergensResponse?.forEach((allergen) => {
-									if (item === allergen.id) {
-										name = allergen.name;
-									}
-								});
+							{getAllergensResponse?.map((allergen) => {
+								let status: AllergenItemStatus = "unkown";
+								if (allergenStatus[allergen.id] === "unkown") {
+									status = "unkown";
+								} else if (allergenStatus[allergen.id] === "contain") {
+									status = "normal";
+								} else if (allergenStatus[allergen.id] === "not contained") {
+									return "";
+								} else if (allergenStatus[allergen.id] === "removable") {
+									status = "check";
+								}
 
-								return <AllergenItem key={item} image={`/icons/${item}.png`} text={name} />;
+								return (
+									<AllergenItem
+										key={allergen.id}
+										image={`/icons/${allergen.id}.png`}
+										text={allergen.name}
+										status={status}
+									/>
+								);
 							})}
 						</div>
 					</div>
@@ -141,10 +170,10 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						>
 							<Button
 								onClick={() => {
-									addMenu(storeId, menuName, menuDescription, selectAllergens);
+									addMenu(storeId, menuName, menuDescription, allergenStatus);
 								}}
 								disabled={addMenuStatus === "loading" || isEmptyString(menuName)}
-								loading={addMenuStatus === "loading" || isEmptyString(menuName)}
+								loading={addMenuStatus === "loading"}
 							>
 								登録する
 							</Button>

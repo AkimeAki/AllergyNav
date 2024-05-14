@@ -18,7 +18,6 @@ export default function (): JSX.Element {
 				className={css`
 					display: flex;
 					flex-direction: column;
-					align-items: cneter;
 					justify-content: center;
 					gap: 30px;
 					height: 100%;

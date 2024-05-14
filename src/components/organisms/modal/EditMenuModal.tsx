@@ -12,12 +12,13 @@ import { useEffect, useState } from "react";
 import Cursor from "@/components/atoms/Cursor";
 import useEditMenu from "@/hooks/fetch-api/useEditMenu";
 import useGetMenu from "@/hooks/fetch-api/useGetMenu";
-import AllergenSelectModal from "@/components/molecules/AllergenSelectModal";
 import AllergenItem from "@/components/atoms/AllergenItem";
 import { isEmptyString } from "@/libs/check-string";
 import useGetAllergens from "@/hooks/fetch-api/useGetAllergens";
 import Modal from "@/components/molecules/Modal";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
+import type { AllergenItemStatus, AllergenStatusValue } from "@/type";
+import SelectAllergenModal from "@/components/organisms/modal/SelectAllergenModal";
 
 interface Props {
 	menuId: string;
@@ -33,12 +34,12 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 	const [oldMenuDescription, setOldMenuDescription] = useState<string>("");
 	const { editMenuStatus, editMenu } = useEditMenu();
 	const { getMenuResponse, getMenuStatus, getMenu } = useGetMenu();
-	const [selectAllergens, setSelectAllergens] = useState<string[]>([]);
-	const [oldSelectAllergens, setOldSelectAllergens] = useState<string[]>([]);
 	const [isChanged, setIsChanged] = useState<boolean>(false);
-	const [isAllergenSelectModalOpen, setIsAllergenSelectModalOpen] = useState<boolean>(false);
 	const { getAllergens, getAllergensResponse } = useGetAllergens();
 	const { addMessage } = useFloatMessage();
+	const [allergenStatus, setAllergenStatus] = useState<Record<string, AllergenStatusValue>>({});
+	const [oldAllergenStatus, setOldAllergenStatus] = useState<Record<string, AllergenStatusValue>>({});
+	const [isSelectAllergenModalOpen, setIsSelectAllergenModalOpen] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (isOpen) {
@@ -52,14 +53,23 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 
 	useEffect(() => {
 		if (getMenuStatus === "successed" && getMenuResponse !== undefined) {
+			setAllergenStatus(getMenuResponse.allergens);
+		}
+	}, [getMenuResponse, getMenuStatus]);
+
+	useEffect(() => {
+		if (
+			getMenuStatus === "successed" &&
+			getMenuResponse !== undefined &&
+			Object.keys(allergenStatus).length !== 0
+		) {
 			setMenuName(getMenuResponse.name);
 			setOldMenuName(getMenuResponse.name);
 			setMenuDescription(getMenuResponse.description);
 			setOldMenuDescription(getMenuResponse.description);
-			setSelectAllergens(getMenuResponse.allergens.map((allergen) => allergen.id));
-			setOldSelectAllergens(getMenuResponse.allergens.map((allergen) => allergen.id));
+			setOldAllergenStatus(getMenuResponse.allergens);
 		}
-	}, [getMenuStatus, getMenuResponse]);
+	}, [getMenuStatus, getMenuResponse, allergenStatus]);
 
 	useEffect(() => {
 		if (editMenuStatus === "successed") {
@@ -82,13 +92,13 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 		if (
 			oldMenuName !== menuName ||
 			oldMenuDescription !== menuDescription ||
-			JSON.stringify(oldSelectAllergens.sort()) !== JSON.stringify(selectAllergens.sort())
+			JSON.stringify(allergenStatus) !== JSON.stringify(oldAllergenStatus)
 		) {
 			setIsChanged(true);
 		} else {
 			setIsChanged(false);
 		}
-	}, [menuName, menuDescription, selectAllergens]);
+	}, [menuName, menuDescription, allergenStatus]);
 
 	return (
 		<>
@@ -96,7 +106,7 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 			<Modal
 				isOpen={isOpen}
 				setIsOpen={setIsOpen}
-				close={editMenuStatus !== "loading" && !isAllergenSelectModalOpen}
+				close={editMenuStatus !== "loading" && !isSelectAllergenModalOpen}
 			>
 				<SubTitle>メニューを編集</SubTitle>
 				<form
@@ -133,12 +143,20 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 					</div>
 					<div>
 						<Label>含まれるアレルゲン</Label>
-						<AllergenSelectModal
-							selectAllergens={selectAllergens}
-							setSelectAllergens={setSelectAllergens}
-							isOpen={isAllergenSelectModalOpen}
-							setIsOpen={setIsAllergenSelectModalOpen}
+						<Button
+							onClick={() => {
+								setIsSelectAllergenModalOpen(true);
+							}}
 							disabled={editMenuStatus === "loading" || getMenuStatus === "loading"}
+							loading={editMenuStatus === "loading" || getMenuStatus === "loading"}
+						>
+							選択する
+						</Button>
+						<SelectAllergenModal
+							isOpen={isSelectAllergenModalOpen}
+							setIsOpen={setIsSelectAllergenModalOpen}
+							allergenStatus={allergenStatus}
+							setAllergenStatus={setAllergenStatus}
 						/>
 						<div
 							className={css`
@@ -146,15 +164,26 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 								flex-wrap: wrap;
 							`}
 						>
-							{selectAllergens.map((item) => {
-								let name = "";
-								getAllergensResponse?.forEach((allergen) => {
-									if (item === allergen.id) {
-										name = allergen.name;
-									}
-								});
+							{getAllergensResponse?.map((allergen) => {
+								let status: AllergenItemStatus = "unkown";
+								if (allergenStatus[allergen.id] === "unkown") {
+									status = "unkown";
+								} else if (allergenStatus[allergen.id] === "contain") {
+									status = "normal";
+								} else if (allergenStatus[allergen.id] === "not contained") {
+									return "";
+								} else if (allergenStatus[allergen.id] === "removable") {
+									status = "check";
+								}
 
-								return <AllergenItem key={item} image={`/icons/${item}.png`} text={name} />;
+								return (
+									<AllergenItem
+										key={allergen.id}
+										image={`/icons/${allergen.id}.png`}
+										text={allergen.name}
+										status={status}
+									/>
+								);
 							})}
 						</div>
 					</div>
@@ -179,7 +208,7 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 						>
 							<Button
 								onClick={() => {
-									editMenu(menuId, menuName, menuDescription, selectAllergens);
+									editMenu(menuId, menuName, menuDescription, allergenStatus);
 								}}
 								disabled={
 									editMenuStatus === "loading" ||

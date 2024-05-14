@@ -30,7 +30,6 @@ export default function ({
 				resolve((textarea.style.height = "auto"));
 			});
 			void resetHeight.then(() => {
-				console.log("aaa");
 				textarea.style.height = textarea.scrollHeight + "px";
 			});
 		}

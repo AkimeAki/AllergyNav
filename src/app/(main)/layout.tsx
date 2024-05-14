@@ -19,6 +19,16 @@ export default function ({ children }: Props): JSX.Element {
 				overflow-y: scroll;
 				display: flex;
 				flex-direction: column;
+
+				&[data-select="none"] {
+					user-select: none;
+					pointer-events: none;
+
+					* {
+						user-select: none;
+						pointer-events: none;
+					}
+				}
 			`}
 		>
 			<div

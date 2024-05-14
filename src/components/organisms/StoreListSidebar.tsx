@@ -66,6 +66,15 @@ export default function (): JSX.Element {
 		}
 	}, [area]);
 
+	useEffect(() => {
+		try {
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-expect-error
+			// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+			(adsbygoogle = window.adsbygoogle || []).push({});
+		} catch (e) {}
+	}, []);
+
 	const search = (): void => {
 		if (keywords !== undefined && selectAllergens !== undefined && area !== undefined && radius !== undefined) {
 			router.push(
@@ -141,19 +150,7 @@ export default function (): JSX.Element {
 									<AllergenItem
 										image={`/icons/${item.id}.png`}
 										text={item.name}
-										selected={selected}
-										icon={
-											<div
-												className={css`
-													position: absolute;
-													top: 50%;
-													left: 50%;
-													transform: translate(-50%, -50%);
-												`}
-											>
-												<GoogleIcon name="skull" size={40} color="var(--color-red)" />
-											</div>
-										}
+										status={selected ? "skull" : "normal"}
 									/>
 								</div>
 							);
@@ -270,19 +267,7 @@ export default function (): JSX.Element {
 									<AllergenItem
 										image={`/icons/${item.id}.png`}
 										text={item.name}
-										selected={selected}
-										icon={
-											<div
-												className={css`
-													position: absolute;
-													top: 50%;
-													left: 50%;
-													transform: translate(-50%, -50%);
-												`}
-											>
-												<GoogleIcon name="skull" size={40} color="var(--color-red)" />
-											</div>
-										}
+										status={selected ? "skull" : "normal"}
 									/>
 								</div>
 							);
@@ -489,6 +474,28 @@ export default function (): JSX.Element {
 								</Button>
 							</div>
 						</div>
+					</div>
+					<div
+						className={css`
+							* {
+								width: 100% !important;
+								max-height: 600px !important;
+							}
+						`}
+					>
+						<script
+							async
+							src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6914867149724943"
+							crossOrigin="anonymous"
+						/>
+						<ins
+							className="adsbygoogle"
+							style={{ display: "block" }}
+							data-ad-client="ca-pub-6914867149724943"
+							data-ad-slot="7661038914"
+							data-ad-format="auto"
+							data-full-width-responsive="true"
+						/>
 					</div>
 				</div>
 			</aside>

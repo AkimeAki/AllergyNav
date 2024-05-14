@@ -213,6 +213,7 @@ model MenuAllergen {
 
   allergen Allergen @relation(fields: [allergen_id], references: [id])
   menu     Menu     @relation(fields: [menu_id], references: [id])
+  status   String
 
   @@id([allergen_id, menu_id])
   @@map("menu_allergens")
@@ -224,6 +225,7 @@ model MenuAllergenHistory {
   allergen_id     String
   menu_id         String
   created_at      DateTime @default(now())
+  status          String
 
   menu_histories MenuHistory @relation(fields: [menu_history_id], references: [id])
 

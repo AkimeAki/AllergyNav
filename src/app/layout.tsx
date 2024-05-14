@@ -3,6 +3,7 @@ import "@/globals.css";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { KumaRegistry } from "@kuma-ui/next-plugin/registry";
+import { css } from "@kuma-ui/core";
 
 export const metadata: Metadata = {
 	title: {
@@ -18,7 +19,26 @@ interface Props {
 
 export default function ({ children }: Props): JSX.Element {
 	return (
-		<html lang="ja">
+		<html
+			lang="ja"
+			className={css`
+				&[data-cursor="grabbing"] {
+					cursor: grabbing;
+
+					* {
+						cursor: grabbing;
+					}
+				}
+
+				&[data-cursor="wait"] {
+					cursor: wait;
+
+					* {
+						cursor: wait;
+					}
+				}
+			`}
+		>
 			<head>
 				<link rel="manifest" href="/manifest.json" />
 				<meta name="theme-color" content="#fc9e82" />

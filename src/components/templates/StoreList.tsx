@@ -2,7 +2,7 @@
 
 import { css } from "@kuma-ui/core";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Button from "@/components/atoms/Button";
@@ -73,6 +73,15 @@ export default function (): JSX.Element {
 			getPictures(getStoresResponse.map((store) => store.id).join(","));
 		}
 	}, [getStoresStatus]);
+
+	useEffect(() => {
+		try {
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-expect-error
+			// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+			(adsbygoogle = window.adsbygoogle || []).push({});
+		} catch (e) {}
+	}, [getStoresResponse]);
 
 	useEffect(() => {
 		if (params.area === "location") {
@@ -206,107 +215,140 @@ export default function (): JSX.Element {
 									お店が無いようです😿
 								</p>
 							)}
-							{[...getStoresResponse].reverse().map((store) => (
-								<div
-									key={store.id}
-									className={css`
-										position: relative;
-										transition-duration: 200ms;
-										transition-property: box-shadow;
-										overflow: hidden;
-										border-radius: 7px;
-										border-width: 2px;
-										border-style: solid;
-										border-color: #f3f3f3;
-
-										&:hover {
-											box-shadow: 0px 0px 15px -10px #777777;
-										}
-									`}
-								>
+							{[...getStoresResponse].reverse().map((store, index) => (
+								<Fragment key={store.id}>
 									<div
 										className={css`
-											display: flex;
+											position: relative;
+											transition-duration: 200ms;
+											transition-property: box-shadow;
+											overflow: hidden;
+											border-radius: 7px;
+											border-width: 2px;
+											border-style: solid;
+											border-color: #f3f3f3;
 
-											@media (max-width: 880px) {
-												flex-direction: column;
+											&:hover {
+												box-shadow: 0px 0px 15px -10px #777777;
 											}
 										`}
 									>
 										<div
 											className={css`
-												position: relative;
-												aspect-ratio: 1/1;
-												width: 250px;
+												display: flex;
 
 												@media (max-width: 880px) {
-													width: 100%;
-													height: 250px;
+													flex-direction: column;
 												}
 											`}
 										>
 											<div
 												className={css`
-													width: 100%;
-													height: 100%;
-													position: absolute;
-													top: 0;
-													left: 0;
-													z-index: -1;
+													position: relative;
+													aspect-ratio: 1/1;
+													width: 250px;
+
+													@media (max-width: 880px) {
+														width: 100%;
+														height: 250px;
+													}
 												`}
 											>
-												<LoadingEffect />
-											</div>
-											{getPicturesStatus === "successed" && (
-												<Image
+												<div
 													className={css`
-														display: block;
 														width: 100%;
 														height: 100%;
-														object-fit: cover;
-
-														@media (max-width: 880px) {
-															object-fit: cover;
-														}
+														position: absolute;
+														top: 0;
+														left: 0;
+														z-index: -1;
 													`}
-													src={
-														getPicturesResponse?.find((p) => p.store_id === store.id)
-															?.url ?? "/no-image.png"
-													}
-													width={250}
-													height={250}
-													alt={`${store.name}の画像`}
-												/>
-											)}
+												>
+													<LoadingEffect />
+												</div>
+												{getPicturesStatus === "successed" && (
+													<Image
+														className={css`
+															display: block;
+															width: 100%;
+															height: 100%;
+															object-fit: cover;
+
+															@media (max-width: 880px) {
+																object-fit: cover;
+															}
+														`}
+														src={
+															getPicturesResponse?.find((p) => p.store_id === store.id)
+																?.url ?? "/no-image.png"
+														}
+														width={250}
+														height={250}
+														alt={`${store.name}の画像`}
+													/>
+												)}
+											</div>
+											<div
+												className={css`
+													padding: 10px;
+													width: 100%;
+													display: flex;
+													flex-direction: column;
+													gap: 20px;
+												`}
+											>
+												<div>
+													<MiniTitle>{store.name}</MiniTitle>
+												</div>
+												<div>{store.description}</div>
+											</div>
 										</div>
+										<Link
+											className={css`
+												display: block;
+												position: absolute;
+												top: 0;
+												left: 0;
+												width: 100%;
+												height: 100%;
+												z-index: 99;
+											`}
+											href={`/store/${store.id}`}
+										/>
+									</div>
+									{index !== 0 && index !== getStoresResponse.length - 1 && index % 5 === 0 && (
 										<div
 											className={css`
-												padding: 10px;
-												width: 100%;
-												display: flex;
-												flex-direction: column;
-												gap: 20px;
+												* {
+													width: 100% !important;
+													max-height: 90px !important;
+												}
+
+												@media (max-width: 880px) {
+													grid-column: 1 / 3;
+												}
+
+												@media (max-width: 700px) {
+													grid-column: 1 / 1;
+												}
 											`}
 										>
-											<div>
-												<MiniTitle>{store.name}</MiniTitle>
-											</div>
-											<div>{store.description}</div>
+											<script
+												async
+												src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6914867149724943"
+												crossOrigin="anonymous"
+											/>
+											<ins
+												className="adsbygoogle"
+												style={{ display: "block" }}
+												data-ad-client="ca-pub-6914867149724943"
+												data-ad-slot="5973440772"
+												data-ad-format="auto"
+												data-full-width-responsive="true"
+											/>
 										</div>
-									</div>
-									<Link
-										className={css`
-											display: block;
-											position: absolute;
-											top: 0;
-											left: 0;
-											width: 100%;
-											height: 100%;
-											z-index: 99;
-										`}
-										href={`/store/${store.id}`}
-									/>
-								</div>
+									)}
+								</Fragment>
 							))}
 						</>
 					)}
@@ -348,6 +390,28 @@ export default function (): JSX.Element {
 					>
 						お店を追加
 					</Button>
+				</div>
+				<div
+					className={css`
+						* {
+							width: 100% !important;
+							max-height: 90px !important;
+						}
+					`}
+				>
+					<script
+						async
+						src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6914867149724943"
+						crossOrigin="anonymous"
+					/>
+					<ins
+						className="adsbygoogle"
+						style={{ display: "block" }}
+						data-ad-client="ca-pub-6914867149724943"
+						data-ad-slot="5973440772"
+						data-ad-format="auto"
+						data-full-width-responsive="true"
+					/>
 				</div>
 			</div>
 		</>

@@ -10,9 +10,20 @@ interface Props {
 	setIsOpen: Dispatch<SetStateAction<boolean>>;
 	children: ReactNode;
 	close?: boolean;
+	viewBg?: boolean;
+	margin?: number;
+	icon?: "close" | "back";
 }
 
-export default function ({ isOpen, setIsOpen, children, close = true }: Props): JSX.Element {
+export default function ({
+	isOpen,
+	setIsOpen,
+	children,
+	close = true,
+	viewBg = true,
+	margin = 0,
+	icon = "close"
+}: Props): JSX.Element {
 	const modalElement = useClickElemenetSet<HTMLDivElement>(() => {
 		if (close) {
 			setIsOpen(false);
@@ -23,16 +34,17 @@ export default function ({ isOpen, setIsOpen, children, close = true }: Props): 
 		<>
 			{isOpen && (
 				<>
-					<ModalBackground />
+					{viewBg && <ModalBackground />}
 					<div
+						style={margin !== 0 ? { padding: 30 + margin + "px" } : undefined}
 						className={css`
 							position: fixed;
 							top: 50%;
 							left: 50%;
 							transform: translate(-50%, -50%);
 							width: 100%;
-							max-width: 800px;
 							padding: 30px;
+							max-width: 800px;
 							z-index: 99999;
 							user-select: none;
 							pointer-events: none;
@@ -53,7 +65,7 @@ export default function ({ isOpen, setIsOpen, children, close = true }: Props): 
 							}
 
 							@media (max-width: 880px) {
-								padding: 0;
+								padding: 0 !important;
 								max-width: 100%;
 								height: 100%;
 							}
@@ -81,11 +93,14 @@ export default function ({ isOpen, setIsOpen, children, close = true }: Props): 
 						>
 							{children}
 							<div
+								style={
+									margin !== 0 ? { top: 15 + margin + "px", right: 15 + margin + "px" } : undefined
+								}
 								className={css`
 									position: fixed;
+									font-size: 0;
 									top: 15px;
 									right: 15px;
-									font-size: 0;
 									cursor: pointer;
 									user-select: none;
 									background-color: var(--color-theme);
@@ -93,9 +108,9 @@ export default function ({ isOpen, setIsOpen, children, close = true }: Props): 
 									padding: 5px;
 
 									@media (max-width: 880px) {
-										top: auto;
+										top: auto !important;
 										bottom: 20px;
-										right: 20px;
+										right: 20px !important;
 									}
 								`}
 								onClick={() => {
@@ -104,7 +119,11 @@ export default function ({ isOpen, setIsOpen, children, close = true }: Props): 
 									}
 								}}
 							>
-								<GoogleIcon size={25} name="close" color="var(--color-secondary)" />
+								<GoogleIcon
+									size={25}
+									name={icon === "close" ? "close" : icon === "back" ? "arrow_back" : "close"}
+									color="var(--color-secondary)"
+								/>
 							</div>
 						</div>
 					</div>

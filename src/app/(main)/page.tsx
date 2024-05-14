@@ -93,19 +93,7 @@ export default function (): JSX.Element {
 										<AllergenItem
 											image={`/icons/${item.id}.png`}
 											text={item.name}
-											selected={selected}
-											icon={
-												<div
-													className={css`
-														position: absolute;
-														top: 50%;
-														left: 50%;
-														transform: translate(-50%, -50%);
-													`}
-												>
-													<GoogleIcon name="skull" size={40} color="var(--color-red)" />
-												</div>
-											}
+											status={selected ? "skull" : "normal"}
 										/>
 									</div>
 								);

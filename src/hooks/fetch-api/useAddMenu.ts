@@ -1,8 +1,13 @@
 import useFetchApi from "@/hooks/useFetchApi";
-import type { FetchStatus, AddMenuResponse } from "@/type";
+import type { FetchStatus, AddMenuResponse, AllergenStatusValue } from "@/type";
 
 interface ReturnType {
-	addMenu: (storeId: string, name: string, description: string, allergens: string[]) => void;
+	addMenu: (
+		storeId: string,
+		name: string,
+		description: string,
+		allergens: Record<string, AllergenStatusValue>
+	) => void;
 	addMenuResponse: NonNullable<AddMenuResponse> | undefined;
 	addMenuStatus: FetchStatus;
 	addMenuResponseStatus: number | undefined;
@@ -16,7 +21,12 @@ export default function (): ReturnType {
 		responseStatus: addMenuResponseStatus
 	} = useFetchApi<AddMenuResponse>();
 
-	const addMenu = (storeId: string, name: string, description: string, allergens: string[]): void => {
+	const addMenu = (
+		storeId: string,
+		name: string,
+		description: string,
+		allergens: Record<string, AllergenStatusValue>
+	): void => {
 		void fetchData(
 			"addMenu",
 			{},

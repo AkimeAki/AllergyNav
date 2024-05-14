@@ -1,5 +1,5 @@
 import { ForbiddenError, TooManyRequestError, ValidationError } from "@/definition";
-import type { AddMenuResponse, GetMenusResponse } from "@/type";
+import type { AddMenuResponse, AllergenStatusValue, GetMenusResponse } from "@/type";
 import { safeString } from "@/libs/safe-type";
 import { isEmptyString } from "@/libs/check-string";
 import { prisma } from "@/libs/prisma";
@@ -48,7 +48,17 @@ export const GET = async (req: NextRequest): Promise<Response> => {
 		});
 
 		data = [];
+
 		for (const item of result) {
+			const allergenStatus: Record<string, AllergenStatusValue> = {};
+			allergensResult.forEach((allergen) => {
+				allergenStatus[allergen.id] = "unkown";
+			});
+
+			item.menu_allergens.forEach((allergen) => {
+				allergenStatus[allergen.allergen_id] = allergen.status as AllergenStatusValue;
+			});
+
 			data.push({
 				id: item.id,
 				name: item.name,
@@ -56,19 +66,7 @@ export const GET = async (req: NextRequest): Promise<Response> => {
 				description: item.description,
 				updated_at: item.updated_at,
 				created_at: item.created_at,
-				allergens: item.menu_allergens.map((allergen) => {
-					let allergenName = "";
-					allergensResult.forEach((item) => {
-						if (item.id === allergen.allergen_id) {
-							allergenName = item.name;
-						}
-					});
-
-					return {
-						id: allergen.allergen_id,
-						name: allergenName
-					};
-				}),
+				allergens: allergenStatus,
 				created_user_id: item.created_user_id,
 				updated_user_id: item.updated_user_id
 			});
@@ -151,24 +149,20 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 				}
 			});
 
-			const menuAllergenInsertResult = [];
-			for (const allergen of JSON.parse(allergens) as string[]) {
-				const result = await prisma.menuAllergen.create({
+			const allergenStatus = JSON.parse(allergens) as Record<string, AllergenStatusValue>;
+			for (const allergen in allergenStatus) {
+				if (allergenStatus[allergen] === "not contained") {
+					break;
+				}
+
+				await prisma.menuAllergen.create({
 					data: {
 						allergen_id: allergen,
-						menu_id: menuInsertResult.id
+						menu_id: menuInsertResult.id,
+						status: allergenStatus[allergen]
 					}
 				});
-
-				menuAllergenInsertResult.push(result);
 			}
-
-			const allergensResult = await prisma.allergen.findMany({
-				select: {
-					id: true,
-					name: true
-				}
-			});
 
 			data = {
 				id: menuInsertResult.id,
@@ -179,19 +173,7 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 				updated_at: menuInsertResult.updated_at,
 				created_user_id: menuInsertResult.created_user_id,
 				updated_user_id: menuInsertResult.updated_user_id,
-				allergens: menuAllergenInsertResult.map((allergen) => {
-					let allergenName = "";
-					allergensResult.forEach((item) => {
-						if (item.id === allergen.allergen_id) {
-							allergenName = item.name;
-						}
-					});
-
-					return {
-						id: allergen.allergen_id,
-						name: allergenName
-					};
-				})
+				allergens: allergenStatus
 			};
 
 			const menuHistoryInsertResult = await prisma.menuHistory.create({
@@ -204,12 +186,19 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 				}
 			});
 
-			for (const allergen of JSON.parse(allergens) as string[]) {
+			console.log(allergenStatus);
+
+			for (const allergen in allergenStatus) {
+				if (allergenStatus[allergen] === "not contained") {
+					break;
+				}
+
 				await prisma.menuAllergenHistory.create({
 					data: {
 						allergen_id: allergen,
 						menu_id: menuInsertResult.id,
-						menu_history_id: menuHistoryInsertResult.id
+						menu_history_id: menuHistoryInsertResult.id,
+						status: allergenStatus[allergen]
 					}
 				});
 			}

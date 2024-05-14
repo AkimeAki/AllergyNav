@@ -1,6 +1,6 @@
 import { TooManyRequestError, ValidationError } from "@/definition";
 import { safeString } from "@/libs/safe-type";
-import type { GetMenuHistoryResponse } from "@/type";
+import type { AllergenStatusValue, GetMenuHistoryResponse } from "@/type";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/libs/prisma";
 import { accessCheck } from "@/libs/access-check";
@@ -51,25 +51,22 @@ export const GET = async (req: NextRequest, { params }: Data): Promise<Response>
 
 		data = [];
 		for (const item of result) {
+			const allergenStatus: Record<string, AllergenStatusValue> = {};
+			allergensResult.forEach((allergen) => {
+				allergenStatus[allergen.id] = "unkown";
+			});
+
+			item.menu_allergen_histories.forEach((allergen) => {
+				allergenStatus[allergen.allergen_id] = allergen.status as AllergenStatusValue;
+			});
+
 			data.push({
 				id: item.id,
 				name: item.name,
 				store_id: item.store_id,
 				description: item.description,
 				created_at: item.created_at,
-				allergens: item.menu_allergen_histories.map((allergen) => {
-					let allergenName = "";
-					allergensResult.forEach((item) => {
-						if (item.id === allergen.allergen_id) {
-							allergenName = item.name;
-						}
-					});
-
-					return {
-						id: allergen.allergen_id,
-						name: allergenName
-					};
-				}),
+				allergens: allergenStatus,
 				updated_user_id: item.updated_user_id
 			});
 		}

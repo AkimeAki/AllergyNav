@@ -40,10 +40,7 @@ interface MenuResponse {
 	created_at: Date;
 	created_user_id: string;
 	updated_user_id: string;
-	allergens: Array<{
-		id: string;
-		name: string;
-	}>;
+	allergens: Record<string, AllergenStatusValue>;
 }
 
 export type GetMenuResponse = MenuResponse | null;
@@ -70,10 +67,7 @@ interface MenuHistoryResponse {
 	description: string;
 	created_at: Date;
 	updated_user_id: string;
-	allergens: Array<{
-		id: string;
-		name: string;
-	}>;
+	allergens: Record<string, AllergenStatusValue>;
 }
 
 export type GetMenuHistoryResponse = MenuHistoryResponse[] | null;
@@ -103,3 +97,5 @@ export interface Message {
 }
 
 export type FetchStatus = "successed" | "failed" | "yet" | "loading";
+export type AllergenStatusValue = "unkown" | "contain" | "not contained" | "removable";
+export type AllergenItemStatus = "unkown" | "normal" | "check" | "skull";
