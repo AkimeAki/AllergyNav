@@ -4,6 +4,7 @@ import { useEffect, type ReactNode, useRef, useState } from "react";
 import { css } from "@kuma-ui/core";
 import useScroll from "@/hooks/useScroll";
 import useIsTouchDevice from "@/hooks/useIsTouchDevice";
+import { usePathname } from "next/navigation";
 
 interface Props {
 	children: ReactNode;
@@ -14,6 +15,7 @@ export default function ({ children }: Props): JSX.Element {
 	const { stopScroll, startScroll } = useScroll();
 	const [, setTouchScrollX] = useState<number>(0);
 	const { isTouch } = useIsTouchDevice();
+	const pathname = usePathname();
 
 	useEffect(() => {
 		const scroll = (e: WheelEvent): void => {
@@ -90,15 +92,6 @@ export default function ({ children }: Props): JSX.Element {
 		};
 	}, [isTouch]);
 
-	useEffect(() => {
-		try {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-			(adsbygoogle = window.adsbygoogle || []).push({});
-		} catch (e) {}
-	}, []);
-
 	return (
 		<div
 			className={css`
@@ -138,6 +131,7 @@ export default function ({ children }: Props): JSX.Element {
 				{children}
 			</aside>
 			<div
+				key={pathname}
 				className={css`
 					* {
 						width: 100% !important;

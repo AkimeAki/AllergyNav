@@ -4,7 +4,7 @@ import { css } from "@kuma-ui/core";
 import SubTitle from "@/components/atoms/SubTitle";
 import { useEffect, useState } from "react";
 import Button from "@/components/atoms/Button";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import useGetAllergens from "@/hooks/fetch-api/useGetAllergens";
 import GoogleIcon from "@/components/atoms/GoogleIcon";
 import AllergenItem from "@/components/atoms/AllergenItem";
@@ -24,6 +24,7 @@ export default function (): JSX.Element {
 	const searchParams = useSearchParams();
 	const { getAllergensResponse, getAllergens, getAllergensStatus } = useGetAllergens();
 	const router = useRouter();
+	const pathname = usePathname();
 
 	const params = {
 		allergens: searchParams.get("allergens") ?? "",
@@ -65,15 +66,6 @@ export default function (): JSX.Element {
 			}
 		}
 	}, [area]);
-
-	useEffect(() => {
-		try {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-			(adsbygoogle = window.adsbygoogle || []).push({});
-		} catch (e) {}
-	}, []);
 
 	const search = (): void => {
 		if (keywords !== undefined && selectAllergens !== undefined && area !== undefined && radius !== undefined) {
@@ -476,6 +468,7 @@ export default function (): JSX.Element {
 						</div>
 					</div>
 					<div
+						key={pathname}
 						className={css`
 							* {
 								width: 100% !important;

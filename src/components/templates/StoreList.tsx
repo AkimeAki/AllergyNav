@@ -1,7 +1,7 @@
 "use client";
 
 import { css } from "@kuma-ui/core";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -32,6 +32,7 @@ export default function (): JSX.Element {
 	const { userStatus, userId, userVerified } = useGetUserData();
 	const { getPicturesResponse, getPicturesStatus, getPictures } = useGetPictures();
 	const { addMessage } = useFloatMessage();
+	const pathname = usePathname();
 	const params = {
 		allergens: searchParams.get("allergens") ?? "",
 		keywords: searchParams.get("keywords") ?? "",
@@ -73,15 +74,6 @@ export default function (): JSX.Element {
 			getPictures(getStoresResponse.map((store) => store.id).join(","));
 		}
 	}, [getStoresStatus]);
-
-	useEffect(() => {
-		try {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-			(adsbygoogle = window.adsbygoogle || []).push({});
-		} catch (e) {}
-	}, [getStoresResponse]);
 
 	useEffect(() => {
 		if (params.area === "location") {
@@ -318,6 +310,7 @@ export default function (): JSX.Element {
 									</div>
 									{index !== 0 && index !== getStoresResponse.length - 1 && index % 5 === 0 && (
 										<div
+											key={pathname}
 											className={css`
 												* {
 													width: 100% !important;
@@ -390,28 +383,6 @@ export default function (): JSX.Element {
 					>
 						お店を追加
 					</Button>
-				</div>
-				<div
-					className={css`
-						* {
-							width: 100% !important;
-							max-height: 90px !important;
-						}
-					`}
-				>
-					<script
-						async
-						src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6914867149724943"
-						crossOrigin="anonymous"
-					/>
-					<ins
-						className="adsbygoogle"
-						style={{ display: "block" }}
-						data-ad-client="ca-pub-6914867149724943"
-						data-ad-slot="5973440772"
-						data-ad-format="auto"
-						data-full-width-responsive="true"
-					/>
 				</div>
 			</div>
 		</>

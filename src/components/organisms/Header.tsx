@@ -19,6 +19,15 @@ export default function (): JSX.Element {
 		root.scrollTo(0, 0);
 	}, [pathname]);
 
+	useEffect(() => {
+		try {
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-expect-error
+			// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+			(adsbygoogle = window.adsbygoogle || []).push({});
+		} catch (e) {}
+	}, [pathname]);
+
 	return (
 		<>
 			{userVerified === false && (
