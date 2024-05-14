@@ -58,6 +58,17 @@ export default function (): JSX.Element {
 	}, []);
 
 	useEffect(() => {
+		if (getStoresStatus === "successed" && getStoresResponse !== undefined) {
+			try {
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-expect-error
+				// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+				(adsbygoogle = window.adsbygoogle || []).push({});
+			} catch (e) {}
+		}
+	}, [getStoresStatus, getStoresResponse]);
+
+	useEffect(() => {
 		if (getAllergensResponse !== undefined) {
 			const queryAllergens = params.allergens.split(",");
 			const filterdAllergens = queryAllergens.filter((a) => {
