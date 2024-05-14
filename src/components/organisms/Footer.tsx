@@ -13,9 +13,11 @@ export default function (): JSX.Element {
 			<div
 				key={pathname}
 				className={css`
+					text-align: center;
+					margin: 30px 0;
+
 					* {
-						width: 100% !important;
-						max-height: 90px !important;
+						width: 780px !important;
 					}
 				`}
 			>
