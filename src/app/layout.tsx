@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { KumaRegistry } from "@kuma-ui/next-plugin/registry";
 import { css } from "@kuma-ui/core";
+import Script from "next/script";
 
 export const metadata: Metadata = {
 	title: {
@@ -57,11 +58,6 @@ export default function ({ children }: Props): JSX.Element {
 					href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap"
 				/>
 				<link rel="icon" href="/favicon.png"></link>
-				<script
-					async
-					src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6914867149724943"
-					crossOrigin="anonymous"
-				/>
 				{/* eslint-disable-next-line react/jsx-no-comment-textnodes, @next/next/next-script-for-ga */}
 				<script
 					dangerouslySetInnerHTML={{
@@ -83,6 +79,12 @@ export default function ({ children }: Props): JSX.Element {
 					/>
 				</noscript>
 				<KumaRegistry>{children}</KumaRegistry>
+				<Script
+					async
+					src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6914867149724943"
+					crossOrigin="anonymous"
+					strategy="beforeInteractive"
+				/>
 			</body>
 		</html>
 	);
