@@ -21,6 +21,10 @@ export default function (): JSX.Element {
 
 	useEffect(() => {
 		console.log("aaaa");
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-expect-error
+		// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+		console.log(window.adsbygoogle);
 		try {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-expect-error
