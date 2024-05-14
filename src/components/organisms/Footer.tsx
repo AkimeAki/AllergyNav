@@ -16,7 +16,8 @@ export default function (): JSX.Element {
 					margin: 30px auto;
 
 					* {
-						width: 780px !important;
+						max-width: 780px !important;
+						width: 100% !important;
 					}
 				`}
 			>
