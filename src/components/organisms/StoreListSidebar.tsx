@@ -470,19 +470,14 @@ export default function (): JSX.Element {
 					<div
 						key={pathname}
 						className={css`
-							* {
-								width: 100% !important;
-								max-height: 600px !important;
-							}
+							text-align: center;
 						`}
 					>
 						<ins
 							className="adsbygoogle"
-							style={{ display: "block" }}
+							style={{ display: "inline-block", width: "220px", height: "600px" }}
 							data-ad-client="ca-pub-6914867149724943"
 							data-ad-slot="7661038914"
-							data-ad-format="auto"
-							data-full-width-responsive="true"
 						/>
 					</div>
 				</div>

@@ -32,7 +32,6 @@ export default function (): JSX.Element {
 	const { userStatus, userId, userVerified } = useGetUserData();
 	const { getPicturesResponse, getPicturesStatus, getPictures } = useGetPictures();
 	const { addMessage } = useFloatMessage();
-	const pathname = usePathname();
 	const params = {
 		allergens: searchParams.get("allergens") ?? "",
 		keywords: searchParams.get("keywords") ?? "",
@@ -320,32 +319,52 @@ export default function (): JSX.Element {
 										/>
 									</div>
 									{index !== 0 && index !== getStoresResponse.length - 1 && index % 5 === 0 && (
-										<div
-											key={pathname}
-											className={css`
-												* {
-													width: 100% !important;
-													max-height: 90px !important;
-												}
+										<>
+											<div
+												key={getStoresStatus}
+												className={css`
+													text-align: center;
 
-												@media (max-width: 880px) {
-													grid-column: 1 / 3;
-												}
+													@media (max-width: 880px) {
+														grid-column: 1 / 3;
+													}
 
-												@media (max-width: 700px) {
+													@media (max-width: 700px) {
+														grid-column: 1 / 1;
+													}
+
+													@media (max-width: 650px) {
+														display: none;
+													}
+												`}
+											>
+												<ins
+													className="adsbygoogle"
+													style={{ display: "inline-block", width: "560px", height: "90px" }}
+													data-ad-client="ca-pub-6914867149724943"
+													data-ad-slot="5973440772"
+												/>
+											</div>
+											<div
+												key={getStoresStatus}
+												className={css`
+													text-align: center;
 													grid-column: 1 / 1;
-												}
-											`}
-										>
-											<ins
-												className="adsbygoogle"
-												style={{ display: "block" }}
-												data-ad-client="ca-pub-6914867149724943"
-												data-ad-slot="5973440772"
-												data-ad-format="auto"
-												data-full-width-responsive="true"
-											/>
-										</div>
+													display: none;
+
+													@media (max-width: 650px) {
+														display: block;
+													}
+												`}
+											>
+												<ins
+													className="adsbygoogle"
+													style={{ display: "inline-block", width: "300px", height: "150px" }}
+													data-ad-client="ca-pub-6914867149724943"
+													data-ad-slot="5973440772"
+												/>
+											</div>
+										</>
 									)}
 								</Fragment>
 							))}
