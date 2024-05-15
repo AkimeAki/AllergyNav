@@ -5,6 +5,7 @@ import { css } from "@kuma-ui/core";
 import useScroll from "@/hooks/useScroll";
 import useIsTouchDevice from "@/hooks/useIsTouchDevice";
 import { usePathname } from "next/navigation";
+import GoogleAds from "@/components/atoms/GoogleAds";
 
 interface Props {
 	children: ReactNode;
@@ -134,17 +135,17 @@ export default function ({ children }: Props): JSX.Element {
 				key={pathname}
 				className={css`
 					text-align: center;
-
 					@media (max-width: 880px) {
 						display: none;
 					}
 				`}
 			>
-				<ins
-					className="adsbygoogle"
-					style={{ display: "inline-block", width: "220px", height: "600px" }}
-					data-ad-client="ca-pub-6914867149724943"
-					data-ad-slot="7661038914"
+				<GoogleAds
+					slot="7661038914"
+					style={css`
+						width: 220px;
+						height: 600px;
+					`}
 				/>
 			</div>
 		</div>

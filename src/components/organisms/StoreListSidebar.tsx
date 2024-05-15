@@ -13,6 +13,7 @@ import MiniTitle from "@/components/atoms/MiniTitle";
 import TextInput from "@/components/atoms/TextInput";
 import Select from "@/components/atoms/Select";
 import { isEmptyString } from "@/libs/check-string";
+import GoogleAds from "@/components/atoms/GoogleAds";
 
 export default function (): JSX.Element {
 	const [selectAllergens, setSelectAllergens] = useState<string[] | undefined>(undefined);
@@ -471,13 +472,18 @@ export default function (): JSX.Element {
 						key={pathname}
 						className={css`
 							text-align: center;
+
+							@media (max-width: 880px) {
+								display: none;
+							}
 						`}
 					>
-						<ins
-							className="adsbygoogle"
-							style={{ display: "inline-block", width: "220px", height: "600px" }}
-							data-ad-client="ca-pub-6914867149724943"
-							data-ad-slot="7661038914"
+						<GoogleAds
+							slot="7661038914"
+							style={css`
+								width: 220px;
+								height: 600px;
+							`}
 						/>
 					</div>
 				</div>

@@ -4,6 +4,7 @@ import { css } from "@kuma-ui/core";
 import FooterLink from "@/components/molecules/FooterLink";
 import InstallAppButton from "@/components/atoms/InstallAppButton";
 import { usePathname } from "next/navigation";
+import GoogleAds from "@/components/atoms/GoogleAds";
 
 export default function (): JSX.Element {
 	const pathname = usePathname();
@@ -15,20 +16,13 @@ export default function (): JSX.Element {
 				className={css`
 					margin: 30px auto;
 
-					* {
+					ins {
 						max-width: 780px !important;
 						width: 100% !important;
 					}
 				`}
 			>
-				<ins
-					className="adsbygoogle"
-					style={{ display: "block" }}
-					data-ad-client="ca-pub-6914867149724943"
-					data-ad-slot="3013069660"
-					data-ad-format="auto"
-					data-full-width-responsive="true"
-				/>
+				<GoogleAds slot="3013069660" />
 			</div>
 			<footer
 				className={css`

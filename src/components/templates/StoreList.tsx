@@ -1,7 +1,7 @@
 "use client";
 
 import { css } from "@kuma-ui/core";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,6 +20,7 @@ import { useFloatMessage } from "@/hooks/useFloatMessage";
 import NotVerifiedModal from "@/components/molecules/NotVerifiedModal";
 import NotLoginedModal from "@/components/molecules/NotLoginedModal";
 import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
+import GoogleAds from "@/components/atoms/GoogleAds";
 
 export default function (): JSX.Element {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
@@ -32,6 +33,7 @@ export default function (): JSX.Element {
 	const { userStatus, userId, userVerified } = useGetUserData();
 	const { getPicturesResponse, getPicturesStatus, getPictures } = useGetPictures();
 	const { addMessage } = useFloatMessage();
+	const [resizeGoogleAdsToggle, setResizeGoogleAdsToggle] = useState<boolean>(false);
 	const params = {
 		allergens: searchParams.get("allergens") ?? "",
 		keywords: searchParams.get("keywords") ?? "",
@@ -126,6 +128,32 @@ export default function (): JSX.Element {
 			setCurrentLongitude(undefined);
 		}
 	}, [searchParams]);
+
+	useEffect(() => {
+		const resize = (): void => {
+			const mediaQuery = window.matchMedia("(max-width: 650px)");
+			if (mediaQuery.matches) {
+				setResizeGoogleAdsToggle(true);
+			} else {
+				setResizeGoogleAdsToggle(false);
+			}
+		};
+
+		window.addEventListener("resize", resize, false);
+
+		return () => {
+			window.removeEventListener("resize", resize);
+		};
+	}, []);
+
+	useEffect(() => {
+		try {
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-expect-error
+			// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+			(adsbygoogle = window.adsbygoogle || []).push({});
+		} catch (e) {}
+	}, [resizeGoogleAdsToggle]);
 
 	return (
 		<>
@@ -321,7 +349,6 @@ export default function (): JSX.Element {
 									{index !== 0 && index !== getStoresResponse.length - 1 && index % 5 === 0 && (
 										<>
 											<div
-												key={getStoresStatus}
 												className={css`
 													text-align: center;
 
@@ -338,30 +365,30 @@ export default function (): JSX.Element {
 													}
 												`}
 											>
-												<ins
-													className="adsbygoogle"
-													style={{ display: "inline-block", width: "560px", height: "90px" }}
-													data-ad-client="ca-pub-6914867149724943"
-													data-ad-slot="5973440772"
+												<GoogleAds
+													slot="5973440772"
+													style={css`
+														width: 560px;
+														height: 90px;
+													`}
 												/>
 											</div>
 											<div
-												key={getStoresStatus}
 												className={css`
-													text-align: center;
-													grid-column: 1 / 1;
 													display: none;
+													text-align: center;
 
 													@media (max-width: 650px) {
 														display: block;
 													}
 												`}
 											>
-												<ins
-													className="adsbygoogle"
-													style={{ display: "inline-block", width: "300px", height: "150px" }}
-													data-ad-client="ca-pub-6914867149724943"
-													data-ad-slot="5973440772"
+												<GoogleAds
+													slot="5973440772"
+													style={css`
+														width: 300px;
+														height: 150px;
+													`}
 												/>
 											</div>
 										</>
