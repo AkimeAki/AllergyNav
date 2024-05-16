@@ -335,7 +335,7 @@ export default function (): JSX.Element {
 											href={`/store/${store.id}`}
 										/>
 									</div>
-									{index !== 0 && index !== getStoresResponse.length - 1 && index % 5 === 0 && (
+									{index !== 0 && index !== getStoresResponse.length - 1 && index % 3 === 0 && (
 										<>
 											<div
 												key={String(resizeGoogleAdsToggle)}
