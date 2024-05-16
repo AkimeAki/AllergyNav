@@ -112,13 +112,13 @@ export default function (): JSX.Element {
 							<Image
 								src="/icons/allergy-nav.png"
 								alt="アイコン"
-								width={340}
-								height={250}
+								width={256}
+								height={269}
 								className={css`
-									aspect-ratio: 340/250;
-									width: 50px;
+									aspect-ratio: 256/269;
+									width: auto;
 									font-size: 20px;
-									height: auto;
+									height: 40px;
 								`}
 							/>
 							<div
