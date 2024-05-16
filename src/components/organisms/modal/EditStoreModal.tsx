@@ -112,14 +112,15 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 
 	useEffect(() => {
 		if (
-			oldStoreName !== storeName ||
-			oldStoreDescription !== storeDescription ||
-			oldStoreAddress !== storeAddress ||
-			oldStoreUrl !== storeUrl ||
-			oldAllergyMenuUrl !== allergyMenuUrl ||
-			oldGurunaviUrl !== gurunaviUrl ||
-			oldHotpepperUrl !== hotpepperUrl ||
-			oldTabelogUrl !== tabelogUrl
+			getStoreStatus === "successed" &&
+			(oldStoreName !== storeName ||
+				oldStoreDescription !== storeDescription ||
+				oldStoreAddress !== storeAddress ||
+				oldStoreUrl !== storeUrl ||
+				oldAllergyMenuUrl !== allergyMenuUrl ||
+				oldGurunaviUrl !== gurunaviUrl ||
+				oldHotpepperUrl !== hotpepperUrl ||
+				oldTabelogUrl !== tabelogUrl)
 		) {
 			setIsChanged(true);
 		} else {
@@ -165,7 +166,21 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 	return (
 		<>
 			{editStoreStatus === "loading" && <Cursor cursor="wait" />}
-			<Modal isOpen={isOpen} setIsOpen={setIsOpen} close={editStoreStatus !== "loading"}>
+			<Modal
+				isOpen={isOpen}
+				setIsOpen={setIsOpen}
+				close={editStoreStatus !== "loading"}
+				onOutsideClick={
+					isChanged
+						? () => {
+								const result = confirm("編集中のデータが消えますが、閉じても良いですか？");
+								if (result) {
+									setIsOpen(false);
+								}
+							}
+						: undefined
+				}
+			>
 				<SubTitle>お店の情報を編集</SubTitle>
 				<form
 					className={css`

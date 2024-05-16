@@ -90,15 +90,16 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 
 	useEffect(() => {
 		if (
-			oldMenuName !== menuName ||
-			oldMenuDescription !== menuDescription ||
-			JSON.stringify(allergenStatus) !== JSON.stringify(oldAllergenStatus)
+			getMenuStatus === "successed" &&
+			(oldMenuName !== menuName ||
+				oldMenuDescription !== menuDescription ||
+				JSON.stringify(allergenStatus) !== JSON.stringify(oldAllergenStatus))
 		) {
 			setIsChanged(true);
 		} else {
 			setIsChanged(false);
 		}
-	}, [menuName, menuDescription, allergenStatus]);
+	}, [menuName, menuDescription, allergenStatus, editMenuStatus]);
 
 	return (
 		<>
@@ -107,6 +108,16 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 				isOpen={isOpen}
 				setIsOpen={setIsOpen}
 				close={editMenuStatus !== "loading" && !isSelectAllergenModalOpen}
+				onOutsideClick={
+					isChanged
+						? () => {
+								const result = confirm("編集中のデータが消えますが、閉じても良いですか？");
+								if (result) {
+									setIsOpen(false);
+								}
+							}
+						: undefined
+				}
 			>
 				<SubTitle>メニューを編集</SubTitle>
 				<form
@@ -169,11 +180,11 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 								if (allergenStatus[allergen.id] === "unkown") {
 									status = "unkown";
 								} else if (allergenStatus[allergen.id] === "contain") {
-									status = "normal";
+									status = "contain";
 								} else if (allergenStatus[allergen.id] === "not contained") {
 									return "";
 								} else if (allergenStatus[allergen.id] === "removable") {
-									status = "check";
+									status = "removable";
 								}
 
 								return (

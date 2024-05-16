@@ -365,13 +365,13 @@ export default function ({ storeId }: Props): JSX.Element {
 															if (menu.allergens[allergen.id] === "unkown") {
 																status = "unkown";
 															} else if (menu.allergens[allergen.id] === "contain") {
-																status = "normal";
+																status = "contain";
 															} else if (
 																menu.allergens[allergen.id] === "not contained"
 															) {
 																return "";
 															} else if (menu.allergens[allergen.id] === "removable") {
-																status = "check";
+																status = "removable";
 															}
 
 															return (

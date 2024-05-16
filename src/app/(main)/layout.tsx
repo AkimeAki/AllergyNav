@@ -3,6 +3,7 @@ import Sidebar from "@/components/organisms/Sidebar";
 import type { ReactNode } from "react";
 import { css } from "@kuma-ui/core";
 import Footer from "@/components/organisms/Footer";
+import ScrollTop from "@/components/molecules/ScrollTop";
 
 interface Props {
 	children: ReactNode;
@@ -31,6 +32,7 @@ export default function ({ children }: Props): JSX.Element {
 				}
 			`}
 		>
+			<ScrollTop />
 			<div
 				className={css`
 					flex: 1;

@@ -34,6 +34,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 	const router = useRouter();
 	const { addStoreResponse, addStoreStatus, addStore } = useAddStore();
 	const { addMessage } = useFloatMessage();
+	const [isChanged, setIsChanged] = useState<boolean>(false);
 
 	const addStoreClick = async (): Promise<void> => {
 		if (includePostCode(storeAddress)) {
@@ -86,10 +87,54 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 		}
 	}, [addStoreStatus]);
 
+	useEffect(() => {
+		if (
+			!isEmptyString(storeName) ||
+			!isEmptyString(storeAddress) ||
+			!isEmptyString(storeDescription) ||
+			!isEmptyString(storeUrl) ||
+			!isEmptyString(allergyMenuUrl) ||
+			!isEmptyString(tabelogUrl) ||
+			!isEmptyString(gurunaviUrl) ||
+			!isEmptyString(hotpepperUrl)
+		) {
+			setIsChanged(true);
+		} else {
+			setIsChanged(false);
+		}
+	}, [storeName, storeAddress, storeDescription, storeUrl, allergyMenuUrl, tabelogUrl, gurunaviUrl, hotpepperUrl]);
+
+	useEffect(() => {
+		if (!isOpen) {
+			setStoreName("");
+			setStoreAddress("");
+			setStoreDescription("");
+			setStoreUrl("");
+			setAllergyMenuUrl("");
+			setTabelogUrl("");
+			setGurunaviUrl("");
+			setHotpepperUrl("");
+		}
+	}, [isOpen]);
+
 	return (
 		<>
 			{addStoreStatus === "loading" && <Cursor cursor="wait" />}
-			<Modal isOpen={isOpen} setIsOpen={setIsOpen} close={addStoreStatus !== "loading"}>
+			<Modal
+				isOpen={isOpen}
+				setIsOpen={setIsOpen}
+				close={addStoreStatus !== "loading"}
+				onOutsideClick={
+					isChanged
+						? () => {
+								const result = confirm("入力中のデータが消えますが、閉じても良いですか？");
+								if (result) {
+									setIsOpen(false);
+								}
+							}
+						: undefined
+				}
+			>
 				<SubTitle>お店を追加</SubTitle>
 				<form
 					className={css`

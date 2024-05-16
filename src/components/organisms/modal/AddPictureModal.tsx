@@ -12,6 +12,7 @@ import useAddPicture from "@/hooks/fetch-api/useAddPicture";
 import Modal from "@/components/molecules/Modal";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
 import FileUpload from "@/components/atoms/FileUpload";
+import { isEmptyString } from "@/libs/check-string";
 
 interface Props {
 	storeId: string;
@@ -26,6 +27,7 @@ export default function ({ storeId, menuId, isOpen, setIsOpen, callback }: Props
 	const [pictureDescription, setPictureDescription] = useState<string>("");
 	const { addPictureStatus, addPicture } = useAddPicture();
 	const { addMessage } = useFloatMessage();
+	const [isChanged, setIsChanged] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (addPictureStatus === "successed") {
@@ -45,10 +47,39 @@ export default function ({ storeId, menuId, isOpen, setIsOpen, callback }: Props
 		}
 	}, [addPictureStatus]);
 
+	useEffect(() => {
+		if (pictureData !== undefined || !isEmptyString(pictureDescription)) {
+			setIsChanged(true);
+		} else {
+			setIsChanged(false);
+		}
+	}, [pictureData, pictureDescription]);
+
+	useEffect(() => {
+		if (!isOpen) {
+			setPictureData(undefined);
+			setPictureDescription("");
+		}
+	}, [isOpen]);
+
 	return (
 		<>
 			{addPictureStatus === "loading" && <Cursor cursor="wait" />}
-			<Modal isOpen={isOpen} setIsOpen={setIsOpen} close={addPictureStatus !== "loading"}>
+			<Modal
+				isOpen={isOpen}
+				setIsOpen={setIsOpen}
+				close={addPictureStatus !== "loading"}
+				onOutsideClick={
+					isChanged
+						? () => {
+								const result = confirm("入力中のデータが消えますが、閉じても良いですか？");
+								if (result) {
+									setIsOpen(false);
+								}
+							}
+						: undefined
+				}
+			>
 				<SubTitle>写真を追加</SubTitle>
 				<form
 					className={css`
@@ -111,7 +142,7 @@ export default function ({ storeId, menuId, isOpen, setIsOpen, callback }: Props
 										void addPicture(storeId, pictureData, pictureDescription, menuId);
 									}
 								}}
-								disabled={addPictureStatus === "loading"}
+								disabled={addPictureStatus === "loading" || pictureData === undefined}
 								loading={addPictureStatus === "loading"}
 							>
 								登録する

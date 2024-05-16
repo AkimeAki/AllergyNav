@@ -33,6 +33,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 	const { getAllergensResponse, getAllergens, getAllergensStatus } = useGetAllergens();
 	const { addMessage } = useFloatMessage();
 	const [isSelectAllergenModalOpen, setIsSelectAllergenModalOpen] = useState<boolean>(false);
+	const [isChanged, setIsChanged] = useState<boolean>(false);
 
 	useEffect(() => {
 		getAllergens();
@@ -68,10 +69,39 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 		}
 	}, [addMenuStatus]);
 
+	useEffect(() => {
+		if (!isEmptyString(menuName) || !isEmptyString(menuDescription)) {
+			setIsChanged(true);
+		} else {
+			setIsChanged(false);
+		}
+	}, [menuName]);
+
+	useEffect(() => {
+		if (!isOpen) {
+			setMenuName("");
+			setMenuDescription("");
+		}
+	}, [isOpen]);
+
 	return (
 		<>
 			{addMenuStatus === "loading" && <Cursor cursor="wait" />}
-			<Modal isOpen={isOpen} setIsOpen={setIsOpen} close={addMenuStatus !== "loading"}>
+			<Modal
+				isOpen={isOpen}
+				setIsOpen={setIsOpen}
+				close={addMenuStatus !== "loading"}
+				onOutsideClick={
+					isChanged
+						? () => {
+								const result = confirm("入力中のデータが消えますが、閉じても良いですか？");
+								if (result) {
+									setIsOpen(false);
+								}
+							}
+						: undefined
+				}
+			>
 				<SubTitle>メニューを追加</SubTitle>
 				<form
 					className={css`
@@ -131,11 +161,11 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 								if (allergenStatus[allergen.id] === "unkown") {
 									status = "unkown";
 								} else if (allergenStatus[allergen.id] === "contain") {
-									status = "normal";
+									status = "contain";
 								} else if (allergenStatus[allergen.id] === "not contained") {
 									return "";
 								} else if (allergenStatus[allergen.id] === "removable") {
-									status = "check";
+									status = "removable";
 								}
 
 								return (
@@ -172,7 +202,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 								onClick={() => {
 									addMenu(storeId, menuName, menuDescription, allergenStatus);
 								}}
-								disabled={addMenuStatus === "loading" || isEmptyString(menuName)}
+								disabled={addMenuStatus === "loading" || !isChanged}
 								loading={addMenuStatus === "loading"}
 							>
 								登録する

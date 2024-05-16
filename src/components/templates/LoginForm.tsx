@@ -20,6 +20,7 @@ export default function (): JSX.Element {
 	const searchParams = useSearchParams();
 	const redirectPath = searchParams.get("redirect") ?? "/";
 	const { addMessage } = useFloatMessage();
+	const [isLoginPossible, setIsLoginPossible] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (loginResponse === true) {
@@ -39,6 +40,14 @@ export default function (): JSX.Element {
 			addMessage(loginMessage.text, "error");
 		}
 	}, [loginMessage]);
+
+	useEffect(() => {
+		if (!(loginLoading || loginResponse === true || isEmptyString(email) || isEmptyString(password))) {
+			setIsLoginPossible(true);
+		} else {
+			setIsLoginPossible(false);
+		}
+	}, [loginLoading, loginResponse, email, password]);
 
 	return (
 		<>
@@ -91,6 +100,13 @@ export default function (): JSX.Element {
 								onChange={(e) => {
 									setPassword(e.target.value);
 								}}
+								onKeyDown={(e) => {
+									if (e.key === "Enter") {
+										if (isLoginPossible) {
+											void login(email, password);
+										}
+									}
+								}}
 								password
 								disabled={loginLoading || loginResponse === true}
 							/>
@@ -99,12 +115,7 @@ export default function (): JSX.Element {
 							onClick={() => {
 								void login(email, password);
 							}}
-							disabled={
-								loginLoading ||
-								loginResponse === true ||
-								isEmptyString(email) ||
-								isEmptyString(password)
-							}
+							disabled={!isLoginPossible}
 						>
 							ログイン
 						</Button>

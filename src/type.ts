@@ -98,4 +98,4 @@ export interface Message {
 
 export type FetchStatus = "successed" | "failed" | "yet" | "loading";
 export type AllergenStatusValue = "unkown" | "contain" | "not contained" | "removable";
-export type AllergenItemStatus = "unkown" | "normal" | "check" | "skull";
+export type AllergenItemStatus = "unkown" | "normal" | "check" | "skull" | "removable" | "contain";

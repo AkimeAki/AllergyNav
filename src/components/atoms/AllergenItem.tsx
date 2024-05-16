@@ -61,6 +61,10 @@ export default function ({
 					status !== "normal" &&
 						css`
 							filter: opacity(0.4);
+						`,
+					status === "contain" &&
+						css`
+							filter: drop-shadow(0 0 4px var(--color-red)) drop-shadow(0 0 4px var(--color-red));
 						`
 				].join(" ")}
 				width={100}
@@ -123,6 +127,24 @@ export default function ({
 					`}
 				>
 					<GoogleIcon color="rgba(255, 0, 0, 0.8)" name="skull" size={30} />
+				</div>
+			)}
+			{status === "removable" && (
+				<div
+					className={css`
+						position: absolute;
+						top: 50%;
+						left: 50%;
+						transform: translate(-50%, -50%);
+						user-select: none;
+						pointer-events: none;
+
+						span {
+							text-shadow: 0 0 5px white;
+						}
+					`}
+				>
+					<GoogleIcon color="#ffb11e" name="change_history" size={30} />
 				</div>
 			)}
 		</div>

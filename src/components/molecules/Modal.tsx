@@ -13,6 +13,7 @@ interface Props {
 	viewBg?: boolean;
 	margin?: number;
 	icon?: "close" | "back";
+	onOutsideClick?: () => void;
 }
 
 export default function ({
@@ -22,13 +23,18 @@ export default function ({
 	close = true,
 	viewBg = true,
 	margin = 0,
-	icon = "close"
+	icon = "close",
+	onOutsideClick
 }: Props): JSX.Element {
 	const modalElement = useClickElemenetSet<HTMLDivElement>(() => {
 		if (close) {
-			setIsOpen(false);
+			if (onOutsideClick === undefined) {
+				setIsOpen(false);
+			} else {
+				onOutsideClick();
+			}
 		}
-	}, [isOpen, close]);
+	}, [isOpen, close, onOutsideClick]);
 
 	return (
 		<>
@@ -115,7 +121,11 @@ export default function ({
 								`}
 								onClick={() => {
 									if (close) {
-										setIsOpen(false);
+										if (onOutsideClick === undefined) {
+											setIsOpen(false);
+										} else {
+											onOutsideClick();
+										}
 									}
 								}}
 							>
