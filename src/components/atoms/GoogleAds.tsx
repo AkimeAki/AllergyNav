@@ -16,6 +16,7 @@ export default function ({ slot, style }: Props): JSX.Element {
 	useEffect(() => {
 		try {
 			setTimeout(() => {
+				console.log("更新1");
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-expect-error
 				// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions

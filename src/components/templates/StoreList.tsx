@@ -62,6 +62,8 @@ export default function (): JSX.Element {
 		if (getStoresStatus === "successed" && getStoresResponse !== undefined) {
 			try {
 				setTimeout(() => {
+					console.log("更新3");
+
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-expect-error
 					// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
@@ -151,6 +153,8 @@ export default function (): JSX.Element {
 	useEffect(() => {
 		try {
 			setTimeout(() => {
+				console.log("更新2");
+
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-expect-error
 				// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
