@@ -3,15 +3,11 @@
 import { css } from "@kuma-ui/core";
 import FooterLink from "@/components/molecules/FooterLink";
 import InstallAppButton from "@/components/atoms/InstallAppButton";
-import { usePathname } from "next/navigation";
-import GoogleAds from "@/components/atoms/GoogleAds";
 
 export default function (): JSX.Element {
-	const pathname = usePathname();
-
 	return (
 		<>
-			<div
+			{/* <div
 				key={pathname}
 				className={css`
 					margin: 30px auto;
@@ -23,7 +19,7 @@ export default function (): JSX.Element {
 				`}
 			>
 				<GoogleAds slot="3013069660" />
-			</div>
+			</div> */}
 			<footer
 				className={css`
 					background-color: var(--color-theme-thin);
