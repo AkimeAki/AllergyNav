@@ -1,5 +1,6 @@
 "use client";
 
+import { loadGoogleAds } from "@/libs/load-googleads";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -17,10 +18,7 @@ export default function ({ slot, style }: Props): JSX.Element {
 		try {
 			setTimeout(() => {
 				console.log("更新1");
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-				(adsbygoogle = window.adsbygoogle || []).push({});
+				loadGoogleAds();
 			}, 500);
 		} catch (e) {}
 	}, [pathname, searchParams]);

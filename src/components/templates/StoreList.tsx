@@ -21,6 +21,7 @@ import NotVerifiedModal from "@/components/molecules/NotVerifiedModal";
 import NotLoginedModal from "@/components/molecules/NotLoginedModal";
 import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
 import GoogleAds from "@/components/atoms/GoogleAds";
+import { loadGoogleAds } from "@/libs/load-googleads";
 
 export default function (): JSX.Element {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
@@ -63,11 +64,7 @@ export default function (): JSX.Element {
 			try {
 				setTimeout(() => {
 					console.log("更新3");
-
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-expect-error
-					// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-					(adsbygoogle = window.adsbygoogle || []).push({});
+					loadGoogleAds();
 				}, 500);
 			} catch (e) {}
 		}
@@ -154,11 +151,7 @@ export default function (): JSX.Element {
 		try {
 			setTimeout(() => {
 				console.log("更新2");
-
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-				(adsbygoogle = window.adsbygoogle || []).push({});
+				loadGoogleAds();
 			}, 500);
 		} catch (e) {}
 	}, [resizeGoogleAdsToggle]);
