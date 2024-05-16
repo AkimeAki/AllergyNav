@@ -61,10 +61,12 @@ export default function (): JSX.Element {
 	useEffect(() => {
 		if (getStoresStatus === "successed" && getStoresResponse !== undefined) {
 			try {
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-				(adsbygoogle = window.adsbygoogle || []).push({});
+				setTimeout(() => {
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-expect-error
+					// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+					(adsbygoogle = window.adsbygoogle || []).push({});
+				}, 500);
 			} catch (e) {}
 		}
 	}, [getStoresStatus, getStoresResponse]);
@@ -148,10 +150,12 @@ export default function (): JSX.Element {
 
 	useEffect(() => {
 		try {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-			(adsbygoogle = window.adsbygoogle || []).push({});
+			setTimeout(() => {
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-expect-error
+				// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+				(adsbygoogle = window.adsbygoogle || []).push({});
+			}, 500);
 		} catch (e) {}
 	}, [resizeGoogleAdsToggle]);
 
