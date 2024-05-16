@@ -1,22 +1,12 @@
-"use client";
-
 import { css } from "@kuma-ui/core";
 import FooterLink from "@/components/molecules/FooterLink";
 import InstallAppButton from "@/components/atoms/InstallAppButton";
-import GoogleAds from "@/components/atoms/GoogleAds";
+import FooterAds from "@/components/molecules/FooterAds";
 
 export default function (): JSX.Element {
 	return (
 		<>
-			<div
-				className={css`
-					margin: 30px auto;
-					max-width: 780px !important;
-					width: 100% !important;
-				`}
-			>
-				<GoogleAds slot="3013069660" />
-			</div>
+			<FooterAds />
 			<footer
 				className={css`
 					background-color: var(--color-theme-thin);
