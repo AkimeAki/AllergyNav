@@ -4,7 +4,6 @@ import { useEffect, type ReactNode, useRef, useState } from "react";
 import { css } from "@kuma-ui/core";
 import useScroll from "@/hooks/useScroll";
 import useIsTouchDevice from "@/hooks/useIsTouchDevice";
-import { usePathname } from "next/navigation";
 import GoogleAds from "@/components/atoms/GoogleAds";
 
 interface Props {
@@ -16,7 +15,6 @@ export default function ({ children }: Props): JSX.Element {
 	const { stopScroll, startScroll } = useScroll();
 	const [, setTouchScrollX] = useState<number>(0);
 	const { isTouch } = useIsTouchDevice();
-	const pathname = usePathname();
 
 	useEffect(() => {
 		const scroll = (e: WheelEvent): void => {
@@ -132,7 +130,6 @@ export default function ({ children }: Props): JSX.Element {
 				{children}
 			</aside>
 			<div
-				key={pathname}
 				className={css`
 					text-align: center;
 					@media (max-width: 880px) {

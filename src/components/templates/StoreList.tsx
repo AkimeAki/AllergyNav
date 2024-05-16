@@ -60,14 +60,7 @@ export default function (): JSX.Element {
 	}, []);
 
 	useEffect(() => {
-		if (getStoresStatus === "successed" && getStoresResponse !== undefined) {
-			try {
-				setTimeout(() => {
-					console.log("更新3");
-					loadGoogleAds();
-				}, 500);
-			} catch (e) {}
-		}
+		loadGoogleAds();
 	}, [getStoresStatus, getStoresResponse]);
 
 	useEffect(() => {
@@ -148,12 +141,7 @@ export default function (): JSX.Element {
 	}, []);
 
 	useEffect(() => {
-		try {
-			setTimeout(() => {
-				console.log("更新2");
-				loadGoogleAds();
-			}, 500);
-		} catch (e) {}
+		loadGoogleAds();
 	}, [resizeGoogleAdsToggle]);
 
 	return (
@@ -350,6 +338,7 @@ export default function (): JSX.Element {
 									{index !== 0 && index !== getStoresResponse.length - 1 && index % 5 === 0 && (
 										<>
 											<div
+												key={String(resizeGoogleAdsToggle)}
 												className={css`
 													text-align: center;
 

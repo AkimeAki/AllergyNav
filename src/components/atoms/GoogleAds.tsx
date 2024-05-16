@@ -1,8 +1,7 @@
 "use client";
 
 import { loadGoogleAds } from "@/libs/load-googleads";
-import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 interface Props {
 	slot: string;
@@ -10,28 +9,12 @@ interface Props {
 }
 
 export default function ({ slot, style }: Props): JSX.Element {
-	const pathname = usePathname();
-	const searchParams = useSearchParams();
-	const [adsKey, setAdsKey] = useState<boolean>(false);
-
 	useEffect(() => {
-		try {
-			setTimeout(() => {
-				console.log("更新1");
-				loadGoogleAds();
-			}, 500);
-		} catch (e) {}
-	}, [pathname, searchParams]);
-
-	useEffect(() => {
-		setAdsKey((key) => {
-			return !key;
-		});
-	}, [pathname, searchParams]);
+		loadGoogleAds();
+	}, []);
 
 	return (
 		<ins
-			key={String(adsKey)}
 			className={["adsbygoogle", style].join(" ")}
 			style={{ display: "inline-block" }}
 			data-ad-client="ca-pub-6914867149724943"
