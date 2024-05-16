@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
 	slot: string;
@@ -11,6 +11,7 @@ interface Props {
 export default function ({ slot, style }: Props): JSX.Element {
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
+	const [adsKey, setAdsKey] = useState<boolean>(false);
 
 	useEffect(() => {
 		try {
@@ -21,8 +22,15 @@ export default function ({ slot, style }: Props): JSX.Element {
 		} catch (e) {}
 	}, [pathname, searchParams]);
 
+	useEffect(() => {
+		setAdsKey((key) => {
+			return !key;
+		});
+	}, [pathname, searchParams]);
+
 	return (
 		<ins
+			key={String(adsKey)}
 			className={["adsbygoogle", style].join(" ")}
 			style={{ display: "inline-block" }}
 			data-ad-client="ca-pub-6914867149724943"
