@@ -1,4 +1,4 @@
-import type { GetStoreResponse } from "@/type";
+import type { GetStoreResponse, GetStoresResponse } from "@/type";
 import { notFound } from "next/navigation";
 import { safeString } from "@/libs/safe-type";
 
@@ -34,4 +34,37 @@ export const getStore = async (paramId: string): Promise<NonNullable<GetStoreRes
 	}
 
 	return storeDetail;
+};
+
+export const getStores = async (): Promise<NonNullable<GetStoresResponse>> => {
+	const serverApiKey = safeString(process.env.SERVER_API_KEY);
+
+	if (serverApiKey === null) {
+		notFound();
+	}
+
+	let stores = null;
+	try {
+		const storeDetailFetchResult = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/store`, {
+			method: "GET",
+			cache: "no-store",
+			headers: {
+				Authorization: `Bearer: ${serverApiKey}`
+			}
+		});
+
+		if (storeDetailFetchResult.status !== 200) {
+			throw new Error();
+		}
+
+		stores = (await storeDetailFetchResult.json()) as GetStoresResponse;
+	} catch (e) {
+		stores = null;
+	}
+
+	if (stores === null) {
+		notFound();
+	}
+
+	return stores;
 };
