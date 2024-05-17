@@ -23,16 +23,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		.map((store) => {
 			return [
 				{
-					url: `${store.url}/store/${store.id}`
+					url: `${siteUrl}/store/${store.id}`
 				},
 				{
-					url: `${store.url}/store/${store.id}/menu`
+					url: `${siteUrl}/store/${store.id}/menu`
 				},
 				{
-					url: `${store.url}/store/${store.id}/picture`
+					url: `${siteUrl}/store/${store.id}/picture`
 				},
 				{
-					url: `${store.url}/store/${store.id}/comment`
+					url: `${siteUrl}/store/${store.id}/comment`
 				}
 			];
 		})
