@@ -65,10 +65,7 @@ export default function ({ children }: Props): JSX.Element {
 		};
 
 		const click = (): void => {
-			const mediaQuery = window.matchMedia("(max-width: 880px)");
-			if (mediaQuery.matches && !isTouch) {
-				startScroll();
-			}
+			startScroll();
 		};
 
 		if (element.current !== null) {
