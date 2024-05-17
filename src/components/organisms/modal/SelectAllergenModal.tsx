@@ -210,7 +210,11 @@ export default function ({ isOpen, setIsOpen, allergenStatus, setAllergenStatus 
 	}, [isOpen]);
 
 	useEffect(() => {
-		if (getAllergensStatus === "successed" && getAllergensResponse !== undefined) {
+		if (
+			getAllergensStatus === "successed" &&
+			getAllergensResponse !== undefined &&
+			Object.keys(allergenStatus).length === 0
+		) {
 			const initAllergenStatus: Record<string, AllergenStatusValue> = {};
 			getAllergensResponse.forEach((allergen) => {
 				initAllergenStatus[allergen.id] = "unkown";
@@ -218,7 +222,7 @@ export default function ({ isOpen, setIsOpen, allergenStatus, setAllergenStatus 
 
 			setAllergenStatus(initAllergenStatus);
 		}
-	}, [getAllergensStatus, getAllergensResponse]);
+	}, [getAllergensStatus, getAllergensResponse, allergenStatus]);
 
 	return (
 		<>
