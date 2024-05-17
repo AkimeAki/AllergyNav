@@ -67,11 +67,13 @@ export default function ({ children }: Props): JSX.Element {
 								})(window,document,'script','dataLayer','GTM-523PDB8H');`
 					}}
 				/>
-				<script
-					async
-					src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6914867149724943"
-					crossOrigin="anonymous"
-				/>
+				{process.env.NODE_ENV === "production" && (
+					<script
+						async
+						src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6914867149724943"
+						crossOrigin="anonymous"
+					/>
+				)}
 			</head>
 			<body>
 				<noscript>

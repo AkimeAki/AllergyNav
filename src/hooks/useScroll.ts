@@ -22,7 +22,9 @@ export default function (): ReturnType {
 		const root = document.querySelector("#root") as HTMLDivElement;
 		root.style.overflowY = "";
 		document.body.style.overflowY = "";
-		root.scrollTo(0, Number(root.dataset.scrollY));
+		if (root.dataset.scrollY !== undefined && root.dataset.scrollY !== "") {
+			root.scrollTo(0, Number(root.dataset.scrollY));
+		}
 		setIsScroll(true);
 	};
 
