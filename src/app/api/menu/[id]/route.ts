@@ -157,8 +157,8 @@ export const PUT = async (req: NextRequest, { params }: Data): Promise<Response>
 
 			const allergenStatus = JSON.parse(allergens) as Record<string, AllergenStatusValue>;
 			for (const allergen in allergenStatus) {
-				if (allergenStatus[allergen] === "not contained") {
-					break;
+				if (allergenStatus[allergen] === "unkown") {
+					continue;
 				}
 
 				await prisma.menuAllergen.create({
@@ -193,8 +193,8 @@ export const PUT = async (req: NextRequest, { params }: Data): Promise<Response>
 			});
 
 			for (const allergen in allergenStatus) {
-				if (allergenStatus[allergen] === "not contained") {
-					break;
+				if (allergenStatus[allergen] === "unkown") {
+					continue;
 				}
 
 				await prisma.menuAllergenHistory.create({
