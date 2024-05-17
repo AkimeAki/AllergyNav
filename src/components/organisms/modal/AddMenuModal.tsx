@@ -36,10 +36,6 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 	const [isChanged, setIsChanged] = useState<boolean>(false);
 
 	useEffect(() => {
-		getAllergens();
-	}, []);
-
-	useEffect(() => {
 		if (getAllergensStatus === "successed" && getAllergensResponse !== undefined) {
 			const initAllergenStatus: Record<string, AllergenStatusValue> = {};
 			getAllergensResponse.forEach((allergen) => {
@@ -81,6 +77,8 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 		if (!isOpen) {
 			setMenuName("");
 			setMenuDescription("");
+		} else {
+			getAllergens();
 		}
 	}, [isOpen]);
 

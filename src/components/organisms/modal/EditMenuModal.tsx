@@ -44,12 +44,9 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 	useEffect(() => {
 		if (isOpen) {
 			getMenu(menuId);
+			getAllergens();
 		}
 	}, [isOpen]);
-
-	useEffect(() => {
-		getAllergens();
-	}, []);
 
 	useEffect(() => {
 		if (getMenuStatus === "successed" && getMenuResponse !== undefined) {

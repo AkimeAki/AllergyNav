@@ -27,6 +27,7 @@ export default function ({ menuId, isOpen, setIsOpen }: Props): JSX.Element {
 	useEffect(() => {
 		if (isOpen) {
 			getMenuHistories(menuId);
+			getAllergens();
 		}
 	}, [isOpen]);
 
@@ -35,10 +36,6 @@ export default function ({ menuId, isOpen, setIsOpen }: Props): JSX.Element {
 			addMessage("履歴の取得に失敗しました", "error");
 		}
 	}, [getMenuHistoriesStatus]);
-
-	useEffect(() => {
-		getAllergens();
-	}, []);
 
 	return (
 		<Modal isOpen={isOpen} setIsOpen={setIsOpen}>
