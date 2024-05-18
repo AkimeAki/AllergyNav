@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { css } from "@kuma-ui/core";
 import Footer from "@/components/organisms/Footer";
 import ScrollTop from "@/components/molecules/ScrollTop";
+import NextTopLoader from "nextjs-toploader";
 
 interface Props {
 	children: ReactNode;
@@ -32,6 +33,7 @@ export default function ({ children }: Props): JSX.Element {
 				}
 			`}
 		>
+			<NextTopLoader color="var(--color-theme)" showSpinner={false} />
 			<ScrollTop />
 			<div
 				className={css`
