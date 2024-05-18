@@ -54,7 +54,8 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 					include: {
 						menu_allergens: {
 							select: {
-								allergen_id: true
+								allergen_id: true,
+								status: true
 							}
 						}
 					}
@@ -92,14 +93,18 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 			let menuAllergen = false;
 			for (const menu of item.menus) {
 				// メニューの中にアレルゲンが含まれているかどうかを管理する変数
-				let allergen = false;
-				const allergenIds = menu.menu_allergens.map((allergen) => {
-					return allergen.allergen_id;
-				});
+				let allergen = true;
+				const allergenIds = menu.menu_allergens
+					.filter((allergen) => {
+						return allergen.status === "contain";
+					})
+					.map((allergen) => {
+						return allergen.allergen_id;
+					});
 
 				for (const allergenId of allergenIds) {
 					if (allergens.includes(allergenId)) {
-						allergen = true;
+						allergen = false;
 					}
 				}
 
