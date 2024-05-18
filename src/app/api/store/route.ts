@@ -93,7 +93,7 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 			let menuAllergen = false;
 			for (const menu of item.menus) {
 				// メニューの中にアレルゲンが含まれているかどうかを管理する変数
-				let allergen = true;
+				let allergen = false;
 				const allergenIds = menu.menu_allergens
 					.filter((allergen) => {
 						return allergen.status === "contain";
@@ -104,7 +104,7 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 
 				for (const allergenId of allergenIds) {
 					if (allergens.includes(allergenId)) {
-						allergen = false;
+						allergen = true;
 					}
 				}
 
