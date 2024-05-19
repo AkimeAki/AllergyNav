@@ -17,7 +17,7 @@ export default function ({
 	image,
 	text,
 	nameHidden = false,
-	size = 35,
+	size = 32,
 	status = "normal",
 	clickable = false,
 	onClick
@@ -46,7 +46,6 @@ export default function ({
 			].join(" ")}
 		>
 			<Image
-				style={{ width: `${size}px` }}
 				className={[
 					css`
 						height: auto;
@@ -57,6 +56,7 @@ export default function ({
 						transition-property: filter;
 						user-select: none;
 						pointer-events: none;
+						image-rendering: pixelated;
 					`,
 					status !== "normal" &&
 						css`
@@ -67,8 +67,8 @@ export default function ({
 							filter: drop-shadow(0 0 4px var(--color-red)) drop-shadow(0 0 4px var(--color-red));
 						`
 				].join(" ")}
-				width={100}
-				height={100}
+				width={size}
+				height={size}
 				src={image}
 				alt={`${text}のアイコン`}
 			/>
