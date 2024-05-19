@@ -10,8 +10,6 @@ import { getStatus } from "@/libs/get-status";
 import { Resend } from "resend";
 import { mailBody, mailFrom, mailTitle } from "@/libs/verifiy-mail";
 
-export const runtime = "edge";
-
 export const POST = async (req: NextRequest): Promise<Response> => {
 	let status = 500;
 	let data: AddUserResponse = null;

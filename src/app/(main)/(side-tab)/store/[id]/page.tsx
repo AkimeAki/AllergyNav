@@ -6,14 +6,11 @@ import EditStoreButton from "@/components/organisms/EditStoreButton";
 import Image from "next/image";
 import { getStore } from "@/libs/server-fetch";
 import SubTitle from "@/components/atoms/SubTitle";
-
 interface Props {
 	params: {
 		id: string;
 	};
 }
-
-export const runtime = "edge";
 
 export default async function ({ params }: Props): Promise<JSX.Element> {
 	const storeDetail = await getStore(params.id);

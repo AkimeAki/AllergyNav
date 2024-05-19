@@ -10,8 +10,6 @@ import { getToken } from "next-auth/jwt";
 import { accessCheck } from "@/libs/access-check";
 import { getStatus } from "@/libs/get-status";
 
-export const runtime = "edge";
-
 export const GET = async (req: NextRequest): Promise<Response> => {
 	let status = 500;
 	let data: GetMenusResponse = null;

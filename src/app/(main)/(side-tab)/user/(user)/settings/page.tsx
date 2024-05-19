@@ -5,8 +5,6 @@ export const metadata: Metadata = {
 	title: "設定"
 };
 
-export const runtime = "edge";
-
 export default async function (): Promise<JSX.Element> {
 	return (
 		<div

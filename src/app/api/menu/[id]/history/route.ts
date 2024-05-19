@@ -12,8 +12,6 @@ interface Data {
 	};
 }
 
-export const runtime = "edge";
-
 export const GET = async (req: NextRequest, { params }: Data): Promise<Response> => {
 	let status = 500;
 	let data: GetMenuHistoryResponse = null;

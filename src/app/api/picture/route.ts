@@ -13,8 +13,6 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { createId } from "@paralleldrive/cuid2";
 import sharp from "sharp";
 
-export const runtime = "edge";
-
 export const GET = async (req: NextRequest): Promise<NextResponse> => {
 	let status = 500;
 	let data: GetPicturesResponse = null;

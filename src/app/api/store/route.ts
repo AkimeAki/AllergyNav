@@ -17,8 +17,6 @@ const headers = {
 	"Access-Control-Allow-Methods": "GET, POST" // 許可するメソッド
 };
 
-export const runtime = "edge";
-
 export const GET = async (req: NextRequest): Promise<NextResponse> => {
 	let data: GetStoresResponse = null;
 	let status = 500;
