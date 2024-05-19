@@ -8,6 +8,8 @@ interface Props {
 	};
 }
 
+export const runtime = "edge";
+
 export default async function ({ params }: Props): Promise<JSX.Element> {
 	const id = safeString(params.id);
 

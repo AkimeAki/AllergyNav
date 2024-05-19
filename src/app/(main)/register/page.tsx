@@ -8,6 +8,8 @@ export const metadata: Metadata = {
 	title: "アカウント作成"
 };
 
+export const runtime = "edge";
+
 export default async function (): Promise<JSX.Element> {
 	const session = await getServerSession();
 	const user = session?.user;

@@ -6,6 +6,8 @@ import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "@/libs/auth";
 import Script from "next/script";
 
+export const runtime = "edge";
+
 export const metadata: Metadata = {
 	title: "メール認証"
 };

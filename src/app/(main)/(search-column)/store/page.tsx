@@ -7,6 +7,8 @@ export const metadata: Metadata = {
 	title: "お店一覧"
 };
 
+export const runtime = "edge";
+
 export default function (): JSX.Element {
 	return (
 		<div

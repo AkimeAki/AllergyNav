@@ -6,6 +6,8 @@ export const metadata: Metadata = {
 	title: "ユーザー管理"
 };
 
+export const runtime = "edge";
+
 export default async function (): Promise<JSX.Element> {
 	const { userId, role } = await getUserData();
 

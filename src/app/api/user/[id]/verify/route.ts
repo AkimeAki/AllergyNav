@@ -16,6 +16,8 @@ interface Data {
 	};
 }
 
+export const runtime = "edge";
+
 export const POST = async (req: NextRequest, { params }: Data): Promise<Response> => {
 	let status = 500;
 
