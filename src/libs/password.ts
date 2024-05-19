@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const bcrypt = require("bcrypt");
+import bcrypt from "bcryptjs";
 const saltRounds = 12; // ハッシュ値の計算を遅くするためのパラメータらしい
 
 export const hashPass = async (password: string): Promise<string> => {
