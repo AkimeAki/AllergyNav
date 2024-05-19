@@ -44,6 +44,9 @@ steps:
         "${_REGION}",
         "--allow-unauthenticated"
       ]
+  # 古いArtifact Registryのイメージを削除
+  - name: "asia-docker.pkg.dev/gcr-cleaner/gcr-cleaner/gcr-cleaner-cli:latest"
+    args: ["--repo=${_ARTIFACT_RESISTRY_IMAGE_REPO}", "--keep=3", "--tag-filter-any=.*"]
 substitutions:
   _IMAGE_NAME: "asia-northeast1-docker.pkg.dev/${PROJECT_ID}/allergynav/production"
   _SERVICE_NAME: "allergynav"
