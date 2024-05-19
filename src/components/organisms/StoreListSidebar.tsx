@@ -193,6 +193,36 @@ export default function (): JSX.Element {
 							</Select>
 						</div>
 					)}
+					<div
+						className={css`
+							display: flex;
+							flex-direction: column;
+						`}
+					>
+						<Button
+							size="small"
+							onClick={() => {
+								setIsSpModalOpen(false);
+								search();
+							}}
+							disabled={
+								getAllergensStatus === "loading" ||
+								selectAllergens === undefined ||
+								setKeywords === undefined ||
+								setArea === undefined ||
+								setRadius === undefined
+							}
+							loading={
+								getAllergensStatus === "loading" ||
+								selectAllergens === undefined ||
+								setKeywords === undefined ||
+								setArea === undefined ||
+								setRadius === undefined
+							}
+						>
+							検索
+						</Button>
+					</div>
 				</div>
 			</Modal>
 			<Modal isOpen={isAllergenSelectModalOpen} setIsOpen={setIsAllergenSelectModalOpen}>
