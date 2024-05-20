@@ -73,7 +73,7 @@ export default function ({
 							@media (max-width: 880px) {
 								padding: 0 !important;
 								max-width: 100%;
-								height: 100%;
+								height: 100svh;
 							}
 						`}
 					>

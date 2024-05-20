@@ -1,10 +1,9 @@
 "use client";
 
 import { css } from "@kuma-ui/core";
-import GoogleIcon from "@/components/atoms/GoogleIcon";
 
 interface Props {
-	size: 4 | 8 | 12 | 16 | 20 | 24 | 28 | 32 | 36 | 40 | 44 | 48 | 52 | 56 | 60;
+	size: number;
 }
 
 export default function ({ size }: Props): JSX.Element {
@@ -13,7 +12,7 @@ export default function ({ size }: Props): JSX.Element {
 			className={css`
 				animation-name: loadingCircleRotate;
 				animation-iteration-count: infinite;
-				animation-duration: 700ms;
+				animation-duration: 1000ms;
 				animation-timing-function: linear;
 
 				@keyframes loadingCircleRotate {
@@ -31,7 +30,17 @@ export default function ({ size }: Props): JSX.Element {
 				}
 			`}
 		>
-			<GoogleIcon size={size} name="progress_activity" color="var(--color-theme)" />
+			<div
+				style={{ width: size + "px" }}
+				className={css`
+					aspect-ratio: 1/1;
+					border-radius: 9999px;
+					border: 4px solid var(--color-theme);
+					border-bottom-color: transparent;
+					border-left-color: transparent !important;
+					border-top-color: transparent !important;
+				`}
+			/>
 		</div>
 	);
 }
