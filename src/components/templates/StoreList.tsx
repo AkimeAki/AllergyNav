@@ -393,7 +393,7 @@ export default function (): JSX.Element {
 						position: sticky;
 						bottom: 40px;
 						text-align: right;
-						z-index: 98;
+						z-index: 99;
 						animation-name: addStoreButtonFadeIn;
 						opacity: 0;
 						animation-iteration-count: 1;

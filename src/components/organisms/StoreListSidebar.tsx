@@ -526,7 +526,7 @@ export default function (): JSX.Element {
 						display: block;
 						position: sticky;
 						top: 0;
-						z-index: 99;
+						z-index: 100;
 						background-color: var(--color-secondary);
 						border-bottom: 2px solid #d3d3d3;
 						padding: 0 10px;
