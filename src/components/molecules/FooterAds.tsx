@@ -3,7 +3,6 @@
 import { css } from "@kuma-ui/core";
 import GoogleAds from "@/components/atoms/GoogleAds";
 import { useEffect, useState } from "react";
-import { loadGoogleAds } from "@/libs/load-googleads";
 
 export default function (): JSX.Element {
 	const [resizeGoogleAdsToggle, setResizeGoogleAdsToggle] = useState<number>(0);
@@ -26,10 +25,6 @@ export default function (): JSX.Element {
 		};
 	}, []);
 
-	useEffect(() => {
-		loadGoogleAds();
-	}, [resizeGoogleAdsToggle]);
-
 	return (
 		<div
 			className={css`
@@ -48,6 +43,7 @@ export default function (): JSX.Element {
 			>
 				<GoogleAds
 					slot="3013069660"
+					deps={[resizeGoogleAdsToggle]}
 					style={css`
 						width: 728px;
 						height: 250px;
@@ -70,6 +66,7 @@ export default function (): JSX.Element {
 			>
 				<GoogleAds
 					slot="3013069660"
+					deps={[resizeGoogleAdsToggle]}
 					style={css`
 						width: 450px;
 						height: 250px;
@@ -88,6 +85,7 @@ export default function (): JSX.Element {
 			>
 				<GoogleAds
 					slot="3013069660"
+					deps={[resizeGoogleAdsToggle]}
 					style={css`
 						width: 300px;
 						height: 250px;

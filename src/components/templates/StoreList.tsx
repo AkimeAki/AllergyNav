@@ -21,7 +21,6 @@ import NotVerifiedModal from "@/components/molecules/NotVerifiedModal";
 import NotLoginedModal from "@/components/molecules/NotLoginedModal";
 import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
 import GoogleAds from "@/components/atoms/GoogleAds";
-import { loadGoogleAds } from "@/libs/load-googleads";
 
 export default function (): JSX.Element {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
@@ -58,10 +57,6 @@ export default function (): JSX.Element {
 	useEffect(() => {
 		getAllergens();
 	}, []);
-
-	useEffect(() => {
-		loadGoogleAds();
-	}, [getStoresStatus, getStoresResponse]);
 
 	useEffect(() => {
 		if (getAllergensResponse !== undefined) {
@@ -139,10 +134,6 @@ export default function (): JSX.Element {
 			window.removeEventListener("resize", resize);
 		};
 	}, []);
-
-	useEffect(() => {
-		loadGoogleAds();
-	}, [resizeGoogleAdsToggle]);
 
 	return (
 		<>
@@ -357,6 +348,7 @@ export default function (): JSX.Element {
 											>
 												<GoogleAds
 													slot="5973440772"
+													deps={[resizeGoogleAdsToggle, getStoresStatus, getStoresResponse]}
 													style={css`
 														width: 560px;
 														height: 90px;
@@ -375,6 +367,7 @@ export default function (): JSX.Element {
 											>
 												<GoogleAds
 													slot="5973440772"
+													deps={[resizeGoogleAdsToggle, getStoresStatus, getStoresResponse]}
 													style={css`
 														width: 300px;
 														height: 150px;
