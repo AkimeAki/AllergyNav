@@ -1,4 +1,4 @@
-import type { GetStoreResponse, GetStoresResponse } from "@/type";
+import type { GetAllergensResponse, GetStoreResponse, GetStoresResponse } from "@/type";
 import { notFound } from "next/navigation";
 import { safeString } from "@/libs/safe-type";
 
@@ -67,4 +67,37 @@ export const getStores = async (): Promise<NonNullable<GetStoresResponse>> => {
 	}
 
 	return stores;
+};
+
+export const getAllergens = async (): Promise<NonNullable<GetAllergensResponse>> => {
+	const serverApiKey = safeString(process.env.SERVER_API_KEY);
+
+	if (serverApiKey === null) {
+		notFound();
+	}
+
+	let allergens = null;
+	try {
+		const allergenFetchResult = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/allergen`, {
+			method: "GET",
+			cache: "no-store",
+			headers: {
+				Authorization: `Bearer: ${serverApiKey}`
+			}
+		});
+
+		if (allergenFetchResult.status !== 200) {
+			throw new Error();
+		}
+
+		allergens = (await allergenFetchResult.json()) as GetAllergensResponse;
+	} catch (e) {
+		allergens = null;
+	}
+
+	if (allergens === null) {
+		notFound();
+	}
+
+	return allergens;
 };
