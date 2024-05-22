@@ -1,6 +1,5 @@
 "use client";
 
-import { loadGoogleAds } from "@/libs/load-googleads";
 import type { DependencyList } from "react";
 import { useEffect, useState } from "react";
 
@@ -24,7 +23,6 @@ export default function ({ slot, style, deps = [] }: Props): JSX.Element {
 		const observer = new MutationObserver((mutations) => {
 			mutations.forEach((mutation) => {
 				if (mutation.attributeName === "data-ads-num") {
-					loadGoogleAds();
 					setKey((oldKey) => {
 						return oldKey + 1;
 					});

@@ -6,12 +6,12 @@ export const loadGoogleAds = (): void => {
 		setTimeout(() => {
 			if (process.env.NODE_ENV === "production") {
 				const currentAdsNum = (root.dataset.adsNum ?? "") === "" ? 0 : Number(root.dataset.adsNum);
-				console.log(adsNum, currentAdsNum);
-
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-				(adsbygoogle = window.adsbygoogle || []).push({});
+				if (adsNum === currentAdsNum) {
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-expect-error
+					// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+					(adsbygoogle = window.adsbygoogle || []).push({});
+				}
 			}
 		}, 1000);
 	} catch (e) {}
