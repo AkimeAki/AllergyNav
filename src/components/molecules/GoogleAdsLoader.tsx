@@ -8,21 +8,21 @@ export default function (): JSX.Element {
 		const observer = new MutationObserver((mutations) => {
 			mutations.forEach((mutation) => {
 				if (mutation.attributeName === "data-ads-num") {
-					const root = document.querySelector("#root") as HTMLDivElement;
+					// const root = document.querySelector("#root") as HTMLDivElement;
 
 					try {
 						setTimeout(() => {
 							if (process.env.NODE_ENV === "production") {
-								const adsNum = (root.dataset.adsNum ?? "") === "" ? 0 : Number(root.dataset.adsNum);
+								// const adsNum = (root.dataset.adsNum ?? "") === "" ? 0 : Number(root.dataset.adsNum);
 
-								if (adsNum === Number(mutation.oldValue) + 1) {
-									console.log("load", adsNum);
+								// if (adsNum === Number(mutation.oldValue) + 1) {
+								console.log("load", Number(mutation.oldValue) + 1);
 
-									// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-									// @ts-expect-error
-									// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-									(adsbygoogle = window.adsbygoogle || []).push({});
-								}
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-expect-error
+								// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+								(adsbygoogle = window.adsbygoogle || []).push({});
+								// }
 							}
 						}, 1000);
 					} catch (e) {}
