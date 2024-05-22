@@ -9,12 +9,14 @@ export default function (): JSX.Element {
 			mutations.forEach((mutation) => {
 				if (mutation.attributeName === "data-ads-num") {
 					try {
-						if (process.env.NODE_ENV === "production") {
-							// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-							// @ts-expect-error
-							// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-							(adsbygoogle = window.adsbygoogle || []).push({});
-						}
+						setTimeout(() => {
+							if (process.env.NODE_ENV === "production") {
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-expect-error
+								// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+								(adsbygoogle = window.adsbygoogle || []).push({});
+							}
+						}, 1000);
 					} catch (e) {}
 				}
 			});
