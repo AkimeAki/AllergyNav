@@ -1,6 +1,5 @@
 "use client";
 
-import { loadGoogleAds } from "@/libs/load-googleads";
 import { useEffect } from "react";
 
 export default function (): JSX.Element {
@@ -9,7 +8,24 @@ export default function (): JSX.Element {
 		const observer = new MutationObserver((mutations) => {
 			mutations.forEach((mutation) => {
 				if (mutation.attributeName === "data-ads-num") {
-					loadGoogleAds();
+					const root = document.querySelector("#root") as HTMLDivElement;
+
+					try {
+						setTimeout(() => {
+							if (process.env.NODE_ENV === "production") {
+								const adsNum = (root.dataset.adsNum ?? "") === "" ? 0 : Number(root.dataset.adsNum);
+
+								if (adsNum === Number(mutation.oldValue) + 1) {
+									console.log("load", adsNum);
+
+									// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+									// @ts-expect-error
+									// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+									(adsbygoogle = window.adsbygoogle || []).push({});
+								}
+							}
+						}, 1000);
+					} catch (e) {}
 				}
 			});
 		});
@@ -18,7 +34,7 @@ export default function (): JSX.Element {
 			childList: false,
 			subtree: false,
 			characterData: false,
-			attributeOldValue: false,
+			attributeOldValue: true,
 			characterDataOldValue: false
 		});
 
