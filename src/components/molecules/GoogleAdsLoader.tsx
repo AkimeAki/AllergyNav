@@ -16,7 +16,7 @@ export default function (): JSX.Element {
 								// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
 								(adsbygoogle = window.adsbygoogle || []).push({});
 							}
-						}, 1000);
+						}, 500);
 					} catch (e) {}
 				}
 			});
