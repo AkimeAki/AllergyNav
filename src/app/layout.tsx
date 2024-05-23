@@ -8,9 +8,10 @@ import { css } from "@kuma-ui/core";
 export const metadata: Metadata = {
 	title: {
 		default: "アレルギーナビ｜アレルギーの方向けの飲食店情報サービス",
-		template: "%s｜アレルギーナビ｜アレルギーの方向けの飲食店情報サービス"
+		template: "%s｜アレルギーナビ"
 	},
-	description: ""
+	description:
+		"『アレルギーナビ』は、アレルギーの方々が少しでも多く、食べに行ける飲食店が見つけられるように作ったサービスです。どこかの飲食店のアレルギー情報を得た方、持っている方はアレルギーナビに情報を追加してくれると助かります。"
 };
 
 interface Props {

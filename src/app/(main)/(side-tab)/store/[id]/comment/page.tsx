@@ -2,12 +2,17 @@ import { notFound } from "next/navigation";
 import { safeString } from "@/libs/safe-type";
 import { css } from "@kuma-ui/core";
 import StoreComment from "@/components/templates/StoreComment";
+import type { Metadata } from "next";
 
 interface Props {
 	params: {
 		id: string;
 	};
 }
+
+export const metadata: Metadata = {
+	title: "コメント"
+};
 
 export default async function ({ params }: Props): Promise<JSX.Element> {
 	const id = safeString(params.id);

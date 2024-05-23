@@ -16,7 +16,11 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 	const storeDetail = await getStore(params.id);
 
 	return {
-		title: storeDetail.name
+		title: {
+			default: storeDetail.name,
+			template: `%s - ${storeDetail.name}｜アレルギーナビ`
+		},
+		description: `${storeDetail.name}のアレルギー情報ページです。アレルギー情報を得た方、持っている方はアレルギーナビに情報を追加してくれると助かります。`
 	};
 };
 
