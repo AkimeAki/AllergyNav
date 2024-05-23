@@ -37,7 +37,7 @@ export default function ({ onChange, disabled = false, loading = false, accept =
 						color: var(--color-theme);
 						border-width: 2px;
 						border-radius: 30px;
-						font-weight: 700;
+						font-weight: bold;
 						transition-duration: 200ms;
 						transition-property: color, border-color, background-color;
 						white-space: nowrap;

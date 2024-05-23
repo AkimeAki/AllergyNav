@@ -10,7 +10,7 @@ export default function ({ children }: Props): JSX.Element {
 		<h2
 			className={css`
 				width: 100%;
-				font-weight: 700;
+				font-weight: bold;
 				font-size: 18px;
 				background-color: var(--color-theme);
 				padding: 10px 20px;

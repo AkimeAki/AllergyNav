@@ -61,13 +61,13 @@ export default function (): JSX.Element {
 							/>
 							<div
 								className={css`
-									font-weight: 700;
+									font-weight: bold;
 								`}
 							>
 								アレルギーナビ
 								<span
 									className={css`
-										font-weight: 700;
+										font-weight: bold;
 										margin-left: 5px;
 
 										@media (max-width: 430px) {

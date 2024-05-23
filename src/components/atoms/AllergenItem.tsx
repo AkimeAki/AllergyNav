@@ -79,7 +79,7 @@ export default function ({
 						text-align: center;
 						white-space: nowrap;
 						font-size: 15px;
-						font-weight: 700;
+						font-weight: bold;
 						margin-top: 5px;
 						z-index: 1;
 					`}

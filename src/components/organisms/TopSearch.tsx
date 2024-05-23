@@ -24,7 +24,7 @@ export default function ({ allergens }: Props): JSX.Element {
 				以下の中から
 				<span
 					className={css`
-						font-weight: 900;
+						font-weight: bold;
 						text-decoration: underline;
 						color: var(--color-red);
 						margin: 0 5px;

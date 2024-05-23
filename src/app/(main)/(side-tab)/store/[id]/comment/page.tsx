@@ -30,7 +30,7 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 					<span
 						className={css`
 							color: var(--color-red);
-							font-weight: 700;
+							font-weight: bold;
 							text-decoration: underline;
 						`}
 					>

@@ -11,7 +11,7 @@ export default function ({ children }: Props): JSX.Element {
 			className={css`
 				position: relative;
 				width: 100%;
-				font-weight: 700;
+				font-weight: bold;
 				font-size: 18px;
 				padding: 10px 20px 14px 20px;
 

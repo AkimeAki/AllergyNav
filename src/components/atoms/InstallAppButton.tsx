@@ -71,7 +71,7 @@ export default function ({ children }: Props): JSX.Element {
 				color: var(--color-theme);
 				border-width: 2px;
 				border-radius: 30px;
-				font-weight: 700;
+				font-weight: bold;
 				overflow: hidden;
 				white-space: nowrap;
 				user-select: none;

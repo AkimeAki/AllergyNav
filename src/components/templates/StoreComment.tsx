@@ -255,7 +255,7 @@ export default function ({ storeId }: Props): JSX.Element {
 								<h4
 									className={css`
 										font-size: 20px;
-										font-weight: 700;
+										font-weight: bold;
 										border-bottom-style: solid;
 										border-bottom-width: 2px;
 										border-bottom-color: var(--color-theme);

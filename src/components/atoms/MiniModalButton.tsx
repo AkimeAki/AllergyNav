@@ -23,7 +23,7 @@ export default function ({ href, children, onClick, disabled = false, loading = 
 			background-color: var(--color-secondary);
 			color: var(--color-primary);
 			border: none;
-			font-weight: 700;
+			font-weight: bold;
 			overflow: hidden;
 			transition-duration: 200ms;
 			transition-property: color, border-color, background-color;

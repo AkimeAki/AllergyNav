@@ -62,7 +62,7 @@ export default function ({
 			color: var(--button-color);
 			border-width: 2px;
 			border-radius: 30px;
-			font-weight: 700;
+			font-weight: bold;
 			overflow: hidden;
 			transition-duration: 200ms;
 			transition-property: color, border-color, background-color;
