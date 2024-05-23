@@ -30,6 +30,7 @@ export default function ({ isSidebarOpen, setIsSidebarOpen }: Props): JSX.Elemen
 				`}
 			>
 				<button
+					area-label="ナビボタン"
 					onClick={() => {
 						setIsSidebarOpen((status) => {
 							return !status;
