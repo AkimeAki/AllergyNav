@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /user
+Disallow: /user/*
+Disallow: /admin
+Disallow: /admin/*
+Sitemap: https://allergy-navi.com/sitemap.xml
