@@ -1,9 +1,10 @@
+import { seoHead } from "@/libs/seo";
 import { css } from "@kuma-ui/core";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = seoHead({
 	title: "お気に入り"
-};
+});
 
 export default async function (): Promise<JSX.Element> {
 	return (

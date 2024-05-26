@@ -7,6 +7,7 @@ import MainTitle from "@/components/atoms/MainTitle";
 import UserTabs from "@/components/organisms/UserTabs";
 import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "@/libs/auth";
+import { seoHead } from "@/libs/seo";
 
 interface Props {
 	children: ReactNode;
@@ -29,9 +30,9 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 		notFound();
 	}
 
-	return {
+	return seoHead({
 		title
-	};
+	});
 };
 
 export default async function ({ children, params }: Props): Promise<JSX.Element> {

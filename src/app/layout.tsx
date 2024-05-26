@@ -4,15 +4,9 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { KumaRegistry } from "@kuma-ui/next-plugin/registry";
 import { css } from "@kuma-ui/core";
+import { seoHead } from "@/libs/seo";
 
-export const metadata: Metadata = {
-	title: {
-		default: "アレルギーナビ｜アレルギーの方向けの飲食店情報サービス",
-		template: "%s｜アレルギーナビ"
-	},
-	description:
-		"『アレルギーナビ』は、アレルギーの方々が少しでも多く、食べに行ける飲食店が見つけられるように作ったサービスです。どこかの飲食店のアレルギー情報を得た方、持っている方はアレルギーナビに情報を追加してくれると助かります。"
-};
+export const metadata: Metadata = seoHead({});
 
 interface Props {
 	children: ReactNode;
@@ -41,7 +35,6 @@ export default function ({ children }: Props): JSX.Element {
 			`}
 		>
 			<head>
-				<link rel="manifest" href="/manifest.json" />
 				<meta name="theme-color" content="#fc9e82" />
 				<link rel="preconnect" href="https://fonts.googleapis.com" />
 				<link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
@@ -49,7 +42,6 @@ export default function ({ children }: Props): JSX.Element {
 					rel="stylesheet"
 					href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap"
 				/>
-				<link rel="icon" href="/favicon.png"></link>
 				{process.env.NODE_ENV === "production" && (
 					<>
 						{/* eslint-disable-next-line react/jsx-no-comment-textnodes, @next/next/next-script-for-ga */}

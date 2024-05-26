@@ -3,7 +3,6 @@ import { safeString } from "@/libs/safe-type";
 import type { ReactNode } from "react";
 import { css } from "@kuma-ui/core";
 import MainTitle from "@/components/atoms/MainTitle";
-import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "@/libs/auth";
 import AdminTabs from "@/components/organisms/AdminTabs";
@@ -14,14 +13,6 @@ interface Props {
 		id: string;
 	};
 }
-
-export const metadata: Metadata = {
-	title: {
-		default: "管理画面",
-		template: "%s｜管理画面｜アレルギーナビ"
-	},
-	description: ""
-};
 
 export default async function ({ children }: Props): Promise<JSX.Element> {
 	const session = await getServerSession(nextAuthOptions);

@@ -1,5 +1,11 @@
 import { getUserData } from "@/libs/get-user-data";
+import { seoHead } from "@/libs/seo";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+export const metadata: Metadata = seoHead({
+	title: "管理画面"
+});
 
 export default async function (): Promise<JSX.Element> {
 	const { userId, role } = await getUserData();

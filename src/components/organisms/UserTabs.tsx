@@ -24,7 +24,7 @@ export default function ({ pageId, userId }: Props): JSX.Element {
 						お気に入り
 					</SideTabLink>
 					<SideTabLink icon="history" href="/user/histories" active={pathname === "/user/histories"}>
-						履歴
+						閲覧履歴
 					</SideTabLink>
 					<SideTabLink icon="settings" href="/user/settings" active={pathname === "/user/settings"}>
 						設定

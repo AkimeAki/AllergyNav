@@ -3,6 +3,8 @@ import { safeString } from "@/libs/safe-type";
 import { css } from "@kuma-ui/core";
 import StoreComment from "@/components/templates/StoreComment";
 import type { Metadata } from "next";
+import { getStore } from "@/libs/server-fetch";
+import { seoHead } from "@/libs/seo";
 
 interface Props {
 	params: {
@@ -10,8 +12,13 @@ interface Props {
 	};
 }
 
-export const metadata: Metadata = {
-	title: "コメント"
+export const generateMetadata = async ({ params }: Props): Promise<Metadata> => {
+	const storeDetail = await getStore(params.id);
+
+	return seoHead({
+		title: `コメント - ${storeDetail.name}`,
+		description: `『${storeDetail.name}』のコメントページです。アレルギー情報を得た方、持っている方はアレルギーナビに情報を追加してくれると助かります。`
+	});
 };
 
 export default async function ({ params }: Props): Promise<JSX.Element> {

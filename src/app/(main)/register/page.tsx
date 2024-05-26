@@ -1,12 +1,11 @@
 import RegisterForm from "@/components/templates/RegisterForm";
+import { seoHead } from "@/libs/seo";
 import { css } from "@kuma-ui/core";
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-	title: "アカウント作成"
-};
+export const metadata: Metadata = seoHead({ title: "アカウント作成" });
 
 export default async function (): Promise<JSX.Element> {
 	const session = await getServerSession();

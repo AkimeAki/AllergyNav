@@ -1,12 +1,11 @@
 import LoginForm from "@/components/templates/LoginForm";
+import { seoHead } from "@/libs/seo";
 import { css } from "@kuma-ui/core";
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-	title: "ログイン"
-};
+export const metadata: Metadata = seoHead({ title: "ログイン" });
 
 export default async function (): Promise<JSX.Element> {
 	const session = await getServerSession();

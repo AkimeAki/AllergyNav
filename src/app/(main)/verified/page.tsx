@@ -5,10 +5,9 @@ import { safeString } from "@/libs/safe-type";
 import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "@/libs/auth";
 import Script from "next/script";
+import { seoHead } from "@/libs/seo";
 
-export const metadata: Metadata = {
-	title: "メール認証"
-};
+export const metadata: Metadata = seoHead({ title: "メール認証" });
 
 interface Props {
 	searchParams: Record<string, string | string[] | undefined>;

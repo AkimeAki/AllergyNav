@@ -6,11 +6,22 @@ import EditStoreButton from "@/components/organisms/EditStoreButton";
 import Image from "next/image";
 import { getStore } from "@/libs/server-fetch";
 import SubTitle from "@/components/atoms/SubTitle";
+import type { Metadata } from "next";
+import { seoHead } from "@/libs/seo";
 interface Props {
 	params: {
 		id: string;
 	};
 }
+
+export const generateMetadata = async ({ params }: Props): Promise<Metadata> => {
+	const storeDetail = await getStore(params.id);
+
+	return seoHead({
+		title: storeDetail.name,
+		description: `『${storeDetail.name}』のアレルギー情報ページです。アレルギー情報を得た方、持っている方はアレルギーナビに情報を追加してくれると助かります。`
+	});
+};
 
 export default async function ({ params }: Props): Promise<JSX.Element> {
 	const storeDetail = await getStore(params.id);

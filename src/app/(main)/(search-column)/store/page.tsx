@@ -1,13 +1,14 @@
 import MainTitle from "@/components/atoms/MainTitle";
 import StoreList from "@/components/templates/StoreList";
+import { seoHead } from "@/libs/seo";
 import { css } from "@kuma-ui/core";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = seoHead({
 	title: "お店一覧",
 	description:
 		"お店一覧ページです。アレルギー情報を得た方、持っている方はアレルギーナビに情報を追加してくれると助かります。"
-};
+});
 
 export default function (): JSX.Element {
 	return (
