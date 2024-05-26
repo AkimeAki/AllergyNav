@@ -93,7 +93,6 @@ const deleteOldMessage = (): void => {
 	});
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const useFloatMessage = () => {
 	const addMessage = (text: string, type: "success" | "error", secounds: number | "path" = 5): void => {
 		deleteOldMessage();

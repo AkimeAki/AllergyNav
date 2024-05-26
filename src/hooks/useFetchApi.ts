@@ -2,7 +2,6 @@ import { ValidationError } from "@/definition";
 import type { FetchStatus } from "@/type";
 import { useState } from "react";
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default function <T>() {
 	const [responseStatus, setResponseStatus] = useState<number | undefined>(undefined);
 	const [response, setResponse] = useState<NonNullable<T> | undefined>(undefined);

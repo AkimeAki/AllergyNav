@@ -4,14 +4,8 @@
 		"browser": true,
 		"es2023": true
 	},
-	"extends": ["next/core-web-vitals", "standard-with-typescript", "prettier"],
+	"extends": ["next/core-web-vitals", "prettier"],
 	"rules": {
-		"@typescript-eslint/consistent-type-imports": [
-			"warn",
-			{
-				"prefer": "type-imports"
-			}
-		],
 		"import/no-anonymous-default-export": "off",
 		"react/display-name": "off",
 		"react-hooks/exhaustive-deps": "off"

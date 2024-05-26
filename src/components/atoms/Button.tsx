@@ -162,7 +162,6 @@ export default function ({
 						click();
 					}}
 					className={buttonStyle}
-					// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 					style={{ "--button-color": color } as CSSProperties}
 				>
 					<ButtonInner loading={loading} />
@@ -175,7 +174,6 @@ export default function ({
 					}}
 					href={href}
 					className={buttonStyle}
-					// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 					style={{ "--button-color": color } as CSSProperties}
 				>
 					<ButtonInner loading={loading} />
