@@ -13,35 +13,17 @@ export default function ({ slot, style, deps = [] }: Props): JSX.Element {
 	const [key, setKey] = useState<number>(0);
 
 	useEffect(() => {
-		const root = document.querySelector("#root") as HTMLDivElement;
-		const adsNum = (root.dataset.adsNum ?? "") === "" ? 0 : Number(root.dataset.adsNum);
-		root.dataset.adsNum = String(adsNum + 1);
+		setKey((oldKey) => {
+			return oldKey + 1;
+		});
+
+		setTimeout(() => {
+			if (process.env.NODE_ENV === "production") {
+				// @ts-expect-error
+				(adsbygoogle = window.adsbygoogle || []).push({});
+			}
+		}, 200);
 	}, deps);
-
-	useEffect(() => {
-		const root = document.querySelector("#root") as HTMLDivElement;
-		const observer = new MutationObserver((mutations) => {
-			mutations.forEach((mutation) => {
-				if (mutation.attributeName === "data-ads-num") {
-					setKey((oldKey) => {
-						return oldKey + 1;
-					});
-				}
-			});
-		});
-		observer.observe(root, {
-			attributes: true,
-			childList: false,
-			subtree: false,
-			characterData: false,
-			attributeOldValue: false,
-			characterDataOldValue: false
-		});
-
-		return () => {
-			observer.disconnect();
-		};
-	}, []);
 
 	return (
 		<ins

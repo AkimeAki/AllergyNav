@@ -5,7 +5,6 @@ import { css } from "@kuma-ui/core";
 import Footer from "@/components/organisms/Footer";
 import ScrollTop from "@/components/molecules/ScrollTop";
 import NextTopLoader from "nextjs-toploader";
-import GoogleAdsLoader from "@/components/molecules/GoogleAdsLoader";
 
 interface Props {
 	children: ReactNode;
@@ -36,7 +35,6 @@ export default function ({ children }: Props): JSX.Element {
 		>
 			<NextTopLoader color="var(--color-theme)" showSpinner={false} />
 			<ScrollTop />
-			<GoogleAdsLoader />
 			<div
 				className={css`
 					flex: 1;

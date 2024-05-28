@@ -132,10 +132,8 @@ export default function (): JSX.Element {
 							<SidebarLink href="/store" active={pathname === "/store"}>
 								お店一覧
 							</SidebarLink>
-							<SidebarLink href="/store/group" active={pathname === "/store/group"}>
-								グループ一覧（未実装）
-							</SidebarLink>
 							<SidebarLink>自販機の飲み物（未実装）</SidebarLink>
+							<SidebarLink>商品（未実装）</SidebarLink>
 							{userStatus === "loading" && <SidebarLinkLoading />}
 							{userStatus === "authenticated" && userId !== null && (
 								<SidebarLink
