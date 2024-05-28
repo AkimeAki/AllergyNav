@@ -30,15 +30,6 @@ export default function ({
 		if (close) {
 			if (onOutsideClick === undefined) {
 				setIsOpen(false);
-
-				const html = document.querySelector<HTMLHtmlElement>("html");
-
-				document.body.style.overflowY = "";
-				document.body.style.marginTop = "";
-
-				if (document.body.dataset.scrollY !== undefined && document.body.dataset.scrollY !== "") {
-					html?.scrollTo(0, Number(document.body.dataset.scrollY));
-				}
 			} else {
 				onOutsideClick();
 			}
@@ -46,11 +37,20 @@ export default function ({
 	}, [isOpen, close, onOutsideClick]);
 
 	useEffect(() => {
+		const html = document.querySelector<HTMLHtmlElement>("html");
+
 		if (isOpen) {
-			const scrollTop = document.querySelector<HTMLHtmlElement>("html")?.scrollTop ?? 0;
+			const scrollTop = html?.scrollTop ?? 0;
 			document.body.dataset.scrollY = String(scrollTop);
 			document.body.style.overflowY = "hidden";
 			document.body.style.marginTop = String(-1 * scrollTop + "px");
+		} else {
+			document.body.style.overflowY = "";
+			document.body.style.marginTop = "";
+
+			if (document.body.dataset.scrollY !== undefined && document.body.dataset.scrollY !== "") {
+				html?.scrollTo(0, Number(document.body.dataset.scrollY));
+			}
 		}
 	}, [isOpen]);
 
