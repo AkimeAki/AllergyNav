@@ -15,19 +15,20 @@ export default function ({ href, icon, text }: Props): JSX.Element {
 				display: inline-flex;
 				align-items: center;
 				gap: 5px;
+
+				img {
+					object-fit: contain;
+				}
 			`}
 			href={href}
 			target="_blank"
 		>
-			<Image
-				width={20}
-				height={20}
-				src={icon}
-				alt={`${text}のアイコン`}
-				className={css`
-					object-fit: contain;
-				`}
-			/>
+			{/^http/.test(icon) ? (
+				// eslint-disable-next-line @next/next/no-img-element
+				<img width={20} height={20} src={icon} alt={`${text}のアイコン`} />
+			) : (
+				<Image width={20} height={20} src={icon} alt={`${text}のアイコン`} />
+			)}
 			<span
 				className={css`
 					color: inherit;
