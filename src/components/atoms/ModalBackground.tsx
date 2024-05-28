@@ -1,8 +1,6 @@
 "use client";
 
-import useScroll from "@/hooks/useScroll";
 import { css } from "@kuma-ui/core";
-import { useEffect } from "react";
 
 interface Props {
 	onClick?: () => void;
@@ -10,16 +8,6 @@ interface Props {
 }
 
 export default function ({ onClick, color = "#afafaf" }: Props): JSX.Element {
-	const { stopScroll, startScroll } = useScroll();
-
-	useEffect(() => {
-		stopScroll();
-
-		return () => {
-			startScroll();
-		};
-	}, []);
-
 	return (
 		<div
 			onClick={onClick}

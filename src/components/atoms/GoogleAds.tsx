@@ -13,19 +13,21 @@ export default function ({ slot, style, deps = [] }: Props): JSX.Element {
 	const [key, setKey] = useState<number>(0);
 
 	useEffect(() => {
-		const root = document.querySelector("#root") as HTMLDivElement;
+		const root = document.querySelector("html") as HTMLHtmlElement;
 		const adsNum = (root.dataset.adsNum ?? "") === "" ? 0 : Number(root.dataset.adsNum);
 		root.dataset.adsNum = String(adsNum + 1);
 	}, deps);
 
 	useEffect(() => {
-		const root = document.querySelector("#root") as HTMLDivElement;
+		const root = document.querySelector("html") as HTMLHtmlElement;
 		const observer = new MutationObserver((mutations) => {
 			mutations.forEach((mutation) => {
 				if (mutation.attributeName === "data-ads-num") {
-					setKey((oldKey) => {
-						return oldKey + 1;
-					});
+					setTimeout(() => {
+						setKey((oldKey) => {
+							return oldKey + 1;
+						});
+					}, 100);
 				}
 			});
 		});

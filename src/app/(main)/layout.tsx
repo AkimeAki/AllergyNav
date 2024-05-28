@@ -14,12 +14,10 @@ interface Props {
 export default function ({ children }: Props): JSX.Element {
 	return (
 		<div
-			id="root"
 			className={css`
 				position: relative;
 				width: 100%;
-				height: 100svh;
-				overflow-y: scroll;
+				height: 100%;
 				display: flex;
 				flex-direction: column;
 

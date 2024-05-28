@@ -7,48 +7,18 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import useGetUserData from "@/hooks/useGetUserData";
 import SidebarLinkLoading from "@/components/atoms/SidebarLinkLoading";
-import useScroll from "@/hooks/useScroll";
 
 export default function (): JSX.Element {
 	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 	const sidebarRef = useRef(null);
 	const pathname = usePathname();
 	const { userStatus, userId, userRole } = useGetUserData();
-	const { stopScroll, startScroll, isScroll } = useScroll();
-	const [isSizeSp, setIsSizeSp] = useState<boolean>(false);
 
 	const sidebarCloseAreaClick = (event: MouseEvent): void => {
 		if (isSidebarOpen && sidebarRef.current !== null && event.target !== sidebarRef.current) {
 			setIsSidebarOpen(false);
 		}
 	};
-
-	useEffect(() => {
-		const resize = (): void => {
-			const mediaQuery = window.matchMedia("(max-width: 600px)");
-			if (mediaQuery.matches) {
-				setIsSizeSp(true);
-			} else {
-				setIsSizeSp(false);
-			}
-		};
-
-		resize();
-
-		window.addEventListener("resize", resize, false);
-
-		return () => {
-			window.removeEventListener("resize", resize);
-		};
-	}, []);
-
-	useEffect(() => {
-		if (isSidebarOpen && isSizeSp) {
-			stopScroll();
-		} else if (!isScroll) {
-			startScroll();
-		}
-	}, [isSizeSp, isSidebarOpen]);
 
 	useEffect(() => {
 		document.addEventListener("click", sidebarCloseAreaClick, false);
@@ -130,12 +100,10 @@ export default function (): JSX.Element {
 								トップ
 							</SidebarLink>
 							<SidebarLink href="/store" active={pathname === "/store"}>
-								お店一覧
-							</SidebarLink>
-							<SidebarLink href="/store/group" active={pathname === "/store/group"}>
-								グループ一覧（未実装）
+								お店
 							</SidebarLink>
 							<SidebarLink>自販機の飲み物（未実装）</SidebarLink>
+							<SidebarLink>商品（未実装）</SidebarLink>
 							{userStatus === "loading" && <SidebarLinkLoading />}
 							{userStatus === "authenticated" && userId !== null && (
 								<SidebarLink
