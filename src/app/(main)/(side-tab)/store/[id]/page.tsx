@@ -1,13 +1,13 @@
 import { css } from "@kuma-ui/core";
-import Link from "next/link";
 import GoogleMap from "@/components/molecules/GoogleMap";
 import { formatText } from "@/libs/format-text";
 import EditStoreButton from "@/components/organisms/EditStoreButton";
-import Image from "next/image";
 import { getStore } from "@/libs/server-fetch";
 import SubTitle from "@/components/atoms/SubTitle";
 import type { Metadata } from "next";
 import { seoHead } from "@/libs/seo";
+import StoreDetailIconLink from "@/components/molecules/StoreDetailIconLink";
+
 interface Props {
 	params: {
 		id: string;
@@ -25,6 +25,40 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 
 export default async function ({ params }: Props): Promise<JSX.Element> {
 	const storeDetail = await getStore(params.id);
+	let linkCount = 0;
+	let linkFirst = "";
+	if (storeDetail.url !== null) {
+		linkCount++;
+		linkFirst = "url";
+	}
+
+	if (storeDetail.allergy_menu_url !== null) {
+		linkCount++;
+		if (linkFirst === "") {
+			linkFirst = "allergy_menu_url";
+		}
+	}
+
+	if (storeDetail.tabelog_url !== null) {
+		linkCount++;
+		if (linkFirst === "") {
+			linkFirst = "tabelog_url";
+		}
+	}
+
+	if (storeDetail.gurunavi_url !== null) {
+		linkCount++;
+		if (linkFirst === "") {
+			linkFirst = "gurunavi_url";
+		}
+	}
+
+	if (storeDetail.hotpepper_url !== null) {
+		linkCount++;
+		if (linkFirst === "") {
+			linkFirst = "hotpepper_url";
+		}
+	}
 
 	return (
 		<div
@@ -71,11 +105,12 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 							font-weight: bold;
 							padding-left: 20px;
 							padding-right: 20px;
-							width: 210px;
+							width: 130px;
+							user-select: none;
+							pointer-events: none;
 
 							@media (max-width: 600px) {
-								width: 160px;
-								font-size: 15px;
+								width: 115px;
 							}
 						}
 					`}
@@ -88,78 +123,66 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 						<tr>
 							<th>住所</th>
 							<td>
-								<Link
-									className={css`
-										display: inline-flex;
-										align-items: center;
-										gap: 5px;
-									`}
+								<StoreDetailIconLink
 									href={`https://www.google.com/maps/search/${storeDetail.address} ${storeDetail.name}`}
-									target="_blank"
-								>
-									<Image
-										width={20}
-										height={20}
-										src="/icons/google-map.svg"
-										alt="Google マップのアイコン"
-									/>
-									<span
-										className={css`
-											color: inherit;
-										`}
-									>
-										{storeDetail.address}
-									</span>
-								</Link>
+									icon="/icons/google-map.svg"
+									text={storeDetail.address}
+								/>
 							</td>
 						</tr>
 						{storeDetail.url !== null && (
 							<tr>
-								<th>公式サイト</th>
+								{linkFirst === "url" && <th rowSpan={linkCount}>各種リンク</th>}
 								<td>
 									<a href={storeDetail.url} target="_blank">
-										{storeDetail.url}
+										公式サイト
 									</a>
 								</td>
 							</tr>
 						)}
 						{storeDetail.allergy_menu_url !== null && (
 							<tr>
-								<th>公式アレルギー成分表</th>
+								{linkFirst === "allergy_menu_url" && <th rowSpan={linkCount}>各種リンク</th>}
 								<td>
 									<a href={storeDetail.allergy_menu_url} target="_blank">
-										{storeDetail.allergy_menu_url}
+										公式アレルギー成分表
 									</a>
 								</td>
 							</tr>
 						)}
 						{storeDetail.tabelog_url !== null && (
 							<tr>
-								<th>食べログ</th>
+								{linkFirst === "tabelog_url" && <th rowSpan={linkCount}>各種リンク</th>}
 								<td>
-									<a href={storeDetail.tabelog_url} target="_blank">
-										{storeDetail.tabelog_url}
-									</a>
+									<StoreDetailIconLink
+										href={storeDetail.tabelog_url}
+										icon="/icons/tabelog.png"
+										text="食べログ"
+									/>
 								</td>
 							</tr>
 						)}
 						{storeDetail.gurunavi_url !== null && (
 							<tr>
-								<th>ぐるなび</th>
+								{linkFirst === "gurunavi_url" && <th rowSpan={linkCount}>各種リンク</th>}
 								<td>
-									<a href={storeDetail.gurunavi_url} target="_blank">
-										{storeDetail.gurunavi_url}
-									</a>
+									<StoreDetailIconLink
+										href={storeDetail.gurunavi_url}
+										icon="/icons/gurunavi.png"
+										text="ぐるなび"
+									/>
 								</td>
 							</tr>
 						)}
 						{storeDetail.hotpepper_url !== null && (
 							<tr>
-								<th>ホットペッパーグルメ</th>
+								{linkFirst === "hotpepper_url" && <th rowSpan={linkCount}>各種リンク</th>}
 								<td>
-									<a href={storeDetail.hotpepper_url} target="_blank">
-										{storeDetail.hotpepper_url}
-									</a>
+									<StoreDetailIconLink
+										href={storeDetail.hotpepper_url}
+										icon="/icons/hotpepper.png"
+										text="ホットペッパーグルメ"
+									/>
 								</td>
 							</tr>
 						)}
