@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-page-custom-font */
-import "@/globals.scss";
+import "@/globals.css";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { KumaRegistry } from "@kuma-ui/next-plugin/registry";

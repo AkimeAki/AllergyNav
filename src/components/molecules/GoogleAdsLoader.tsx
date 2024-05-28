@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 export default function (): JSX.Element {
 	useEffect(() => {
-		const root = document.querySelector("html") as HTMLHtmlElement;
+		const root = document.querySelector("#root") as HTMLDivElement;
 		const observer = new MutationObserver((mutations) => {
 			mutations.forEach((mutation) => {
 				if (mutation.attributeName === "data-ads-num") {
