@@ -85,6 +85,7 @@ export default function ({
 								box-shadow: 0 0 20px -5px #969696;
 								max-height: calc(100vh - 60px);
 								overflow-y: auto;
+								overflow-x: hidden;
 								overscroll-behavior: contain;
 								user-select: text;
 								pointer-events: auto;
