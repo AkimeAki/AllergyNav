@@ -134,19 +134,24 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 							<tr>
 								{linkFirst === "url" && <th rowSpan={linkCount}>各種リンク</th>}
 								<td>
-									<a href={storeDetail.url} target="_blank">
-										公式サイト
-									</a>
+									<StoreDetailIconLink
+										href={storeDetail.url}
+										icon={`https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${storeDetail.url}&size=64`}
+										text="公式サイト"
+									/>
 								</td>
 							</tr>
 						)}
+
 						{storeDetail.allergy_menu_url !== null && (
 							<tr>
 								{linkFirst === "allergy_menu_url" && <th rowSpan={linkCount}>各種リンク</th>}
 								<td>
-									<a href={storeDetail.allergy_menu_url} target="_blank">
-										公式アレルギー成分表
-									</a>
+									<StoreDetailIconLink
+										href={storeDetail.allergy_menu_url}
+										icon={`https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${storeDetail.allergy_menu_url}&size=64`}
+										text="公式アレルギー成分表"
+									/>
 								</td>
 							</tr>
 						)}
