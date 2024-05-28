@@ -32,6 +32,16 @@ export default function ({ children }: Props): JSX.Element {
 						cursor: wait;
 					}
 				}
+
+				&[data-select="none"] {
+					user-select: none;
+					pointer-events: none;
+
+					* {
+						user-select: none;
+						pointer-events: none;
+					}
+				}
 			`}
 		>
 			<head>

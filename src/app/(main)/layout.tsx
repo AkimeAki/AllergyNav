@@ -20,16 +20,6 @@ export default function ({ children }: Props): JSX.Element {
 				height: 100%;
 				display: flex;
 				flex-direction: column;
-
-				&[data-select="none"] {
-					user-select: none;
-					pointer-events: none;
-
-					* {
-						user-select: none;
-						pointer-events: none;
-					}
-				}
 			`}
 		>
 			<NextTopLoader color="var(--color-theme)" showSpinner={false} />

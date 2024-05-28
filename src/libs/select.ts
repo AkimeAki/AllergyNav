@@ -1,9 +1,9 @@
 export const removeSelect = (): void => {
-	const root = document.querySelector("#root") as HTMLDivElement;
-	root.dataset.select = "none";
+	const html = document.querySelector("html") as HTMLHtmlElement;
+	html.dataset.select = "none";
 };
 
 export const startSelect = (): void => {
-	const root = document.querySelector("#root") as HTMLDivElement;
-	root.dataset.select = "";
+	const html = document.querySelector("html") as HTMLHtmlElement;
+	html.dataset.select = "";
 };
