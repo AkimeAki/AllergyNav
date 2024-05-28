@@ -1,6 +1,6 @@
 "use client";
 import { css } from "@kuma-ui/core";
-import { type Dispatch, type ReactNode, type SetStateAction } from "react";
+import { useEffect, type Dispatch, type ReactNode, type SetStateAction } from "react";
 import GoogleIcon from "@/components/atoms/GoogleIcon";
 import ModalBackground from "@/components/atoms/ModalBackground";
 import useClickElemenetSet from "@/hooks/useClickElemenetSet";
@@ -30,11 +30,29 @@ export default function ({
 		if (close) {
 			if (onOutsideClick === undefined) {
 				setIsOpen(false);
+
+				const html = document.querySelector<HTMLHtmlElement>("html");
+
+				document.body.style.overflowY = "";
+				document.body.style.marginTop = "";
+
+				if (document.body.dataset.scrollY !== undefined && document.body.dataset.scrollY !== "") {
+					html?.scrollTo(0, Number(document.body.dataset.scrollY));
+				}
 			} else {
 				onOutsideClick();
 			}
 		}
 	}, [isOpen, close, onOutsideClick]);
+
+	useEffect(() => {
+		if (isOpen) {
+			const scrollTop = document.querySelector<HTMLHtmlElement>("html")?.scrollTop ?? 0;
+			document.body.dataset.scrollY = String(scrollTop);
+			document.body.style.overflowY = "hidden";
+			document.body.style.marginTop = String(-1 * scrollTop + "px");
+		}
+	}, [isOpen]);
 
 	return (
 		<>
