@@ -37,12 +37,6 @@ export default function ({ color, children, title }: Props): JSX.Element {
 					border-radius: 10px;
 					background-color: #fafafa;
 					padding: 10px;
-
-					@media (prefers-color-scheme: dark) {
-						* {
-							color: var(--color-secondary);
-						}
-					}
 				`}
 			>
 				{children}
