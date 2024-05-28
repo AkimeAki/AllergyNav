@@ -47,6 +47,7 @@ export default async function (): Promise<JSX.Element> {
 						<li>ラベル機能</li>
 						<li>お気に入り機能</li>
 						<li>閲覧履歴機能</li>
+						<li>アレルギー情報提供の貢献度に応じた広告の非表示</li>
 					</ul>
 				</section>
 			</div>

@@ -25,6 +25,7 @@ import NotLoginedModal from "@/components/molecules/NotLoginedModal";
 import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
 import useGetAllergens from "@/hooks/fetch-api/useGetAllergens";
 import type { AllergenItemStatus } from "@/type";
+import AlertBox from "@/components/atoms/AlertBox";
 
 interface Props {
 	storeId: string;
@@ -135,6 +136,41 @@ export default function ({ storeId }: Props): JSX.Element {
 								>
 									メニューが無いようです😿
 								</p>
+							)}
+							{getMenusResponse?.length !== 0 && (
+								<AlertBox>
+									<div>
+										<p
+											className={css`
+												text-align: center;
+											`}
+										>
+											以下の情報はユーザーより提供いただいた情報で、
+											<span
+												className={css`
+													font-weight: bold;
+													text-decoration: underline;
+													color: var(--color-red);
+													margin: 0 5px;
+												`}
+											>
+												公式情報ではありません。
+											</span>
+											間違った情報、古い情報が記載されている可能性もあるため、
+											<span
+												className={css`
+													font-weight: bold;
+													text-decoration: underline;
+													color: var(--color-red);
+													margin: 0 5px;
+												`}
+											>
+												必ず実際の店舗でご確認のほどお願いいたします
+											</span>
+											。
+										</p>
+									</div>
+								</AlertBox>
 							)}
 							{[...(getMenusResponse ?? [])].reverse().map((menu) => (
 								<div

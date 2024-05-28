@@ -21,6 +21,7 @@ import NotVerifiedModal from "@/components/molecules/NotVerifiedModal";
 import NotLoginedModal from "@/components/molecules/NotLoginedModal";
 import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
 import GoogleAds from "@/components/atoms/GoogleAds";
+import AlertBox from "@/components/atoms/AlertBox";
 
 export default function (): JSX.Element {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
@@ -157,17 +158,7 @@ export default function (): JSX.Element {
 				{getAllergensStatus === "successed" &&
 					getAllergensResponse !== undefined &&
 					searchAllergens.length !== 0 && (
-						<div
-							className={css`
-								border: 4px solid var(--color-theme);
-								padding: 10px;
-								background-color: var(--color-theme-thin);
-								border-radius: 10px;
-								display: flex;
-								flex-direction: column;
-								gap: 5px;
-							`}
-						>
+						<AlertBox>
 							<div
 								className={css`
 									display: flex;
@@ -195,7 +186,7 @@ export default function (): JSX.Element {
 									上記成分のアレルギーをお持ちの方が食べに行けるお店を表示しています。
 								</p>
 							</div>
-						</div>
+						</AlertBox>
 					)}
 				{(getStoresStatus === "loading" || getStoresStatus === "yet") && <LoadingCircleCenter />}
 				<section
