@@ -53,6 +53,24 @@ body {
 	overflow: hidden;
 }
 
+html {
+	&[data-cursor="grabbing"] {
+		cursor: grabbing;
+
+		* {
+			cursor: grabbing;
+		}
+	}
+
+	&[data-cursor="wait"] {
+		cursor: wait;
+
+		* {
+			cursor: wait;
+		}
+	}
+}
+
 ul,
 ol {
 	padding-block-start: 0;

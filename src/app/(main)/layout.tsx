@@ -13,7 +13,6 @@ interface Props {
 export default function ({ children }: Props): JSX.Element {
 	return (
 		<div
-			id="root"
 			className={css`
 				position: relative;
 				width: 100%;

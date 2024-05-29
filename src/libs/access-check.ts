@@ -4,7 +4,12 @@ import { prisma } from "@/libs/prisma";
 
 export const accessCheck = async (req: NextRequest): Promise<boolean> => {
 	const serverApiKey = safeString(process.env.SERVER_API_KEY);
+	const maintenanceMode = safeString(process.env.MAINTENANCE);
 	const authorization = safeString(req.headers.get("Authorization"));
+
+	if (maintenanceMode === "true") {
+		return false;
+	}
 
 	if (serverApiKey !== null && authorization !== null && authorization === `Bearer: ${serverApiKey}`) {
 		return true;

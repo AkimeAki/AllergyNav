@@ -1,9 +1,8 @@
 /* eslint-disable @next/next/no-page-custom-font */
-import "@/globals.css";
+import "@/globals.scss";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { KumaRegistry } from "@kuma-ui/next-plugin/registry";
-import { css } from "@kuma-ui/core";
 import { seoHead } from "@/libs/seo";
 
 export const metadata: Metadata = seoHead({});
@@ -14,26 +13,7 @@ interface Props {
 
 export default function ({ children }: Props): JSX.Element {
 	return (
-		<html
-			lang="ja"
-			className={css`
-				&[data-cursor="grabbing"] {
-					cursor: grabbing;
-
-					* {
-						cursor: grabbing;
-					}
-				}
-
-				&[data-cursor="wait"] {
-					cursor: wait;
-
-					* {
-						cursor: wait;
-					}
-				}
-			`}
-		>
+		<html lang="ja">
 			<head>
 				<meta name="theme-color" content="#fc9e82" />
 				<link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -42,7 +22,7 @@ export default function ({ children }: Props): JSX.Element {
 					rel="stylesheet"
 					href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap"
 				/>
-				{process.env.NODE_ENV === "production" && (
+				{process.env.NODE_ENV === "production" && process.env.MAINTENANCE === "false" && (
 					<>
 						{/* eslint-disable-next-line react/jsx-no-comment-textnodes, @next/next/next-script-for-ga */}
 						<script
@@ -56,7 +36,7 @@ export default function ({ children }: Props): JSX.Element {
 						/>
 					</>
 				)}
-				{process.env.NODE_ENV === "production" && (
+				{process.env.NODE_ENV === "production" && process.env.MAINTENANCE === "false" && (
 					<script
 						async
 						src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6914867149724943"
@@ -76,15 +56,18 @@ export default function ({ children }: Props): JSX.Element {
 				/>
 			</head>
 			<body>
-				<noscript>
-					<iframe
-						src="https://www.googletagmanager.com/ns.html?id=GTM-523PDB8H"
-						height="0"
-						width="0"
-						style={{ display: "none", visibility: "hidden" }}
-					/>
-				</noscript>
-				<KumaRegistry>{children}</KumaRegistry>
+				{process.env.NODE_ENV === "production" && process.env.MAINTENANCE === "false" && (
+					<noscript>
+						<iframe
+							src="https://www.googletagmanager.com/ns.html?id=GTM-523PDB8H"
+							height="0"
+							width="0"
+							style={{ display: "none", visibility: "hidden" }}
+						/>
+					</noscript>
+				)}
+				{process.env.MAINTENANCE === "false" && <KumaRegistry>{children}</KumaRegistry>}
+				{process.env.MAINTENANCE === "true" && <p>メンテナンス中です。</p>}
 			</body>
 		</html>
 	);

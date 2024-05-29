@@ -1,4 +1,5 @@
 import MainTitle from "@/components/atoms/MainTitle";
+import StoreListSidebar from "@/components/organisms/StoreListSidebar";
 import StoreList from "@/components/templates/StoreList";
 import { seoHead } from "@/libs/seo";
 import { css } from "@kuma-ui/core";
@@ -12,16 +13,19 @@ export const metadata: Metadata = seoHead({
 
 export default function (): JSX.Element {
 	return (
-		<div
-			className={css`
-				position: relative;
-				display: flex;
-				flex-direction: column;
-				gap: 20px;
-			`}
-		>
-			<MainTitle>お店一覧</MainTitle>
-			<StoreList />
-		</div>
+		<>
+			<StoreListSidebar />
+			<div
+				className={css`
+					position: relative;
+					display: flex;
+					flex-direction: column;
+					gap: 20px;
+				`}
+			>
+				<MainTitle>お店一覧</MainTitle>
+				<StoreList />
+			</div>
+		</>
 	);
 }
