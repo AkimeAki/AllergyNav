@@ -18,11 +18,8 @@
 		"prisma:deploy:prod": "dotenv -e .env.production.local -- prisma migrate deploy",
 		"prisma:migrate": "dotenv -e .env.development -- prisma migrate dev",
 		"prisma:delete": "dotenv -e .env.development -- prisma migrate reset --skip-seed",
-		"prisma:seed": "dotenv -e .env.development -- prisma db seed",
+		"prisma:seed": "dotenv -e .env.development -- tsnode -- prisma/seed.ts",
 		"prisma:studio": "prisma studio"
-	},
-	"prisma": {
-		"seed": "npm run tsnode -- prisma/seed.ts"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.554.0",

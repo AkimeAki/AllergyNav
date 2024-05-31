@@ -20,7 +20,7 @@ export default function ({ children }: Props): JSX.Element {
 				<link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
 				<link
 					rel="stylesheet"
-					href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=optional"
+					href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap"
 				/>
 				{process.env.NODE_ENV === "production" && process.env.MAINTENANCE === "false" && (
 					<>
