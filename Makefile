@@ -13,9 +13,13 @@ delete:
 	docker compose down --rmi all --volumes --remove-orphans
 	docker compose -f compose.prod.yml down --rmi all --volumes --remove-orphans
 
-.PHONY: コンテナにアタッチ
-attach:
+.PHONY: アプリコンテナにアタッチ
+attach-app:
 	docker compose exec -it app bash
+
+.PHONY: DBコンテナにアタッチ
+attach-db:
+	docker compose exec -it db ./cockroach sql --insecure
 
 .PHONY: コンテナログ
 logs:

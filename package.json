@@ -14,9 +14,12 @@
 		"format": "prettier --write './**/*.{json,js,cjs,mjs,ts,tsx,yaml,yml,html}' && prisma format",
 		"lint:fix": "npm run lint -- --fix && npm run format",
 		"tsnode": "ts-node -r tsconfig-paths/register --project ./tsconfig.node.json",
-		"prisma:push": "prisma db push && prisma generate",
-		"prisma:delete": "prisma migrate reset --skip-seed",
-		"prisma:seed": "prisma db seed"
+		"prisma:deploy:dev": "dotenv -e .env.development -- prisma migrate deploy",
+		"prisma:deploy:prod": "dotenv -e .env.production.local -- prisma migrate deploy",
+		"prisma:migrate": "dotenv -e .env.development -- prisma migrate dev",
+		"prisma:delete": "dotenv -e .env.development -- prisma migrate reset --skip-seed",
+		"prisma:seed": "dotenv -e .env.development -- prisma db seed",
+		"prisma:studio": "prisma studio"
 	},
 	"prisma": {
 		"seed": "npm run tsnode -- prisma/seed.ts"
@@ -35,6 +38,7 @@
 		"@types/react-dom": "^18.2.7",
 		"@types/sanitize-html": "^2.11.0",
 		"bcrypt": "^5.1.1",
+		"dotenv-cli": "^7.4.2",
 		"next": "^14.2.1",
 		"next-auth": "^4.24.7",
 		"nextjs-toploader": "^1.6.12",
