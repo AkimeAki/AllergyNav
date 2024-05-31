@@ -180,6 +180,8 @@ model MenuPicture {
 
   picture Picture @relation(fields: [id], references: [id])
   menu    Menu    @relation(fields: [menu_id], references: [id])
+
+  @@map("menu_pictures")
 }
 
 model StoreComment {

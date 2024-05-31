@@ -24,6 +24,7 @@ interface PictureResponse {
 	url: string;
 	description: string;
 	store_id: string;
+	menu_id?: string;
 	updated_at: Date;
 	created_at: Date;
 }

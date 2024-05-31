@@ -26,6 +26,8 @@ import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
 import useGetAllergens from "@/hooks/fetch-api/useGetAllergens";
 import type { AllergenItemStatus } from "@/type";
 import AlertBox from "@/components/atoms/AlertBox";
+import useGetPictures from "@/hooks/fetch-api/useGetPictures";
+import LoadingEffect from "@/components/atoms/LoadingEffect";
 
 interface Props {
 	storeId: string;
@@ -46,6 +48,7 @@ export default function ({ storeId }: Props): JSX.Element {
 	const { addMessage } = useFloatMessage();
 	const { isTouch } = useIsTouchDevice();
 	const { getAllergensResponse, getAllergens } = useGetAllergens();
+	const { getPicturesResponse, getPicturesStatus, getPictures } = useGetPictures();
 
 	const params = {
 		allergens: searchParams.get("allergens") ?? "",
@@ -59,6 +62,12 @@ export default function ({ storeId }: Props): JSX.Element {
 	useEffect(() => {
 		getMenus(params.keywords, params.allergens, storeId);
 	}, [searchParams]);
+
+	useEffect(() => {
+		if (getMenusStatus === "successed" && getMenusResponse !== undefined) {
+			getPictures(storeId);
+		}
+	}, [getMenusStatus]);
 
 	return (
 		<>
@@ -356,16 +365,53 @@ export default function ({ storeId }: Props): JSX.Element {
 												<GoogleIcon name="more_vert" size={23} color="var(--color-theme)" />
 											</div>
 										)}
-										<Image
+										<div
 											className={css`
+												position: relative;
 												aspect-ratio: 1/1;
-												width: 100px;
+												width: 250px;
+
+												@media (max-width: 880px) {
+													width: 100%;
+													height: 250px;
+												}
 											`}
-											src="/no-image.png"
-											width={100}
-											height={100}
-											alt="メニューの画像"
-										/>
+										>
+											<div
+												className={css`
+													width: 100%;
+													height: 100%;
+													position: absolute;
+													top: 0;
+													left: 0;
+													z-index: -1;
+												`}
+											>
+												<LoadingEffect />
+											</div>
+											{getPicturesStatus === "successed" && (
+												<Image
+													className={css`
+														display: block;
+														width: 100%;
+														aspect-ratio: 1/1;
+														height: 100%;
+														object-fit: cover;
+
+														@media (max-width: 880px) {
+															object-fit: cover;
+														}
+													`}
+													src={
+														getPicturesResponse?.find((p) => p.menu_id === menu.id)?.url ??
+														"/no-image.png"
+													}
+													width={100}
+													height={100}
+													alt={`${menu.name}の画像`}
+												/>
+											)}
+										</div>
 										<div
 											className={css`
 												padding: 10px;

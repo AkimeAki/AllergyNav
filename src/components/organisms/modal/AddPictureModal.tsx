@@ -13,21 +13,23 @@ import Modal from "@/components/molecules/Modal";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
 import FileUpload from "@/components/atoms/FileUpload";
 import { isEmptyString } from "@/libs/check-string";
+import useGetMenus from "@/hooks/fetch-api/useGetMenus";
 
 interface Props {
 	storeId: string;
-	menuId?: string;
 	isOpen: boolean;
 	setIsOpen: Dispatch<SetStateAction<boolean>>;
 	callback?: () => void;
 }
 
-export default function ({ storeId, menuId, isOpen, setIsOpen, callback }: Props): JSX.Element {
+export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.Element {
 	const [pictureData, setPictureData] = useState<File | undefined>(undefined);
 	const [pictureDescription, setPictureDescription] = useState<string>("");
 	const { addPictureStatus, addPicture } = useAddPicture();
 	const { addMessage } = useFloatMessage();
 	const [isChanged, setIsChanged] = useState<boolean>(false);
+	const { getMenus, getMenusResponse, getMenusStatus } = useGetMenus();
+	const [pictureMenuId, setPictureMenuId] = useState<string>("null");
 
 	useEffect(() => {
 		if (addPictureStatus === "successed") {
@@ -59,6 +61,7 @@ export default function ({ storeId, menuId, isOpen, setIsOpen, callback }: Props
 		if (!isOpen) {
 			setPictureData(undefined);
 			setPictureDescription("");
+			getMenus("", "", storeId);
 		}
 	}, [isOpen]);
 
@@ -112,9 +115,29 @@ export default function ({ storeId, menuId, isOpen, setIsOpen, callback }: Props
 						/>
 					</div>
 					<div>
-						<Label>メニューと紐づける（未実装）</Label>
-						<Select value="null" disabled={true}>
+						<Label>メニューと紐づける</Label>
+						<Select
+							value={pictureMenuId}
+							disabled={getMenusStatus === "loading" || addPictureStatus === "loading"}
+							loading={getMenusStatus === "loading" || addPictureStatus === "loading"}
+							onChange={(e) => {
+								let selectId = "null";
+								Array.from(e.target).forEach((item) => {
+									if ((item as HTMLOptionElement).selected) {
+										selectId = (item as HTMLOptionElement).value;
+									}
+								});
+
+								setPictureMenuId(selectId);
+							}}
+						>
 							<option value="null">なし</option>
+							{getMenusStatus === "successed" &&
+								getMenusResponse?.map((menu) => (
+									<option key={menu.id} value={menu.id}>
+										{menu.name}
+									</option>
+								))}
 						</Select>
 					</div>
 					<div>
@@ -139,7 +162,7 @@ export default function ({ storeId, menuId, isOpen, setIsOpen, callback }: Props
 							<Button
 								onClick={() => {
 									if (pictureData !== undefined) {
-										void addPicture(storeId, pictureData, pictureDescription, menuId);
+										void addPicture(storeId, pictureData, pictureDescription, pictureMenuId);
 									}
 								}}
 								disabled={addPictureStatus === "loading" || pictureData === undefined}

@@ -32,7 +32,8 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 				store_id: true,
 				description: true,
 				created_at: true,
-				updated_at: true
+				updated_at: true,
+				menu_picture: true
 			},
 			where: {
 				deleted: false,
@@ -54,6 +55,7 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 				url: item.url,
 				description: item.description,
 				store_id: item.store_id,
+				menu_id: item.menu_picture?.menu_id,
 				updated_at: item.updated_at,
 				created_at: item.created_at
 			});
@@ -148,7 +150,7 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
 					description,
 					store_id: storeId,
 					menu_picture:
-						menuId === null
+						menuId === null || menuId === "null"
 							? undefined
 							: {
 									create: { menu_id: menuId }
@@ -170,6 +172,7 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
 				url: addPictureResult.url,
 				description: addPictureResult.description,
 				store_id: addPictureResult.store_id,
+				menu_id: menuId === null || menuId === "null" ? undefined : menuId,
 				updated_at: addPictureResult.updated_at,
 				created_at: addPictureResult.created_at
 			};
