@@ -368,11 +368,12 @@ export default function ({ storeId }: Props): JSX.Element {
 										<div
 											className={css`
 												position: relative;
-												aspect-ratio: 1/1;
 												width: 150px;
+												height: 150px;
 
 												@media (max-width: 880px) {
 													width: 100px;
+													height: 100px;
 												}
 											`}
 										>
@@ -415,6 +416,7 @@ export default function ({ storeId }: Props): JSX.Element {
 												padding: 10px;
 												width: 100%;
 												display: flex;
+												flex: 1;
 												flex-direction: column;
 												gap: 20px;
 											`}
