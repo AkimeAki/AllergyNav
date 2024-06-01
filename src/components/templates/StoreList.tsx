@@ -22,6 +22,7 @@ import NotLoginedModal from "@/components/molecules/NotLoginedModal";
 import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
 import GoogleAds from "@/components/atoms/GoogleAds";
 import AlertBox from "@/components/atoms/AlertBox";
+import SubTitle from "@/components/atoms/SubTitle";
 
 export default function (): JSX.Element {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
@@ -307,7 +308,7 @@ export default function (): JSX.Element {
 													`}
 												>
 													<div>
-														<MiniTitle>{store.name}</MiniTitle>
+														<SubTitle>{store.name}</SubTitle>
 													</div>
 													<div>{store.description}</div>
 												</div>
