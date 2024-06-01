@@ -10,7 +10,6 @@ import AddStoreModal from "@/components/organisms/modal/AddStoreModal";
 import useGetStores from "@/hooks/fetch-api/useGetStores";
 import useGetAllergens from "@/hooks/fetch-api/useGetAllergens";
 import AllergenItem from "@/components/atoms/AllergenItem";
-import MiniTitle from "@/components/atoms/MiniTitle";
 import useGetUserData from "@/hooks/useGetUserData";
 import useGetPictures from "@/hooks/fetch-api/useGetPictures";
 import LoadingEffect from "../atoms/LoadingEffect";
