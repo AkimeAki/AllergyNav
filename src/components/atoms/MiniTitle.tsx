@@ -9,27 +9,18 @@ export default function ({ children }: Props): JSX.Element {
 	return (
 		<h2
 			className={css`
-				position: relative;
 				width: 100%;
 				font-weight: bold;
-				font-size: 18px;
-				padding: 10px 20px 14px 20px;
+				font-size: 16px;
+				background-color: var(--color-theme);
+				padding: 7px 20px;
+				color: var(--color-secondary);
+				border-radius: 7px;
 
 				* {
 					font-weight: inherit;
 					font-size: inherit;
 					color: inherit;
-				}
-
-				&:after {
-					content: "";
-					position: absolute;
-					bottom: 0;
-					left: 0;
-					width: 100%;
-					height: 4px;
-					background-color: var(--color-theme);
-					border-radius: 20px;
 				}
 			`}
 		>
