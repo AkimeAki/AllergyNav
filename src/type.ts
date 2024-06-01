@@ -1,4 +1,4 @@
-interface StoreResponse {
+export interface StoreResponse {
 	id: string;
 	name: string;
 	address: string;
@@ -12,6 +12,11 @@ interface StoreResponse {
 	created_at: Date;
 	created_user_id: string;
 	updated_user_id: string;
+	labels: {
+		id: string;
+		name: string;
+		locked: boolean;
+	}[];
 }
 
 export type GetStoresResponse = StoreResponse[] | null;

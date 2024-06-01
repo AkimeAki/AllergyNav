@@ -296,12 +296,54 @@ export default function (): JSX.Element {
 													display: flex;
 													flex-direction: column;
 													gap: 20px;
+													justify-content: space-between;
 												`}
 											>
-												<div>
-													<MiniTitle>{store.name}</MiniTitle>
+												<div
+													className={css`
+														display: flex;
+														flex-direction: column;
+														gap: 20px;
+													`}
+												>
+													<div>
+														<MiniTitle>{store.name}</MiniTitle>
+													</div>
+													<div>{store.description}</div>
 												</div>
-												<div>{store.description}</div>
+												<div
+													className={css`
+														display: flex;
+														flex-wrap: wrap;
+														align-items: flex-start;
+													`}
+												>
+													{store.labels.map((label) => (
+														<div
+															key={label.id}
+															className={[
+																css`
+																	font-size: 13px;
+																	border: 2px solid var(--color-theme-thin);
+																	border-radius: 8px;
+																	background-color: var(--color-theme);
+																	padding: 5px 10px;
+																	color: var(--color-secondary);
+
+																	@media (prefers-color-scheme: dark) {
+																		font-weight: bold;
+																	}
+																`,
+																!label.locked &&
+																	css`
+																		border-radius: 9999px;
+																	`
+															].join(" ")}
+														>
+															{label.name}
+														</div>
+													))}
+												</div>
 											</div>
 										</div>
 										<Link

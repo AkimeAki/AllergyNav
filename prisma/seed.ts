@@ -7,12 +7,14 @@ const userData = [
 	{
 		email: "admin@example.com",
 		password: "admin",
-		role: "admin"
+		role: "admin",
+		verified: true
 	},
 	{
 		email: "normal@example.com",
 		password: "normal",
-		role: "normal"
+		role: "normal",
+		verified: false
 	}
 ];
 
@@ -53,7 +55,8 @@ void prisma.$transaction(async (prisma) => {
 			data: {
 				email: user.email,
 				password: await hashPass(user.password),
-				role: user.role
+				role: user.role,
+				verified: user.verified
 			}
 		});
 	}

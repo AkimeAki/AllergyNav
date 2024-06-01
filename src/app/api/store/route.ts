@@ -1,5 +1,5 @@
 import { ForbiddenError, TooManyRequestError, ValidationError } from "@/definition";
-import type { AddStoreResponse, GetStoresResponse } from "@/type";
+import type { AddStoreResponse, GetStoresResponse, StoreResponse } from "@/type";
 import { safeNumber, safeString } from "@/libs/safe-type";
 import { NextResponse, type NextRequest } from "next/server";
 import { isEmptyString } from "@/libs/check-string";
@@ -124,6 +124,15 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 
 			// メニューの中にアレルゲンが含まれていなかったらお店をレスポンスに追加
 			if (menuAllergen) {
+				const labels: StoreResponse["labels"] = [];
+				if (item.allergy_menu_url !== null) {
+					labels.push({
+						id: "exist_official_allergy_menu_url",
+						name: "公式成分表あり",
+						locked: true
+					});
+				}
+
 				data.push({
 					id: item.id,
 					name: item.name,
@@ -137,7 +146,8 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 					updated_at: item.updated_at,
 					created_at: item.created_at,
 					created_user_id: item.created_user_id,
-					updated_user_id: item.updated_user_id
+					updated_user_id: item.updated_user_id,
+					labels
 				});
 			}
 		}
@@ -258,6 +268,15 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 				}
 			});
 
+			const labels: StoreResponse["labels"] = [];
+			if (storeInsertResult.allergy_menu_url !== null) {
+				labels.push({
+					id: "exist_official_allergy_menu_url",
+					name: "公式成分表あり",
+					locked: true
+				});
+			}
+
 			data = {
 				id: storeInsertResult.id,
 				name: storeInsertResult.name,
@@ -271,7 +290,8 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 				created_at: storeInsertResult.created_at,
 				updated_at: storeInsertResult.updated_at,
 				created_user_id: storeInsertResult.created_user_id,
-				updated_user_id: storeInsertResult.updated_user_id
+				updated_user_id: storeInsertResult.updated_user_id,
+				labels
 			};
 
 			await prisma.storeHistory.create({

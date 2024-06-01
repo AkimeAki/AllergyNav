@@ -2,7 +2,7 @@ import { ForbiddenError, TooManyRequestError, ValidationError } from "@/definiti
 import { safeString } from "@/libs/safe-type";
 import { isEmptyString } from "@/libs/check-string";
 import { prisma } from "@/libs/prisma";
-import type { EditStoreResponse, GetStoreResponse } from "@/type";
+import type { EditStoreResponse, GetStoreResponse, StoreResponse } from "@/type";
 import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "@/libs/auth";
 import { getToken } from "next-auth/jwt";
@@ -50,7 +50,31 @@ export const GET = async (req: NextRequest, { params }: Data): Promise<Response>
 			}
 		});
 
-		data = result;
+		const labels: StoreResponse["labels"] = [];
+		if (result.allergy_menu_url !== null) {
+			labels.push({
+				id: "exist_official_allergy_menu_url",
+				name: "公式成分表あり",
+				locked: true
+			});
+		}
+
+		data = {
+			id: result.id,
+			name: result.name,
+			address: result.address,
+			description: result.description,
+			url: result.url,
+			allergy_menu_url: result.allergy_menu_url,
+			tabelog_url: result.tabelog_url,
+			gurunavi_url: result.gurunavi_url,
+			hotpepper_url: result.hotpepper_url,
+			created_at: result.created_at,
+			updated_at: result.updated_at,
+			created_user_id: result.created_user_id,
+			updated_user_id: result.updated_user_id,
+			labels
+		};
 		status = 200;
 	} catch (e) {
 		data = null;
@@ -142,6 +166,15 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
 				}
 			});
 
+			const labels: StoreResponse["labels"] = [];
+			if (storeInsertResult.allergy_menu_url !== null) {
+				labels.push({
+					id: "exist_official_allergy_menu_url",
+					name: "公式成分表あり",
+					locked: true
+				});
+			}
+
 			data = {
 				id: storeInsertResult.id,
 				name: storeInsertResult.name,
@@ -155,7 +188,8 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
 				created_at: storeInsertResult.created_at,
 				updated_at: storeInsertResult.updated_at,
 				created_user_id: storeInsertResult.created_user_id,
-				updated_user_id: storeInsertResult.updated_user_id
+				updated_user_id: storeInsertResult.updated_user_id,
+				labels
 			};
 
 			await prisma.storeHistory.create({
