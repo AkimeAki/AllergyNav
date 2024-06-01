@@ -369,11 +369,10 @@ export default function ({ storeId }: Props): JSX.Element {
 											className={css`
 												position: relative;
 												aspect-ratio: 1/1;
-												width: 250px;
+												width: 150px;
 
 												@media (max-width: 880px) {
-													width: 100%;
-													height: 250px;
+													width: 100px;
 												}
 											`}
 										>
@@ -394,7 +393,6 @@ export default function ({ storeId }: Props): JSX.Element {
 													className={css`
 														display: block;
 														width: 100%;
-														aspect-ratio: 1/1;
 														height: 100%;
 														object-fit: cover;
 

@@ -27,6 +27,8 @@ interface PictureResponse {
 	menu_id?: string;
 	updated_at: Date;
 	created_at: Date;
+	created_user_id?: string;
+	updated_user_id?: string;
 }
 
 export type GetPicturesResponse = PictureResponse[] | null;

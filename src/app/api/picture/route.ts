@@ -149,6 +149,8 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
 					url: `https://${filesHostname}/${filename}`,
 					description,
 					store_id: storeId,
+					created_user_id: userId,
+					updated_user_id: userId,
 					menu_picture:
 						menuId === null || menuId === "null"
 							? undefined
