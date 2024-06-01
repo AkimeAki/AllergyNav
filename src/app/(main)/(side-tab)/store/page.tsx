@@ -21,6 +21,9 @@ export default function (): JSX.Element {
 					display: flex;
 					flex-direction: column;
 					gap: 20px;
+					@media (max-width: 880px) {
+						margin-top: 30px;
+					}
 				`}
 			>
 				<MainTitle>お店一覧</MainTitle>
