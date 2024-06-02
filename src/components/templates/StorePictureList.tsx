@@ -1,7 +1,7 @@
 "use client";
 
 import { css } from "@kuma-ui/core";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Image from "next/image";
 import Button from "@/components/atoms/Button";
 import AddPictureModal from "@/components/organisms/modal/AddPictureModal";
@@ -13,6 +13,8 @@ import { formatText } from "@/libs/format-text";
 import NotVerifiedModal from "@/components/molecules/NotVerifiedModal";
 import NotLoginedModal from "@/components/molecules/NotLoginedModal";
 import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
+import GoogleIcon from "@/components/atoms/GoogleIcon";
+import EditPictureModal from "@/components/organisms/modal/EditPictureModal";
 
 interface Props {
 	storeId: string;
@@ -25,6 +27,8 @@ export default function ({ storeId }: Props): JSX.Element {
 	const { addMessage } = useFloatMessage();
 	const [isViewPicture, setIsViewPicture] = useState<boolean>(false);
 	const [viewPictureId, setViewPictureId] = useState<string>();
+	const [openEditModalId, setOpenEditModalId] = useState<string>();
+	const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
 
 	useEffect(() => {
 		getPictures(storeId);
@@ -52,69 +56,128 @@ export default function ({ storeId }: Props): JSX.Element {
 				setIsOpen={setIsOpenAddModal}
 			/>
 			{getPicturesResponse?.map((picture) => (
-				<Modal
-					key={picture.id}
-					isOpen={isViewPicture && viewPictureId === picture.id}
-					setIsOpen={setIsViewPicture}
-				>
-					<Image
-						className={css`
-							width: 100%;
-							height: calc(100% - 10px);
-							object-fit: contain;
-							user-select: none;
-						`}
-						src={picture.url}
-						width={1280}
-						height={1280}
-						alt="写真"
-					/>
-					{picture.description !== "" && (
-						<div
+				<Fragment key={picture.id}>
+					<Modal
+						isOpen={isViewPicture && viewPictureId === picture.id && !isOpenEditModal}
+						setIsOpen={setIsViewPicture}
+					>
+						<Image
 							className={css`
-								position: absolute;
-								bottom: 0;
-								left: 0;
 								width: 100%;
-								padding: 30px;
+								height: calc(100% - 10px);
+								object-fit: contain;
 								user-select: none;
-								pointer-events: none;
-
-								@media (max-width: 880px) {
-									padding: 0;
-								}
 							`}
-						>
+							src={picture.url}
+							width={1280}
+							height={1280}
+							alt="写真"
+						/>
+						{picture.description !== "" && (
 							<div
 								className={css`
-									background-color: black;
-									padding: 10px;
-									opacity: 0.7;
-									padding: 20px;
-									max-height: 120px;
-									overflow-y: auto;
-									border-bottom-left-radius: 15px;
-									border-bottom-right-radius: 15px;
+									position: absolute;
+									bottom: 0;
+									left: 0;
+									width: 100%;
+									padding: 30px;
+									user-select: none;
+									pointer-events: none;
 
 									@media (max-width: 880px) {
-										border-radius: 0;
+										padding: 0;
 									}
 								`}
 							>
 								<div
 									className={css`
-										color: white;
-										user-select: text;
-										pointer-events: auto;
+										background-color: black;
+										padding: 10px;
+										opacity: 0.7;
+										padding: 20px;
+										max-height: 120px;
+										overflow-y: auto;
+										border-bottom-left-radius: 15px;
+										border-bottom-right-radius: 15px;
+
+										@media (max-width: 880px) {
+											border-radius: 0;
+										}
 									`}
-									dangerouslySetInnerHTML={{
-										__html: formatText(picture.description)
-									}}
-								/>
+								>
+									<div
+										className={css`
+											color: white;
+											user-select: text;
+											pointer-events: auto;
+										`}
+										dangerouslySetInnerHTML={{
+											__html: formatText(picture.description)
+										}}
+									/>
+								</div>
 							</div>
+						)}
+						<div
+							className={css`
+								position: absolute;
+								top: 55px;
+								right: 55px;
+								z-index: 99;
+
+								@media (max-width: 880px) {
+									top: 15px;
+									right: 15px;
+								}
+							`}
+						>
+							<Button
+								size="tiny"
+								disabled={userStatus !== "authenticated"}
+								loading={userStatus === "loading"}
+								onClick={() => {
+									if (userStatus === "authenticated") {
+										setOpenEditModalId(picture.id);
+										setIsOpenEditModal(true);
+									}
+								}}
+								selected={openEditModalId === picture.id && isOpenEditModal}
+							>
+								<span
+									className={css`
+										display: flex;
+										justify-content: center;
+										align-items: center;
+									`}
+								>
+									<GoogleIcon name="edit" size={15} color="inherit" />
+									<span
+										className={css`
+											line-height: 1;
+											display: flex;
+											font-size: 13px;
+											color: inherit;
+										`}
+									>
+										編集
+									</span>
+								</span>
+							</Button>
 						</div>
-					)}
-				</Modal>
+					</Modal>
+					<EditPictureModal
+						storeId={storeId}
+						pictureId={picture.id}
+						isOpen={userVerified === true && isOpenEditModal && openEditModalId === picture.id}
+						setIsOpen={setIsOpenEditModal}
+						callback={() => {
+							setIsOpenEditModal(false);
+							addMessage("写真を編集しました！", "success");
+							getPictures(storeId);
+							setIsViewPicture(false);
+						}}
+					/>
+				</Fragment>
 			))}
 			<div
 				className={css`

@@ -37,7 +37,9 @@ interface PictureResponse {
 }
 
 export type GetPicturesResponse = PictureResponse[] | null;
+export type GetPictureResponse = PictureResponse | null;
 export type AddPictureResponse = PictureResponse | null;
+export type EditPictureResponse = PictureResponse | null;
 
 interface MenuResponse {
 	id: string;

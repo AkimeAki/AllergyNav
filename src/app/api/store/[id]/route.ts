@@ -123,8 +123,6 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
 		const storeId = safeString(params.id);
 		const userId = safeString(session?.user?.id);
 
-		console.log(url);
-
 		if (name === null || address === null || description === null || storeId === null) {
 			throw new ValidationError();
 		}

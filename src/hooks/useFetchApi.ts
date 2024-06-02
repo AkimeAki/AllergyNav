@@ -23,6 +23,8 @@ export default function <T>() {
 			| "getMenu"
 			| "getMenuHistories"
 			| "getPictures"
+			| "getPicture"
+			| "editPicture"
 			| "getStore"
 			| "getStores",
 		params: Record<string, string | undefined>,
@@ -111,6 +113,26 @@ export default function <T>() {
 						return {
 							url: `${process.env.NEXT_PUBLIC_API_URL}/picture?storeId=${params.storeId}`,
 							method: "GET"
+						};
+
+					case "getPicture":
+						if (params.pictureId === undefined) {
+							throw new Error();
+						}
+
+						return {
+							url: `${process.env.NEXT_PUBLIC_API_URL}/picture/${params.pictureId}`,
+							method: "GET"
+						};
+
+					case "editPicture":
+						if (params.pictureId === undefined) {
+							throw new Error();
+						}
+
+						return {
+							url: `${process.env.NEXT_PUBLIC_API_URL}/picture/${params.pictureId}`,
+							method: "PUT"
 						};
 
 					case "addPicture":

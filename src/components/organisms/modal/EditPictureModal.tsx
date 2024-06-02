@@ -11,67 +11,82 @@ import Cursor from "@/components/atoms/Cursor";
 import useAddPicture from "@/hooks/fetch-api/useAddPicture";
 import Modal from "@/components/molecules/Modal";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
-import FileUpload from "@/components/atoms/FileUpload";
 import { isEmptyString } from "@/libs/check-string";
 import useGetMenus from "@/hooks/fetch-api/useGetMenus";
+import useEditPicture from "@/hooks/fetch-api/useEditPicture";
+import useGetPicture from "@/hooks/fetch-api/useGetPicture";
 
 interface Props {
+	pictureId: string;
 	storeId: string;
 	isOpen: boolean;
 	setIsOpen: Dispatch<SetStateAction<boolean>>;
 	callback?: () => void;
 }
 
-export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.Element {
-	const [pictureData, setPictureData] = useState<File | undefined>(undefined);
+export default function ({ pictureId, storeId, isOpen, setIsOpen, callback }: Props): JSX.Element {
 	const [pictureDescription, setPictureDescription] = useState<string>("");
-	const { addPictureStatus, addPicture } = useAddPicture();
+	const [oldPictureDescription, setOldPictureDescription] = useState<string>("");
 	const { addMessage } = useFloatMessage();
 	const [isChanged, setIsChanged] = useState<boolean>(false);
 	const { getMenus, getMenusResponse, getMenusStatus } = useGetMenus();
+	const { getPicture, getPictureResponse, getPictureStatus } = useGetPicture();
+	const { editPicture, editPictureResponse, editPictureStatus } = useEditPicture();
 	const [pictureMenuId, setPictureMenuId] = useState<string>("null");
+	const [oldPictureMenuId, setOldPictureMenuId] = useState<string>("null");
 
 	useEffect(() => {
-		if (addPictureStatus === "successed") {
-			setPictureData(undefined);
+		if (editPictureStatus === "successed") {
 			setPictureDescription("");
 			if (callback !== undefined) {
 				callback();
 			}
 		}
 
-		if (addPictureStatus === "loading") {
+		if (editPictureStatus === "loading") {
 			addMessage("入力データを送信しています", "success");
 		}
 
-		if (addPictureStatus === "failed") {
-			addMessage("画像の登録に失敗しました", "error");
+		if (editPictureStatus === "failed") {
+			addMessage("画像の編集に失敗しました", "error");
 		}
-	}, [addPictureStatus]);
+	}, [editPictureStatus]);
 
 	useEffect(() => {
-		if (pictureData !== undefined || !isEmptyString(pictureDescription)) {
-			setIsChanged(true);
-		} else {
-			setIsChanged(false);
+		if (getPictureStatus === "successed") {
+			if (pictureDescription !== oldPictureDescription || pictureMenuId !== oldPictureMenuId) {
+				setIsChanged(true);
+			} else {
+				setIsChanged(false);
+			}
 		}
-	}, [pictureData, pictureDescription]);
+	}, [pictureDescription, getPictureStatus, pictureMenuId]);
+
+	useEffect(() => {
+		if (getPictureStatus === "successed" && getPictureResponse !== undefined) {
+			setPictureDescription(getPictureResponse.description);
+			setOldPictureDescription(getPictureResponse.description);
+			setPictureMenuId(getPictureResponse.menu_id ?? "null");
+			setOldPictureMenuId(getPictureResponse.menu_id ?? "null");
+		}
+	}, [getPictureStatus]);
 
 	useEffect(() => {
 		if (!isOpen) {
-			setPictureData(undefined);
 			setPictureDescription("");
+		} else {
 			getMenus("", "", storeId);
+			getPicture(pictureId);
 		}
 	}, [isOpen]);
 
 	return (
 		<>
-			{addPictureStatus === "loading" && <Cursor cursor="wait" />}
+			{getPictureStatus === "loading" && <Cursor cursor="wait" />}
 			<Modal
 				isOpen={isOpen}
 				setIsOpen={setIsOpen}
-				close={addPictureStatus !== "loading"}
+				close={editPictureStatus !== "loading"}
 				onOutsideClick={
 					isChanged
 						? () => {
@@ -83,7 +98,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						: undefined
 				}
 			>
-				<SubTitle>写真を追加</SubTitle>
+				<SubTitle>写真を編集</SubTitle>
 				<form
 					className={css`
 						display: flex;
@@ -103,8 +118,16 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						<Label>メニューと紐づける</Label>
 						<Select
 							value={pictureMenuId}
-							disabled={getMenusStatus === "loading" || addPictureStatus === "loading"}
-							loading={getMenusStatus === "loading" || addPictureStatus === "loading"}
+							disabled={
+								getMenusStatus === "loading" ||
+								editPictureStatus === "loading" ||
+								getPictureStatus === "loading"
+							}
+							loading={
+								getMenusStatus === "loading" ||
+								editPictureStatus === "loading" ||
+								getPictureStatus === "loading"
+							}
 							onChange={(e) => {
 								let selectId = "null";
 								Array.from(e.target).forEach((item) => {
@@ -129,8 +152,8 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						<Label>写真の情報</Label>
 						<TextArea
 							value={pictureDescription}
-							disabled={addPictureStatus === "loading"}
-							loading={addPictureStatus === "loading"}
+							disabled={editPictureStatus === "loading" || getPictureStatus === "loading"}
+							loading={editPictureStatus === "loading" || getPictureStatus === "loading"}
 							onChange={(e) => {
 								setPictureDescription(e.target.value);
 							}}
@@ -146,12 +169,12 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						>
 							<Button
 								onClick={() => {
-									if (pictureData !== undefined) {
-										void addPicture(storeId, pictureData, pictureDescription, pictureMenuId);
-									}
+									editPicture(pictureId, pictureDescription, pictureMenuId);
 								}}
-								disabled={addPictureStatus === "loading" || pictureData === undefined}
-								loading={addPictureStatus === "loading"}
+								disabled={
+									editPictureStatus === "loading" || getPictureStatus === "loading" || !isChanged
+								}
+								loading={editPictureStatus === "loading" || getPictureStatus === "loading"}
 							>
 								登録する
 							</Button>
