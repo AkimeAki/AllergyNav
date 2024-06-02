@@ -298,7 +298,7 @@ export default function ({ isOpen, setIsOpen, allergenStatus, setAllergenStatus 
 								className={css`
 									display: flex;
 									flex-wrap: wrap;
-									gap: 10px;
+									column-gap: 25px;
 								`}
 							>
 								{getAllergensResponse?.map((allergen) => {
@@ -345,6 +345,7 @@ export default function ({ isOpen, setIsOpen, allergenStatus, setAllergenStatus 
 										className={css`
 											display: flex;
 											flex-wrap: wrap;
+											column-gap: 20px;
 										`}
 									>
 										{getAllergensResponse?.map((allergen) => {
@@ -381,6 +382,7 @@ export default function ({ isOpen, setIsOpen, allergenStatus, setAllergenStatus 
 										className={css`
 											display: flex;
 											flex-wrap: wrap;
+											column-gap: 20px;
 										`}
 									>
 										{getAllergensResponse?.map((allergen) => {
@@ -417,6 +419,7 @@ export default function ({ isOpen, setIsOpen, allergenStatus, setAllergenStatus 
 										className={css`
 											display: flex;
 											flex-wrap: wrap;
+											column-gap: 20px;
 										`}
 									>
 										{getAllergensResponse?.map((allergen) => {
