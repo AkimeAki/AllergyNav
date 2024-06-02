@@ -440,6 +440,7 @@ export default function ({ storeId }: Props): JSX.Element {
 														className={css`
 															display: flex;
 															flex-wrap: wrap;
+															column-gap: 6px;
 														`}
 													>
 														{getAllergensResponse?.map((allergen) => {

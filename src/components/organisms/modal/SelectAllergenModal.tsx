@@ -298,6 +298,7 @@ export default function ({ isOpen, setIsOpen, allergenStatus, setAllergenStatus 
 								className={css`
 									display: flex;
 									flex-wrap: wrap;
+									column-gap: 6px;
 								`}
 							>
 								{getAllergensResponse?.map((allergen) => {
