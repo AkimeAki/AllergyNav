@@ -152,7 +152,6 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 							className={css`
 								display: flex;
 								flex-wrap: wrap;
-								column-gap: 25px;
 							`}
 						>
 							{getAllergensResponse?.map((allergen) => {

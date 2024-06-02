@@ -170,7 +170,6 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 							className={css`
 								display: flex;
 								flex-wrap: wrap;
-								column-gap: 25px;
 							`}
 						>
 							{getAllergensResponse?.map((allergen) => {

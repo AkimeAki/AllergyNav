@@ -22,6 +22,11 @@ export default function ({
 	clickable = false,
 	onClick
 }: Props): JSX.Element {
+	let scaleX = 1;
+	if (text.length > 3) {
+		scaleX -= (text.length - 3) * 0.1 + 0.1;
+	}
+
 	return (
 		<div
 			onClick={() => {
@@ -74,6 +79,7 @@ export default function ({
 			/>
 			{!nameHidden && (
 				<div
+					style={{ transform: `scale(${scaleX}, 1)` }}
 					className={css`
 						position: relative;
 						text-align: center;
