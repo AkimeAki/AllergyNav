@@ -101,7 +101,8 @@ export const PUT = async (req: NextRequest, { params }: Data): Promise<NextRespo
 		await prisma.$transaction(async (prisma) => {
 			const result = await prisma.picture.update({
 				data: {
-					description
+					description,
+					updated_user_id: userId
 				},
 				where: {
 					id: pictureId
