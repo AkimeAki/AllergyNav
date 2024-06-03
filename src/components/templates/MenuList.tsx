@@ -353,8 +353,8 @@ export default function ({ storeId }: Props): JSX.Element {
 												}}
 												className={css`
 													position: absolute;
-													top: 5px;
-													right: 5px;
+													top: 14px;
+													right: 13px;
 													z-index: 99;
 
 													& > div {
@@ -362,7 +362,7 @@ export default function ({ storeId }: Props): JSX.Element {
 													}
 												`}
 											>
-												<GoogleIcon name="more_vert" size={23} color="var(--color-theme)" />
+												<GoogleIcon name="more_vert" size={23} color="white" />
 											</div>
 										)}
 										<div
