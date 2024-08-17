@@ -280,8 +280,10 @@ export default function (): JSX.Element {
 															}
 														`}
 														src={
-															getPicturesResponse?.find((p) => p.store_id === store.id)
-																?.url ?? "/no-image.png"
+															getPicturesResponse?.find(
+																(p) =>
+																	p.store_id === store.id && p.menu_id !== undefined
+															)?.url ?? "/no-image.png"
 														}
 														width={250}
 														height={250}
