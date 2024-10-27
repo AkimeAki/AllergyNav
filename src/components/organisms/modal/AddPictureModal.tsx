@@ -60,6 +60,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 	useEffect(() => {
 		if (!isOpen) {
 			setPictureData(undefined);
+			setPictureMenuId("null");
 			setPictureDescription("");
 			getMenus("", "", storeId);
 		}
