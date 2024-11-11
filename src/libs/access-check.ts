@@ -104,7 +104,9 @@ export const accessCheck = async (req: NextRequest): Promise<boolean> => {
 		}
 
 		error = false;
-	} catch (e) {}
+	} catch (e) {
+		/* empty */
+	}
 
 	if (error) {
 		return false;

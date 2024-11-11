@@ -45,7 +45,9 @@ export default function <T>() {
 
 					case "getMenus":
 						return {
-							url: `${process.env.NEXT_PUBLIC_API_URL}/menu?keywords=${params.keywords ?? ""}&allergens=${params.allergens ?? ""}&storeId=${params.storeId ?? ""}`,
+							url: `${process.env.NEXT_PUBLIC_API_URL}/menu?keywords=${params.keywords ?? ""}&allergens=${
+								params.allergens ?? ""
+							}&storeId=${params.storeId ?? ""}`,
 							method: "GET"
 						};
 
@@ -143,7 +145,11 @@ export default function <T>() {
 
 					case "getStores":
 						return {
-							url: `${process.env.NEXT_PUBLIC_API_URL}/store?keywords=${params.keywords ?? ""}&allergens=${params.allergens ?? ""}&area=${params.area ?? ""}&coords=${params.coords ?? ""}&radius=${params.radius ?? ""}`,
+							url: `${process.env.NEXT_PUBLIC_API_URL}/store?keywords=${
+								params.keywords ?? ""
+							}&allergens=${params.allergens ?? ""}&area=${params.area ?? ""}&coords=${
+								params.coords ?? ""
+							}&radius=${params.radius ?? ""}`,
 							method: "GET"
 						};
 

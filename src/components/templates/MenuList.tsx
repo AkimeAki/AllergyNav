@@ -268,10 +268,17 @@ export default function ({ storeId }: Props): JSX.Element {
 													<Button
 														size="tiny"
 														disabled={userStatus !== "authenticated"}
+														disabledClick
 														onClick={() => {
 															if (userStatus === "authenticated") {
 																setOpenEditModalId(menu.id);
 																setIsOpenEditModal(true);
+															} else if (userStatus === "unauthenticated") {
+																addMessage(
+																	"メニューを編集するには、ログインする必要があります",
+																	"error",
+																	3
+																);
 															}
 														}}
 														selected={openEditModalId === menu.id && isOpenEditModal}
@@ -281,7 +288,7 @@ export default function ({ storeId }: Props): JSX.Element {
 																position: relative;
 															`}
 														>
-															{userStatus !== "authenticated" && (
+															{userStatus === "loading" && (
 																<div
 																	className={css`
 																		position: absolute;

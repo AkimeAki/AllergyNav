@@ -26,7 +26,9 @@ export const getUserData = async (): Promise<ReturnType> => {
 
 		role = safeString(result.role);
 		email = safeString(result.email);
-	} catch (e) {}
+	} catch (e) {
+		/* empty */
+	}
 
 	return { userId, email, role };
 };

@@ -22,7 +22,7 @@ export default function (): JSX.Element {
 					flex-direction: column;
 					gap: 20px;
 					@media (max-width: 880px) {
-						margin-top: 30px;
+						margin-top: 10px;
 					}
 				`}
 			>

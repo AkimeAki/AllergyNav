@@ -131,7 +131,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 								if (result) {
 									setIsOpen(false);
 								}
-							}
+						  }
 						: undefined
 				}
 			>

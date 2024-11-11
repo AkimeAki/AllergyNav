@@ -535,9 +535,9 @@ export default function (): JSX.Element {
 						gap: 5px;
 					}
 
-					@media (max-width: 600px) {
-						width: calc(100% + 20px + 20px);
-						margin-left: -20px;
+					@media (max-width: 800px) {
+						width: calc(100% + 10px + 10px);
+						margin-left: -10px;
 					}
 				`}
 			>

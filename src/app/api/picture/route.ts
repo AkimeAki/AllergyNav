@@ -44,7 +44,7 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 								return {
 									store_id: id
 								};
-							})
+						  })
 			}
 		});
 
@@ -156,7 +156,7 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
 							? undefined
 							: {
 									create: { menu_id: menuId }
-								}
+							  }
 				}
 			});
 

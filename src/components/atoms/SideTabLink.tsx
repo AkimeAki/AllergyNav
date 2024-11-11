@@ -61,7 +61,7 @@ export default function ({ href, onClick, children, active = false, icon = "pend
 						background-color: var(--color-theme);
 						color: var(--color-secondary);
 					}
-				`
+			  `
 			: css`
 					background-color: var(--color-theme-thin);
 					color: var(--color-primary);
@@ -69,7 +69,7 @@ export default function ({ href, onClick, children, active = false, icon = "pend
 					@media (max-width: 880px) {
 						font-weight: normal;
 					}
-				`
+			  `
 	].join(" ");
 
 	const iconStyle = css`

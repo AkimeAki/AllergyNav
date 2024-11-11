@@ -19,7 +19,8 @@ export default function ({ children }: Props): JSX.Element {
 				}
 
 				@media (max-width: 880px) {
-					display: block;
+					grid-template-columns: 1fr;
+					gap: 10px;
 				}
 			`}
 		>

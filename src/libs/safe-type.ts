@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const safeNumber = (value: any): number | null => {
 	if (!isNaN(parseInt(value ?? ""))) {
 		return Number(value ?? "");
@@ -6,6 +7,7 @@ export const safeNumber = (value: any): number | null => {
 	return null;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const safeString = (value: any): string | null => {
 	if (value === null || value === undefined) {
 		return null;
@@ -18,6 +20,7 @@ export const safeString = (value: any): string | null => {
 	return String(value ?? "");
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const safeBigInt = (value: any): bigint | null => {
 	if (value === null || value === undefined) {
 		return null;

@@ -112,7 +112,7 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 								if (result) {
 									setIsOpen(false);
 								}
-							}
+						  }
 						: undefined
 				}
 			>

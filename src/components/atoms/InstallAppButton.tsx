@@ -19,21 +19,26 @@ export default function ({ children }: Props): JSX.Element {
 
 		const eventCustom = (event: Event): void => {
 			event.preventDefault();
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-expect-error
 			button.promptEvent = event;
 			button.style.display = "flex"; // 要素を表示する
 		};
 
 		const click = (): void => {
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-expect-error
 			if (button.promptEvent !== null && button.promptEvent !== undefined) {
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-expect-error
 				button.promptEvent.prompt();
 
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-expect-error
 				button.promptEvent.userChoice.then(() => {
 					button.style.display = "none";
 
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-expect-error
 					button.promptEvent = null;
 				});

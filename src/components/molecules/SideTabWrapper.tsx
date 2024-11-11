@@ -22,7 +22,7 @@ export default function ({ children }: Props): JSX.Element {
 				element.current.scrollBy({
 					top: 0,
 					left: e.deltaY / 5,
-					behavior: "instant"
+					behavior: "auto"
 				});
 			}
 		};
@@ -33,7 +33,7 @@ export default function ({ children }: Props): JSX.Element {
 					element.current?.scrollBy({
 						top: 0,
 						left: oldX - e.changedTouches[0].pageX,
-						behavior: "instant"
+						behavior: "auto"
 					});
 
 					return e.changedTouches[0].pageX;
@@ -97,6 +97,14 @@ export default function ({ children }: Props): JSX.Element {
 				display: flex;
 				flex-direction: column;
 				gap: 30px;
+
+				@media (max-width: 880px) {
+					position: sticky;
+					top: 5px;
+					z-index: 9999;
+					width: 100%;
+					overflow: hidden;
+				}
 			`}
 		>
 			<aside
@@ -109,21 +117,11 @@ export default function ({ children }: Props): JSX.Element {
 
 					@media (max-width: 880px) {
 						flex-direction: row;
-						position: fixed;
-						z-index: 9999;
-						bottom: 40px;
-						right: 15px;
 						height: 60px;
-						width: calc(100% - 130px);
 						align-items: center;
 						white-space: nowrap;
 						box-shadow: 0 0 10px -5px #969696;
 						border: 2px solid #797979;
-					}
-
-					@media (max-width: 600px) {
-						bottom: 20px;
-						width: calc(100% - 110px);
 					}
 				`}
 			>

@@ -79,12 +79,12 @@ export default function ({ isSidebarOpen, setIsSidebarOpen }: Props): JSX.Elemen
 									&:before {
 										opacity: 1;
 									}
-								`
+							  `
 							: css`
 									&:before {
 										opacity: 0.5;
 									}
-								`
+							  `
 					].join(" ")}
 				>
 					<div
@@ -113,12 +113,12 @@ export default function ({ isSidebarOpen, setIsSidebarOpen }: Props): JSX.Elemen
 										div {
 											height: 2px;
 										}
-									`
+								  `
 								: css`
 										div {
 											height: 1px;
 										}
-									`
+								  `
 						].join(" ")}
 					>
 						<div
@@ -131,11 +131,11 @@ export default function ({ isSidebarOpen, setIsSidebarOpen }: Props): JSX.Elemen
 									? css`
 											top: 50%;
 											transform: translateY(-50%) rotate(45deg);
-										`
+									  `
 									: css`
 											top: calc(50% - 7px);
 											transform: translateY(-50%) rotate(0deg);
-										`
+									  `
 							].join(" ")}
 						/>
 						<div
@@ -148,12 +148,12 @@ export default function ({ isSidebarOpen, setIsSidebarOpen }: Props): JSX.Elemen
 											top: 50%;
 											transform: translateY(-50%) rotate(-45deg);
 											width: 100%;
-										`
+									  `
 									: css`
 											top: calc(50% + 7px);
 											transform: translateY(-50%) rotate(0deg);
 											width: 60%;
-										`
+									  `
 							].join(" ")}
 						/>
 					</div>

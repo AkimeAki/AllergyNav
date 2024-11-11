@@ -177,7 +177,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 								if (result) {
 									setIsOpen(false);
 								}
-							}
+						  }
 						: undefined
 				}
 			>

@@ -16,6 +16,17 @@ export default async function ({ children, params }: Props): Promise<JSX.Element
 
 	return (
 		<>
+			<div
+				className={css`
+					display: none;
+
+					@media (max-width: 880px) {
+						display: block;
+					}
+				`}
+			>
+				<MainTitle>{storeDetail.name}</MainTitle>
+			</div>
 			<StoreDetailTabs storeId={storeDetail.id} />
 			<div
 				className={css`
@@ -24,7 +35,15 @@ export default async function ({ children, params }: Props): Promise<JSX.Element
 					gap: 30px;
 				`}
 			>
-				<MainTitle>{storeDetail.name}</MainTitle>
+				<div
+					className={css`
+						@media (max-width: 880px) {
+							display: none;
+						}
+					`}
+				>
+					<MainTitle>{storeDetail.name}</MainTitle>
+				</div>
 				<div>{children}</div>
 			</div>
 		</>

@@ -31,17 +31,9 @@ export default function ({ allergens }: Props): JSX.Element {
 						font-size: 20px;
 					`}
 				>
-					食べられない物
+					食べられないアレルゲン
 				</span>
-				にクリックして
-				<span
-					className={css`
-						vertical-align: sub;
-					`}
-				>
-					<GoogleIcon name="skull" size={25} color="var(--color-red)" />
-				</span>
-				マークを付けてください。
+				を選択してください。
 			</div>
 			<div>
 				<div
@@ -75,16 +67,24 @@ export default function ({ allergens }: Props): JSX.Element {
 											return [...selectAllergens, item.id];
 										});
 									}}
-									className={css`
-										cursor: pointer;
-										user-select: none;
-									`}
+									className={[
+										css`
+											cursor: pointer;
+											user-select: none;
+											border: 2px solid var(--color-theme);
+											padding: 5px;
+											border-radius: 7px;
+											transition-duration: 200ms;
+											transition-property: background-color;
+										`,
+										selected
+											? css`
+													background-color: var(--color-theme-thin);
+											  `
+											: ""
+									].join(" ")}
 								>
-									<AllergenItem
-										image={`/icons/${item.id}.png`}
-										text={item.name}
-										status={selected ? "skull" : "normal"}
-									/>
+									<AllergenItem image={`/icons/${item.id}.png`} text={item.name} />
 								</div>
 							);
 						})}
@@ -101,6 +101,7 @@ export default function ({ allergens }: Props): JSX.Element {
 
 						@media screen and (max-width: 600px) {
 							grid-template-columns: 1fr;
+							gap: 10px;
 						}
 					`}
 				>
@@ -120,7 +121,9 @@ export default function ({ allergens }: Props): JSX.Element {
 					<div
 						className={css`
 							@media screen and (max-width: 600px) {
-								display: none;
+								display: flex;
+								flex-direction: column;
+								width: 100%;
 							}
 						`}
 					>

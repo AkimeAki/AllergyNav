@@ -24,7 +24,6 @@ export default function ({ children }: Props): JSX.Element {
 				/>
 				{process.env.NODE_ENV === "production" && process.env.MAINTENANCE === "false" && (
 					<>
-						{/* eslint-disable-next-line react/jsx-no-comment-textnodes, @next/next/next-script-for-ga */}
 						<script
 							dangerouslySetInnerHTML={{
 								__html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

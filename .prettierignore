@@ -1,2 +1,16 @@
 /node_modules/
 package-lock.json
+*.png
+*.prisma
+*.ico
+*.ttf
+*.svg
+*.sql
+*.txt
+Dockerfile
+Dockerfile.*
+.env.*
+.editorconfig
+Makefile
+*.toml
+.npmrc

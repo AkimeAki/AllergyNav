@@ -9,44 +9,10 @@
 		"npm.packageManager": "npm",
 		"eslint.workingDirectories": ["./"],
 		"eslint.validate": ["javascript", "typescript", "typescriptreact"],
-		"[json]": {
-			"editor.formatOnSave": true,
-			"editor.defaultFormatter": "esbenp.prettier-vscode"
-		},
-		"[javascript]": {
-			"editor.formatOnSave": true,
-			"editor.defaultFormatter": "esbenp.prettier-vscode"
-		},
-		"[jsonc]": {
-			"editor.formatOnSave": true,
-			"editor.defaultFormatter": "esbenp.prettier-vscode"
-		},
-		"[typescript]": {
-			"editor.formatOnSave": true,
-			"editor.defaultFormatter": "esbenp.prettier-vscode"
-		},
-		"[typescriptreact]": {
-			"editor.formatOnSave": true,
-			"editor.defaultFormatter": "esbenp.prettier-vscode"
-		},
-		"[html]": {
-			"editor.formatOnSave": true,
-			"editor.defaultFormatter": "esbenp.prettier-vscode"
-		},
-		"[yaml]": {
-			"editor.formatOnSave": true,
-			"editor.defaultFormatter": "esbenp.prettier-vscode"
-		},
-		"[dockercompose]": {
-			"editor.formatOnSave": true,
-			"editor.defaultFormatter": "esbenp.prettier-vscode"
-		},
-		"[css]": {
-			"editor.formatOnSave": true,
-			"editor.defaultFormatter": "esbenp.prettier-vscode"
-		},
+		"eslint.useFlatConfig": true,
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
 		"[prisma]": {
-			"editor.formatOnSave": true,
 			"editor.defaultFormatter": "Prisma.prisma"
 		}
 	},
@@ -55,7 +21,8 @@
 			"bierner.comment-tagged-templates",
 			"dbaeumer.vscode-eslint",
 			"esbenp.prettier-vscode",
-			"EditorConfig.EditorConfig"
+			"EditorConfig.EditorConfig",
+			"prisma.prisma"
 		]
 	}
 }

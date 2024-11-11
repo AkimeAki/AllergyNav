@@ -19,6 +19,7 @@ export default function ({ slot, style, deps = [] }: Props): JSX.Element {
 
 		setTimeout(() => {
 			if (process.env.NODE_ENV === "production") {
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-expect-error
 				(adsbygoogle = window.adsbygoogle || []).push({});
 			}

@@ -91,7 +91,7 @@ export default function ({
 						? css`
 								height: auto;
 								overflow-y: hidden;
-							`
+						  `
 						: ""
 				].join(" ")}
 			/>
