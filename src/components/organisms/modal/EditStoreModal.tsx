@@ -41,7 +41,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 	const [oldGurunaviUrl, setOldGurunaviUrl] = useState<string>("");
 	const [hotpepperUrl, setHotpepperUrl] = useState<string>("");
 	const [oldHotpepperUrl, setOldHotpepperUrl] = useState<string>("");
-	const { editStoreStatus, editStore } = useEditStore();
+	const { editStoreStatus, editStore, editStoreReset } = useEditStore();
 	const { getStoreResponse, getStoreStatus, getStore } = useGetStore();
 	const [isChanged, setIsChanged] = useState<boolean>(false);
 	const { addMessage } = useFloatMessage();
@@ -86,6 +86,8 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 	useEffect(() => {
 		if (isOpen) {
 			getStore(storeId);
+		} else {
+			editStoreReset();
 		}
 	}, [isOpen]);
 
@@ -169,7 +171,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 			<Modal
 				isOpen={isOpen}
 				setIsOpen={setIsOpen}
-				close={editStoreStatus !== "loading"}
+				close={editStoreStatus !== "loading" && editStoreStatus !== "successed"}
 				onOutsideClick={
 					isChanged
 						? () => {

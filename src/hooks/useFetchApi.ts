@@ -234,5 +234,10 @@ export default function <T>() {
 		}
 	};
 
-	return { response, status, responseStatus, fetchData };
+	const reset = () => {
+		setResponse(undefined);
+		setStatus("yet");
+	};
+
+	return { response, status, responseStatus, fetchData, reset };
 }

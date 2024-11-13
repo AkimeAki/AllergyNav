@@ -15,6 +15,7 @@ interface ReturnType {
 	addStoreResponse: NonNullable<AddStoreResponse> | undefined;
 	addStoreStatus: FetchStatus;
 	addStoreResponseStatus: number | undefined;
+	addStoreReset: () => void;
 }
 
 export default function (): ReturnType {
@@ -22,7 +23,8 @@ export default function (): ReturnType {
 		fetchData,
 		response: addStoreResponse,
 		status: addStoreStatus,
-		responseStatus: addStoreResponseStatus
+		responseStatus: addStoreResponseStatus,
+		reset: addStoreReset
 	} = useFetchApi<AddStoreResponse>();
 
 	const addStore = (
@@ -51,5 +53,5 @@ export default function (): ReturnType {
 		);
 	};
 
-	return { addStore, addStoreResponse, addStoreStatus, addStoreResponseStatus };
+	return { addStore, addStoreResponse, addStoreStatus, addStoreResponseStatus, addStoreReset };
 }

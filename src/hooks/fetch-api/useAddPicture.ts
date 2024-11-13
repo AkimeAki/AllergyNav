@@ -6,6 +6,7 @@ interface ReturnType {
 	addPictureResponse: NonNullable<AddMenuResponse> | undefined;
 	addPictureStatus: FetchStatus;
 	addPictureResponseStatus: number | undefined;
+	addPictureReset: () => void;
 }
 
 export default function (): ReturnType {
@@ -13,7 +14,8 @@ export default function (): ReturnType {
 		fetchData,
 		response: addPictureResponse,
 		status: addPictureStatus,
-		responseStatus: addPictureResponseStatus
+		responseStatus: addPictureResponseStatus,
+		reset: addPictureReset
 	} = useFetchApi<AddMenuResponse>();
 
 	const addPicture = async (storeId: string, file: File, description: string, menuId?: string): Promise<void> => {
@@ -31,5 +33,5 @@ export default function (): ReturnType {
 		);
 	};
 
-	return { addPicture, addPictureResponse, addPictureStatus, addPictureResponseStatus };
+	return { addPicture, addPictureResponse, addPictureStatus, addPictureResponseStatus, addPictureReset };
 }

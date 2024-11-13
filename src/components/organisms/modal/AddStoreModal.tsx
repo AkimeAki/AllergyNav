@@ -32,7 +32,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 	const [gurunaviUrl, setGurunaviUrl] = useState<string>("");
 	const [hotpepperUrl, setHotpepperUrl] = useState<string>("");
 	const router = useRouter();
-	const { addStoreResponse, addStoreStatus, addStore } = useAddStore();
+	const { addStoreResponse, addStoreStatus, addStore, addStoreReset } = useAddStore();
 	const { addMessage } = useFloatMessage();
 	const [isChanged, setIsChanged] = useState<boolean>(false);
 
@@ -114,6 +114,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 			setTabelogUrl("");
 			setGurunaviUrl("");
 			setHotpepperUrl("");
+			addStoreReset();
 		}
 	}, [isOpen]);
 
@@ -123,7 +124,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 			<Modal
 				isOpen={isOpen}
 				setIsOpen={setIsOpen}
-				close={addStoreStatus !== "loading"}
+				close={addStoreStatus !== "loading" && addStoreStatus !== "successed"}
 				onOutsideClick={
 					isChanged
 						? () => {

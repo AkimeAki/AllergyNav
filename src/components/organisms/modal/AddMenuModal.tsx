@@ -28,7 +28,7 @@ interface Props {
 export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.Element {
 	const [menuName, setMenuName] = useState<string>("");
 	const [menuDescription, setMenuDescription] = useState<string>("");
-	const { addMenuStatus, addMenu } = useAddMenu();
+	const { addMenuStatus, addMenu, addMenuReset } = useAddMenu();
 	const [allergenStatus, setAllergenStatus] = useState<Record<string, AllergenStatusValue>>({});
 	const { getAllergensResponse, getAllergens, getAllergensStatus } = useGetAllergens();
 	const { addMessage } = useFloatMessage();
@@ -77,6 +77,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 		if (!isOpen) {
 			setMenuName("");
 			setMenuDescription("");
+			addMenuReset();
 		} else {
 			getAllergens();
 		}
@@ -88,7 +89,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 			<Modal
 				isOpen={isOpen}
 				setIsOpen={setIsOpen}
-				close={addMenuStatus !== "loading"}
+				close={addMenuStatus !== "loading" && addMenuStatus !== "successed"}
 				onOutsideClick={
 					isChanged
 						? () => {

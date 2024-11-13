@@ -32,7 +32,7 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 	const [oldMenuName, setOldMenuName] = useState<string>("");
 	const [menuDescription, setMenuDescription] = useState<string>("");
 	const [oldMenuDescription, setOldMenuDescription] = useState<string>("");
-	const { editMenuStatus, editMenu } = useEditMenu();
+	const { editMenuStatus, editMenu, editMenuReset } = useEditMenu();
 	const { getMenuResponse, getMenuStatus, getMenu } = useGetMenu();
 	const [isChanged, setIsChanged] = useState<boolean>(false);
 	const { getAllergens, getAllergensResponse } = useGetAllergens();
@@ -45,6 +45,8 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 		if (isOpen) {
 			getMenu(menuId);
 			getAllergens();
+		} else {
+			editMenuReset();
 		}
 	}, [isOpen]);
 
@@ -104,7 +106,7 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 			<Modal
 				isOpen={isOpen}
 				setIsOpen={setIsOpen}
-				close={editMenuStatus !== "loading" && !isSelectAllergenModalOpen}
+				close={editMenuStatus !== "loading" && editMenuStatus !== "successed" && !isSelectAllergenModalOpen}
 				onOutsideClick={
 					isChanged
 						? () => {

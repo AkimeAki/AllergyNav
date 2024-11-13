@@ -31,7 +31,7 @@ export default function ({ pictureId, storeId, isOpen, setIsOpen, callback }: Pr
 	const [isChanged, setIsChanged] = useState<boolean>(false);
 	const { getMenus, getMenusResponse, getMenusStatus } = useGetMenus();
 	const { getPicture, getPictureResponse, getPictureStatus } = useGetPicture();
-	const { editPicture, editPictureResponse, editPictureStatus } = useEditPicture();
+	const { editPicture, editPictureResponse, editPictureStatus, editPictureReset } = useEditPicture();
 	const [pictureMenuId, setPictureMenuId] = useState<string>("null");
 	const [oldPictureMenuId, setOldPictureMenuId] = useState<string>("null");
 
@@ -74,6 +74,7 @@ export default function ({ pictureId, storeId, isOpen, setIsOpen, callback }: Pr
 	useEffect(() => {
 		if (!isOpen) {
 			setPictureDescription("");
+			editPictureReset();
 		} else {
 			getMenus("", "", storeId);
 			getPicture(pictureId);
@@ -86,7 +87,7 @@ export default function ({ pictureId, storeId, isOpen, setIsOpen, callback }: Pr
 			<Modal
 				isOpen={isOpen}
 				setIsOpen={setIsOpen}
-				close={editPictureStatus !== "loading"}
+				close={editPictureStatus !== "loading" && editPictureStatus !== "successed"}
 				onOutsideClick={
 					isChanged
 						? () => {

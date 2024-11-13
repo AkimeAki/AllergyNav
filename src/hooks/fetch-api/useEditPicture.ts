@@ -6,6 +6,7 @@ interface ReturnType {
 	editPictureResponse: NonNullable<EditPictureResponse> | undefined;
 	editPictureStatus: FetchStatus;
 	editPictureResponseStatus: number | undefined;
+	editPictureReset: () => void;
 }
 
 export default function (): ReturnType {
@@ -13,7 +14,8 @@ export default function (): ReturnType {
 		fetchData,
 		response: editPictureResponse,
 		status: editPictureStatus,
-		responseStatus: editPictureResponseStatus
+		responseStatus: editPictureResponseStatus,
+		reset: editPictureReset
 	} = useFetchApi<EditPictureResponse>();
 
 	const editPicture = (pictureId: string, description: string, menuId?: string): void => {
@@ -27,5 +29,5 @@ export default function (): ReturnType {
 		);
 	};
 
-	return { editPicture, editPictureResponse, editPictureStatus, editPictureResponseStatus };
+	return { editPicture, editPictureResponse, editPictureStatus, editPictureResponseStatus, editPictureReset };
 }

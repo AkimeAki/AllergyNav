@@ -16,6 +16,7 @@ interface ReturnType {
 	editStoreResponse: NonNullable<EditStoreResponse> | undefined;
 	editStoreStatus: FetchStatus;
 	editStoreResponseStatus: number | undefined;
+	editStoreReset: () => void;
 }
 
 export default function (): ReturnType {
@@ -23,7 +24,8 @@ export default function (): ReturnType {
 		fetchData,
 		response: editStoreResponse,
 		status: editStoreStatus,
-		responseStatus: editStoreResponseStatus
+		responseStatus: editStoreResponseStatus,
+		reset: editStoreReset
 	} = useFetchApi<EditStoreResponse>();
 
 	const editStore = (
@@ -55,5 +57,5 @@ export default function (): ReturnType {
 		);
 	};
 
-	return { editStore, editStoreResponse, editStoreStatus, editStoreResponseStatus };
+	return { editStore, editStoreResponse, editStoreStatus, editStoreResponseStatus, editStoreReset };
 }

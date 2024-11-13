@@ -25,7 +25,7 @@ interface Props {
 export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.Element {
 	const [pictureData, setPictureData] = useState<File | undefined>(undefined);
 	const [pictureDescription, setPictureDescription] = useState<string>("");
-	const { addPictureStatus, addPicture } = useAddPicture();
+	const { addPictureStatus, addPicture, addPictureReset } = useAddPicture();
 	const { addMessage } = useFloatMessage();
 	const [isChanged, setIsChanged] = useState<boolean>(false);
 	const { getMenus, getMenusResponse, getMenusStatus } = useGetMenus();
@@ -63,6 +63,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 			setPictureMenuId("null");
 			setPictureDescription("");
 			getMenus("", "", storeId);
+			addPictureReset();
 		}
 	}, [isOpen]);
 
@@ -72,7 +73,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 			<Modal
 				isOpen={isOpen}
 				setIsOpen={setIsOpen}
-				close={addPictureStatus !== "loading"}
+				close={addPictureStatus !== "loading" && addPictureStatus !== "successed"}
 				onOutsideClick={
 					isChanged
 						? () => {

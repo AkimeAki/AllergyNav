@@ -11,6 +11,7 @@ interface ReturnType {
 	editMenuResponse: NonNullable<EditMenuResponse> | undefined;
 	editMenuStatus: FetchStatus;
 	editMenuResponseStatus: number | undefined;
+	editMenuReset: () => void;
 }
 
 export default function (): ReturnType {
@@ -18,7 +19,8 @@ export default function (): ReturnType {
 		fetchData,
 		response: editMenuResponse,
 		status: editMenuStatus,
-		responseStatus: editMenuResponseStatus
+		responseStatus: editMenuResponseStatus,
+		reset: editMenuReset
 	} = useFetchApi<EditMenuResponse>();
 
 	const editMenu = (
@@ -40,5 +42,5 @@ export default function (): ReturnType {
 		);
 	};
 
-	return { editMenu, editMenuResponse, editMenuStatus, editMenuResponseStatus };
+	return { editMenu, editMenuResponse, editMenuStatus, editMenuResponseStatus, editMenuReset };
 }

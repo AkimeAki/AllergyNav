@@ -11,6 +11,7 @@ interface ReturnType {
 	addMenuResponse: NonNullable<AddMenuResponse> | undefined;
 	addMenuStatus: FetchStatus;
 	addMenuResponseStatus: number | undefined;
+	addMenuReset: () => void;
 }
 
 export default function (): ReturnType {
@@ -18,7 +19,8 @@ export default function (): ReturnType {
 		fetchData,
 		response: addMenuResponse,
 		status: addMenuStatus,
-		responseStatus: addMenuResponseStatus
+		responseStatus: addMenuResponseStatus,
+		reset: addMenuReset
 	} = useFetchApi<AddMenuResponse>();
 
 	const addMenu = (
@@ -39,5 +41,5 @@ export default function (): ReturnType {
 		);
 	};
 
-	return { addMenu, addMenuResponse, addMenuStatus, addMenuResponseStatus };
+	return { addMenu, addMenuResponse, addMenuStatus, addMenuResponseStatus, addMenuReset };
 }
