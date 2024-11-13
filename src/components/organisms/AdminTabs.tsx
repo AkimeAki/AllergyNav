@@ -21,13 +21,6 @@ export default function (): JSX.Element {
 				お店管理
 			</SideTabLink>
 			<SideTabLink
-				href="/admin/group"
-				active={pathname === "/admin/group" || pathname.startsWith("/admin/group/")}
-				icon="storefront"
-			>
-				グループ管理
-			</SideTabLink>
-			<SideTabLink
 				href="/admin/user"
 				active={pathname === "/admin/user" || pathname.startsWith("/admin/user/")}
 				icon="person"

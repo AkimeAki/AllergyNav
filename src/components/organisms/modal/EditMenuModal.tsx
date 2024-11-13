@@ -144,12 +144,6 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 						/>
 					</div>
 					<div>
-						<Label>グループ（未実装）</Label>
-						<Select value="null" disabled={true}>
-							<option value="null">なし</option>
-						</Select>
-					</div>
-					<div>
 						<Label>含まれるアレルゲン</Label>
 						<Button
 							onClick={() => {

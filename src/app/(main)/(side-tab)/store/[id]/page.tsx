@@ -117,10 +117,6 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 				>
 					<tbody>
 						<tr>
-							<th>グループ</th>
-							<td>（未実装）</td>
-						</tr>
-						<tr>
 							<th>住所</th>
 							<td>
 								<StoreDetailIconLink

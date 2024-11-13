@@ -129,11 +129,38 @@ export default function ({
 									}
 								}}
 							>
-								<GoogleIcon
-									size={25}
-									name={icon === "close" ? "close" : icon === "back" ? "arrow_back" : "close"}
-									color="var(--color-secondary)"
-								/>
+								<div
+									className={css`
+										display: block;
+										font-size: 0;
+
+										@media (max-width: 880px) {
+											display: none;
+										}
+									`}
+								>
+									<GoogleIcon
+										size={30}
+										name={icon === "close" ? "close" : icon === "back" ? "arrow_back" : "close"}
+										color="var(--color-secondary)"
+									/>
+								</div>
+								<div
+									className={css`
+										display: none;
+										font-size: 0;
+
+										@media (max-width: 880px) {
+											display: block;
+										}
+									`}
+								>
+									<GoogleIcon
+										size={40}
+										name={icon === "close" ? "close" : icon === "back" ? "arrow_back" : "close"}
+										color="var(--color-secondary)"
+									/>
+								</div>
 							</div>
 						</div>
 					</div>

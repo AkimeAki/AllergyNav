@@ -221,12 +221,6 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						/>
 					</div>
 					<div>
-						<Label>グループ（未実装）</Label>
-						<Select value="null" disabled>
-							<option value="null">なし</option>
-						</Select>
-					</div>
-					<div>
 						<Label>公式サイトURL</Label>
 						<TextInput
 							value={storeUrl}
