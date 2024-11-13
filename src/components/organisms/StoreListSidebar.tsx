@@ -14,6 +14,8 @@ import TextInput from "@/components/atoms/TextInput";
 import Select from "@/components/atoms/Select";
 import { isEmptyString } from "@/libs/check-string";
 import GoogleAds from "@/components/atoms/GoogleAds";
+import SelectButton from "@/components/atoms/SelectButton";
+import { useFloatMessage } from "@/hooks/useFloatMessage";
 
 export default function (): JSX.Element {
 	const [selectAllergens, setSelectAllergens] = useState<string[] | undefined>(undefined);
@@ -26,6 +28,8 @@ export default function (): JSX.Element {
 	const { getAllergensResponse, getAllergens, getAllergensStatus } = useGetAllergens();
 	const router = useRouter();
 	const pathname = usePathname();
+	const [filterMode, setFilterMode] = useState<"exclude" | "include">("exclude");
+	const { addMessage } = useFloatMessage();
 
 	const params = {
 		allergens: searchParams.get("allergens") ?? "",
@@ -87,33 +91,13 @@ export default function (): JSX.Element {
 					`}
 				>
 					<SubTitle>検索したいアレルゲンを選択</SubTitle>
-					<div>
-						<p>
-							<span
-								className={css`
-									vertical-align: sub;
-								`}
-							>
-								<GoogleIcon name="skull" size={25} color="var(--color-red)" />
-							</span>
-							で選択したアレルゲンが
-							<span
-								className={css`
-									color: var(--color-red);
-									font-weight: bold;
-								`}
-							>
-								含まれていない
-							</span>
-							メニューを食べられるお店を検索します。
-						</p>
-					</div>
 					<div
 						className={css`
 							display: flex;
 							flex-wrap: wrap;
 							gap: 20px;
 							width: 100%;
+							justify-content: center;
 						`}
 					>
 						{getAllergensResponse?.map((item) => {
@@ -135,19 +119,89 @@ export default function (): JSX.Element {
 											return [...(selectAllergens ?? []), item.id];
 										});
 									}}
-									className={css`
-										cursor: pointer;
-										user-select: none;
-									`}
+									className={[
+										css`
+											cursor: pointer;
+											user-select: none;
+											border: 2px solid var(--color-theme);
+											padding: 5px;
+											border-radius: 7px;
+											transition-duration: 200ms;
+											transition-property: background-color;
+										`,
+										selected
+											? css`
+													background-color: var(--color-theme-thin);
+											  `
+											: ""
+									].join(" ")}
 								>
-									<AllergenItem
-										image={`/icons/${item.id}.png`}
-										text={item.name}
-										status={selected ? "skull" : "normal"}
-									/>
+									<AllergenItem image={`/icons/${item.id}.png`} text={item.name} />
 								</div>
 							);
 						})}
+					</div>
+					<div
+						className={css`
+							display: flex;
+							gap: 20px;
+							justify-content: center;
+
+							@media (max-width: 600px) {
+								flex-direction: column;
+							}
+						`}
+					>
+						<SelectButton
+							onClick={() => {
+								setFilterMode("exclude");
+							}}
+							disabled={filterMode === "exclude"}
+						>
+							選択したアレルゲンが
+							<br />
+							<span
+								className={css`
+									font-weight: bold;
+									text-decoration: underline;
+									color: var(--color-red);
+									font-size: 19px;
+									white-space: nowrap;
+
+									@media (max-width: 600px) {
+										font-size: 17px;
+									}
+								`}
+							>
+								含まれていない
+							</span>
+							ものを検索
+						</SelectButton>
+						<SelectButton
+							onClick={() => {
+								addMessage("未対応です。実装されるまでしばらくお待ち下さい。", "error", 3);
+							}}
+							disabled={filterMode === "include"}
+						>
+							選択したアレルゲンが
+							<br />
+							<span
+								className={css`
+									font-weight: bold;
+									text-decoration: underline;
+									color: var(--color-red);
+									font-size: 19px;
+									white-space: nowrap;
+
+									@media (max-width: 600px) {
+										font-size: 17px;
+									}
+								`}
+							>
+								含まれている
+							</span>
+							ものを検索
+						</SelectButton>
 					</div>
 					<SubTitle>エリア選択</SubTitle>
 					<div
@@ -234,33 +288,13 @@ export default function (): JSX.Element {
 					`}
 				>
 					<SubTitle>検索したいアレルゲンを選択</SubTitle>
-					<div>
-						<p>
-							<span
-								className={css`
-									vertical-align: sub;
-								`}
-							>
-								<GoogleIcon name="skull" size={25} color="var(--color-red)" />
-							</span>
-							で選択したアレルゲンが
-							<span
-								className={css`
-									color: var(--color-red);
-									font-weight: bold;
-								`}
-							>
-								含まれていない
-							</span>
-							メニューを食べられるお店を検索します。
-						</p>
-					</div>
 					<div
 						className={css`
 							display: flex;
 							flex-wrap: wrap;
 							gap: 20px;
 							width: 100%;
+							justify-content: center;
 						`}
 					>
 						{getAllergensResponse?.map((item) => {
@@ -282,19 +316,89 @@ export default function (): JSX.Element {
 											return [...(selectAllergens ?? []), item.id];
 										});
 									}}
-									className={css`
-										cursor: pointer;
-										user-select: none;
-									`}
+									className={[
+										css`
+											cursor: pointer;
+											user-select: none;
+											border: 2px solid var(--color-theme);
+											padding: 5px;
+											border-radius: 7px;
+											transition-duration: 200ms;
+											transition-property: background-color;
+										`,
+										selected
+											? css`
+													background-color: var(--color-theme-thin);
+											  `
+											: ""
+									].join(" ")}
 								>
-									<AllergenItem
-										image={`/icons/${item.id}.png`}
-										text={item.name}
-										status={selected ? "skull" : "normal"}
-									/>
+									<AllergenItem image={`/icons/${item.id}.png`} text={item.name} />
 								</div>
 							);
 						})}
+					</div>
+					<div
+						className={css`
+							display: flex;
+							gap: 20px;
+							justify-content: center;
+
+							@media (max-width: 600px) {
+								flex-direction: column;
+							}
+						`}
+					>
+						<SelectButton
+							onClick={() => {
+								setFilterMode("exclude");
+							}}
+							disabled={filterMode === "exclude"}
+						>
+							選択したアレルゲンが
+							<br />
+							<span
+								className={css`
+									font-weight: bold;
+									text-decoration: underline;
+									color: var(--color-red);
+									font-size: 19px;
+									white-space: nowrap;
+
+									@media (max-width: 600px) {
+										font-size: 17px;
+									}
+								`}
+							>
+								含まれていない
+							</span>
+							ものを検索
+						</SelectButton>
+						<SelectButton
+							onClick={() => {
+								addMessage("未対応です。実装されるまでしばらくお待ち下さい。", "error", 3);
+							}}
+							disabled={filterMode === "include"}
+						>
+							選択したアレルゲンが
+							<br />
+							<span
+								className={css`
+									font-weight: bold;
+									text-decoration: underline;
+									color: var(--color-red);
+									font-size: 19px;
+									white-space: nowrap;
+
+									@media (max-width: 600px) {
+										font-size: 17px;
+									}
+								`}
+							>
+								含まれている
+							</span>
+							ものを検索
+						</SelectButton>
 					</div>
 				</div>
 			</Modal>

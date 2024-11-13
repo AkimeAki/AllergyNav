@@ -126,13 +126,7 @@ export default function (): JSX.Element {
 								addUserStatus === "loading" ||
 								loginLoading
 							}
-							loading={
-								password !== confirmPassword ||
-								isEmptyString(password) ||
-								!isEmailString(email) ||
-								addUserStatus === "loading" ||
-								loginLoading
-							}
+							loading={addUserStatus === "loading" || loginLoading}
 						>
 							アカウントを作成
 						</Button>

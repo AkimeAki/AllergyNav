@@ -67,27 +67,6 @@ export default function (): JSX.Element {
 					`}
 				>
 					<SubTitle>検索したいアレルゲンを選択</SubTitle>
-					<div>
-						<p>
-							<span
-								className={css`
-									vertical-align: sub;
-								`}
-							>
-								<GoogleIcon name="skull" size={25} color="var(--color-red)" />
-							</span>
-							で選択したアレルゲンが
-							<span
-								className={css`
-									color: var(--color-red);
-									font-weight: bold;
-								`}
-							>
-								含まれていない
-							</span>
-							メニューを食べられるお店を検索します。
-						</p>
-					</div>
 					<div
 						className={css`
 							display: flex;
@@ -120,11 +99,7 @@ export default function (): JSX.Element {
 										user-select: none;
 									`}
 								>
-									<AllergenItem
-										image={`/icons/${item.id}.png`}
-										text={item.name}
-										status={selected ? "skull" : "normal"}
-									/>
+									<AllergenItem image={`/icons/${item.id}.png`} text={item.name} />
 								</div>
 							);
 						})}
@@ -166,27 +141,6 @@ export default function (): JSX.Element {
 					`}
 				>
 					<SubTitle>検索したいアレルゲンを選択</SubTitle>
-					<div>
-						<p>
-							<span
-								className={css`
-									vertical-align: sub;
-								`}
-							>
-								<GoogleIcon name="skull" size={25} color="var(--color-red)" />
-							</span>
-							で選択したアレルゲンが
-							<span
-								className={css`
-									color: var(--color-red);
-									font-weight: bold;
-								`}
-							>
-								含まれていない
-							</span>
-							メニューを食べられるお店を検索します。
-						</p>
-					</div>
 					<div
 						className={css`
 							display: flex;
@@ -219,11 +173,7 @@ export default function (): JSX.Element {
 										user-select: none;
 									`}
 								>
-									<AllergenItem
-										image={`/icons/${item.id}.png`}
-										text={item.name}
-										status={selected ? "skull" : "normal"}
-									/>
+									<AllergenItem image={`/icons/${item.id}.png`} text={item.name} />
 								</div>
 							);
 						})}

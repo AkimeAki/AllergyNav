@@ -20,7 +20,7 @@
 		"db:migrate": "dotenv -e .env.development -- prisma migrate dev",
 		"db:delete": "dotenv -e .env.development -- prisma migrate reset --skip-seed",
 		"db:seed": "dotenv -e .env.development -- npm run tsnode -- prisma/seed.ts",
-		"init": "npm run db:deploy:dev && npm run db:seed"
+		"db:init": "npm run db:deploy && npm run db:seed"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "3.554.0",

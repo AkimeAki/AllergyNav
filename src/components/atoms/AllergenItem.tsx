@@ -121,20 +121,6 @@ export default function ({
 					<GoogleIcon color="rgba(255, 0, 0, 0.8)" name="check_small" size={30} />
 				</div>
 			)}
-			{status === "skull" && (
-				<div
-					className={css`
-						position: absolute;
-						top: 50%;
-						left: 50%;
-						transform: translate(-50%, -50%);
-						user-select: none;
-						pointer-events: none;
-					`}
-				>
-					<GoogleIcon color="rgba(255, 0, 0, 0.8)" name="skull" size={30} />
-				</div>
-			)}
 			{status === "removable" && (
 				<div
 					className={css`
