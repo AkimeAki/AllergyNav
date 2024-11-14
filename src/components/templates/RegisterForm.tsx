@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import SubTitle from "@/components/atoms/SubTitle";
 import Link from "next/link";
 import useAddUser from "@/hooks/fetch-api/useAddUser";
-import { isEmailString, isEmptyString, isValidPassword } from "@/libs/check-string";
+import { isEmailString, isEmptyString, checkValidPassword } from "@/libs/check-string";
 import { useSearchParams } from "next/navigation";
 import Cursor from "@/components/atoms/Cursor";
 import useLogin from "@/hooks/useLogin";
@@ -23,6 +23,7 @@ export default function (): JSX.Element {
 	const searchParams = useSearchParams();
 	const redirectPath = searchParams.get("redirect") ?? "";
 	const { addMessage } = useFloatMessage();
+	const [notAllowedString, setNotAllowedString] = useState<string>("");
 
 	useEffect(() => {
 		if (addUserResponse !== undefined && addUserResponse !== null) {
@@ -35,6 +36,15 @@ export default function (): JSX.Element {
 			window.location.href = redirectPath;
 		}
 	}, [loginResponse]);
+
+	useEffect(() => {
+		const result = checkValidPassword(password);
+		if (result.status === "not allowed") {
+			setNotAllowedString(result.message);
+		} else {
+			setNotAllowedString("");
+		}
+	}, [password]);
 
 	useEffect(() => {
 		if (addUserStatus === "loading") {
@@ -110,6 +120,26 @@ export default function (): JSX.Element {
 							>
 								※最大60文字
 							</span>
+							<span
+								className={css`
+									font-size: 15px;
+									display: block;
+								`}
+							>
+								※大小英数字記号を使用可能
+							</span>
+							{notAllowedString !== "" && (
+								<span
+									className={css`
+										font-size: 15px;
+										display: block;
+										color: var(--color-red);
+									`}
+								>
+									※「{Array.from(new Set(notAllowedString.split(""))).join("」「")}
+									」は使用できません。
+								</span>
+							)}
 						</div>
 						<div>
 							<Label>パスワード（確認）</Label>
@@ -133,7 +163,7 @@ export default function (): JSX.Element {
 								!isEmailString(email) ||
 								addUserStatus === "loading" ||
 								loginLoading ||
-								!isValidPassword(password)
+								checkValidPassword(password).status !== "success"
 							}
 							loading={addUserStatus === "loading" || loginLoading}
 						>

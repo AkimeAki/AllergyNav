@@ -26,6 +26,82 @@ export const isEmailString = (text: string): boolean => {
 	return true;
 };
 
-export const isValidPassword = (password: string): boolean => {
-	return password.length <= 60;
+export const checkValidPassword = (
+	password: string
+): {
+	status: "success" | "long" | "not allowed";
+	message: string;
+} => {
+	const allowedString = [
+		"#",
+		"$",
+		"%",
+		"&",
+		"@",
+		"^",
+		"`",
+		"~",
+		".",
+		",",
+		":",
+		";",
+		'"',
+		"'",
+		"\\",
+		"/",
+		"|",
+		"_",
+		"-",
+		"<",
+		">",
+		"*",
+		"+",
+		"!",
+		"?",
+		"=",
+		"{",
+		"}",
+		"[",
+		"]",
+		"(",
+		")"
+	];
+
+	const uppercaseLetterStart = "a".charCodeAt(0);
+	[...Array(26)].forEach((_, i) => {
+		allowedString.push(String.fromCharCode(uppercaseLetterStart + i));
+	});
+
+	const lowercaseLetterStart = "A".charCodeAt(0);
+	[...Array(26)].forEach((_, i) => {
+		allowedString.push(String.fromCharCode(lowercaseLetterStart + i));
+	});
+
+	[...Array(10)].forEach((_, i) => {
+		allowedString.push(String(i));
+	});
+
+	let deleteAllowedStringPassword = password;
+	for (const string of allowedString) {
+		deleteAllowedStringPassword = deleteAllowedStringPassword.replaceAll(string, "");
+	}
+
+	if (deleteAllowedStringPassword !== "") {
+		return {
+			status: "not allowed",
+			message: deleteAllowedStringPassword
+		};
+	}
+
+	if (password.length > 60) {
+		return {
+			status: "long",
+			message: ""
+		};
+	}
+
+	return {
+		status: "success",
+		message: ""
+	};
 };
