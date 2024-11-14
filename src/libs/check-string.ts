@@ -19,7 +19,7 @@ export const isEmptyString = (text: string): boolean => {
 
 export const isEmailString = (text: string): boolean => {
 	// @が1つだけある
-	if (!/^[^@]+@[^@]+$/.test(text)) {
+	if (!/^[^@]+@[^@.]+\.[^@.]+$/.test(text)) {
 		return false;
 	}
 

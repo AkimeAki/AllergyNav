@@ -100,6 +100,17 @@ export default function (): JSX.Element {
 									setEmail(e.target.value);
 								}}
 							/>
+							{!isEmptyString(email) && !isEmailString(email) && (
+								<span
+									className={css`
+										font-size: 15px;
+										display: block;
+										color: var(--color-red);
+									`}
+								>
+									※メールアドレスの形式ではありません。
+								</span>
+							)}
 						</div>
 						<div>
 							<Label>パスワード</Label>
@@ -136,13 +147,43 @@ export default function (): JSX.Element {
 										color: var(--color-red);
 									`}
 								>
-									※「{Array.from(new Set(notAllowedString.split(""))).join("」「")}
-									」は使用できません。
+									※
+									{(() => {
+										const segmenter = new Intl.Segmenter("ja-JP");
+										const target = notAllowedString;
+
+										let text = "";
+										Array.from(segmenter.segment(target)).map((data) => {
+											text += `「${data.segment}」`;
+										});
+
+										return text;
+									})()}
+									は使用できません。
+								</span>
+							)}
+							{checkValidPassword(password).status === "long" && (
+								<span
+									className={css`
+										font-size: 15px;
+										display: block;
+										color: var(--color-red);
+									`}
+								>
+									※文字数オーバーです。
 								</span>
 							)}
 						</div>
 						<div>
 							<Label>パスワード（確認）</Label>
+							<span
+								className={css`
+									font-size: 15px;
+									display: block;
+								`}
+							>
+								もう一度パスワードを入力してください。
+							</span>
 							<TextInput
 								password
 								value={confirmPassword}
