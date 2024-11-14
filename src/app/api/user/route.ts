@@ -1,6 +1,6 @@
 import { TooManyRequestError, ValidationError } from "@/definition";
 import { safeString } from "@/libs/safe-type";
-import { isEmailString, isEmptyString } from "@/libs/check-string";
+import { isEmailString, isEmptyString, isValidPassword } from "@/libs/check-string";
 import { prisma } from "@/libs/prisma";
 import type { AddUserResponse } from "@/type";
 import { hashPass } from "@/libs/password";
@@ -29,6 +29,10 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 		}
 
 		if (isEmptyString(email) || isEmptyString(password)) {
+			throw new ValidationError();
+		}
+
+		if (!isValidPassword(password)) {
 			throw new ValidationError();
 		}
 

@@ -25,3 +25,7 @@ export const isEmailString = (text: string): boolean => {
 
 	return true;
 };
+
+export const isValidPassword = (password: string): boolean => {
+	return password.length <= 60;
+};

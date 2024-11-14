@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-const saltRounds = 12; // ハッシュ値の計算を遅くするためのパラメータらしい
+const saltRounds = 12;
 
 export const hashPass = async (password: string): Promise<string> => {
 	const salt = await bcrypt.genSalt(saltRounds);

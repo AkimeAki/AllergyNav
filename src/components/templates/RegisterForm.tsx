@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import SubTitle from "@/components/atoms/SubTitle";
 import Link from "next/link";
 import useAddUser from "@/hooks/fetch-api/useAddUser";
-import { isEmailString, isEmptyString } from "@/libs/check-string";
+import { isEmailString, isEmptyString, isValidPassword } from "@/libs/check-string";
 import { useSearchParams } from "next/navigation";
 import Cursor from "@/components/atoms/Cursor";
 import useLogin from "@/hooks/useLogin";
@@ -102,6 +102,14 @@ export default function (): JSX.Element {
 									setPassword(e.target.value);
 								}}
 							/>
+							<span
+								className={css`
+									font-size: 15px;
+									display: block;
+								`}
+							>
+								※最大60文字
+							</span>
 						</div>
 						<div>
 							<Label>パスワード（確認）</Label>
@@ -124,7 +132,8 @@ export default function (): JSX.Element {
 								isEmptyString(password) ||
 								!isEmailString(email) ||
 								addUserStatus === "loading" ||
-								loginLoading
+								loginLoading ||
+								!isValidPassword(password)
 							}
 							loading={addUserStatus === "loading" || loginLoading}
 						>
