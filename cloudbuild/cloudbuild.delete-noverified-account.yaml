@@ -16,19 +16,19 @@ steps:
   - name: "gcr.io/cloud-builders/docker"
     args: ["push", "${_IMAGE_NAME}:${COMMIT_SHA}"]
   # デプロイ
-  # - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
-  #   entrypoint: gcloud
-  #   args:
-  #     [
-  #       "run",
-  #       "deploy",
-  #       "${_DELETE_NOVERIFIED_ACCOUNT_BATCH_SERVICE_NAME}",
-  #       "--image",
-  #       "${_DELETE_NOVERIFIED_ACCOUNT_BATCH_IMAGE_NAME}:${COMMIT_SHA}",
-  #       "--region",
-  #       "us-central1",
-  #       "--allow-unauthenticated"
-  #     ]
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      [
+        "run",
+        "jobs",
+        "deploy",
+        "${_DELETE_NOVERIFIED_ACCOUNT_BATCH_SERVICE_NAME}",
+        "--image",
+        "${_DELETE_NOVERIFIED_ACCOUNT_BATCH_IMAGE_NAME}:${COMMIT_SHA}",
+        "--region",
+        "us-central1"
+      ]
   # 古いArtifact Registryのイメージを削除
   - name: "asia-docker.pkg.dev/gcr-cleaner/gcr-cleaner/gcr-cleaner-cli:latest"
     args: ["--repo=${_DELETE_NOVERIFIED_ACCOUNT_BATCH_IMAGE_NAME}", "--keep=3", "--tag-filter-any=.*"]

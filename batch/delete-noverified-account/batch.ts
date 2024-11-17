@@ -22,7 +22,7 @@ void (async () => {
 			}
 		});
 
-		console.log(`delete: ${result.count}`);
+		console.log(`delete acount: ${result.count}`);
 	} catch (e) {
 		console.error(e);
 	}
