@@ -161,16 +161,17 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 				const longitude = safeNumber(coords.split(",")[1]);
 
 				if (
-					addressNormalizeResult.lat !== null &&
-					addressNormalizeResult.lng !== null &&
+					addressNormalizeResult.point !== undefined &&
+					addressNormalizeResult.point.lat !== null &&
+					addressNormalizeResult.point.lng !== null &&
 					latitude !== null &&
 					longitude !== null
 				) {
 					const distance = calcDistance(
 						longitude,
 						latitude,
-						addressNormalizeResult.lng,
-						addressNormalizeResult.lat
+						addressNormalizeResult.point.lng,
+						addressNormalizeResult.point.lat
 					);
 
 					if (distance <= radius) {

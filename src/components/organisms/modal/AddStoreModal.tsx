@@ -57,6 +57,16 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 				return;
 		}
 
+		if (
+			normalizeResult.pref === undefined ||
+			normalizeResult.city === undefined ||
+			normalizeResult.town === undefined ||
+			normalizeResult.addr === undefined
+		) {
+			addMessage("エラーが発生しました", "error");
+			return;
+		}
+
 		const normalizedAddress =
 			normalizeResult.pref + normalizeResult.city + normalizeResult.town + normalizeResult.addr;
 
