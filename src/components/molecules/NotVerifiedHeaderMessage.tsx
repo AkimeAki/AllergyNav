@@ -22,10 +22,11 @@ export default function (): JSX.Element {
 							max-width: 1200px;
 							margin: 0 auto;
 							width: 100%;
-							padding: 0 30px;
-							height: 40px;
+							padding: 10px 30px;
 							display: flex;
 							align-items: center;
+							flex-wrap: wrap;
+							gap: 10px;
 						`}
 					>
 						<span
@@ -33,7 +34,7 @@ export default function (): JSX.Element {
 								color: white;
 							`}
 						>
-							メール認証が完了していません。7日後にアカウントが削除されます。
+							メール認証が完了していません。アカウント作成日から7日後にアカウントが削除されます。
 						</span>
 						{sendVerifyMailStatus === "yet" && (
 							<Button
