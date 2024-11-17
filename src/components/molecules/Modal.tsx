@@ -92,6 +92,7 @@ export default function ({
 									border-radius: 0;
 									height: 100%;
 									max-height: 100%;
+									padding: 7px;
 									padding-bottom: 80px;
 								}
 							`}

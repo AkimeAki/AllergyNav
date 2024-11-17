@@ -17,6 +17,11 @@ export default function ({ children, required = false }: Props): JSX.Element {
 				user-select: none;
 				pointer-events: auto;
 				cursor: default;
+				font-size: 17px;
+
+				@media (max-width: 880px) {
+					font-size: 14px;
+				}
 			`}
 		>
 			{children}

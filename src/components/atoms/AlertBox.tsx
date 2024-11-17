@@ -15,6 +15,18 @@ export default function ({ children }: Props): JSX.Element {
 				display: flex;
 				flex-direction: column;
 				gap: 5px;
+				font-size: 17px;
+				* {
+					font-size: 17px;
+				}
+
+				@media (max-width: 880px) {
+					padding: 7px;
+					font-size: 14px;
+					* {
+						font-size: 14px;
+					}
+				}
 			`}
 		>
 			{children}

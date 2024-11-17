@@ -163,9 +163,9 @@ export default function ({ storeId }: Props): JSX.Element {
 													margin: 0 5px;
 												`}
 											>
-												公式情報ではありません。
+												公式情報ではありません
 											</span>
-											間違った情報、古い情報が記載されている可能性もあるため、
+											。間違った情報、古い情報が記載されている可能性もあるため、
 											<span
 												className={css`
 													font-weight: bold;
@@ -434,7 +434,7 @@ export default function ({ storeId }: Props): JSX.Element {
 													className={css`
 														display: flex;
 														flex-direction: column;
-														gap: 5px;
+														gap: 7px;
 													`}
 												>
 													<div
@@ -442,37 +442,92 @@ export default function ({ storeId }: Props): JSX.Element {
 															__html: formatText(menu.description)
 														}}
 													/>
-													<Label>含まれるアレルゲン</Label>
 													<div
 														className={css`
 															display: flex;
-															flex-wrap: wrap;
-															column-gap: 6px;
+															flex-direction: column;
+															gap: 5px;
 														`}
 													>
-														{getAllergensResponse?.map((allergen) => {
-															let status: AllergenItemStatus = "unkown";
-															if (menu.allergens[allergen.id] === "unkown") {
-																status = "unkown";
-															} else if (menu.allergens[allergen.id] === "contain") {
-																status = "contain";
-															} else if (
-																menu.allergens[allergen.id] === "not contained"
-															) {
-																return "";
-															} else if (menu.allergens[allergen.id] === "removable") {
-																status = "removable";
-															}
+														<Label>含まれるアレルゲン</Label>
+														<div
+															className={css`
+																display: flex;
+																flex-wrap: wrap;
+																column-gap: 8px;
+															`}
+														>
+															{getAllergensResponse?.map((allergen) => {
+																let status: AllergenItemStatus = "unkown";
+																if (menu.allergens[allergen.id] === "unkown") {
+																	status = "unkown";
+																} else if (menu.allergens[allergen.id] === "contain") {
+																	status = "contain";
+																} else if (
+																	menu.allergens[allergen.id] === "not contained"
+																) {
+																	return "";
+																} else if (
+																	menu.allergens[allergen.id] === "removable"
+																) {
+																	status = "removable";
+																}
 
-															return (
-																<AllergenItem
-																	key={allergen.id}
-																	image={`/icons/${allergen.id}.png`}
-																	text={allergen.name}
-																	status={status}
-																/>
-															);
-														})}
+																return (
+																	<AllergenItem
+																		key={allergen.id}
+																		image={`/icons/${allergen.id}.png`}
+																		text={allergen.name}
+																		status={status}
+																	/>
+																);
+															})}
+														</div>
+													</div>
+													<div
+														className={css`
+															display: flex;
+															gap: 5px;
+															padding: 5px 4px;
+															align-items: center;
+															flex-wrap: wrap;
+
+															* {
+																font-size: 13px;
+															}
+														`}
+													>
+														<span>含まれないアレルゲン：</span>
+														<div
+															className={css`
+																display: flex;
+																flex-wrap: wrap;
+																gap: 6px;
+															`}
+														>
+															{getAllergensResponse?.map((allergen) => {
+																if (menu.allergens[allergen.id] === "not contained") {
+																	return (
+																		<span
+																			className={css`
+																				border-radius: 4px;
+
+																				&:last-child {
+																					span {
+																						display: none;
+																					}
+																				}
+																			`}
+																		>
+																			{allergen.name}
+																			<span>,</span>
+																		</span>
+																	);
+																}
+
+																return "";
+															})}
+														</div>
 													</div>
 												</div>
 											)}

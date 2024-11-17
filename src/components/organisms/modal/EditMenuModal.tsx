@@ -47,6 +47,12 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 			getAllergens();
 		} else {
 			editMenuReset();
+			setMenuName("");
+			setOldMenuName("");
+			setMenuDescription("");
+			setOldMenuDescription("");
+			setAllergenStatus({});
+			setOldAllergenStatus({});
 		}
 	}, [isOpen]);
 
@@ -114,7 +120,7 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 								if (result) {
 									setIsOpen(false);
 								}
-						  }
+							}
 						: undefined
 				}
 			>

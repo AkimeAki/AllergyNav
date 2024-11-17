@@ -60,15 +60,18 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 		if (
 			normalizeResult.pref === undefined ||
 			normalizeResult.city === undefined ||
-			normalizeResult.town === undefined ||
-			normalizeResult.addr === undefined
+			normalizeResult.town === undefined
 		) {
 			addMessage("エラーが発生しました", "error");
 			return;
 		}
 
 		const normalizedAddress =
-			normalizeResult.pref + normalizeResult.city + normalizeResult.town + normalizeResult.addr;
+			normalizeResult.pref +
+			normalizeResult.city +
+			normalizeResult.town +
+			(normalizeResult.addr ?? "") +
+			normalizeResult.other;
 
 		addStore(
 			storeName,
@@ -142,7 +145,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 								if (result) {
 									setIsOpen(false);
 								}
-						  }
+							}
 						: undefined
 				}
 			>

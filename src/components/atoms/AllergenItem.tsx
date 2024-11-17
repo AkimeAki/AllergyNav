@@ -84,9 +84,9 @@ export default function ({
 						position: relative;
 						text-align: center;
 						white-space: nowrap;
-						font-size: 15px;
+						font-size: 13px;
 						font-weight: bold;
-						margin-top: 5px;
+						margin-top: 7px;
 						z-index: 1;
 					`}
 				>
