@@ -1,0 +1,37 @@
+steps:
+  # ビルド
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "--build-arg",
+        "DATABASE_URL=${_DATABASE_URL}",
+        "-t",
+        "${_IMAGE_NAME}:${COMMIT_SHA}",
+        "-f",
+        "docker/batch/delete-noverified-account/Dockerfile.prod",
+        "."
+      ]
+  # push
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "${_IMAGE_NAME}:${COMMIT_SHA}"]
+  # # アカウント削除バッチデプロイ
+  # - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+  #   entrypoint: gcloud
+  #   args:
+  #     [
+  #       "run",
+  #       "deploy",
+  #       "${_DELETE_NOVERIFIED_ACCOUNT_BATCH_SERVICE_NAME}",
+  #       "--image",
+  #       "${_DELETE_NOVERIFIED_ACCOUNT_BATCH_IMAGE_NAME}:${COMMIT_SHA}",
+  #       "--region",
+  #       "asia-northeast1",
+  #       "--allow-unauthenticated"
+  #     ]
+  # # 古いArtifact Registryのイメージを削除
+  # - name: "asia-docker.pkg.dev/gcr-cleaner/gcr-cleaner/gcr-cleaner-cli:latest"
+  #   args: ["--repo=${_DELETE_NOVERIFIED_ACCOUNT_BATCH_IMAGE_NAME}", "--keep=3", "--tag-filter-any=.*"]
+substitutions:
+  _IMAGE_NAME: "asia-northeast1-docker.pkg.dev/${PROJECT_ID}/delete-noverified-account-batch/production"
+  _SERVICE_NAME: "delete-noverified-account"
