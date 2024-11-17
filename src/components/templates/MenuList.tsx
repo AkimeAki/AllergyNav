@@ -429,19 +429,23 @@ export default function ({ storeId }: Props): JSX.Element {
 											`}
 										>
 											<MiniTitle>{menu.name}</MiniTitle>
+											<div
+												dangerouslySetInnerHTML={{
+													__html: formatText(menu.description)
+												}}
+											/>
 											{Object.keys(menu.allergens).length !== 0 && (
 												<div
 													className={css`
 														display: flex;
 														flex-direction: column;
 														gap: 7px;
+
+														@media (max-width: 880px) {
+															display: none;
+														}
 													`}
 												>
-													<div
-														dangerouslySetInnerHTML={{
-															__html: formatText(menu.description)
-														}}
-													/>
 													<div
 														className={css`
 															display: flex;
@@ -531,6 +535,100 @@ export default function ({ storeId }: Props): JSX.Element {
 													</div>
 												</div>
 											)}
+										</div>
+									</div>
+									<div
+										className={css`
+											padding: 10px;
+											display: none;
+
+											@media (max-width: 880px) {
+												display: block;
+											}
+										`}
+									>
+										<div
+											className={css`
+												display: flex;
+												flex-direction: column;
+												gap: 5px;
+											`}
+										>
+											<Label>含まれるアレルゲン</Label>
+											<div
+												className={css`
+													display: flex;
+													flex-wrap: wrap;
+													column-gap: 8px;
+												`}
+											>
+												{getAllergensResponse?.map((allergen) => {
+													let status: AllergenItemStatus = "unkown";
+													if (menu.allergens[allergen.id] === "unkown") {
+														status = "unkown";
+													} else if (menu.allergens[allergen.id] === "contain") {
+														status = "contain";
+													} else if (menu.allergens[allergen.id] === "not contained") {
+														return "";
+													} else if (menu.allergens[allergen.id] === "removable") {
+														status = "removable";
+													}
+
+													return (
+														<AllergenItem
+															key={allergen.id}
+															image={`/icons/${allergen.id}.png`}
+															text={allergen.name}
+															status={status}
+														/>
+													);
+												})}
+											</div>
+										</div>
+										<div
+											className={css`
+												display: flex;
+												gap: 5px;
+												padding: 5px 4px;
+												align-items: center;
+												flex-wrap: wrap;
+
+												* {
+													font-size: 13px;
+												}
+											`}
+										>
+											<span>含まれないアレルゲン：</span>
+											<div
+												className={css`
+													display: flex;
+													flex-wrap: wrap;
+													gap: 6px;
+												`}
+											>
+												{getAllergensResponse?.map((allergen) => {
+													if (menu.allergens[allergen.id] === "not contained") {
+														return (
+															<span
+																className={css`
+																	border-radius: 4px;
+
+																	&:last-child {
+																		span {
+																			display: none;
+																		}
+																	}
+																`}
+															>
+																{allergen.name}
+																<span>,</span>
+															</span>
+														);
+													}
+
+													return "";
+												})}
+											</div>
 										</div>
 									</div>
 								</div>
