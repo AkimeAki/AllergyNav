@@ -27,6 +27,7 @@ export default function ({ children, onClick, disabled }: Props) {
 					transition-duration: 200ms;
 					transition-property: background-color;
 					white-space: nowrap;
+					text-align: center;
 
 					@media (max-width: 600px) {
 						font-size: 15px;
@@ -37,7 +38,7 @@ export default function ({ children, onClick, disabled }: Props) {
 					? css`
 							background-color: var(--color-theme-thin);
 							border-color: var(--color-theme);
-					  `
+						`
 					: ""
 			].join(" ")}
 		>
