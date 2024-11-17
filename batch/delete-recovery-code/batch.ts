@@ -7,13 +7,15 @@ sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
 void (async () => {
 	try {
-		await prisma.userRecoveryCode.deleteMany({
+		const result = await prisma.userRecoveryCode.deleteMany({
 			where: {
 				created_at: {
 					lt: sevenDaysAgo
 				}
 			}
 		});
+
+		console.log(`delete code: ${result.count}`);
 	} catch (e) {
 		console.error(e);
 	}
