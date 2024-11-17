@@ -541,9 +541,11 @@ export default function ({ storeId }: Props): JSX.Element {
 										className={css`
 											padding: 10px;
 											display: none;
+											gap: 7px;
+											flex-direction: column;
 
 											@media (max-width: 880px) {
-												display: block;
+												display: flex;
 											}
 										`}
 									>
