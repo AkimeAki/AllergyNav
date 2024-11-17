@@ -9,6 +9,7 @@ import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
 import { accessCheck } from "@/libs/access-check";
 import { getStatus } from "@/libs/get-status";
+import { isVerifiedUser } from "@/libs/check-verified-user";
 
 interface Data {
 	params: {
@@ -109,17 +110,19 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
 		const name = safeString(body.name);
 		const address = safeString(body.address);
 		const description = safeString(body.description);
-		const url = isEmptyString(safeString(body.url) ?? "") ? null : safeString(body.url) ?? "";
+		const url = isEmptyString(safeString(body.url) ?? "") ? null : (safeString(body.url) ?? "");
 		const allergyMenuUrl = isEmptyString(safeString(body.allergyMenuUrl) ?? "")
 			? null
-			: safeString(body.allergyMenuUrl) ?? "";
-		const tabelogUrl = isEmptyString(safeString(body.tabelogUrl) ?? "") ? null : safeString(body.tabelogUrl) ?? "";
+			: (safeString(body.allergyMenuUrl) ?? "");
+		const tabelogUrl = isEmptyString(safeString(body.tabelogUrl) ?? "")
+			? null
+			: (safeString(body.tabelogUrl) ?? "");
 		const gurunaviUrl = isEmptyString(safeString(body.gurunaviUrl) ?? "")
 			? null
-			: safeString(body.gurunaviUrl) ?? "";
+			: (safeString(body.gurunaviUrl) ?? "");
 		const hotpepperUrl = isEmptyString(safeString(body.hotpepperUrl) ?? "")
 			? null
-			: safeString(body.hotpepperUrl) ?? "";
+			: (safeString(body.hotpepperUrl) ?? "");
 		const storeId = safeString(params.id);
 		const userId = safeString(session?.user?.id);
 
@@ -135,16 +138,7 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
 			throw new ValidationError();
 		}
 
-		const userResult = await prisma.user.findFirstOrThrow({
-			select: {
-				verified: true
-			},
-			where: {
-				id: userId
-			}
-		});
-
-		if (!userResult.verified) {
+		if (!(await isVerifiedUser(userId))) {
 			throw new ForbiddenError();
 		}
 

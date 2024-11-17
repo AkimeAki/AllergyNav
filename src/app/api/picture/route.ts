@@ -12,6 +12,7 @@ import { getStatus } from "@/libs/get-status";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { createId } from "@paralleldrive/cuid2";
 import sharp from "sharp";
+import { isVerifiedUser } from "@/libs/check-verified-user";
 
 export const GET = async (req: NextRequest): Promise<NextResponse> => {
 	let status = 500;
@@ -44,7 +45,7 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 								return {
 									store_id: id
 								};
-						  })
+							})
 			}
 		});
 
@@ -109,16 +110,7 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
 			throw new ForbiddenError();
 		}
 
-		const userResult = await prisma.user.findFirstOrThrow({
-			select: {
-				verified: true
-			},
-			where: {
-				id: userId
-			}
-		});
-
-		if (!userResult.verified) {
+		if (!(await isVerifiedUser(userId))) {
 			throw new ForbiddenError();
 		}
 
@@ -156,7 +148,7 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
 							? undefined
 							: {
 									create: { menu_id: menuId }
-							  }
+								}
 				}
 			});
 

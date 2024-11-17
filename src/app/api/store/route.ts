@@ -11,6 +11,7 @@ import { accessCheck } from "@/libs/access-check";
 import { getStatus } from "@/libs/get-status";
 import { normalize } from "@geolonia/normalize-japanese-addresses";
 import { calcDistance } from "@/libs/calc-distance";
+import { isVerifiedUser } from "@/libs/check-verified-user";
 
 const headers = {
 	// "Access-Control-Allow-Origin": "http://localhost:10111", // 許可するオリジン
@@ -30,7 +31,7 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 		const allergens = (safeString(searchParams.get("allergens")) ?? "").split(",");
 		const keywords = (safeString(searchParams.get("keywords")) ?? "").replaceAll(/\s/g, " ").split(" ");
 		const area = !isEmptyString(safeString(searchParams.get("area")) ?? "")
-			? safeString(searchParams.get("area")) ?? "all"
+			? (safeString(searchParams.get("area")) ?? "all")
 			: "all";
 		const coords = safeString(searchParams.get("coords"));
 		const radius = safeNumber(searchParams.get("radius"));
@@ -215,17 +216,19 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 		const name = safeString(body.name);
 		const address = safeString(body.address);
 		const description = safeString(body.description);
-		const url = isEmptyString(safeString(body.url) ?? "") ? null : safeString(body.url) ?? "";
+		const url = isEmptyString(safeString(body.url) ?? "") ? null : (safeString(body.url) ?? "");
 		const allergyMenuUrl = isEmptyString(safeString(body.allergyMenuUrl) ?? "")
 			? null
-			: safeString(body.allergyMenuUrl) ?? "";
-		const tabelogUrl = isEmptyString(safeString(body.tabelogUrl) ?? "") ? null : safeString(body.tabelogUrl) ?? "";
+			: (safeString(body.allergyMenuUrl) ?? "");
+		const tabelogUrl = isEmptyString(safeString(body.tabelogUrl) ?? "")
+			? null
+			: (safeString(body.tabelogUrl) ?? "");
 		const gurunaviUrl = isEmptyString(safeString(body.gurunaviUrl) ?? "")
 			? null
-			: safeString(body.gurunaviUrl) ?? "";
+			: (safeString(body.gurunaviUrl) ?? "");
 		const hotpepperUrl = isEmptyString(safeString(body.hotpepperUrl) ?? "")
 			? null
-			: safeString(body.hotpepperUrl) ?? "";
+			: (safeString(body.hotpepperUrl) ?? "");
 		const userId = safeString(session?.user?.id);
 
 		if (name === null || address === null || description === null) {
@@ -240,16 +243,7 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 			throw new ValidationError();
 		}
 
-		const userResult = await prisma.user.findFirstOrThrow({
-			select: {
-				verified: true
-			},
-			where: {
-				id: userId
-			}
-		});
-
-		if (!userResult.verified) {
+		if (!(await isVerifiedUser(userId))) {
 			throw new ForbiddenError();
 		}
 

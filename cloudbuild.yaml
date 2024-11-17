@@ -46,24 +46,22 @@ steps:
   # アプリの古いArtifact Registryのイメージを削除
   - name: "asia-docker.pkg.dev/gcr-cleaner/gcr-cleaner/gcr-cleaner-cli:latest"
     args: ["--repo=${_APP_IMAGE_NAME}", "--keep=3", "--tag-filter-any=.*"]
-  # # アカウント削除バッチビルド
-  # - name: "gcr.io/cloud-builders/docker"
-  #   args:
-  #     [
-  #       "build",
-  #       "--build-arg",
-  #       "DATABASE_URL=${_DATABASE_URL}",
-  #       "--build-arg",
-  #       "SERVER_API_KEY=${_SERVER_API_KEY}",
-  #       "-t",
-  #       "${_APP_IMAGE_NAME}:${COMMIT_SHA}",
-  #       "-f",
-  #       "docker/batch/delete-noverified-account/Dockerfile.prod",
-  #       "."
-  #     ]
-  # # アカウント削除バッチpush
-  # - name: "gcr.io/cloud-builders/docker"
-  #   args: ["push", "${_DELETE_NOVERIFIED_ACCOUNT_BATCH_IMAGE_NAME}:${COMMIT_SHA}"]
+  # アカウント削除バッチビルド
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "--build-arg",
+        "DATABASE_URL=${_DATABASE_URL}",
+        "-t",
+        "${_APP_IMAGE_NAME}:${COMMIT_SHA}",
+        "-f",
+        "docker/batch/delete-noverified-account/Dockerfile.prod",
+        "."
+      ]
+  # アカウント削除バッチpush
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "${_DELETE_NOVERIFIED_ACCOUNT_BATCH_IMAGE_NAME}:${COMMIT_SHA}"]
   # # アカウント削除バッチデプロイ
   # - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
   #   entrypoint: gcloud
@@ -84,7 +82,5 @@ steps:
 substitutions:
   _APP_IMAGE_NAME: "asia-northeast1-docker.pkg.dev/${PROJECT_ID}/allergynav/production"
   _APP_SERVICE_NAME: "allergynav"
-  # _DELETE_NOVERIFIED_ACCOUNT_BATCH_IMAGE_NAME: "asia-northeast1-docker.pkg.dev/${PROJECT_ID}/allergynav/production"
-  # _DELETE_NOVERIFIED_ACCOUNT_BATCH_SERVICE_NAME: "delete-noverified-account"
-# images:
-# - "${_APP_IMAGE_NAME}:${COMMIT_SHA}"
+  _DELETE_NOVERIFIED_ACCOUNT_BATCH_IMAGE_NAME: "asia-northeast1-docker.pkg.dev/${PROJECT_ID}/allergynav/production"
+  _DELETE_NOVERIFIED_ACCOUNT_BATCH_SERVICE_NAME: "delete-noverified-account"

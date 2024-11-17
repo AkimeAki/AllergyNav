@@ -41,11 +41,13 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 		}
 
 		await prisma.$transaction(async (prisma) => {
+			// 対象のアドレスで認証済みのユーザーを取得
 			const userResult = await prisma.user.findFirst({
 				select: { id: true },
 				where: { email, verified: true }
 			});
 
+			// 対象のアドレスで認証済みユーザーがいた場合はエラー
 			if (userResult !== null) {
 				throw new Error();
 			}

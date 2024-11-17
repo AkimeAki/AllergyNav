@@ -25,7 +25,3 @@
 `npm run db:generate`: Prismaで型生成
 `npm run db:migrate`: Prismaでマイグレーションファイル生成
 `npm run db:deploy`: マイグレーションファイルを反映
-
-## URL
-
-`phpMyAdmin`: http://localhost:10111

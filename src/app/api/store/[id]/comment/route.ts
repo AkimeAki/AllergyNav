@@ -9,6 +9,7 @@ import { nextAuthOptions } from "@/libs/auth";
 import { getToken } from "next-auth/jwt";
 import { accessCheck } from "@/libs/access-check";
 import { getStatus } from "@/libs/get-status";
+import { isVerifiedUser } from "@/libs/check-verified-user";
 
 interface Data {
 	params: {
@@ -107,16 +108,7 @@ export const POST = async (req: NextRequest, { params }: { params: { id: string 
 			throw new ValidationError();
 		}
 
-		const userResult = await prisma.user.findFirstOrThrow({
-			select: {
-				verified: true
-			},
-			where: {
-				id: userId
-			}
-		});
-
-		if (!userResult.verified) {
+		if (!(await isVerifiedUser(userId))) {
 			throw new ForbiddenError();
 		}
 

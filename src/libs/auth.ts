@@ -16,10 +16,6 @@ declare module "next-auth" {
 			  } & DefaultSession["user"])
 			| null;
 	}
-
-	// interface User {
-	// 	role: string;
-	// }
 }
 
 declare module "next-auth/jwt" {
@@ -56,7 +52,7 @@ export const nextAuthOptions: NextAuthOptions = {
 
 				try {
 					user = await prisma.user.findUniqueOrThrow({
-						where: { email: credentials.email }
+						where: { email: credentials.email, deleted: false }
 					});
 
 					if (user.password === null) {

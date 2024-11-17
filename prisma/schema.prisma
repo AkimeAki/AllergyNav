@@ -6,18 +6,18 @@ generator client {
 }
 
 datasource db {
-  provider = "cockroachdb" // PROD
-  // provider = "postgresql" // DEV
+  provider = "cockroachdb"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id       String  @id @default(cuid())
-  email    String  @unique
-  password String?
-  role     String  @default("normal")
-  verified Boolean @default(false)
-  deleted  Boolean @default(false)
+  id         String   @id @default(cuid())
+  email      String   @unique
+  password   String?
+  role       String   @default("normal")
+  verified   Boolean  @default(false)
+  deleted    Boolean  @default(false)
+  created_at DateTime @default(now())
 
   store_comments     StoreComment[]
   created_stores     Store[]            @relation("created_user")

@@ -7,8 +7,8 @@ import { nextAuthOptions } from "@/libs/auth";
 import { getToken } from "next-auth/jwt";
 import { accessCheck } from "@/libs/access-check";
 import { getStatus } from "@/libs/get-status";
-import { recoveryMailBody, recoveryMailTitle, mailFrom } from "@/libs/mail-template";
-import { Resend } from "resend";
+// import { recoveryMailBody, recoveryMailTitle, mailFrom } from "@/libs/mail-template";
+// import { Resend } from "resend";
 
 interface Data {
 	params: {
@@ -40,50 +40,38 @@ export const POST = async (req: NextRequest, { params }: Data): Promise<Response
 		}
 
 		await prisma.$transaction(async (prisma) => {
-			const result = await prisma.user.findUniqueOrThrow({
-				select: {
-					email: true,
-					verified: true
-				},
-				where: { id: userId }
-			});
-
-			if (result.verified) {
-				throw new ForbiddenError();
-			}
-
-			const verifyCodeResult = await prisma.userVerifyCode.findUnique({
+			const recoveryCodeResult = await prisma.userRecoveryCode.findUnique({
 				where: {
 					user_id: userId
 				}
 			});
 
-			if (verifyCodeResult !== null) {
-				await prisma.userVerifyCode.delete({
+			if (recoveryCodeResult !== null) {
+				await prisma.userRecoveryCode.delete({
 					where: {
 						user_id: userId
 					}
 				});
 			}
 
-			const createRecoveryCodeResult = await prisma.userVerifyCode.create({
+			const createRecoveryCodeResult = await prisma.userRecoveryCode.create({
 				data: {
 					user_id: userId
 				}
 			});
 
-			const resend = new Resend(process.env.RESEND_API_KEY ?? "");
+			// const resend = new Resend(process.env.RESEND_API_KEY ?? "");
 
-			const sendEmailResult = await resend.emails.send({
-				from: mailFrom,
-				to: result.email,
-				subject: recoveryMailTitle,
-				html: recoveryMailBody(createRecoveryCodeResult.code)
-			});
+			// const sendEmailResult = await resend.emails.send({
+			// 	from: mailFrom,
+			// 	to: result.email,
+			// 	subject: recoveryMailTitle,
+			// 	html: recoveryMailBody(createRecoveryCodeResult.code)
+			// });
 
-			if (sendEmailResult.data === null) {
-				throw new Error(sendEmailResult.error?.message ?? "");
-			}
+			// if (sendEmailResult.data === null) {
+			// 	throw new Error(sendEmailResult.error?.message ?? "");
+			// }
 		});
 
 		status = 200;
