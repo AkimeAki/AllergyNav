@@ -38,7 +38,7 @@ export const GET = async (req: NextRequest, { params }: Data): Promise<Response>
 		}
 
 		const result = await prisma.user.findUniqueOrThrow({
-			where: { id: userId }
+			where: { id: userId, deleted: false }
 		});
 
 		data = {
