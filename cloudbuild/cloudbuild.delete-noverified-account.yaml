@@ -22,7 +22,7 @@ steps:
       [
         "run",
         "jobs",
-        "deploy",
+        "update",
         "${_DELETE_NOVERIFIED_ACCOUNT_BATCH_SERVICE_NAME}",
         "--image",
         "${_DELETE_NOVERIFIED_ACCOUNT_BATCH_IMAGE_NAME}:${COMMIT_SHA}",
