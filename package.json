@@ -21,7 +21,9 @@
 		"db:delete": "dotenv -e .env.development -- prisma migrate reset --skip-seed",
 		"db:seed": "dotenv -e .env.development -- npm run tsnode -- prisma/seed.ts",
 		"db:init": "npm run db:deploy && npm run db:seed",
-		"batch:delete-noverified-account": "dotenv -e .env.development -- npm run tsnode -- batch/delete-noverified-account/batch.ts"
+		"batch:delete-noverified-account": "dotenv -e .env.development -- npm run tsnode -- batch/delete-noverified-account/batch.ts",
+		"batch:delete-recovery-code": "dotenv -e .env.development -- npm run tsnode -- batch/delete-recovery-code/batch.ts",
+		"batch:delete-verify-code": "dotenv -e .env.development -- npm run tsnode -- batch/delete-verify-code/batch.ts"
 	},
 	"dependencies": {
 		"@akimeaki/check-browser": "0.1.0",
@@ -57,7 +59,6 @@
 	"devDependencies": {
 		"@next/eslint-plugin-next": "15.0.3",
 		"@typescript-eslint/parser": "8.14.0",
-		"encoding": "0.1.13",
 		"eslint": "9.15.0",
 		"eslint-config-next": "15.0.3",
 		"eslint-config-prettier": "9.1.0",
