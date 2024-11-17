@@ -54,9 +54,11 @@ export default function ({
 				className={css`
 					border: none;
 					padding: 10px 20px 10px 10px;
-					background-color: inherit;
+					background-color: var(--color-secondary);
 					width: 100%;
 					cursor: inherit;
+					box-shadow: none;
+					border-radius: 0;
 				`}
 			>
 				{children}
