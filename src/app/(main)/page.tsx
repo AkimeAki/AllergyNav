@@ -49,6 +49,13 @@ export default async function (): Promise<JSX.Element> {
 						<li>閲覧履歴機能</li>
 						<li>アレルギー情報提供の貢献度に応じた広告の非表示</li>
 					</ul>
+					<p>
+						アプデ情報は
+						<a href="https://blog.aki.wtf/category/allergy-navi" target="_blank">
+							こちらのブログ
+						</a>
+						に記載しています。
+					</p>
 				</section>
 			</div>
 		</div>
