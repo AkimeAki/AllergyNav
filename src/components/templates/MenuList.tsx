@@ -193,10 +193,6 @@ export default function ({ storeId }: Props): JSX.Element {
 										border-width: 2px;
 										border-style: solid;
 										border-color: #f3f3f3;
-
-										&:hover {
-											box-shadow: 0px 0px 15px -10px #777777;
-										}
 									`}
 								>
 									<MiniModal
