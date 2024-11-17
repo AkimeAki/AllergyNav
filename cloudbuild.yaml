@@ -82,5 +82,5 @@ steps:
 substitutions:
   _APP_IMAGE_NAME: "asia-northeast1-docker.pkg.dev/${PROJECT_ID}/allergynav/production"
   _APP_SERVICE_NAME: "allergynav"
-  _DELETE_NOVERIFIED_ACCOUNT_BATCH_IMAGE_NAME: "asia-northeast1-docker.pkg.dev/${PROJECT_ID}/allergynav/production"
+  _DELETE_NOVERIFIED_ACCOUNT_BATCH_IMAGE_NAME: "asia-northeast1-docker.pkg.dev/${PROJECT_ID}/delete-noverified-account-batch/production"
   _DELETE_NOVERIFIED_ACCOUNT_BATCH_SERVICE_NAME: "delete-noverified-account"
