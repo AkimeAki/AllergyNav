@@ -30,6 +30,5 @@ ENV R2_BUCKET ${R2_BUCKET}
 RUN npm install -g npm@10.5.0 && \
 	npm ci --omit=dev && \
 	npx prisma generate && \
-	npm run build && \
-	npx prisma generate
+	npm run build
 CMD ["npm", "run", "start"]
