@@ -8,7 +8,7 @@ import { accessCheck } from "@/libs/access-check";
 import type { NextRequest } from "next/server";
 import { getStatus } from "@/libs/get-status";
 import { Resend } from "resend";
-import { mailBody, mailFrom, mailTitle } from "@/libs/verifiy-mail";
+import { mailFrom, verifyMailTitle, verifyMailBody } from "@/libs/mail-template";
 
 export const POST = async (req: NextRequest): Promise<Response> => {
 	let status = 500;
@@ -73,8 +73,8 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 			const sendEmailResult = await resend.emails.send({
 				from: mailFrom,
 				to: email,
-				subject: mailTitle,
-				html: mailBody(createVerifyCodeResult.code)
+				subject: verifyMailTitle,
+				html: verifyMailBody(createVerifyCodeResult.code)
 			});
 
 			if (sendEmailResult.data === null) {

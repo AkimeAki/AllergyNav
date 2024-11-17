@@ -1,4 +1,6 @@
+/* eslint-disable @next/next/next-script-for-ga */
 /* eslint-disable @next/next/no-page-custom-font */
+import "@akimeaki/reset-css";
 import "@/globals.scss";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";

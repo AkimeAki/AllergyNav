@@ -1,5 +1,5 @@
 steps:
-  # ビルド
+  # アプリビルド
   - name: "gcr.io/cloud-builders/docker"
     args:
       [
@@ -21,35 +21,70 @@ steps:
         "--build-arg",
         "R2_BUCKET=${_R2_BUCKET}",
         "-t",
-        "${_IMAGE_NAME}:${COMMIT_SHA}",
+        "${_APP_IMAGE_NAME}:${COMMIT_SHA}",
         "-f",
         "docker/app/Dockerfile.prod",
         "."
       ]
-  # push
-  # いつもは勝手にpushしてくれるのに、なぜかデプロイも自動でしてくれない
+  # アプリpush
   - name: "gcr.io/cloud-builders/docker"
-    args: ["push", "${_IMAGE_NAME}:${COMMIT_SHA}"]
-  # デプロイ
+    args: ["push", "${_APP_IMAGE_NAME}:${COMMIT_SHA}"]
+  # アプリデプロイ
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     entrypoint: gcloud
     args:
       [
         "run",
         "deploy",
-        "${_SERVICE_NAME}",
+        "${_APP_SERVICE_NAME}",
         "--image",
-        "${_IMAGE_NAME}:${COMMIT_SHA}",
+        "${_APP_IMAGE_NAME}:${COMMIT_SHA}",
         "--region",
-        "${_REGION}",
+        "asia-northeast1",
         "--allow-unauthenticated"
       ]
-  # 古いArtifact Registryのイメージを削除
+  # アプリの古いArtifact Registryのイメージを削除
   - name: "asia-docker.pkg.dev/gcr-cleaner/gcr-cleaner/gcr-cleaner-cli:latest"
-    args: ["--repo=${_ARTIFACT_RESISTRY_IMAGE_REPO}", "--keep=3", "--tag-filter-any=.*"]
+    args: ["--repo=${_APP_IMAGE_NAME}", "--keep=3", "--tag-filter-any=.*"]
+  # # アカウント削除バッチビルド
+  # - name: "gcr.io/cloud-builders/docker"
+  #   args:
+  #     [
+  #       "build",
+  #       "--build-arg",
+  #       "DATABASE_URL=${_DATABASE_URL}",
+  #       "--build-arg",
+  #       "SERVER_API_KEY=${_SERVER_API_KEY}",
+  #       "-t",
+  #       "${_APP_IMAGE_NAME}:${COMMIT_SHA}",
+  #       "-f",
+  #       "docker/batch/delete-noverified-account/Dockerfile.prod",
+  #       "."
+  #     ]
+  # # アカウント削除バッチpush
+  # - name: "gcr.io/cloud-builders/docker"
+  #   args: ["push", "${_DELETE_NOVERIFIED_ACCOUNT_BATCH_IMAGE_NAME}:${COMMIT_SHA}"]
+  # # アカウント削除バッチデプロイ
+  # - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+  #   entrypoint: gcloud
+  #   args:
+  #     [
+  #       "run",
+  #       "deploy",
+  #       "${_DELETE_NOVERIFIED_ACCOUNT_BATCH_SERVICE_NAME}",
+  #       "--image",
+  #       "${_DELETE_NOVERIFIED_ACCOUNT_BATCH_IMAGE_NAME}:${COMMIT_SHA}",
+  #       "--region",
+  #       "asia-northeast1",
+  #       "--allow-unauthenticated"
+  #     ]
+  # # 古いArtifact Registryのイメージを削除
+  # - name: "asia-docker.pkg.dev/gcr-cleaner/gcr-cleaner/gcr-cleaner-cli:latest"
+  #   args: ["--repo=${_DELETE_NOVERIFIED_ACCOUNT_BATCH_IMAGE_NAME}", "--keep=3", "--tag-filter-any=.*"]
 substitutions:
-  _IMAGE_NAME: "asia-northeast1-docker.pkg.dev/${PROJECT_ID}/allergynav/production"
-  _SERVICE_NAME: "allergynav"
-  _REGION: "asia-northeast1"
-images:
-  - "${_IMAGE_NAME}:${COMMIT_SHA}"
+  _APP_IMAGE_NAME: "asia-northeast1-docker.pkg.dev/${PROJECT_ID}/allergynav/production"
+  _APP_SERVICE_NAME: "allergynav"
+  # _DELETE_NOVERIFIED_ACCOUNT_BATCH_IMAGE_NAME: "asia-northeast1-docker.pkg.dev/${PROJECT_ID}/allergynav/production"
+  # _DELETE_NOVERIFIED_ACCOUNT_BATCH_SERVICE_NAME: "delete-noverified-account"
+# images:
+# - "${_APP_IMAGE_NAME}:${COMMIT_SHA}"

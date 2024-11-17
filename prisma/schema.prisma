@@ -19,17 +19,18 @@ model User {
   verified Boolean @default(false)
   deleted  Boolean @default(false)
 
-  store_comments   StoreComment[]
-  created_stores   Store[]          @relation("created_user")
-  updated_stores   Store[]          @relation("updated_user")
-  created_menus    Menu[]           @relation("created_user")
-  updated_menus    Menu[]           @relation("updated_user")
-  user_ips         UserIp[]
-  user_store_goods UserStoreGood[]
-  user_store_bads  UserStoreBad[]
-  user_verify_code UserVerifyCode[]
-  created_pictures Picture[]        @relation("created_user")
-  updated_pictures Picture[]        @relation("updated_user")
+  store_comments     StoreComment[]
+  created_stores     Store[]            @relation("created_user")
+  updated_stores     Store[]            @relation("updated_user")
+  created_menus      Menu[]             @relation("created_user")
+  updated_menus      Menu[]             @relation("updated_user")
+  user_ips           UserIp[]
+  user_store_goods   UserStoreGood[]
+  user_store_bads    UserStoreBad[]
+  user_verify_code   UserVerifyCode[]
+  user_recovery_code UserRecoveryCode[]
+  created_pictures   Picture[]          @relation("created_user")
+  updated_pictures   Picture[]          @relation("updated_user")
 
   @@map("users")
 }
@@ -42,6 +43,16 @@ model UserVerifyCode {
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("user_verify_codes")
+}
+
+model UserRecoveryCode {
+  user_id    String   @id
+  code       String   @unique @default(uuid())
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("user_recovery_codes")
 }
 
 model UserIp {

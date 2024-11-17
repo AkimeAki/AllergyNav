@@ -122,6 +122,7 @@ export default function (): JSX.Element {
 					</form>
 				</div>
 				<Link href={`/register?redirect=${redirectPath}`}>アカウント作成する場合はこちらから</Link>
+				<Link href={`/recovery?redirect=${redirectPath}`}>パスワードを忘れた方はこちらから</Link>
 			</div>
 		</>
 	);

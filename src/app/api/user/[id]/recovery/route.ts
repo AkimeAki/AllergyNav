@@ -7,7 +7,7 @@ import { nextAuthOptions } from "@/libs/auth";
 import { getToken } from "next-auth/jwt";
 import { accessCheck } from "@/libs/access-check";
 import { getStatus } from "@/libs/get-status";
-import { mailFrom, verifyMailTitle, verifyMailBody } from "@/libs/mail-template";
+import { recoveryMailBody, recoveryMailTitle, mailFrom } from "@/libs/mail-template";
 import { Resend } from "resend";
 
 interface Data {
@@ -66,7 +66,7 @@ export const POST = async (req: NextRequest, { params }: Data): Promise<Response
 				});
 			}
 
-			const createVerifyCodeResult = await prisma.userVerifyCode.create({
+			const createRecoveryCodeResult = await prisma.userVerifyCode.create({
 				data: {
 					user_id: userId
 				}
@@ -77,8 +77,8 @@ export const POST = async (req: NextRequest, { params }: Data): Promise<Response
 			const sendEmailResult = await resend.emails.send({
 				from: mailFrom,
 				to: result.email,
-				subject: verifyMailTitle,
-				html: verifyMailBody(createVerifyCodeResult.code)
+				subject: recoveryMailTitle,
+				html: recoveryMailBody(createRecoveryCodeResult.code)
 			});
 
 			if (sendEmailResult.data === null) {
