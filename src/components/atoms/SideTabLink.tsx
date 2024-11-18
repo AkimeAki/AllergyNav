@@ -50,7 +50,9 @@ export default function ({ href, onClick, children, active = false, icon = "pend
 				}
 
 				&:hover {
-					background-color: var(--color-theme-thin);
+					@media (hover: hover) {
+						background-color: var(--color-theme-thin);
+					}
 				}
 			}
 
@@ -64,7 +66,9 @@ export default function ({ href, onClick, children, active = false, icon = "pend
 					color: var(--color-secondary);
 
 					&:hover {
-						color: var(--color-secondary);
+						@media (hover: hover) {
+							color: var(--color-secondary);
+						}
 					}
 
 					@media (max-width: 880px) {
@@ -73,7 +77,9 @@ export default function ({ href, onClick, children, active = false, icon = "pend
 						color: var(--color-primary);
 
 						&:hover {
-							color: var(--color-primary);
+							@media (hover: hover) {
+								color: var(--color-primary);
+							}
 						}
 					}
 				`
