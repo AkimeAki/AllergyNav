@@ -512,6 +512,7 @@ export default function ({ storeId }: Props): JSX.Element {
 																if (menu.allergens[allergen.id] === "not contained") {
 																	return (
 																		<span
+																			key={allergen.id}
 																			className={css`
 																				&:last-child {
 																					span {
@@ -612,6 +613,7 @@ export default function ({ storeId }: Props): JSX.Element {
 													if (menu.allergens[allergen.id] === "not contained") {
 														return (
 															<span
+																key={allergen.id}
 																className={css`
 																	&:last-child {
 																		span {
