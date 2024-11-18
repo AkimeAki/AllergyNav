@@ -16,6 +16,10 @@ export default function ({ children }: Props): JSX.Element {
 				padding: 12px 20px;
 				color: var(--color-secondary);
 				border-radius: 7px;
+
+				@media (max-width: 880px) {
+					font-size: 20px;
+				}
 			`}
 		>
 			{children}

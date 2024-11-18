@@ -190,39 +190,41 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 					</tbody>
 				</table>
 			</div>
-			<div
-				className={css`
-					display: flex;
-					flex-wrap: wrap;
-					align-items: flex-start;
-				`}
-			>
-				{storeDetail.labels.map((label) => (
-					<div
-						key={label.id}
-						className={[
-							css`
-								font-size: 13px;
-								border: 2px solid var(--color-theme-thin);
-								border-radius: 8px;
-								background-color: var(--color-theme);
-								padding: 5px 10px;
-								color: var(--color-secondary);
-
-								@media (prefers-color-scheme: dark) {
-									font-weight: bold;
-								}
-							`,
-							!label.locked &&
+			{storeDetail.labels.length !== 0 && (
+				<div
+					className={css`
+						display: flex;
+						flex-wrap: wrap;
+						align-items: flex-start;
+					`}
+				>
+					{storeDetail.labels.map((label) => (
+						<div
+							key={label.id}
+							className={[
 								css`
-									border-radius: 9999px;
-								`
-						].join(" ")}
-					>
-						{label.name}
-					</div>
-				))}
-			</div>
+									font-size: 13px;
+									border: 2px solid var(--color-theme-thin);
+									border-radius: 8px;
+									background-color: var(--color-theme);
+									padding: 5px 10px;
+									color: var(--color-secondary);
+
+									@media (prefers-color-scheme: dark) {
+										font-weight: bold;
+									}
+								`,
+								!label.locked &&
+									css`
+										border-radius: 9999px;
+									`
+							].join(" ")}
+						>
+							{label.name}
+						</div>
+					))}
+				</div>
+			)}
 			{storeDetail.description !== "" && (
 				<div
 					dangerouslySetInnerHTML={{
