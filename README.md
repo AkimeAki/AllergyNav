@@ -20,6 +20,10 @@
 6. `npm run db:seed`
    ローカルのDBにテストデータを挿入
 
+### URL
+
+http://localhost:10111/
+
 ## コマンド
 
 `npm run db:generate`: Prismaで型生成

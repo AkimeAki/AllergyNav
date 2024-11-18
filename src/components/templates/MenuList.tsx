@@ -505,13 +505,14 @@ export default function ({ storeId }: Props): JSX.Element {
 																gap: 6px;
 															`}
 														>
+															{(getAllergensResponse ?? []).filter((allergen) => {
+																return menu.allergens[allergen.id] === "not contained";
+															}).length === 0 && <span>ありません。</span>}
 															{getAllergensResponse?.map((allergen) => {
 																if (menu.allergens[allergen.id] === "not contained") {
 																	return (
 																		<span
 																			className={css`
-																				border-radius: 4px;
-
 																				&:last-child {
 																					span {
 																						display: none;
@@ -604,13 +605,14 @@ export default function ({ storeId }: Props): JSX.Element {
 													gap: 6px;
 												`}
 											>
+												{(getAllergensResponse ?? []).filter((allergen) => {
+													return menu.allergens[allergen.id] === "not contained";
+												}).length === 0 && <span>ありません。</span>}
 												{getAllergensResponse?.map((allergen) => {
 													if (menu.allergens[allergen.id] === "not contained") {
 														return (
 															<span
 																className={css`
-																	border-radius: 4px;
-
 																	&:last-child {
 																		span {
 																			display: none;
@@ -641,12 +643,8 @@ export default function ({ storeId }: Props): JSX.Element {
 						text-align: right;
 						z-index: 99;
 
-						@media (max-width: 880px) {
-							bottom: 120px;
-						}
-
 						@media (max-width: 600px) {
-							bottom: 90px;
+							bottom: 20px;
 						}
 					`}
 				>

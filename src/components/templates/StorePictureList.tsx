@@ -254,12 +254,8 @@ export default function ({ storeId }: Props): JSX.Element {
 						text-align: right;
 						z-index: 99;
 
-						@media (max-width: 880px) {
-							bottom: 120px;
-						}
-
 						@media (max-width: 600px) {
-							bottom: 90px;
+							bottom: 20px;
 						}
 					`}
 				>
