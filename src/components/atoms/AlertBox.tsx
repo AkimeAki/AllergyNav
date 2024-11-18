@@ -16,8 +16,10 @@ export default function ({ children }: Props): JSX.Element {
 				flex-direction: column;
 				gap: 5px;
 				font-size: 17px;
+				word-break: auto-phrase;
 				* {
 					font-size: 17px;
+					word-break: auto-phrase;
 				}
 
 				@media (max-width: 880px) {

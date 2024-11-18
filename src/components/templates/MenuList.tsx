@@ -148,37 +148,35 @@ export default function ({ storeId }: Props): JSX.Element {
 							)}
 							{getMenusResponse?.length !== 0 && (
 								<AlertBox>
-									<div>
-										<p
+									<p
+										className={css`
+											text-align: center;
+										`}
+									>
+										以下の情報はユーザーより提供いただいた情報で、
+										<span
 											className={css`
-												text-align: center;
+												font-weight: bold;
+												text-decoration: underline;
+												color: var(--color-red);
+												margin: 0 5px;
 											`}
 										>
-											以下の情報はユーザーより提供いただいた情報で、
-											<span
-												className={css`
-													font-weight: bold;
-													text-decoration: underline;
-													color: var(--color-red);
-													margin: 0 5px;
-												`}
-											>
-												公式情報ではありません
-											</span>
-											。間違った情報、古い情報が記載されている可能性もあるため、
-											<span
-												className={css`
-													font-weight: bold;
-													text-decoration: underline;
-													color: var(--color-red);
-													margin: 0 5px;
-												`}
-											>
-												必ず実際の店舗でご確認のほどお願いいたします
-											</span>
-											。
-										</p>
-									</div>
+											公式情報ではありません
+										</span>
+										。間違った情報、古い情報が記載されている可能性もあるため、
+										<span
+											className={css`
+												font-weight: bold;
+												text-decoration: underline;
+												color: var(--color-red);
+												margin: 0 5px;
+											`}
+										>
+											必ず実際の店舗でご確認のほどお願いいたします
+										</span>
+										。
+									</p>
 								</AlertBox>
 							)}
 							{[...(getMenusResponse ?? [])].reverse().map((menu) => (
