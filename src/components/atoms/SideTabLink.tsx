@@ -42,9 +42,15 @@ export default function ({ href, onClick, children, active = false, icon = "pend
 				height: 60px;
 				padding: 15px 0;
 				min-width: 80px;
+				border-bottom-width: 4px;
+				border-bottom-style: solid;
 
 				span {
 					font-size: 13px;
+				}
+
+				&:hover {
+					background-color: var(--color-theme-thin);
 				}
 			}
 
@@ -58,18 +64,29 @@ export default function ({ href, onClick, children, active = false, icon = "pend
 					color: var(--color-secondary);
 
 					&:hover {
-						background-color: var(--color-theme);
 						color: var(--color-secondary);
 					}
-			  `
+
+					@media (max-width: 880px) {
+						background-color: var(--color-secondary);
+						border-bottom-color: var(--color-theme);
+						color: var(--color-primary);
+
+						&:hover {
+							color: var(--color-primary);
+						}
+					}
+				`
 			: css`
 					background-color: var(--color-theme-thin);
 					color: var(--color-primary);
 
 					@media (max-width: 880px) {
 						font-weight: normal;
+						background-color: var(--color-secondary);
+						border-bottom-color: transparent;
 					}
-			  `
+				`
 	].join(" ");
 
 	const iconStyle = css`

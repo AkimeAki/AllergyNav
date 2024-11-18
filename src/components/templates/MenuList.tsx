@@ -423,11 +423,13 @@ export default function ({ storeId }: Props): JSX.Element {
 											`}
 										>
 											<MiniTitle>{menu.name}</MiniTitle>
-											<div
-												dangerouslySetInnerHTML={{
-													__html: formatText(menu.description)
-												}}
-											/>
+											{formatText(menu.description) !== "" && (
+												<div
+													dangerouslySetInnerHTML={{
+														__html: formatText(menu.description)
+													}}
+												/>
+											)}
 											{Object.keys(menu.allergens).length !== 0 && (
 												<div
 													className={css`

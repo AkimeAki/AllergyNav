@@ -99,11 +99,17 @@ export default function ({ children }: Props): JSX.Element {
 				gap: 30px;
 
 				@media (max-width: 880px) {
+					width: calc(100% + 60px);
+					margin-left: -30px;
 					position: sticky;
-					top: 5px;
+					top: 0;
 					z-index: 9999;
-					width: 100%;
 					overflow: hidden;
+				}
+
+				@media (max-width: 800px) {
+					width: calc(100% + 20px);
+					margin-left: -10px;
 				}
 			`}
 		>
@@ -117,11 +123,11 @@ export default function ({ children }: Props): JSX.Element {
 
 					@media (max-width: 880px) {
 						flex-direction: row;
+						border-radius: 0;
 						height: 60px;
 						align-items: center;
 						white-space: nowrap;
-						box-shadow: 0 0 10px -5px #969696;
-						border: 2px solid #797979;
+						border-bottom: 1px solid var(--color-hide);
 					}
 				`}
 			>
