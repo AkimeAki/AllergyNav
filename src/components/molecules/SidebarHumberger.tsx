@@ -79,47 +79,35 @@ export default function ({ isSidebarOpen, setIsSidebarOpen }: Props): JSX.Elemen
 									&:before {
 										opacity: 1;
 									}
-							  `
+								`
 							: css`
 									&:before {
 										opacity: 0.5;
 									}
-							  `
+								`
 					].join(" ")}
 				>
 					<div
-						className={[
-							css`
+						className={css`
+							position: absolute;
+							content: "";
+							display: block;
+							top: 50%;
+							left: 50%;
+							transform: translate(-50%, -50%);
+							width: 50%;
+							height: 100%;
+
+							div {
 								position: absolute;
 								content: "";
+								height: 2px;
 								display: block;
-								top: 50%;
-								left: 50%;
-								transform: translate(-50%, -50%);
-								width: 50%;
-								height: 100%;
-
-								div {
-									position: absolute;
-									content: "";
-									display: block;
-									background-color: var(--color-primary);
-									transition-duration: 200ms;
-									transition-property: top, width, transform, height;
-								}
-							`,
-							isSidebarOpen
-								? css`
-										div {
-											height: 2px;
-										}
-								  `
-								: css`
-										div {
-											height: 1px;
-										}
-								  `
-						].join(" ")}
+								background-color: var(--color-primary);
+								transition-duration: 200ms;
+								transition-property: top, width, transform, height;
+							}
+						`}
 					>
 						<div
 							className={[
@@ -131,11 +119,11 @@ export default function ({ isSidebarOpen, setIsSidebarOpen }: Props): JSX.Elemen
 									? css`
 											top: 50%;
 											transform: translateY(-50%) rotate(45deg);
-									  `
+										`
 									: css`
 											top: calc(50% - 7px);
 											transform: translateY(-50%) rotate(0deg);
-									  `
+										`
 							].join(" ")}
 						/>
 						<div
@@ -148,12 +136,12 @@ export default function ({ isSidebarOpen, setIsSidebarOpen }: Props): JSX.Elemen
 											top: 50%;
 											transform: translateY(-50%) rotate(-45deg);
 											width: 100%;
-									  `
+										`
 									: css`
 											top: calc(50% + 7px);
 											transform: translateY(-50%) rotate(0deg);
 											width: 60%;
-									  `
+										`
 							].join(" ")}
 						/>
 					</div>
