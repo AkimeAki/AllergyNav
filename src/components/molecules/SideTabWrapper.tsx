@@ -169,7 +169,13 @@ export default function ({ children }: Props): JSX.Element {
 						}
 
 						document.body.dataset.swipeLoading = "true";
-						router.push(nextPath);
+						setTimeout(
+							(nextPath) => {
+								router.push(nextPath);
+							},
+							300,
+							nextPath
+						);
 					} else {
 						sideTabContents.style.transform = "";
 					}
@@ -204,6 +210,7 @@ export default function ({ children }: Props): JSX.Element {
 		const sideTabContents = document.querySelector<HTMLDivElement>("#side-tab-contents");
 		if (sideTabContents !== null) {
 			sideTabContents.style.transform = "";
+			sideTabContents.style.transitionDuration = "0s";
 		}
 
 		document.body.dataset.swipeLoading = "";
