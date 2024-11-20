@@ -641,13 +641,9 @@ export default function ({ storeId }: Props): JSX.Element {
 				<div
 					className={css`
 						position: sticky;
-						bottom: 40px;
+						bottom: 0;
 						text-align: right;
 						z-index: 99;
-
-						@media (max-width: 600px) {
-							bottom: 20px;
-						}
 					`}
 				>
 					<Button
