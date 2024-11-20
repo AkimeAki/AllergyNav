@@ -45,7 +45,8 @@ model UserVerifyCode {
 }
 
 model UserRecoveryCode {
-  user_id    String   @id
+  id         String   @id @default(cuid())
+  email      String
   code       String   @unique @default(uuid())
   created_at DateTime @default(now())
 
