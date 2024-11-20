@@ -160,7 +160,7 @@ export default function ({ children }: Props): JSX.Element {
 			const sideTabContents = document.querySelector<HTMLDivElement>("#side-tab-contents");
 			if (sideTabContents !== null) {
 				if (isTouch && touchX !== null && touchY !== null && isMoving && nextPath !== null) {
-					if (Math.abs(overPercent) > 50) {
+					if (Math.abs(overPercent) > 30) {
 						if (overPercent > 0) {
 							sideTabContents.style.transform = "translateX(calc(100% + 30px))";
 						} else {
