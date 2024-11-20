@@ -31,13 +31,19 @@ export default async function ({ children, params }: Props): Promise<JSX.Element
 			<StoreDetailTabs storeId={storeDetail.id} />
 			<div
 				className={css`
+					position: relative;
 					width: 100%;
 					overflow-x: hidden;
 				`}
 			>
 				<div
 					className={css`
+						position: absolute;
+						top: 0;
+						left: 0;
+						width: 100%;
 						display: none;
+						z-index: -1;
 
 						body[data-swipe-loading="true"] & {
 							display: block;
