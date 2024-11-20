@@ -28,6 +28,7 @@ export default function ({ href, onClick, children, active = false, icon = "pend
 			display: flex;
 			align-items: center;
 			font-weight: bold;
+			user-select: none;
 
 			span {
 				color: inherit;

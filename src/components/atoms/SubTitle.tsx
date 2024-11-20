@@ -16,6 +16,7 @@ export default function ({ children }: Props): JSX.Element {
 				padding: 10px 20px;
 				color: var(--color-secondary);
 				border-radius: 7px;
+				user-select: none;
 
 				* {
 					font-weight: inherit;

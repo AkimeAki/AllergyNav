@@ -3,6 +3,7 @@ import { css } from "@kuma-ui/core";
 import MainTitle from "@/components/atoms/MainTitle";
 import StoreDetailTabs from "@/components/organisms/StoreDetailTabs";
 import { getStore } from "@/libs/server-fetch";
+import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
 
 interface Props {
 	children: ReactNode;
@@ -30,21 +31,42 @@ export default async function ({ children, params }: Props): Promise<JSX.Element
 			<StoreDetailTabs storeId={storeDetail.id} />
 			<div
 				className={css`
-					display: flex;
-					flex-direction: column;
-					gap: 30px;
+					width: 100%;
+					overflow-x: hidden;
 				`}
 			>
 				<div
 					className={css`
-						@media (max-width: 880px) {
-							display: none;
+						display: none;
+
+						body[data-swipe-loading="true"] & {
+							display: block;
 						}
 					`}
 				>
-					<MainTitle>{storeDetail.name}</MainTitle>
+					<LoadingCircleCenter />
 				</div>
-				<div>{children}</div>
+				<div
+					id="side-tab-contents"
+					className={css`
+						display: flex;
+						flex-direction: column;
+						gap: 30px;
+						transition-duration: 100ms;
+						transition-property: transform;
+					`}
+				>
+					<div
+						className={css`
+							@media (max-width: 880px) {
+								display: none;
+							}
+						`}
+					>
+						<MainTitle>{storeDetail.name}</MainTitle>
+					</div>
+					<div>{children}</div>
+				</div>
 			</div>
 		</>
 	);

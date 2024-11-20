@@ -5,6 +5,8 @@ import { css } from "@kuma-ui/core";
 import useScroll from "@/hooks/useScroll";
 import useIsTouchDevice from "@/hooks/useIsTouchDevice";
 import GoogleAds from "@/components/atoms/GoogleAds";
+import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 interface Props {
 	children: ReactNode;
@@ -15,6 +17,8 @@ export default function ({ children }: Props): JSX.Element {
 	const { stopScroll, startScroll } = useScroll();
 	const [, setTouchScrollX] = useState<number>(0);
 	const { isTouch } = useIsTouchDevice();
+	const router = useRouter();
+	const pathname = usePathname();
 
 	useEffect(() => {
 		const scroll = (e: WheelEvent): void => {
@@ -90,6 +94,119 @@ export default function ({ children }: Props): JSX.Element {
 			}
 		};
 	}, [isTouch]);
+
+	useEffect(() => {
+		let touchX: number | null = null;
+		let touchY: number | null = null;
+		let overPercent = 0;
+		let isMoving = false;
+		let nextPath: null | string = null;
+		let noSwipe = false;
+
+		const move = (e: TouchEvent) => {
+			if (isTouch && touchX !== null && touchY !== null) {
+				const touch = e.touches[0];
+
+				if (Math.abs(touchY - touch.clientY) > 50) {
+					noSwipe = true;
+				}
+
+				if (!noSwipe && (Math.abs(touchX - touch.clientX) > 30 || isMoving)) {
+					const sideTabContents = document.querySelector<HTMLDivElement>("#side-tab-contents");
+					if (sideTabContents !== null && Array.isArray(children)) {
+						if (!isMoving) {
+							sideTabContents.style.transitionDuration = "0s";
+						}
+
+						isMoving = true;
+
+						const childPaths: string[] = children.map((child) => {
+							return child.props.href;
+						});
+						const currentIndex = childPaths.findIndex((path) => {
+							return path === location.pathname;
+						});
+
+						if (touchX - touch.clientX > 0) {
+							if (currentIndex !== childPaths.length - 1) {
+								sideTabContents.style.transform = `translateX(${touch.clientX - touchX}px)`;
+								nextPath = childPaths[currentIndex + 1];
+							}
+						} else {
+							if (currentIndex !== 0) {
+								sideTabContents.style.transform = `translateX(${touch.clientX - touchX}px)`;
+								nextPath = childPaths[currentIndex - 1];
+							}
+						}
+						overPercent = ((touch.clientX - touchX) / sideTabContents.offsetWidth) * 100;
+					}
+				}
+			}
+		};
+
+		const start = (e: TouchEvent) => {
+			isMoving = false;
+			nextPath = null;
+			noSwipe = false;
+			overPercent = 0;
+			if (isTouch) {
+				const touch = e.touches[0];
+				touchX = touch.clientX;
+				touchY = touch.clientY;
+			}
+		};
+
+		const end = () => {
+			const sideTabContents = document.querySelector<HTMLDivElement>("#side-tab-contents");
+			if (sideTabContents !== null) {
+				if (isTouch && touchX !== null && touchY !== null && isMoving && nextPath !== null) {
+					if (Math.abs(overPercent) > 50) {
+						if (overPercent > 0) {
+							sideTabContents.style.transform = "translateX(calc(100% + 30px))";
+						} else {
+							sideTabContents.style.transform = "translateX(calc(-100% - 30px))";
+						}
+
+						document.body.dataset.swipeLoading = "true";
+						router.push(nextPath);
+					} else {
+						sideTabContents.style.transform = "";
+					}
+
+					sideTabContents.style.transitionDuration = "300ms";
+					setTimeout(() => {
+						sideTabContents.style.transitionDuration = "";
+					}, 300);
+				}
+			}
+
+			isMoving = false;
+			touchX = null;
+			touchY = null;
+			noSwipe = false;
+			nextPath = null;
+			overPercent = 0;
+		};
+
+		document.addEventListener("touchmove", move);
+		document.addEventListener("touchstart", start);
+		document.addEventListener("touchend", end);
+
+		return () => {
+			document.removeEventListener("touchmove", move);
+			document.removeEventListener("touchstart", start);
+			document.removeEventListener("touchend", end);
+		};
+	}, [isTouch]);
+
+	useEffect(() => {
+		const sideTabContents = document.querySelector<HTMLDivElement>("#side-tab-contents");
+		if (sideTabContents !== null) {
+			sideTabContents.style.transform = "";
+		}
+
+		document.body.dataset.swipeLoading = "";
+	}, [pathname]);
 
 	return (
 		<div
