@@ -108,7 +108,10 @@ export default function ({ children }: Props): JSX.Element {
 				const touch = e.touches[0];
 
 				const root = document.querySelector<HTMLDivElement>("#root");
-				if (Math.abs(touchY - touch.clientY) > 50 || (root !== null && root.style.overflowY === "hidden")) {
+				if (
+					!isMoving &&
+					(Math.abs(touchY - touch.clientY) > 50 || (root !== null && root.style.overflowY === "hidden"))
+				) {
 					noSwipe = true;
 				}
 
