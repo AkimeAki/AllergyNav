@@ -4,12 +4,14 @@ interface Props {
 	title?: string;
 	description?: string;
 	isFullTitle?: boolean;
+	canonicalPath: string;
 }
 
 export const seoHead = ({
 	title,
 	isFullTitle = false,
-	description = "『アレルギーナビ』は、アレルギーの方々が少しでも多く、食べに行ける飲食店が見つけられるように作ったサービスです。どこかの飲食店のアレルギー情報を得た方、持っている方はアレルギーナビに情報を追加してくれると助かります。"
+	description = "『アレルギーナビ』は、アレルギーの方々が少しでも多く、食べに行ける飲食店が見つけられるように作ったサービスです。どこかの飲食店のアレルギー情報を得た方、持っている方はアレルギーナビに情報を追加してくれると助かります。",
+	canonicalPath
 }: Props): Metadata => {
 	let metaTitle = "アレルギーナビ｜アレルギーの方向けの飲食店情報サービス";
 	if (title !== undefined) {
@@ -44,6 +46,9 @@ export const seoHead = ({
 			images: `${process.env.SITEURL}/favicon.png`
 		},
 		icons: `${process.env.SITEURL}/favicon.png`,
-		manifest: `${process.env.SITEURL}/manifest.json`
+		manifest: `${process.env.SITEURL}/manifest.json`,
+		alternates: {
+			canonical: `${process.env.SITEURL}${canonicalPath}`
+		}
 	};
 };

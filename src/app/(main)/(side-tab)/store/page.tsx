@@ -9,7 +9,8 @@ import { Suspense } from "react";
 export const metadata: Metadata = seoHead({
 	title: "お店一覧",
 	description:
-		"お店一覧ページです。アレルギー情報を得た方、持っている方はアレルギーナビに情報を追加してくれると助かります。"
+		"お店一覧ページです。アレルギー情報を得た方、持っている方はアレルギーナビに情報を追加してくれると助かります。",
+	canonicalPath: "/store"
 });
 
 export default function (): JSX.Element {

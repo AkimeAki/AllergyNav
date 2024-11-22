@@ -9,7 +9,8 @@ import { Suspense } from "react";
 export const metadata: Metadata = seoHead({
 	title: "自販機一覧",
 	description:
-		"自販機一覧ページです。アレルギー情報を得た方、持っている方はアレルギーナビに情報を追加してくれると助かります。"
+		"自販機一覧ページです。アレルギー情報を得た方、持っている方はアレルギーナビに情報を追加してくれると助かります。",
+	canonicalPath: "/vendor"
 });
 
 export default function (): JSX.Element {

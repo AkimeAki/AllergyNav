@@ -19,7 +19,8 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 
 	return seoHead({
 		title: storeDetail.name,
-		description: `『${storeDetail.name}』のアレルギー情報ページです。アレルギー情報を得た方、持っている方はアレルギーナビに情報を追加してくれると助かります。`
+		description: `『${storeDetail.name}』のアレルギー情報ページです。アレルギー情報を得た方、持っている方はアレルギーナビに情報を追加してくれると助かります。`,
+		canonicalPath: `/store/${storeDetail.id}`
 	});
 };
 

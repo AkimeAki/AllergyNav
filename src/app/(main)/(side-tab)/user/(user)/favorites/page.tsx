@@ -3,7 +3,8 @@ import { css } from "@kuma-ui/core";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = seoHead({
-	title: "お気に入り"
+	title: "お気に入り",
+	canonicalPath: "/user/favorites"
 });
 
 export default async function (): Promise<JSX.Element> {

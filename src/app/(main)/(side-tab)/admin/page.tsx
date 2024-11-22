@@ -4,7 +4,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 export const metadata: Metadata = seoHead({
-	title: "管理画面"
+	title: "管理画面",
+	canonicalPath: "/admin"
 });
 
 export default async function (): Promise<JSX.Element> {

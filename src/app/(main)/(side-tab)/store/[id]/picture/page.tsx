@@ -16,7 +16,8 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 
 	return seoHead({
 		title: `写真 - ${storeDetail.name}`,
-		description: `『${storeDetail.name}』の写真ページです。アレルギー情報を得た方、持っている方はアレルギーナビに情報を追加してくれると助かります。`
+		description: `『${storeDetail.name}』の写真ページです。アレルギー情報を得た方、持っている方はアレルギーナビに情報を追加してくれると助かります。`,
+		canonicalPath: `/store/${storeDetail.id}/picture`
 	});
 };
 

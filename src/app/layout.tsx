@@ -7,7 +7,9 @@ import type { ReactNode } from "react";
 import { KumaRegistry } from "@kuma-ui/next-plugin/registry";
 import { seoHead } from "@/libs/seo";
 
-export const metadata: Metadata = seoHead({});
+export const metadata: Metadata = seoHead({
+	canonicalPath: ""
+});
 
 interface Props {
 	children: ReactNode;

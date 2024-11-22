@@ -18,10 +18,11 @@ interface Props {
 
 export const generateMetadata = async ({ params }: Props): Promise<Metadata> => {
 	let title = "";
+	let userId: null | string = "";
 
 	try {
-		const id = safeString(params.id);
-		if (id === null) {
+		userId = safeString(params.id);
+		if (userId === null) {
 			throw new Error();
 		}
 
@@ -31,7 +32,8 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 	}
 
 	return seoHead({
-		title
+		title,
+		canonicalPath: `/user/${userId}`
 	});
 };
 
