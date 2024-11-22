@@ -122,7 +122,7 @@ export default function ({ href, onClick, children, active = false, icon = "pend
 					<span>{children}</span>
 				</button>
 			) : (
-				<Link href={href} className={style}>
+				<Link aria-label={String(children)} href={href} className={style}>
 					<div className={iconStyle}>
 						<GoogleIcon name={icon} size={30} color="inherit" />
 					</div>

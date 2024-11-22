@@ -108,6 +108,7 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 							width: 130px;
 							user-select: none;
 							pointer-events: none;
+							white-space: nowrap;
 
 							@media (max-width: 600px) {
 								width: 115px;

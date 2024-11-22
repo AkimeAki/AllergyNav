@@ -10,6 +10,7 @@ interface Props {
 export default function ({ href, name }: Props): JSX.Element {
 	return (
 		<Link
+			aria-label={name}
 			href={href}
 			target="_blank"
 			className={css`

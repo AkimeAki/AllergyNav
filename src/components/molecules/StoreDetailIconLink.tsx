@@ -11,6 +11,7 @@ interface Props {
 export default function ({ href, icon, text }: Props): JSX.Element {
 	return (
 		<Link
+			aria-label={text}
 			className={css`
 				display: inline-flex;
 				align-items: center;

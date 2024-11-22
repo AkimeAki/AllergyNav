@@ -38,7 +38,7 @@ export default function (): JSX.Element {
 						`}
 					>
 						<Link
-							aria-label="トップページに行く"
+							aria-label="トップページ"
 							href="/"
 							className={css`
 								display: flex;

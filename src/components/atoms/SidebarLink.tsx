@@ -37,17 +37,18 @@ export default function ({ href, onClick, children, active = false }: Props): JS
 						background-color: var(--color-theme);
 						color: var(--color-secondary);
 					}
-			  `
+				`
 			: css`
 					background-color: transparent;
 					color: var(--color-primary);
-			  `
+				`
 	].join(" ");
 
 	return (
 		<>
 			{href !== undefined ? (
 				<Link
+					aria-label={String(children)}
 					href={href}
 					onClick={() => {
 						if (onClick !== undefined) {

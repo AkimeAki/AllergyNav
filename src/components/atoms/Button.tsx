@@ -169,6 +169,7 @@ export default function ({
 				</button>
 			) : (
 				<Link
+					aria-label={String(children)}
 					onClick={() => {
 						click();
 					}}

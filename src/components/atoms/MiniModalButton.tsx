@@ -104,6 +104,7 @@ export default function ({ href, children, onClick, disabled = false, loading = 
 				</button>
 			) : (
 				<Link
+					aria-label={String(children)}
 					onClick={() => {
 						if (onClick !== undefined) {
 							onClick();
