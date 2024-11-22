@@ -40,7 +40,7 @@ export default function (): JSX.Element {
 		keywords: searchParams.get("keywords") ?? "",
 		area: isEmptyString(safeString(searchParams.get("area")) ?? "")
 			? "all"
-			: safeString(searchParams.get("area")) ?? "all",
+			: (safeString(searchParams.get("area")) ?? "all"),
 		radius: safeString(searchParams.get("radius")) ?? ""
 	};
 
@@ -305,6 +305,7 @@ export default function (): JSX.Element {
 											</div>
 										</div>
 										<Link
+											aria-label={`「${store.name}」のお店ページ`}
 											className={css`
 												display: block;
 												position: absolute;

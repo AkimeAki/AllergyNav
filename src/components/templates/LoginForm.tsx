@@ -121,8 +121,12 @@ export default function (): JSX.Element {
 						</Button>
 					</form>
 				</div>
-				<Link href={`/register?redirect=${redirectPath}`}>アカウント作成する場合はこちらから</Link>
-				<Link href={`/recovery?redirect=${redirectPath}`}>パスワードを忘れた方はこちらから</Link>
+				<Link aria-label="アカウント作成ページ" href={`/register?redirect=${redirectPath}`}>
+					アカウント作成する場合はこちらから
+				</Link>
+				<Link aria-label="パスワード再設定ページ" href={`/recovery?redirect=${redirectPath}`}>
+					パスワードを忘れた方はこちらから
+				</Link>
 			</div>
 		</>
 	);

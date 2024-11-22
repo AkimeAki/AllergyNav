@@ -212,7 +212,9 @@ export default function (): JSX.Element {
 						</Button>
 					</form>
 				</div>
-				<Link href={`/login?redirect=${redirectPath}`}>アカウント作成済みの方はこちらからログイン</Link>
+				<Link aria-label="ログインページ" href={`/login?redirect=${redirectPath}`}>
+					アカウント作成済みの方はこちらからログイン
+				</Link>
 			</div>
 		</>
 	);

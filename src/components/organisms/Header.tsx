@@ -38,6 +38,7 @@ export default function (): JSX.Element {
 						`}
 					>
 						<Link
+							aria-label="トップページに行く"
 							href="/"
 							className={css`
 								display: flex;
@@ -64,19 +65,7 @@ export default function (): JSX.Element {
 									font-weight: bold;
 								`}
 							>
-								アレルギーナビ
-								<span
-									className={css`
-										font-weight: bold;
-										margin-left: 5px;
-
-										@media (max-width: 430px) {
-											display: none;
-										}
-									`}
-								>
-									超β版
-								</span>
+								アレルギーナビ 超β版
 							</div>
 						</Link>
 					</h1>
