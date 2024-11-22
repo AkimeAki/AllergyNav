@@ -4,6 +4,7 @@ import StoreList from "@/components/templates/StoreList";
 import { seoHead } from "@/libs/seo";
 import { css } from "@kuma-ui/core";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = seoHead({
 	title: "お店一覧",
@@ -14,7 +15,9 @@ export const metadata: Metadata = seoHead({
 export default function (): JSX.Element {
 	return (
 		<>
-			<StoreListSidebar />
+			<Suspense>
+				<StoreListSidebar />
+			</Suspense>
 			<div
 				className={css`
 					position: relative;
@@ -27,7 +30,9 @@ export default function (): JSX.Element {
 				`}
 			>
 				<MainTitle>お店一覧</MainTitle>
-				<StoreList />
+				<Suspense>
+					<StoreList />
+				</Suspense>
 			</div>
 		</>
 	);

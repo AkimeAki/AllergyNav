@@ -1,11 +1,11 @@
 const { withKumaUI } = require("@kuma-ui/next-plugin");
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+	enabled: process.env.ANALYZE === "true"
+});
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	reactStrictMode: true,
-	experimental: {
-		missingSuspenseWithCSRBailout: false
-	},
 	images: {
 		remotePatterns: [
 			{
@@ -24,4 +24,4 @@ const nextConfig = {
 	}
 };
 
-module.exports = withKumaUI(nextConfig);
+module.exports = withKumaUI(withBundleAnalyzer(nextConfig));

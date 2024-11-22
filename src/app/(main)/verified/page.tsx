@@ -8,6 +8,7 @@ import Script from "next/script";
 import { seoHead } from "@/libs/seo";
 
 export const metadata: Metadata = seoHead({ title: "メール認証" });
+export const dynamic = "force-dynamic";
 
 interface Props {
 	searchParams: Record<string, string | string[] | undefined>;
