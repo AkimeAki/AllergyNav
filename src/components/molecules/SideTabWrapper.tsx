@@ -116,6 +116,8 @@ export default function ({ children }: Props): JSX.Element {
 				}
 
 				if (!noSwipe && (Math.abs(touchX - touch.clientX) > 30 || isMoving)) {
+					stopScroll();
+
 					const sideTabContents = document.querySelector<HTMLDivElement>("#side-tab-contents");
 					if (sideTabContents !== null && Array.isArray(children)) {
 						if (!isMoving) {
@@ -190,6 +192,7 @@ export default function ({ children }: Props): JSX.Element {
 				}
 			}
 
+			startScroll();
 			isMoving = false;
 			touchX = null;
 			touchY = null;
