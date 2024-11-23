@@ -697,37 +697,19 @@ export default function (): JSX.Element {
 				<div
 					className={css`
 						display: flex;
-						justify-content: space-between;
+						flex-direction: column;
+						justify-content: center;
 						height: 45px;
 					`}
 				>
-					<div>
-						<div
-							className={css`
-								display: flex;
-								flex-wrap: wrap;
-								align-items: center;
-								height: 100%;
-							`}
-						>
-							検索条件：{area === "location" && "エリア"}
-						</div>
-					</div>
-					<div
-						className={css`
-							display: flex;
-							align-items: center;
-						`}
+					<Button
+						size="small"
+						onClick={() => {
+							setIsSpModalOpen(true);
+						}}
 					>
-						<Button
-							size="small"
-							onClick={() => {
-								setIsSpModalOpen(true);
-							}}
-						>
-							検索オプション
-						</Button>
-					</div>
+						検索オプション
+					</Button>
 				</div>
 			</aside>
 		</>

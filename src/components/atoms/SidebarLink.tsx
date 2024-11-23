@@ -22,6 +22,7 @@ export default function ({ href, onClick, children, active = false }: Props): JS
 			transition-property: background-color;
 			border: none;
 			text-align: left;
+			font-size: 17px;
 
 			&:hover {
 				background-color: var(--color-theme-thin);
