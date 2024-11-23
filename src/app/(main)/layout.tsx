@@ -1,6 +1,6 @@
 import Header from "@/components/organisms/Header";
 import Sidebar from "@/components/organisms/Sidebar";
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import { css } from "@kuma-ui/core";
 import Footer from "@/components/organisms/Footer";
 import ScrollTop from "@/components/molecules/ScrollTop";
@@ -34,7 +34,9 @@ export default function ({ children }: Props): JSX.Element {
 			`}
 		>
 			<NextTopLoader color="var(--color-theme)" showSpinner={false} />
-			<ScrollTop />
+			<Suspense>
+				<ScrollTop />
+			</Suspense>
 			<div
 				className={css`
 					flex: 1;
