@@ -10,7 +10,7 @@ import { isEmptyString, checkValidPassword } from "@/libs/check-string";
 import Cursor from "@/components/atoms/Cursor";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
 import useChangePassword from "@/hooks/fetch-api/useChangePassword";
-import { redirect } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 interface Props {
 	recoveryCode: string;
@@ -43,7 +43,10 @@ export default function ({ recoveryCode }: Props): JSX.Element {
 
 		if (changePasswordStatus === "successed") {
 			addMessage("パスワード変更完了しました。ログインし直してください。", "success");
-			redirect("/login");
+			void signOut({
+				redirect: true,
+				callbackUrl: "/login"
+			});
 		}
 	}, [changePasswordStatus]);
 
