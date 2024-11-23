@@ -88,6 +88,9 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 					}
 				]
 			},
+			orderBy: {
+				created_at: "desc"
+			},
 			take: limit,
 			skip: offset
 		});
@@ -216,7 +219,7 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 		}
 
 		resultData = {
-			data,
+			data: data.sort((a, b) => (a.created_at < b.created_at ? -1 : 1)),
 			info: {
 				limit,
 				offset,
