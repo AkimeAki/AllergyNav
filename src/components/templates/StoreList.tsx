@@ -13,7 +13,7 @@ import AllergenItem from "@/components/atoms/AllergenItem";
 import useGetUserData from "@/hooks/useGetUserData";
 import useGetPictures from "@/hooks/fetch-api/useGetPictures";
 import LoadingEffect from "../atoms/LoadingEffect";
-import { safeString } from "@/libs/safe-type";
+import { safeNumber, safeString } from "@/libs/safe-type";
 import { isEmptyString } from "@/libs/check-string";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
 import NotVerifiedModal from "@/components/molecules/NotVerifiedModal";
@@ -41,7 +41,8 @@ export default function (): JSX.Element {
 		area: isEmptyString(safeString(searchParams.get("area")) ?? "")
 			? "all"
 			: (safeString(searchParams.get("area")) ?? "all"),
-		radius: safeString(searchParams.get("radius")) ?? ""
+		radius: safeString(searchParams.get("radius")) ?? "",
+		page: safeNumber(searchParams.get("page")) ?? 1
 	};
 
 	useEffect(() => {
@@ -51,7 +52,7 @@ export default function (): JSX.Element {
 			!(params.area === "location" && currentLatitude === undefined && currentLongitude === undefined)
 		) {
 			const coords = (safeString(currentLatitude) ?? "") + "," + (safeString(currentLongitude) ?? "");
-			getStores(params.allergens, params.keywords, params.area, coords, params.radius);
+			getStores(params.allergens, params.keywords, params.area, coords, params.radius, params.page);
 		}
 	}, [searchParams, currentLatitude, currentLongitude]);
 
@@ -73,7 +74,7 @@ export default function (): JSX.Element {
 
 	useEffect(() => {
 		if (getStoresStatus === "successed" && getStoresResponse !== undefined) {
-			getPictures(getStoresResponse.map((store) => store.id).join(","));
+			getPictures(getStoresResponse.data.map((store) => store.id).join(","));
 		}
 	}, [getStoresStatus]);
 
@@ -207,7 +208,7 @@ export default function (): JSX.Element {
 				>
 					{getStoresStatus === "successed" && getStoresResponse !== undefined && (
 						<>
-							{getStoresResponse.length === 0 && (
+							{getStoresResponse.data.length === 0 && (
 								<p
 									className={css`
 										text-align: center;
@@ -216,7 +217,7 @@ export default function (): JSX.Element {
 									お店が無いようです😿
 								</p>
 							)}
-							{[...getStoresResponse].reverse().map((store, index) => (
+							{[...getStoresResponse.data].reverse().map((store, index) => (
 								<Fragment key={store.id}>
 									<div
 										className={css`
@@ -364,99 +365,154 @@ export default function (): JSX.Element {
 											href={`/store/${store.id}`}
 										/>
 									</div>
-									{index !== 0 && index !== getStoresResponse.length - 1 && (index + 1) % 4 === 0 && (
-										<>
-											<div
-												key={String(resizeGoogleAdsToggle)}
-												className={css`
-													text-align: center;
+									{index !== 0 &&
+										index !== getStoresResponse.data.length - 1 &&
+										(index + 1) % 4 === 0 && (
+											<>
+												<div
+													key={String(resizeGoogleAdsToggle)}
+													className={css`
+														text-align: center;
 
-													@media (max-width: 880px) {
-														grid-column: 1 / 3;
-													}
+														@media (max-width: 880px) {
+															grid-column: 1 / 3;
+														}
 
-													@media (max-width: 700px) {
-														grid-column: 1 / 1;
-													}
+														@media (max-width: 700px) {
+															grid-column: 1 / 1;
+														}
 
-													@media (max-width: 650px) {
+														@media (max-width: 650px) {
+															display: none;
+														}
+													`}
+												>
+													<GoogleAds
+														slot="5973440772"
+														deps={[
+															resizeGoogleAdsToggle,
+															getStoresStatus,
+															getStoresResponse
+														]}
+														style={css`
+															width: 560px;
+															height: 90px;
+														`}
+													/>
+												</div>
+												<div
+													className={css`
 														display: none;
-													}
-												`}
-											>
-												<GoogleAds
-													slot="5973440772"
-													deps={[resizeGoogleAdsToggle, getStoresStatus, getStoresResponse]}
-													style={css`
-														width: 560px;
-														height: 90px;
-													`}
-												/>
-											</div>
-											<div
-												className={css`
-													display: none;
-													text-align: center;
+														text-align: center;
 
-													@media (max-width: 650px) {
-														display: block;
-													}
-												`}
-											>
-												<GoogleAds
-													slot="5973440772"
-													deps={[resizeGoogleAdsToggle, getStoresStatus, getStoresResponse]}
-													style={css`
-														width: 300px;
-														height: 150px;
+														@media (max-width: 650px) {
+															display: block;
+														}
 													`}
-												/>
-											</div>
-										</>
-									)}
+												>
+													<GoogleAds
+														slot="5973440772"
+														deps={[
+															resizeGoogleAdsToggle,
+															getStoresStatus,
+															getStoresResponse
+														]}
+														style={css`
+															width: 300px;
+															height: 150px;
+														`}
+													/>
+												</div>
+											</>
+										)}
 								</Fragment>
 							))}
 						</>
 					)}
 				</section>
-				<div
-					className={css`
-						position: sticky;
-						bottom: 40px;
-						text-align: right;
-						z-index: 99;
-						animation-name: addStoreButtonFadeIn;
-						opacity: 0;
-						animation-iteration-count: 1;
-						animation-duration: 200ms;
-						animation-fill-mode: forwards;
-
-						@keyframes addStoreButtonFadeIn {
-							0% {
+				{getStoresStatus === "successed" && (
+					<>
+						<div
+							className={css`
+								display: flex;
+								justify-content: space-between;
+							`}
+						>
+							<Button
+								disabled={
+									getStoresStatus !== "successed" ||
+									getStoresResponse === undefined ||
+									params.page - 1 < 1
+								}
+								loading={getStoresStatus !== "successed" || getStoresResponse === undefined}
+								href={
+									params.page - 1 > 0
+										? `/store?keywords=${params.keywords}&allergens=${params.allergens}&area=${params.area}&radius=${params.radius}&page=${params.page - 1}`
+										: undefined
+								}
+							>
+								前へ
+							</Button>
+							<Button
+								disabled={
+									getStoresStatus !== "successed" ||
+									getStoresResponse === undefined ||
+									(getStoresResponse !== undefined &&
+										getStoresResponse.info.limit * getStoresResponse.info.page >
+											getStoresResponse.info.total)
+								}
+								loading={getStoresStatus !== "successed" || getStoresResponse === undefined}
+								href={
+									getStoresResponse !== undefined &&
+									getStoresResponse.info.limit * getStoresResponse.info.page >
+										getStoresResponse.info.total
+										? undefined
+										: `/store?keywords=${params.keywords}&allergens=${params.allergens}&area=${params.area}&radius=${params.radius}&page=${params.page + 1}`
+								}
+							>
+								次へ
+							</Button>
+						</div>
+						<div
+							className={css`
+								position: sticky;
+								bottom: 40px;
+								text-align: right;
+								z-index: 99;
+								animation-name: addStoreButtonFadeIn;
 								opacity: 0;
-							}
+								animation-iteration-count: 1;
+								animation-duration: 200ms;
+								animation-fill-mode: forwards;
 
-							100% {
-								opacity: 1;
-							}
-						}
+								@keyframes addStoreButtonFadeIn {
+									0% {
+										opacity: 0;
+									}
 
-						@media (max-width: 600px) {
-							bottom: 20px;
-						}
-					`}
-				>
-					<Button
-						onClick={() => {
-							setIsOpenAddModal(true);
-						}}
-						disabled={userStatus === "loading"}
-						loading={userStatus === "loading"}
-						selected={isOpenAddModal}
-					>
-						お店を追加
-					</Button>
-				</div>
+									100% {
+										opacity: 1;
+									}
+								}
+
+								@media (max-width: 600px) {
+									bottom: 20px;
+								}
+							`}
+						>
+							<Button
+								onClick={() => {
+									setIsOpenAddModal(true);
+								}}
+								disabled={userStatus === "loading"}
+								loading={userStatus === "loading"}
+								selected={isOpenAddModal}
+							>
+								お店を追加
+							</Button>
+						</div>
+					</>
+				)}
 			</div>
 		</>
 	);

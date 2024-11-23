@@ -95,7 +95,7 @@ export default function ({ pictureId, storeId, isOpen, setIsOpen, callback }: Pr
 								if (result) {
 									setIsOpen(false);
 								}
-						  }
+							}
 						: undefined
 				}
 			>

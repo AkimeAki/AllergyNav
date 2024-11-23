@@ -73,7 +73,7 @@ export default function ({ allergens }: Props): JSX.Element {
 									selected
 										? css`
 												background-color: var(--color-theme-thin);
-										  `
+											`
 										: ""
 								].join(" ")}
 							>

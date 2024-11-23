@@ -17,7 +17,9 @@ export const isVerifiedUser = async (userId: string): Promise<boolean> => {
 		if (userResult.verified && !userResult.deleted) {
 			verified = true;
 		}
-	} catch (e) {}
+	} catch (e) {
+		/* empty */
+	}
 
 	return verified;
 };

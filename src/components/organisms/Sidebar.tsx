@@ -118,12 +118,12 @@ export default function (): JSX.Element {
 											opacity: 1;
 											user-select: auto;
 											pointer-events: auto;
-									  `
+										`
 									: css`
 											opacity: 0;
 											user-select: none;
 											pointer-events: none;
-									  `
+										`
 							].join(" ")}
 						>
 							<SidebarLink href="/" active={pathname === "/"}>

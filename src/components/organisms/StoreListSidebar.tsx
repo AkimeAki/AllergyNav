@@ -16,6 +16,7 @@ import { isEmptyString } from "@/libs/check-string";
 import GoogleAds from "@/components/atoms/GoogleAds";
 import SelectButton from "@/components/atoms/SelectButton";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
+import { safeNumber } from "@/libs/safe-type";
 
 export default function (): JSX.Element {
 	const [selectAllergens, setSelectAllergens] = useState<string[] | undefined>(undefined);
@@ -34,8 +35,9 @@ export default function (): JSX.Element {
 	const params = {
 		allergens: searchParams.get("allergens") ?? "",
 		keywords: searchParams.get("keywords") ?? "",
-		area: isEmptyString(searchParams.get("area") ?? "") ? "all" : searchParams.get("area") ?? "all",
-		radius: searchParams.get("radius") ?? ""
+		area: isEmptyString(searchParams.get("area") ?? "") ? "all" : (searchParams.get("area") ?? "all"),
+		radius: searchParams.get("radius") ?? "",
+		page: safeNumber(searchParams.get("page")) ?? 1
 	};
 
 	useEffect(() => {
@@ -132,7 +134,7 @@ export default function (): JSX.Element {
 										selected
 											? css`
 													background-color: var(--color-theme-thin);
-											  `
+												`
 											: ""
 									].join(" ")}
 								>
@@ -329,7 +331,7 @@ export default function (): JSX.Element {
 										selected
 											? css`
 													background-color: var(--color-theme-thin);
-											  `
+												`
 											: ""
 									].join(" ")}
 								>

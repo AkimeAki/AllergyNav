@@ -1,3 +1,13 @@
+interface WithInfo<T> {
+	data: T;
+	info: {
+		limit: number;
+		offset: number;
+		page: number;
+		total: number;
+	};
+}
+
 export interface StoreResponse {
 	id: string;
 	name: string;
@@ -19,7 +29,7 @@ export interface StoreResponse {
 	}[];
 }
 
-export type GetStoresResponse = StoreResponse[] | null;
+export type GetStoresResponse = WithInfo<StoreResponse[]> | null;
 export type GetStoreResponse = StoreResponse | null;
 export type AddStoreResponse = StoreResponse | null;
 export type EditStoreResponse = StoreResponse | null;

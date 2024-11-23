@@ -14,12 +14,11 @@ import { calcDistance } from "@/libs/calc-distance";
 import { isVerifiedUser } from "@/libs/check-verified-user";
 
 const headers = {
-	// "Access-Control-Allow-Origin": "http://localhost:10111", // 許可するオリジン
 	"Access-Control-Allow-Methods": "GET, POST" // 許可するメソッド
 };
 
 export const GET = async (req: NextRequest): Promise<NextResponse> => {
-	let data: GetStoresResponse = null;
+	let resultData: GetStoresResponse = null;
 	let status = 500;
 
 	try {
@@ -35,6 +34,11 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 			: "all";
 		const coords = safeString(searchParams.get("coords"));
 		const radius = safeNumber(searchParams.get("radius"));
+		let limit = safeNumber(searchParams.get("limit"));
+		if ((limit !== null && limit > 50) || limit === null) {
+			limit = 50;
+		}
+		const offset = safeNumber(searchParams.get("offset")) ?? 0;
 
 		const result = await prisma.store.findMany({
 			select: {
@@ -83,10 +87,37 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 						})
 					}
 				]
+			},
+			take: limit,
+			skip: offset
+		});
+
+		const totalCount = await prisma.store.count({
+			where: {
+				OR: [
+					{
+						OR: keywords.map((keyword) => {
+							return {
+								name: {
+									contains: keyword
+								}
+							};
+						})
+					},
+					{
+						OR: keywords.map((keyword) => {
+							return {
+								description: {
+									contains: keyword
+								}
+							};
+						})
+					}
+				]
 			}
 		});
 
-		data = [];
+		let data = [];
 
 		// アレルゲンフィルター
 		for (const item of result) {
@@ -184,15 +215,24 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 			data = filterData;
 		}
 
+		resultData = {
+			data,
+			info: {
+				limit,
+				offset,
+				page: Math.floor(offset / limit) + 1,
+				total: totalCount
+			}
+		};
 		status = 200;
 	} catch (e) {
 		console.error(e);
-		data = null;
+		resultData = null;
 
 		status = getStatus(e);
 	}
 
-	return NextResponse.json(data, { status, headers });
+	return NextResponse.json(resultData, { status, headers });
 };
 
 export const POST = async (req: NextRequest): Promise<Response> => {

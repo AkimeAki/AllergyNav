@@ -143,15 +143,20 @@ export default function <T>() {
 							method: "POST"
 						};
 
-					case "getStores":
+					case "getStores": {
+						const page = Number(params.page ?? 1);
+						const limit = 10;
+						const offset = (page - 1) * limit;
+
 						return {
 							url: `${process.env.NEXT_PUBLIC_API_URL}/store?keywords=${
 								params.keywords ?? ""
 							}&allergens=${params.allergens ?? ""}&area=${params.area ?? ""}&coords=${
 								params.coords ?? ""
-							}&radius=${params.radius ?? ""}`,
+							}&radius=${params.radius ?? ""}&offset=${offset}&limit=${limit}`,
 							method: "GET"
 						};
+					}
 
 					case "getStore":
 						if (params.storeId === undefined) {
