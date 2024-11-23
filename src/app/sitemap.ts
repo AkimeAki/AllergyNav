@@ -19,7 +19,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		}
 	];
 
-	const storeList = (await getStores())
+	const storeList = (await getStores()).data
 		.map((store) => {
 			return [
 				{
