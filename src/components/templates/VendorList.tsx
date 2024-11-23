@@ -51,7 +51,7 @@ export default function (): JSX.Element {
 			!(params.area === "location" && currentLatitude === undefined && currentLongitude === undefined)
 		) {
 			const coords = (safeString(currentLatitude) ?? "") + "," + (safeString(currentLongitude) ?? "");
-			getStores(params.allergens, params.keywords, params.area, coords, params.radius);
+			getStores(params.allergens, params.keywords, params.area, coords, params.radius, 1);
 		}
 	}, [searchParams, currentLatitude, currentLongitude]);
 
@@ -73,7 +73,7 @@ export default function (): JSX.Element {
 
 	useEffect(() => {
 		if (getStoresStatus === "successed" && getStoresResponse !== undefined) {
-			getPictures(getStoresResponse.map((store) => store.id).join(","));
+			getPictures(getStoresResponse.data.map((store) => store.id).join(","));
 		}
 	}, [getStoresStatus]);
 
@@ -207,7 +207,7 @@ export default function (): JSX.Element {
 				>
 					{getStoresStatus === "successed" && getStoresResponse !== undefined && (
 						<>
-							{getStoresResponse.length === 0 && (
+							{getStoresResponse.data.length === 0 && (
 								<p
 									className={css`
 										text-align: center;
@@ -216,7 +216,7 @@ export default function (): JSX.Element {
 									お店が無いようです😿
 								</p>
 							)}
-							{[...getStoresResponse].reverse().map((store, index) => (
+							{[...getStoresResponse.data].reverse().map((store, index) => (
 								<Fragment key={store.id}>
 									<div
 										className={css`
@@ -318,56 +318,66 @@ export default function (): JSX.Element {
 											href={`/store/${store.id}`}
 										/>
 									</div>
-									{index !== 0 && index !== getStoresResponse.length - 1 && (index + 1) % 4 === 0 && (
-										<>
-											<div
-												key={String(resizeGoogleAdsToggle)}
-												className={css`
-													text-align: center;
+									{index !== 0 &&
+										index !== getStoresResponse.data.length - 1 &&
+										(index + 1) % 4 === 0 && (
+											<>
+												<div
+													key={String(resizeGoogleAdsToggle)}
+													className={css`
+														text-align: center;
 
-													@media (max-width: 880px) {
-														grid-column: 1 / 3;
-													}
+														@media (max-width: 880px) {
+															grid-column: 1 / 3;
+														}
 
-													@media (max-width: 700px) {
-														grid-column: 1 / 1;
-													}
+														@media (max-width: 700px) {
+															grid-column: 1 / 1;
+														}
 
-													@media (max-width: 650px) {
+														@media (max-width: 650px) {
+															display: none;
+														}
+													`}
+												>
+													<GoogleAds
+														slot="5973440772"
+														deps={[
+															resizeGoogleAdsToggle,
+															getStoresStatus,
+															getStoresResponse
+														]}
+														style={css`
+															width: 560px;
+															height: 90px;
+														`}
+													/>
+												</div>
+												<div
+													className={css`
 														display: none;
-													}
-												`}
-											>
-												<GoogleAds
-													slot="5973440772"
-													deps={[resizeGoogleAdsToggle, getStoresStatus, getStoresResponse]}
-													style={css`
-														width: 560px;
-														height: 90px;
-													`}
-												/>
-											</div>
-											<div
-												className={css`
-													display: none;
-													text-align: center;
+														text-align: center;
 
-													@media (max-width: 650px) {
-														display: block;
-													}
-												`}
-											>
-												<GoogleAds
-													slot="5973440772"
-													deps={[resizeGoogleAdsToggle, getStoresStatus, getStoresResponse]}
-													style={css`
-														width: 300px;
-														height: 150px;
+														@media (max-width: 650px) {
+															display: block;
+														}
 													`}
-												/>
-											</div>
-										</>
-									)}
+												>
+													<GoogleAds
+														slot="5973440772"
+														deps={[
+															resizeGoogleAdsToggle,
+															getStoresStatus,
+															getStoresResponse
+														]}
+														style={css`
+															width: 300px;
+															height: 150px;
+														`}
+													/>
+												</div>
+											</>
+										)}
 								</Fragment>
 							))}
 						</>
