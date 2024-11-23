@@ -30,7 +30,15 @@ export default function (): JSX.Element {
 					}
 				`}
 			>
-				<MainTitle>お店一覧</MainTitle>
+				<div
+					className={css`
+						@media (max-width: 700px) {
+							display: none;
+						}
+					`}
+				>
+					<MainTitle>お店一覧</MainTitle>
+				</div>
 				<Suspense>
 					<StoreList />
 				</Suspense>

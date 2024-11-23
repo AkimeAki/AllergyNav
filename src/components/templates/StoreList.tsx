@@ -165,6 +165,7 @@ export default function (): JSX.Element {
 									display: flex;
 									gap: 5px;
 									justify-content: center;
+									flex-wrap: wrap;
 								`}
 							>
 								{searchAllergens.map((item) => {
@@ -189,6 +190,27 @@ export default function (): JSX.Element {
 							</div>
 						</AlertBox>
 					)}
+				{getStoresStatus === "successed" && getStoresResponse !== undefined && (
+					<div
+						className={css`
+							display: flex;
+							justify-content: space-between;
+							align-items: flex-end;
+						`}
+					>
+						<span>{getStoresResponse.info.page}ページ目</span>
+						<span>
+							<span
+								className={css`
+									font-size: 20px;
+								`}
+							>
+								{getStoresResponse.data.length}件
+							</span>{" "}
+							/ {getStoresResponse.info.total}件中
+						</span>
+					</div>
+				)}
 				{(getStoresStatus === "loading" || getStoresStatus === "yet") && <LoadingCircleCenter />}
 				<section
 					className={css`
