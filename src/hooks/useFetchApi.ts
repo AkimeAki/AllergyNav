@@ -11,6 +11,7 @@ export default function <T>() {
 		type:
 			| "getMenus"
 			| "sendVerifyMail"
+			| "sendRecoveryMail"
 			| "addComment"
 			| "getComments"
 			| "addMenu"
@@ -26,7 +27,8 @@ export default function <T>() {
 			| "getPicture"
 			| "editPicture"
 			| "getStore"
-			| "getStores",
+			| "getStores"
+			| "changePassword",
 		params: Record<string, string | undefined>,
 		value: Record<string, string | undefined>
 	): Promise<void> => {
@@ -84,6 +86,12 @@ export default function <T>() {
 
 						return {
 							url: `${process.env.NEXT_PUBLIC_API_URL}/user/${params.userId}/verify`,
+							method: "POST"
+						};
+
+					case "sendRecoveryMail":
+						return {
+							url: `${process.env.NEXT_PUBLIC_API_URL}/user/recovery`,
 							method: "POST"
 						};
 
@@ -190,6 +198,12 @@ export default function <T>() {
 							method: "POST"
 						};
 
+					case "changePassword":
+						return {
+							url: `${process.env.NEXT_PUBLIC_API_URL}/user/recovery/${params.recoveryCode}`,
+							method: "PUT"
+						};
+
 					case "getMenuHistories":
 						if (params.menuId === undefined) {
 							throw new Error();
@@ -214,6 +228,7 @@ export default function <T>() {
 			});
 
 			setResponseStatus(result.status);
+			console.log(result.status);
 
 			if (result.status === 422) {
 				throw new ValidationError();
@@ -225,11 +240,9 @@ export default function <T>() {
 
 			const response = (await result.json()) as T;
 
-			if (response === null) {
-				throw new Error();
+			if (response !== null) {
+				setResponse(response);
 			}
-
-			setResponse(response);
 			setStatus("successed");
 		} catch (e) {
 			console.log(e);

@@ -7,58 +7,35 @@ import { css } from "@kuma-ui/core";
 import { useEffect, useState } from "react";
 import SubTitle from "@/components/atoms/SubTitle";
 import Link from "next/link";
-import useAddUser from "@/hooks/fetch-api/useAddUser";
-import { isEmailString, isEmptyString, checkValidPassword } from "@/libs/check-string";
-import { useSearchParams } from "next/navigation";
+import { isEmailString, isEmptyString } from "@/libs/check-string";
 import Cursor from "@/components/atoms/Cursor";
-import useLogin from "@/hooks/useLogin";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
+import useSendRecoveryMail from "@/hooks/fetch-api/useSendRecoveryMail";
 
 export default function (): JSX.Element {
 	const [email, setEmail] = useState<string>("");
-	const [password, setPassword] = useState<string>("");
-	const [confirmPassword, setConfirmPassword] = useState<string>("");
-	const { addUserResponse, addUserStatus, addUser } = useAddUser();
-	const { response: loginResponse, loading: loginLoading, login } = useLogin();
-	const searchParams = useSearchParams();
-	const redirectPath = searchParams.get("redirect") ?? "";
+	const { sendRecoveryMail, sendRecoveryMailStatus } = useSendRecoveryMail();
 	const { addMessage } = useFloatMessage();
-	const [notAllowedString, setNotAllowedString] = useState<string>("");
 
 	useEffect(() => {
-		if (addUserResponse !== undefined && addUserResponse !== null) {
-			void login(email, password);
-		}
-	}, [addUserResponse]);
+		console.log(sendRecoveryMailStatus);
 
-	useEffect(() => {
-		if (loginResponse !== undefined && loginResponse) {
-			window.location.href = redirectPath;
-		}
-	}, [loginResponse]);
-
-	useEffect(() => {
-		const result = checkValidPassword(password);
-		if (result.status === "not allowed") {
-			setNotAllowedString(result.message);
-		} else {
-			setNotAllowedString("");
-		}
-	}, [password]);
-
-	useEffect(() => {
-		if (addUserStatus === "loading") {
+		if (sendRecoveryMailStatus === "loading") {
 			addMessage("入力データを送信しています", "success");
 		}
 
-		if (addUserStatus === "failed") {
-			addMessage("アカウント作成処理に失敗しました", "error");
+		if (sendRecoveryMailStatus === "failed") {
+			addMessage("パスワード再設定メールの送信に失敗しました", "error");
 		}
-	}, [addUserStatus]);
+
+		if (sendRecoveryMailStatus === "successed") {
+			addMessage("パスワード再設定メールを送信しました", "success");
+		}
+	}, [sendRecoveryMailStatus]);
 
 	return (
 		<>
-			{(addUserStatus === "loading" || loginLoading) && <Cursor cursor="wait" />}
+			{sendRecoveryMailStatus === "loading" && <Cursor cursor="wait" />}
 			<div
 				className={css`
 					display: flex;
@@ -94,8 +71,8 @@ export default function (): JSX.Element {
 							<Label>メールアドレス</Label>
 							<TextInput
 								value={email}
-								disabled={addUserStatus === "loading" || loginLoading}
-								loading={addUserStatus === "loading" || loginLoading}
+								disabled={sendRecoveryMailStatus === "loading"}
+								loading={sendRecoveryMailStatus === "loading"}
 								onChange={(e) => {
 									setEmail(e.target.value);
 								}}
@@ -122,23 +99,16 @@ export default function (): JSX.Element {
 						</div>
 						<Button
 							onClick={() => {
-								addUser(email, password);
+								sendRecoveryMail(email);
 							}}
-							disabled={
-								password !== confirmPassword ||
-								isEmptyString(password) ||
-								!isEmailString(email) ||
-								addUserStatus === "loading" ||
-								loginLoading ||
-								checkValidPassword(password).status !== "success"
-							}
-							loading={addUserStatus === "loading" || loginLoading}
+							disabled={!isEmailString(email) || sendRecoveryMailStatus === "loading"}
+							loading={sendRecoveryMailStatus === "loading"}
 						>
 							パスワード再設定メールを送信
 						</Button>
 					</form>
 				</div>
-				<Link aria-label="ログインページ" href={`/login?redirect=${redirectPath}`}>
+				<Link aria-label="ログインページ" href="/login">
 					ログインはこちらから
 				</Link>
 			</div>

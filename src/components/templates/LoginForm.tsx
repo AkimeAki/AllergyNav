@@ -124,7 +124,7 @@ export default function (): JSX.Element {
 				<Link aria-label="アカウント作成ページ" href={`/register?redirect=${redirectPath}`}>
 					アカウント作成する場合はこちらから
 				</Link>
-				<Link aria-label="パスワード再設定ページ" href={`/recovery?redirect=${redirectPath}`}>
+				<Link aria-label="パスワード再設定ページ" href="/recovery">
 					パスワードを忘れた方はこちらから
 				</Link>
 			</div>

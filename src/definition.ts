@@ -1,15 +1,5 @@
 export const siteTitle = "アレルギーナビ";
 
-// const localDbData = {
-// 	host: "db",
-// 	user: "root",
-// 	password: "root",
-// 	database: "dev"
-// };
-
-// export const mysqlConfig: ConnectionOptions | string =
-// 	(process.env.USE_DB_LOCAL === "1" ? localDbData : process.env.DATABASE_URL) ?? "";
-
 export class NotFoundError extends Error {
 	constructor(message?: string) {
 		super(message);

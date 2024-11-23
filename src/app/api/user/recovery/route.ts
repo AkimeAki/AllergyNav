@@ -1,23 +1,14 @@
-import { ForbiddenError, TooManyRequestError, ValidationError } from "@/definition";
+import { TooManyRequestError, ValidationError } from "@/definition";
 import { safeString } from "@/libs/safe-type";
 import { prisma } from "@/libs/prisma";
 import type { NextRequest } from "next/server";
-import { getServerSession } from "next-auth";
-import { nextAuthOptions } from "@/libs/auth";
-import { getToken } from "next-auth/jwt";
 import { accessCheck } from "@/libs/access-check";
 import { getStatus } from "@/libs/get-status";
 import { isEmailString, isEmptyString } from "@/libs/check-string";
-// import { recoveryMailBody, recoveryMailTitle, mailFrom } from "@/libs/mail-template";
-// import { Resend } from "resend";
+import { recoveryMailBody, recoveryMailTitle, mailFrom } from "@/libs/mail-template";
+import { Resend } from "resend";
 
-interface Data {
-	params: {
-		id: string;
-	};
-}
-
-export const POST = async (req: NextRequest, { params }: Data): Promise<Response> => {
+export const POST = async (req: NextRequest): Promise<Response> => {
 	let status = 500;
 
 	try {
@@ -41,40 +32,37 @@ export const POST = async (req: NextRequest, { params }: Data): Promise<Response
 			throw new ValidationError();
 		}
 
-		// await prisma.$transaction(async (prisma) => {
-		// 	const recoveryCodeResult = await prisma.userRecoveryCode.findUnique({
-		// 		where: {
-		// 			user_id: userId
-		// 		}
-		// 	});
+		await prisma.$transaction(async (prisma) => {
+			const userResult = await prisma.user.findUnique({
+				where: {
+					email
+				}
+			});
 
-		// 	if (recoveryCodeResult !== null) {
-		// 		await prisma.userRecoveryCode.delete({
-		// 			where: {
-		// 				user_id: userId
-		// 			}
-		// 		});
-		// 	}
+			if (userResult !== null) {
+				const createRecoveryCodeResult = await prisma.userRecoveryCode.create({
+					data: {
+						email
+					}
+				});
 
-		// 	const createRecoveryCodeResult = await prisma.userRecoveryCode.create({
-		// 		data: {
-		// 			user_id: userId
-		// 		}
-		// 	});
+				const resend = new Resend(process.env.RESEND_API_KEY ?? "");
 
-		// const resend = new Resend(process.env.RESEND_API_KEY ?? "");
+				const sendEmailResult = await resend.emails.send({
+					from: mailFrom,
+					to: email,
+					subject: recoveryMailTitle,
+					html: recoveryMailBody(createRecoveryCodeResult.code)
+				});
 
-		// const sendEmailResult = await resend.emails.send({
-		// 	from: mailFrom,
-		// 	to: result.email,
-		// 	subject: recoveryMailTitle,
-		// 	html: recoveryMailBody(createRecoveryCodeResult.code)
-		// });
+				if (sendEmailResult.data === null) {
+					throw new Error(sendEmailResult.error?.message ?? "");
+				}
+			}
+		});
 
-		// if (sendEmailResult.data === null) {
-		// 	throw new Error(sendEmailResult.error?.message ?? "");
-		// }
-		// });
+		const randam = Math.floor(Math.random() * 1500);
+		await new Promise((resolve) => setTimeout(resolve, randam));
 
 		status = 200;
 	} catch (e) {
@@ -83,7 +71,7 @@ export const POST = async (req: NextRequest, { params }: Data): Promise<Response
 		status = getStatus(e);
 	}
 
-	return new Response(null, {
+	return new Response(JSON.stringify({}), {
 		status
 	});
 };

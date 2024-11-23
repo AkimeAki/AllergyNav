@@ -93,7 +93,7 @@ export const POST = async (req: NextRequest, { params }: Data): Promise<Response
 		status = getStatus(e);
 	}
 
-	return new Response(null, {
+	return new Response(JSON.stringify({}), {
 		status
 	});
 };
