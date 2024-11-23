@@ -24,6 +24,7 @@ export default function (): ReturnType {
 		document.body.style.overflowY = "";
 		if (root.dataset.scrollY !== undefined && root.dataset.scrollY !== "") {
 			root.scrollTo(0, Number(root.dataset.scrollY));
+			root.dataset.scrollY = "";
 		}
 		setIsScroll(true);
 	};
