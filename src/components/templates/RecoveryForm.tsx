@@ -51,62 +51,81 @@ export default function (): JSX.Element {
 					`}
 				>
 					<SubTitle>パスワード再設定</SubTitle>
-					<form
-						className={css`
-							display: flex;
-							flex-direction: column;
-							gap: 20px;
-							margin-top: 30px;
-							padding: 0 10px;
-
-							& > div {
+					{sendRecoveryMailStatus === "successed" && (
+						<div
+							className={css`
+								padding: 0 10px;
+								margin-top: 30px;
 								display: flex;
-								align-items: flex-start;
 								flex-direction: column;
 								gap: 10px;
-							}
-						`}
-					>
-						<div>
-							<Label>メールアドレス</Label>
-							<TextInput
-								value={email}
-								disabled={sendRecoveryMailStatus === "loading"}
-								loading={sendRecoveryMailStatus === "loading"}
-								onChange={(e) => {
-									setEmail(e.target.value);
-								}}
-							/>
-							<span
-								className={css`
-									font-size: 15px;
-									display: block;
-								`}
-							>
-								※パスワードを再設定したいアカウントのメールアドレスを入力してください。
-							</span>
-							{!isEmptyString(email) && !isEmailString(email) && (
+							`}
+						>
+							<p>「{email}」にパスワード再設定メールを送信しました。</p>
+							<p>
+								メールが届かなかった場合は、迷惑メールフォルダ等に入っている、もしくは「{email}
+								」でアカウントを作成していない可能性があります。
+							</p>
+						</div>
+					)}
+					{sendRecoveryMailStatus !== "successed" && (
+						<form
+							className={css`
+								display: flex;
+								flex-direction: column;
+								gap: 20px;
+								margin-top: 30px;
+								padding: 0 10px;
+
+								& > div {
+									display: flex;
+									align-items: flex-start;
+									flex-direction: column;
+									gap: 10px;
+								}
+							`}
+						>
+							<div>
+								<Label>メールアドレス</Label>
+								<TextInput
+									value={email}
+									disabled={sendRecoveryMailStatus === "loading"}
+									loading={sendRecoveryMailStatus === "loading"}
+									onChange={(e) => {
+										setEmail(e.target.value);
+									}}
+								/>
 								<span
 									className={css`
 										font-size: 15px;
 										display: block;
-										color: var(--color-red);
 									`}
 								>
-									※メールアドレスの形式ではありません。
+									※パスワードを再設定したいアカウントのメールアドレスを入力してください。
 								</span>
-							)}
-						</div>
-						<Button
-							onClick={() => {
-								sendRecoveryMail(email);
-							}}
-							disabled={!isEmailString(email) || sendRecoveryMailStatus === "loading"}
-							loading={sendRecoveryMailStatus === "loading"}
-						>
-							パスワード再設定メールを送信
-						</Button>
-					</form>
+								{!isEmptyString(email) && !isEmailString(email) && (
+									<span
+										className={css`
+											font-size: 15px;
+											display: block;
+											color: var(--color-red);
+										`}
+									>
+										※メールアドレスの形式ではありません。
+									</span>
+								)}
+							</div>
+							<Button
+								onClick={() => {
+									sendRecoveryMail(email);
+								}}
+								disabled={!isEmailString(email) || sendRecoveryMailStatus === "loading"}
+								loading={sendRecoveryMailStatus === "loading"}
+							>
+								パスワード再設定メールを送信
+							</Button>
+						</form>
+					)}
 				</div>
 				<Link aria-label="ログインページ" href="/login">
 					ログインはこちらから
