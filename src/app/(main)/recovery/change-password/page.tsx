@@ -45,7 +45,7 @@ export default async function ({ searchParams }: Props): Promise<JSX.Element> {
 			// 対象のアドレスで認証済みのユーザーを取得
 			const userResult = await prisma.user.findFirst({
 				select: { id: true },
-				where: { email: userRecoveryCodeResult.email, verified: true, deleted: false }
+				where: { email: userRecoveryCodeResult.email, deleted: false }
 			});
 
 			// 対象のアドレスのユーザーが存在しない場合はエラー
