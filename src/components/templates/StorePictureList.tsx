@@ -187,7 +187,18 @@ export default function ({ storeId }: Props): JSX.Element {
 				`}
 			>
 				{(getPicturesStatus === "loading" || getPicturesStatus === "yet") && <LoadingCircleCenter />}
-
+				{getPicturesStatus === "blocked" && (
+					<div
+						className={css`
+							p {
+								text-align: center;
+							}
+						`}
+					>
+						<p>API制限中</p>
+						<p>時間を置いてからアクセスしてください。</p>
+					</div>
+				)}
 				{getPicturesStatus === "successed" && getPicturesResponse !== undefined && (
 					<>
 						{getPicturesResponse.length === 0 && (
@@ -247,29 +258,31 @@ export default function ({ storeId }: Props): JSX.Element {
 						</section>
 					</>
 				)}
-				<div
-					className={css`
-						position: sticky;
-						bottom: 40px;
-						text-align: right;
-						z-index: 99;
+				{getPicturesStatus === "successed" && (
+					<div
+						className={css`
+							position: sticky;
+							bottom: 40px;
+							text-align: right;
+							z-index: 99;
 
-						@media (max-width: 600px) {
-							bottom: 20px;
-						}
-					`}
-				>
-					<Button
-						onClick={() => {
-							setIsOpenAddModal(true);
-						}}
-						disabled={userStatus === "loading"}
-						loading={userStatus === "loading"}
-						selected={isOpenAddModal}
+							@media (max-width: 600px) {
+								bottom: 20px;
+							}
+						`}
 					>
-						写真を追加
-					</Button>
-				</div>
+						<Button
+							onClick={() => {
+								setIsOpenAddModal(true);
+							}}
+							disabled={userStatus === "loading"}
+							loading={userStatus === "loading"}
+							selected={isOpenAddModal}
+						>
+							写真を追加
+						</Button>
+					</div>
+				)}
 			</div>
 		</>
 	);

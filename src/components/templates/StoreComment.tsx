@@ -54,171 +54,185 @@ export default function ({ storeId }: Props): JSX.Element {
 		<>
 			{addCommentStatus === "loading" && <Cursor cursor="wait" />}
 			<SubTitle>コメントを書く</SubTitle>
-			<form
-				className={css`
-					padding: 0 10px;
-					position: relative;
-				`}
-			>
-				{userStatus === "unauthenticated" && (
-					<StoreCommentBarrier>
-						<p
-							className={css`
-								text-align: center;
-							`}
-						>
-							コメントを書くには、ログインする必要があります
-						</p>
-						<div
-							className={css`
-								display: flex;
-								gap: 20px;
-								justify-content: center;
-
-								@media (max-width: 500px) {
-									flex-direction: column;
-									align-items: center;
-
-									& > div {
-										display: flex;
-										flex-direction: column;
-										width: 100%;
-									}
-								}
-							`}
-						>
-							<div>
-								<Button href={`/login?redirect=${pathname}`}>ログイン</Button>
-							</div>
-							<div>
-								<Button href={`/register?redirect=${pathname}`}>アカウント作成</Button>
-							</div>
-						</div>
-					</StoreCommentBarrier>
-				)}
-				{userStatus === "authenticated" && userVerified === false && (
-					<StoreCommentBarrier>
-						<p
-							className={css`
-								text-align: center;
-							`}
-						>
-							コメントを書くには、メール認証を完了する必要があります。
-						</p>
-						<div
-							className={css`
-								display: flex;
-								gap: 20px;
-								justify-content: center;
-
-								@media (max-width: 500px) {
-									flex-direction: column;
-									align-items: center;
-								}
-							`}
-						>
-							<div>
-								{sendVerifyMailStatus === "yet" && (
-									<Button
-										onClick={() => {
-											sendVerifyMail(userId ?? "");
-										}}
-									>
-										認証メールを再送信する
-									</Button>
-								)}
-								{sendVerifyMailStatus === "loading" && <Button disabled>送信中</Button>}
-								{sendVerifyMailStatus === "successed" && (
-									<Button disabled>認証メールを送信しました</Button>
-								)}
-							</div>
-						</div>
-					</StoreCommentBarrier>
-				)}
-
+			{getCommentsStatus === "blocked" && (
 				<div
 					className={css`
-						display: flex;
-						flex-direction: column;
-						gap: 20px;
-
-						& > div {
-							display: flex;
-							align-items: flex-start;
-							flex-direction: column;
-							gap: 10px;
+						p {
+							text-align: center;
 						}
 					`}
 				>
-					<div>
-						<Label required>タイトル</Label>
-						<TextInput
-							value={newCommentTitle}
-							onChange={(e) => {
-								setNewCommentTitle(e.target.value);
-							}}
-							disabled={
-								getCommentsStatus !== "successed" ||
-								addCommentStatus === "loading" ||
-								userStatus === "loading"
+					<p>API制限中</p>
+					<p>時間を置いてからアクセスしてください。</p>
+				</div>
+			)}
+			{getCommentsStatus !== "blocked" && (
+				<form
+					className={css`
+						padding: 0 10px;
+						position: relative;
+					`}
+				>
+					{userStatus === "unauthenticated" && (
+						<StoreCommentBarrier>
+							<p
+								className={css`
+									text-align: center;
+								`}
+							>
+								コメントを書くには、ログインする必要があります
+							</p>
+							<div
+								className={css`
+									display: flex;
+									gap: 20px;
+									justify-content: center;
+
+									@media (max-width: 500px) {
+										flex-direction: column;
+										align-items: center;
+
+										& > div {
+											display: flex;
+											flex-direction: column;
+											width: 100%;
+										}
+									}
+								`}
+							>
+								<div>
+									<Button href={`/login?redirect=${pathname}`}>ログイン</Button>
+								</div>
+								<div>
+									<Button href={`/register?redirect=${pathname}`}>アカウント作成</Button>
+								</div>
+							</div>
+						</StoreCommentBarrier>
+					)}
+					{userStatus === "authenticated" && userVerified === false && (
+						<StoreCommentBarrier>
+							<p
+								className={css`
+									text-align: center;
+								`}
+							>
+								コメントを書くには、メール認証を完了する必要があります。
+							</p>
+							<div
+								className={css`
+									display: flex;
+									gap: 20px;
+									justify-content: center;
+
+									@media (max-width: 500px) {
+										flex-direction: column;
+										align-items: center;
+									}
+								`}
+							>
+								<div>
+									{sendVerifyMailStatus === "yet" && (
+										<Button
+											onClick={() => {
+												sendVerifyMail(userId ?? "");
+											}}
+										>
+											認証メールを再送信する
+										</Button>
+									)}
+									{sendVerifyMailStatus === "loading" && <Button disabled>送信中</Button>}
+									{sendVerifyMailStatus === "successed" && (
+										<Button disabled>認証メールを送信しました</Button>
+									)}
+								</div>
+							</div>
+						</StoreCommentBarrier>
+					)}
+
+					<div
+						className={css`
+							display: flex;
+							flex-direction: column;
+							gap: 20px;
+
+							& > div {
+								display: flex;
+								align-items: flex-start;
+								flex-direction: column;
+								gap: 10px;
 							}
-							loading={
-								getCommentsStatus !== "successed" ||
-								addCommentStatus === "loading" ||
-								userStatus === "loading"
-							}
-						/>
-					</div>
-					<div>
-						<Label required>コメント</Label>
-						<TextArea
-							autoSize
-							value={newCommentContent}
-							onChange={(e) => {
-								setNewCommentContent(e.target.value);
-							}}
-							disabled={
-								getCommentsStatus !== "successed" ||
-								addCommentStatus === "loading" ||
-								userStatus === "loading"
-							}
-							loading={
-								getCommentsStatus !== "successed" ||
-								addCommentStatus === "loading" ||
-								userStatus === "loading"
-							}
-						/>
-					</div>
-					<div>
-						<div
-							className={css`
-								width: 100%;
-								text-align: right;
-							`}
-						>
-							<Button
-								onClick={() => {
-									addComment(storeId, newCommentTitle, newCommentContent);
+						`}
+					>
+						<div>
+							<Label required>タイトル</Label>
+							<TextInput
+								value={newCommentTitle}
+								onChange={(e) => {
+									setNewCommentTitle(e.target.value);
 								}}
 								disabled={
 									getCommentsStatus !== "successed" ||
-									isEmptyString(newCommentTitle) ||
-									isEmptyString(newCommentContent) ||
 									addCommentStatus === "loading" ||
-									userStatus !== "authenticated"
+									userStatus === "loading"
 								}
 								loading={
 									getCommentsStatus !== "successed" ||
 									addCommentStatus === "loading" ||
 									userStatus === "loading"
 								}
+							/>
+						</div>
+						<div>
+							<Label required>コメント</Label>
+							<TextArea
+								autoSize
+								value={newCommentContent}
+								onChange={(e) => {
+									setNewCommentContent(e.target.value);
+								}}
+								disabled={
+									getCommentsStatus !== "successed" ||
+									addCommentStatus === "loading" ||
+									userStatus === "loading"
+								}
+								loading={
+									getCommentsStatus !== "successed" ||
+									addCommentStatus === "loading" ||
+									userStatus === "loading"
+								}
+							/>
+						</div>
+						<div>
+							<div
+								className={css`
+									width: 100%;
+									text-align: right;
+								`}
 							>
-								送信する
-							</Button>
+								<Button
+									onClick={() => {
+										addComment(storeId, newCommentTitle, newCommentContent);
+									}}
+									disabled={
+										getCommentsStatus !== "successed" ||
+										isEmptyString(newCommentTitle) ||
+										isEmptyString(newCommentContent) ||
+										addCommentStatus === "loading" ||
+										userStatus !== "authenticated"
+									}
+									loading={
+										getCommentsStatus !== "successed" ||
+										addCommentStatus === "loading" ||
+										userStatus === "loading"
+									}
+								>
+									送信する
+								</Button>
+							</div>
 						</div>
 					</div>
-				</div>
-			</form>
+				</form>
+			)}
 			<SubTitle>コメント一覧</SubTitle>
 			<div
 				className={css`
@@ -229,6 +243,18 @@ export default function ({ storeId }: Props): JSX.Element {
 				`}
 			>
 				{(getCommentsStatus === "loading" || getCommentsStatus === "yet") && <LoadingCircleCenter />}
+				{getCommentsStatus === "blocked" && (
+					<div
+						className={css`
+							p {
+								text-align: center;
+							}
+						`}
+					>
+						<p>API制限中</p>
+						<p>時間を置いてからアクセスしてください。</p>
+					</div>
+				)}
 				{getCommentsStatus === "successed" && (
 					<>
 						{getCommentsResponse?.length === 0 && (

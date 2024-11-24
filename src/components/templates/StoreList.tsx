@@ -212,6 +212,18 @@ export default function (): JSX.Element {
 					</div>
 				)}
 				{(getStoresStatus === "loading" || getStoresStatus === "yet") && <LoadingCircleCenter />}
+				{getStoresStatus === "blocked" && (
+					<div
+						className={css`
+							p {
+								text-align: center;
+							}
+						`}
+					>
+						<p>API制限中</p>
+						<p>時間を置いてからアクセスしてください。</p>
+					</div>
+				)}
 				<section
 					className={css`
 						display: grid;

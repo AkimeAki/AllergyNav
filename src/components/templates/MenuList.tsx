@@ -135,6 +135,18 @@ export default function ({ storeId }: Props): JSX.Element {
 					`}
 				>
 					{(getMenusStatus === "loading" || getMenusStatus === "yet") && <LoadingCircleCenter />}
+					{getMenusStatus === "blocked" && (
+						<div
+							className={css`
+								p {
+									text-align: center;
+								}
+							`}
+						>
+							<p>API制限中</p>
+							<p>時間を置いてからアクセスしてください。</p>
+						</div>
+					)}
 					{getMenusStatus === "successed" && (
 						<>
 							{getMenusResponse?.length === 0 && (
@@ -638,25 +650,27 @@ export default function ({ storeId }: Props): JSX.Element {
 						</>
 					)}
 				</section>
-				<div
-					className={css`
-						position: sticky;
-						bottom: 0;
-						text-align: right;
-						z-index: 99;
-					`}
-				>
-					<Button
-						disabled={userStatus === "loading"}
-						loading={userStatus === "loading"}
-						onClick={() => {
-							setIsOpenAddModal(true);
-						}}
-						selected={isOpenAddModal}
+				{getMenusStatus === "successed" && (
+					<div
+						className={css`
+							position: sticky;
+							bottom: 0;
+							text-align: right;
+							z-index: 99;
+						`}
 					>
-						メニューを追加
-					</Button>
-				</div>
+						<Button
+							disabled={userStatus === "loading"}
+							loading={userStatus === "loading"}
+							onClick={() => {
+								setIsOpenAddModal(true);
+							}}
+							selected={isOpenAddModal}
+						>
+							メニューを追加
+						</Button>
+					</div>
+				)}
 			</div>
 		</>
 	);

@@ -95,9 +95,5 @@ export const getAllergens = async (): Promise<NonNullable<GetAllergensResponse>>
 		allergens = null;
 	}
 
-	if (allergens === null) {
-		notFound();
-	}
-
-	return allergens;
+	return allergens ?? [];
 };

@@ -1,4 +1,5 @@
-import { ValidationError } from "@/definition";
+import { TooManyRequestError, ValidationError } from "@/definition";
+import { getStatus } from "@/libs/get-status";
 import type { FetchStatus } from "@/type";
 import { useState } from "react";
 
@@ -234,6 +235,10 @@ export default function <T>() {
 				throw new ValidationError();
 			}
 
+			if (result.status === 429) {
+				throw new TooManyRequestError();
+			}
+
 			if (result.status !== 200) {
 				throw new Error();
 			}
@@ -247,8 +252,15 @@ export default function <T>() {
 		} catch (e) {
 			console.log(e);
 
+			const errorStatus = getStatus(e);
+
+			if (errorStatus === 429) {
+				setStatus("blocked");
+			} else {
+				setStatus("failed");
+			}
+
 			setResponse(undefined);
-			setStatus("failed");
 		}
 	};
 

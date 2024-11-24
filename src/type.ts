@@ -116,6 +116,6 @@ export interface Message {
 	text: string;
 }
 
-export type FetchStatus = "successed" | "failed" | "yet" | "loading";
+export type FetchStatus = "successed" | "failed" | "yet" | "loading" | "blocked";
 export type AllergenStatusValue = "unkown" | "contain" | "not contained" | "removable";
 export type AllergenItemStatus = "unkown" | "normal" | "check" | "removable" | "contain";

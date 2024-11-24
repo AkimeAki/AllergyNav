@@ -33,7 +33,6 @@ export default async function ({ children, params }: Props): Promise<JSX.Element
 				className={css`
 					position: relative;
 					width: 100%;
-					overflow-x: hidden;
 				`}
 			>
 				<div
