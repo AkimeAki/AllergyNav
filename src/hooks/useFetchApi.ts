@@ -3,7 +3,7 @@ import { getStatus } from "@/libs/get-status";
 import type { FetchStatus } from "@/type";
 import { useState } from "react";
 
-export default function <T>(initStatus: FetchStatus) {
+export default function <T>(initStatus: FetchStatus = "yet") {
 	const [responseStatus, setResponseStatus] = useState<number | undefined>(undefined);
 	const [response, setResponse] = useState<NonNullable<T> | undefined>(undefined);
 	const [status, setStatus] = useState<FetchStatus>(initStatus);
