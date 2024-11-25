@@ -8,6 +8,7 @@ export default function ({ search }: Props): JSX.Element {
 	return (
 		<>
 			<iframe
+				title="Googleマップ"
 				src={`https://maps.google.co.jp/maps?q=${encodeURIComponent(search)}&output=embed&t=m&z=17`}
 				className={css`
 					position: relative;

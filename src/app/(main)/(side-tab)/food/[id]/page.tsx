@@ -1,5 +1,5 @@
 import { css } from "@kuma-ui/core";
-import GoogleMap from "@/components/molecules/GoogleMap";
+import GoogleMap from "@/components/atoms/GoogleMap";
 import { formatText } from "@/libs/format-text";
 import EditStoreButton from "@/components/organisms/EditStoreButton";
 import { getStore } from "@/libs/server-fetch";
