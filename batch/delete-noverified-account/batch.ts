@@ -8,21 +8,48 @@ sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
 void (async () => {
 	try {
-		const result = await prisma.user.updateMany({
-			data: {
-				verified: false,
-				deleted: true,
-				email: crypto.randomUUID()
+		const noVerifiedOver7DaysUsers = await prisma.user.findMany({
+			select: {
+				id: true,
+				email: true
 			},
 			where: {
 				created_at: {
 					lt: sevenDaysAgo
 				},
-				deleted: false
+				deleted: false,
+				verified: false
 			}
 		});
 
-		console.log(`delete acount: ${result.count}`);
+		for (const user of noVerifiedOver7DaysUsers) {
+			const randam = user.email + "__noVerified__" + crypto.randomUUID();
+
+			await prisma.user.updateMany({
+				data: {
+					verified: false,
+					deleted: true,
+					email: randam
+				},
+				where: {
+					id: user.id
+				}
+			});
+
+			await prisma.userRecoveryCode.deleteMany({
+				where: {
+					email: user.email
+				}
+			});
+
+			await prisma.userVerifyCode.deleteMany({
+				where: {
+					user_id: user.id
+				}
+			});
+		}
+
+		console.log(`delete acount: ${noVerifiedOver7DaysUsers.length}`);
 	} catch (e) {
 		console.error(e);
 	}
