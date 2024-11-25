@@ -18,16 +18,13 @@ export default function ({ description = defaultDescription, jsonld = [] }: Prop
 						alternateName: siteTitle,
 						description,
 						url: siteUrl,
-						publisher: {
-							"@type": "Organization",
-							name: siteTitle,
-							url: siteUrl,
-							logo: {
-								"@type": "ImageObject",
-								url: `${siteUrl}/icon512.png`,
-								width: 512,
-								height: 512
-							}
+						potentialAction: {
+							"@type": "SearchAction",
+							target: {
+								"@type": "EntryPoint",
+								urlTemplate: `${siteUrl}/store?keywords={search_string}`
+							},
+							"query-input": "required name=search_string"
 						},
 						image: {
 							"@type": "ImageObject",
