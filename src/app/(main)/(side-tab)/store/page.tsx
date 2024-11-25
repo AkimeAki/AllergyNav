@@ -28,14 +28,18 @@ export default function (): JSX.Element {
 							{
 								"@type": "ListItem",
 								position: 1,
-								name: siteTitle,
-								item: siteUrl
+								item: {
+									"@id": siteUrl,
+									name: siteTitle
+								}
 							},
 							{
 								"@type": "ListItem",
 								position: 2,
-								name: "お店一覧",
-								item: `${siteUrl}/store`
+								item: {
+									"@id": `${siteUrl}/store`,
+									name: "お店一覧"
+								}
 							}
 						]
 					}

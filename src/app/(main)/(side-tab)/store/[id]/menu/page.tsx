@@ -36,26 +36,48 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 							{
 								"@type": "ListItem",
 								position: 1,
-								name: siteTitle,
-								item: siteUrl
+								item: {
+									"@id": siteUrl,
+									name: siteTitle
+								}
 							},
 							{
 								"@type": "ListItem",
 								position: 2,
-								name: "お店",
-								item: `${siteUrl}/store`
+								item: {
+									"@id": `${siteUrl}/store`,
+									name: "お店"
+								}
 							},
 							{
 								"@type": "ListItem",
 								position: 3,
-								name: store.name,
-								item: `${siteUrl}/store/${store.id}`
+								item: {
+									"@id": `${siteUrl}/store/${store.id}`,
+									name: store.name
+								}
 							},
 							{
 								"@type": "ListItem",
 								position: 4,
-								name: "アレルギー成分表",
-								item: `${siteUrl}/store/${store.id}/menu`
+								item: {
+									"@id": `${siteUrl}/store/${store.id}/menu`,
+									name: "アレルギー成分表"
+								}
+							}
+						]
+					},
+					{
+						"@context": "https://schema.org",
+						"@type": "FAQPage",
+						mainEntity: [
+							{
+								"@type": "Question",
+								name: "記載されているアレルギー成分表は公式情報ですか？",
+								acceptedAnswer: {
+									"@type": "Answer",
+									text: "<p>公式情報ではありません。匿名のユーザーが情報によって集められたデータです。</p>"
+								}
 							}
 						]
 					}
