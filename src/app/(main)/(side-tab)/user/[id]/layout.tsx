@@ -33,7 +33,8 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 
 	return seoHead({
 		title,
-		canonicalPath: `/user/${userId}`
+		canonicalPath: `/user/${userId}`,
+		noIndex: true
 	});
 };
 

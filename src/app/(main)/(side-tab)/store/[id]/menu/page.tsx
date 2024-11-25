@@ -1,3 +1,4 @@
+import JsonLD from "@/components/atoms/JsonLD";
 import MenuList from "@/components/templates/MenuList";
 import { seoHead } from "@/libs/seo";
 import { getStore } from "@/libs/server-fetch";
@@ -22,5 +23,10 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 export default async function ({ params }: Props): Promise<JSX.Element> {
 	const store = await getStore(params.id);
 
-	return <MenuList storeId={store.id} />;
+	return (
+		<>
+			<JsonLD />
+			<MenuList storeId={store.id} />
+		</>
+	);
 }

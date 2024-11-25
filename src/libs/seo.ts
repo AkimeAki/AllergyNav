@@ -1,3 +1,4 @@
+import { defaultDescription, siteTitle } from "@/definition";
 import type { Metadata } from "next";
 
 interface Props {
@@ -5,20 +6,22 @@ interface Props {
 	description?: string;
 	isFullTitle?: boolean;
 	canonicalPath: string;
+	noIndex?: boolean;
 }
 
 export const seoHead = ({
 	title,
 	isFullTitle = false,
-	description = "『アレルギーナビ』は、アレルギーの方々が少しでも多く、食べに行ける飲食店が見つけられるように作ったサービスです。どこかの飲食店のアレルギー情報を得た方、持っている方はアレルギーナビに情報を追加してくれると助かります。",
-	canonicalPath
+	description = defaultDescription,
+	canonicalPath,
+	noIndex = false
 }: Props): Metadata => {
-	let metaTitle = "アレルギーナビ｜アレルギーの方向けの飲食店情報サービス";
+	let metaTitle = `${siteTitle}｜アレルギーの方向けの飲食店情報サービス`;
 	if (title !== undefined) {
 		if (isFullTitle) {
 			metaTitle = title;
 		} else {
-			metaTitle = `${title}｜アレルギーナビ`;
+			metaTitle = `${title}｜${siteTitle}`;
 		}
 	}
 
@@ -32,9 +35,9 @@ export const seoHead = ({
 		openGraph: {
 			type: "website",
 			url: process.env.SITEURL,
-			title: title ?? "アレルギーナビ",
+			title: title ?? siteTitle,
 			description,
-			siteName: "アレルギーナビ",
+			siteName: siteTitle,
 			images: {
 				url: `${process.env.SITEURL}/favicon.png`
 			}
@@ -49,6 +52,9 @@ export const seoHead = ({
 		manifest: `${process.env.SITEURL}/manifest.json`,
 		alternates: {
 			canonical: `${process.env.SITEURL}${canonicalPath}`
+		},
+		robots: {
+			index: !noIndex // noindexの設定
 		}
 	};
 };

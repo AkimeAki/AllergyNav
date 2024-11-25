@@ -7,7 +7,7 @@ import { nextAuthOptions } from "@/libs/auth";
 import Script from "next/script";
 import { seoHead } from "@/libs/seo";
 
-export const metadata: Metadata = seoHead({ title: "メール認証", canonicalPath: "/verified" });
+export const metadata: Metadata = seoHead({ title: "メール認証", canonicalPath: "/verified", noIndex: true });
 export const dynamic = "force-dynamic";
 
 interface Props {

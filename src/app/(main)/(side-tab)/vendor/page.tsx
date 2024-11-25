@@ -1,3 +1,4 @@
+import JsonLD from "@/components/atoms/JsonLD";
 import MainTitle from "@/components/atoms/MainTitle";
 import VendorListSidebar from "@/components/organisms/VendorListSidebar";
 import VendorList from "@/components/templates/VendorList";
@@ -16,6 +17,7 @@ export const metadata: Metadata = seoHead({
 export default function (): JSX.Element {
 	return (
 		<>
+			<JsonLD />
 			<Suspense>
 				<VendorListSidebar />
 			</Suspense>

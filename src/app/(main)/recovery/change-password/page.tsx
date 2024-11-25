@@ -5,7 +5,7 @@ import { safeString } from "@/libs/safe-type";
 import { seoHead } from "@/libs/seo";
 import ChangePasswordForm from "@/components/templates/ChangePasswordForm";
 
-export const metadata: Metadata = seoHead({ title: "メール認証", canonicalPath: "/verified" });
+export const metadata: Metadata = seoHead({ title: "メール認証", canonicalPath: "/verified", noIndex: true });
 export const dynamic = "force-dynamic";
 
 interface Props {

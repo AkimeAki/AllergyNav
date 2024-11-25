@@ -1,3 +1,4 @@
+import JsonLD from "@/components/atoms/JsonLD";
 import LoginForm from "@/components/templates/LoginForm";
 import { seoHead } from "@/libs/seo";
 import { css } from "@kuma-ui/core";
@@ -16,16 +17,19 @@ export default async function (): Promise<JSX.Element> {
 	}
 
 	return (
-		<div
-			className={css`
-				width: 100%;
-				max-width: 500px;
-				margin: 0 auto;
-			`}
-		>
-			<div>
-				<LoginForm />
+		<>
+			<JsonLD />
+			<div
+				className={css`
+					width: 100%;
+					max-width: 500px;
+					margin: 0 auto;
+				`}
+			>
+				<div>
+					<LoginForm />
+				</div>
 			</div>
-		</div>
+		</>
 	);
 }

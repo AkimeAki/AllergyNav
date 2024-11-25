@@ -5,6 +5,7 @@ import StoreComment from "@/components/templates/StoreComment";
 import type { Metadata } from "next";
 import { getStore } from "@/libs/server-fetch";
 import { seoHead } from "@/libs/seo";
+import JsonLD from "@/components/atoms/JsonLD";
 
 interface Props {
 	params: {
@@ -30,29 +31,32 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 	}
 
 	return (
-		<div
-			className={css`
-				display: flex;
-				flex-direction: column;
-				gap: 30px;
-			`}
-		>
-			<div>
-				<p>
-					アレルギーの方への対応や、アレルギー除去対応について等、
-					<span
-						className={css`
-							color: var(--color-red);
-							font-weight: bold;
-							text-decoration: underline;
-						`}
-					>
-						アレルギーに関することのみ記載
-					</span>
-					をお願いします。
-				</p>
+		<>
+			<JsonLD />
+			<div
+				className={css`
+					display: flex;
+					flex-direction: column;
+					gap: 30px;
+				`}
+			>
+				<div>
+					<p>
+						アレルギーの方への対応や、アレルギー除去対応について等、
+						<span
+							className={css`
+								color: var(--color-red);
+								font-weight: bold;
+								text-decoration: underline;
+							`}
+						>
+							アレルギーに関することのみ記載
+						</span>
+						をお願いします。
+					</p>
+				</div>
+				<StoreComment storeId={id} />
 			</div>
-			<StoreComment storeId={id} />
-		</div>
+		</>
 	);
 }

@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import { getStore } from "@/libs/server-fetch";
 import { seoHead } from "@/libs/seo";
 import AlertBox from "@/components/atoms/AlertBox";
+import JsonLD from "@/components/atoms/JsonLD";
 
 interface Props {
 	params: {
@@ -31,35 +32,38 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 	}
 
 	return (
-		<div
-			className={css`
-				display: flex;
-				flex-direction: column;
-				gap: 30px;
-			`}
-		>
-			<div>
-				<AlertBox>
-					<p
-						className={css`
-							text-align: center;
-						`}
-					>
-						こちらのコメント欄は、アレルギーの方への対応やアレルギー除去対応について等、
-						<span
+		<>
+			<JsonLD />
+			<div
+				className={css`
+					display: flex;
+					flex-direction: column;
+					gap: 30px;
+				`}
+			>
+				<div>
+					<AlertBox>
+						<p
 							className={css`
-								color: var(--color-red);
-								font-weight: bold;
-								text-decoration: underline;
+								text-align: center;
 							`}
 						>
-							アレルギーに関することのみ記載
-						</span>
-						をお願いします。
-					</p>
-				</AlertBox>
+							こちらのコメント欄は、アレルギーの方への対応やアレルギー除去対応について等、
+							<span
+								className={css`
+									color: var(--color-red);
+									font-weight: bold;
+									text-decoration: underline;
+								`}
+							>
+								アレルギーに関することのみ記載
+							</span>
+							をお願いします。
+						</p>
+					</AlertBox>
+				</div>
+				<StoreComment storeId={id} />
 			</div>
-			<StoreComment storeId={id} />
-		</div>
+		</>
 	);
 }

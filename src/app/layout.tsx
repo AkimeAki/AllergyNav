@@ -46,17 +46,6 @@ export default function ({ children }: Props): JSX.Element {
 						crossOrigin="anonymous"
 					/>
 				)}
-				<script
-					type="application/ld+json"
-					dangerouslySetInnerHTML={{
-						__html: JSON.stringify({
-							"@context": "https://schema.org",
-							"@type": "WebSite",
-							name: "アレルギーナビ",
-							url: "https://allergy-navi.com"
-						})
-					}}
-				/>
 			</head>
 			<body>
 				{process.env.NODE_ENV === "production" && process.env.MAINTENANCE === "false" && (

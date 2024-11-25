@@ -4,6 +4,7 @@ import StorePictureList from "@/components/templates/StorePictureList";
 import type { Metadata } from "next";
 import { getStore } from "@/libs/server-fetch";
 import { seoHead } from "@/libs/seo";
+import JsonLD from "@/components/atoms/JsonLD";
 
 interface Props {
 	params: {
@@ -28,5 +29,10 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 		notFound();
 	}
 
-	return <StorePictureList storeId={id} />;
+	return (
+		<>
+			<JsonLD />
+			<StorePictureList storeId={id} />
+		</>
+	);
 }

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { safeString } from "@/libs/safe-type";
 import { css } from "@kuma-ui/core";
+import JsonLD from "@/components/atoms/JsonLD";
 
 interface Props {
 	params: {

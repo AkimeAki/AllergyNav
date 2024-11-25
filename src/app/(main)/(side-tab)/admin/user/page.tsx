@@ -5,7 +5,8 @@ import { notFound } from "next/navigation";
 
 export const metadata: Metadata = seoHead({
 	title: "ユーザー管理",
-	canonicalPath: "/admin/user"
+	canonicalPath: "/admin/user",
+	noIndex: true
 });
 
 export default async function (): Promise<JSX.Element> {

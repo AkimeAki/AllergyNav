@@ -1,7 +1,7 @@
+import { siteUrl } from "@/definition";
 import { getStores } from "@/libs/server-fetch";
 import type { MetadataRoute } from "next";
 
-const siteUrl = "https://allergy-navi.com";
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
