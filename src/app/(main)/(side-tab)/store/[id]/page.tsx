@@ -8,6 +8,7 @@ import type { Metadata } from "next";
 import { seoHead } from "@/libs/seo";
 import StoreDetailIconLink from "@/components/molecules/StoreDetailIconLink";
 import JsonLD from "@/components/atoms/JsonLD";
+import { siteTitle, siteUrl } from "@/definition";
 
 interface Props {
 	params: {
@@ -64,7 +65,35 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 
 	return (
 		<>
-			<JsonLD />
+			<JsonLD
+				jsonld={[
+					{
+						"@context": "http://schema.org",
+						"@type": "BreadcrumbList",
+						name: "パンくずリスト",
+						itemListElement: [
+							{
+								"@type": "ListItem",
+								position: 1,
+								name: siteTitle,
+								item: siteUrl
+							},
+							{
+								"@type": "ListItem",
+								position: 2,
+								name: "お店",
+								item: `${siteUrl}/store`
+							},
+							{
+								"@type": "ListItem",
+								position: 3,
+								name: storeDetail.name,
+								item: `${siteUrl}/store/${storeDetail.id}`
+							}
+						]
+					}
+				]}
+			/>
 			<div
 				className={css`
 					display: flex;

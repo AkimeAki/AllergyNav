@@ -1,5 +1,5 @@
 export const siteTitle = "アレルギーナビ";
-export const siteUrl = "https://allergy-navi.com";
+export const siteUrl = process.env.NODE_ENV === "production" ? "https://allergy-navi.com" : "http://localhost:10111";
 export const defaultDescription =
 	"『アレルギーナビ』は、アレルギーの方々が少しでも多く、食べに行ける飲食店が見つけられるように作ったサービスです。どこかの飲食店のアレルギー情報を得た方、持っている方はアレルギーナビに情報を追加してくれると助かります。";
 

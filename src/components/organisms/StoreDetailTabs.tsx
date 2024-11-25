@@ -21,7 +21,7 @@ export default function ({ storeId }: Props): JSX.Element {
 				active={pathname === `/store/${storeId}/menu`}
 				icon="menu_book"
 			>
-				メニュー
+				アレルギー成分表
 			</SideTabLink>
 			<SideTabLink
 				href={`/store/${storeId}/picture`}

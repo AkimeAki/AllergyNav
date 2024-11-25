@@ -3,40 +3,45 @@ import Script from "next/script";
 
 interface Props {
 	description?: string;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	jsonld?: any[];
 }
 
-export default function ({ description = defaultDescription }: Props) {
-	const jsonld = [
-		{
-			"@context": "https://schema.org",
-			"@type": "WebSite",
-			name: siteTitle,
-			alternateName: siteTitle,
-			description,
-			url: siteUrl,
-			publisher: {
-				"@type": "Organization",
-				name: siteTitle,
-				url: siteUrl,
-				logo: {
-					"@type": "ImageObject",
-					url: `${siteUrl}/icon512.png`,
-					width: 512,
-					height: 512
-				}
-			},
-			image: {
-				"@type": "ImageObject",
-				url: `${siteUrl}/icon512.png`,
-				width: 512,
-				height: 512
-			}
-		}
-	];
+export default function ({ description = defaultDescription, jsonld = [] }: Props) {
+	const jsonldList =
+		jsonld.length === 0
+			? [
+					{
+						"@context": "https://schema.org",
+						"@type": "WebSite",
+						name: siteTitle,
+						alternateName: siteTitle,
+						description,
+						url: siteUrl,
+						publisher: {
+							"@type": "Organization",
+							name: siteTitle,
+							url: siteUrl,
+							logo: {
+								"@type": "ImageObject",
+								url: `${siteUrl}/icon512.png`,
+								width: 512,
+								height: 512
+							}
+						},
+						image: {
+							"@type": "ImageObject",
+							url: `${siteUrl}/icon512.png`,
+							width: 512,
+							height: 512
+						}
+					}
+				]
+			: jsonld;
 
 	return (
 		<>
-			{jsonld.map((json, index) => (
+			{jsonldList.map((json, index) => (
 				<Script
 					id={`jsonld-${index}`}
 					key={index}

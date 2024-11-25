@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { getStore } from "@/libs/server-fetch";
 import { seoHead } from "@/libs/seo";
 import JsonLD from "@/components/atoms/JsonLD";
+import { siteTitle, siteUrl } from "@/definition";
 
 interface Props {
 	params: {
@@ -24,6 +25,7 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 
 export default async function ({ params }: Props): Promise<JSX.Element> {
 	const id = safeString(params.id);
+	const storeDetail = await getStore(params.id);
 
 	if (id === null) {
 		notFound();
@@ -31,7 +33,41 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 
 	return (
 		<>
-			<JsonLD />
+			<JsonLD
+				jsonld={[
+					{
+						"@context": "http://schema.org",
+						"@type": "BreadcrumbList",
+						name: "パンくずリスト",
+						itemListElement: [
+							{
+								"@type": "ListItem",
+								position: 1,
+								name: siteTitle,
+								item: siteUrl
+							},
+							{
+								"@type": "ListItem",
+								position: 2,
+								name: "お店",
+								item: `${siteUrl}/store`
+							},
+							{
+								"@type": "ListItem",
+								position: 3,
+								name: storeDetail.name,
+								item: `${siteUrl}/store/${storeDetail.id}`
+							},
+							{
+								"@type": "ListItem",
+								position: 4,
+								name: "写真",
+								item: `${siteUrl}/store/${storeDetail.id}/picture`
+							}
+						]
+					}
+				]}
+			/>
 			<StorePictureList storeId={id} />
 		</>
 	);

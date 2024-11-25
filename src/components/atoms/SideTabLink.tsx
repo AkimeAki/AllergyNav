@@ -47,7 +47,7 @@ export default function ({ href, onClick, children, active = false, icon = "pend
 				border-bottom-style: solid;
 
 				span {
-					font-size: 13px;
+					font-size: 12px;
 				}
 
 				&:hover {
@@ -73,7 +73,7 @@ export default function ({ href, onClick, children, active = false, icon = "pend
 					}
 
 					@media (max-width: 880px) {
-						background-color: var(--color-secondary);
+						background-color: transparent;
 						border-bottom-color: var(--color-theme);
 						color: var(--color-primary);
 
@@ -90,7 +90,7 @@ export default function ({ href, onClick, children, active = false, icon = "pend
 
 					@media (max-width: 880px) {
 						font-weight: normal;
-						background-color: var(--color-secondary);
+						background-color: transparent;
 						border-bottom-color: transparent;
 					}
 				`

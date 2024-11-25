@@ -2,6 +2,7 @@ import JsonLD from "@/components/atoms/JsonLD";
 import MainTitle from "@/components/atoms/MainTitle";
 import StoreListSidebar from "@/components/organisms/StoreListSidebar";
 import StoreList from "@/components/templates/StoreList";
+import { siteTitle, siteUrl } from "@/definition";
 import { seoHead } from "@/libs/seo";
 import { css } from "@kuma-ui/core";
 import type { Metadata } from "next";
@@ -17,7 +18,29 @@ export const metadata: Metadata = seoHead({
 export default function (): JSX.Element {
 	return (
 		<>
-			<JsonLD />
+			<JsonLD
+				jsonld={[
+					{
+						"@context": "http://schema.org",
+						"@type": "BreadcrumbList",
+						name: "パンくずリスト",
+						itemListElement: [
+							{
+								"@type": "ListItem",
+								position: 1,
+								name: siteTitle,
+								item: siteUrl
+							},
+							{
+								"@type": "ListItem",
+								position: 2,
+								name: "お店一覧",
+								item: `${siteUrl}/store`
+							}
+						]
+					}
+				]}
+			/>
 			<Suspense>
 				<StoreListSidebar />
 			</Suspense>
