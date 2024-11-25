@@ -2,7 +2,7 @@ import JsonLD from "@/components/atoms/JsonLD";
 import MenuList from "@/components/templates/MenuList";
 import { siteTitle, siteUrl } from "@/definition";
 import { seoHead } from "@/libs/seo";
-import { getStore } from "@/libs/server-fetch";
+import { getMenus, getStore } from "@/libs/server-fetch";
 import type { Metadata } from "next";
 
 interface Props {
@@ -23,6 +23,7 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 
 export default async function ({ params }: Props): Promise<JSX.Element> {
 	const store = await getStore(params.id);
+	const menus = await getMenus(params.id);
 
 	return (
 		<>
@@ -83,7 +84,7 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 					}
 				]}
 			/>
-			<MenuList storeId={store.id} />
+			<MenuList storeId={store.id} menuList={menus} />
 		</>
 	);
 }

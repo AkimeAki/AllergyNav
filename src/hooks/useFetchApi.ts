@@ -3,10 +3,10 @@ import { getStatus } from "@/libs/get-status";
 import type { FetchStatus } from "@/type";
 import { useState } from "react";
 
-export default function <T>() {
+export default function <T>(initStatus: FetchStatus) {
 	const [responseStatus, setResponseStatus] = useState<number | undefined>(undefined);
 	const [response, setResponse] = useState<NonNullable<T> | undefined>(undefined);
-	const [status, setStatus] = useState<FetchStatus>("yet");
+	const [status, setStatus] = useState<FetchStatus>(initStatus);
 
 	const fetchData = async (
 		type:
@@ -229,7 +229,6 @@ export default function <T>() {
 			});
 
 			setResponseStatus(result.status);
-			console.log(result.status);
 
 			if (result.status === 422) {
 				throw new ValidationError();

@@ -8,13 +8,13 @@ interface ReturnType {
 	getMenusResponseStatus: number | undefined;
 }
 
-export default function (): ReturnType {
+export default function (initStatus: FetchStatus = "yet"): ReturnType {
 	const {
 		fetchData,
 		response: getMenusResponse,
 		status: getMenusStatus,
 		responseStatus: getMenusResponseStatus
-	} = useFetchApi<GetMenusResponse>();
+	} = useFetchApi<GetMenusResponse>(initStatus);
 
 	const getMenus = (keywords: string, allergens: string, storeId: string): void => {
 		void fetchData(

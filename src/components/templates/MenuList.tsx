@@ -1,7 +1,6 @@
 "use client";
 
 import { css } from "@kuma-ui/core";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Button from "@/components/atoms/Button";
@@ -24,16 +23,17 @@ import NotVerifiedModal from "@/components/molecules/NotVerifiedModal";
 import NotLoginedModal from "@/components/molecules/NotLoginedModal";
 import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
 import useGetAllergens from "@/hooks/fetch-api/useGetAllergens";
-import type { AllergenItemStatus } from "@/type";
+import type { AllergenItemStatus, GetMenusResponse } from "@/type";
 import AlertBox from "@/components/atoms/AlertBox";
 import useGetPictures from "@/hooks/fetch-api/useGetPictures";
 import LoadingEffect from "@/components/atoms/LoadingEffect";
 
 interface Props {
 	storeId: string;
+	menuList: NonNullable<GetMenusResponse>;
 }
 
-export default function ({ storeId }: Props): JSX.Element {
+export default function ({ storeId, menuList }: Props): JSX.Element {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
 	const [openEditModalId, setOpenEditModalId] = useState<string>();
 	const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
@@ -41,31 +41,26 @@ export default function ({ storeId }: Props): JSX.Element {
 	const [isOpenHistoryModal, setIsOpenHistoryModal] = useState<boolean>(false);
 	const [isOpenTouchMenuModal, setIsOpenTouchMenuModal] = useState<boolean>(false);
 	const [openTouchMenuModalId, setOpenTouchMenuModalId] = useState<string>();
-	const searchParams = useSearchParams();
 	const [menuHoverId, setMenuHoverId] = useState<string>();
 	const { userStatus, userId, userVerified } = useGetUserData();
-	const { getMenus, getMenusResponse, getMenusStatus } = useGetMenus();
+	const { getMenus, getMenusResponse, getMenusStatus } = useGetMenus("successed");
 	const { addMessage } = useFloatMessage();
 	const { isTouch } = useIsTouchDevice();
 	const { getAllergensResponse, getAllergens } = useGetAllergens();
 	const { getPicturesResponse, getPicturesStatus, getPictures } = useGetPictures();
-
-	const params = {
-		allergens: searchParams.get("allergens") ?? "",
-		keywords: searchParams.get("keywords") ?? ""
-	};
+	const [menus, setMenus] = useState<NonNullable<GetMenusResponse>>(menuList);
 
 	useEffect(() => {
 		getAllergens();
 	}, []);
 
 	useEffect(() => {
-		getMenus(params.keywords, params.allergens, storeId);
-	}, [searchParams]);
-
-	useEffect(() => {
-		if (getMenusStatus === "successed" && getMenusResponse !== undefined) {
+		if (getMenusStatus === "successed") {
 			getPictures(storeId);
+
+			if (getMenusResponse !== undefined) {
+				setMenus(getMenusResponse);
+			}
 		}
 	}, [getMenusStatus]);
 
@@ -78,7 +73,7 @@ export default function ({ storeId }: Props): JSX.Element {
 				callback={() => {
 					setIsOpenAddModal(false);
 					addMessage("メニューを追加しました！", "success");
-					getMenus(params.keywords, params.allergens, storeId);
+					getMenus("", "", storeId);
 				}}
 			/>
 			<NotVerifiedModal
@@ -95,7 +90,7 @@ export default function ({ storeId }: Props): JSX.Element {
 				setIsOpen={setIsOpenEditModal}
 				userId={userId ?? ""}
 			/>
-			{getMenusResponse?.map((item) => {
+			{menus.map((item) => {
 				return (
 					<EditMenuModal
 						key={item.id}
@@ -105,12 +100,12 @@ export default function ({ storeId }: Props): JSX.Element {
 						callback={() => {
 							setIsOpenEditModal(false);
 							addMessage("メニューを編集しました！", "success");
-							getMenus(params.allergens, params.keywords, storeId);
+							getMenus("", "", storeId);
 						}}
 					/>
 				);
 			})}
-			{getMenusResponse?.map((item) => {
+			{menus.map((item) => {
 				return (
 					<MenuHistoryModal
 						key={item.id}
@@ -149,7 +144,7 @@ export default function ({ storeId }: Props): JSX.Element {
 					)}
 					{getMenusStatus === "successed" && (
 						<>
-							{getMenusResponse?.length === 0 && (
+							{menus.length === 0 && (
 								<p
 									className={css`
 										text-align: center;
@@ -158,7 +153,7 @@ export default function ({ storeId }: Props): JSX.Element {
 									メニューが無いようです😿
 								</p>
 							)}
-							{getMenusResponse?.length !== 0 && (
+							{menus.length !== 0 && (
 								<AlertBox>
 									<p
 										className={css`
@@ -191,7 +186,7 @@ export default function ({ storeId }: Props): JSX.Element {
 									</p>
 								</AlertBox>
 							)}
-							{[...(getMenusResponse ?? [])].reverse().map((menu) => (
+							{[...menus].reverse().map((menu) => (
 								<div
 									key={menu.id}
 									className={css`
