@@ -11,7 +11,7 @@ const isTouchDevice = (): boolean => {
 };
 
 export default function () {
-	const [isTouch, setIsTouch] = useState<boolean>(isTouchDevice());
+	const [isTouch, setIsTouch] = useState<boolean>(false);
 
 	const touched = (): void => {
 		setIsTouch(true);
@@ -28,6 +28,8 @@ export default function () {
 	};
 
 	useEffect(() => {
+		setIsTouch(isTouchDevice());
+
 		window.addEventListener("touchstart", touched, false);
 		window.addEventListener("pointermove", move, false);
 

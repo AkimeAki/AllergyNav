@@ -62,7 +62,7 @@ export default function ({ storeId, menuList }: Props): JSX.Element {
 				setMenus(getMenusResponse);
 			}
 		}
-	}, [getMenusStatus]);
+	}, [getMenusStatus, getMenusResponse]);
 
 	return (
 		<>
