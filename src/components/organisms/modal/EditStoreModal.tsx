@@ -98,6 +98,23 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 			getStore(storeId);
 		} else {
 			editStoreReset();
+
+			setStoreName("");
+			setOldStoreName("");
+			setStoreAddress("");
+			setOldStoreAddress("");
+			setStoreDescription("");
+			setOldStoreDescription("");
+			setStoreUrl("");
+			setOldStoreUrl("");
+			setAllergyMenuUrl("");
+			setOldAllergyMenuUrl("");
+			setTabelogUrl("");
+			setOldTabelogUrl("");
+			setGurunaviUrl("");
+			setOldGurunaviUrl("");
+			setHotpepperUrl("");
+			setOldHotpepperUrl("");
 		}
 	}, [isOpen]);
 

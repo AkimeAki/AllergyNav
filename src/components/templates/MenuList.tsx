@@ -46,7 +46,7 @@ export default function ({ storeId, menuList }: Props): JSX.Element {
 	const { getMenus, getMenusResponse, getMenusStatus } = useGetMenus("successed");
 	const { addMessage } = useFloatMessage();
 	const { isTouch } = useIsTouchDevice();
-	const { getAllergensResponse, getAllergens } = useGetAllergens();
+	const { getAllergensStatus, getAllergensResponse, getAllergens } = useGetAllergens();
 	const { getPicturesResponse, getPicturesStatus, getPictures } = useGetPictures();
 	const [menus, setMenus] = useState<NonNullable<GetMenusResponse>>(menuList);
 
@@ -457,6 +457,21 @@ export default function ({ storeId, menuList }: Props): JSX.Element {
 														`}
 													>
 														<Label>含まれるアレルゲン</Label>
+														{(getAllergensStatus === "loading" ||
+															getAllergensStatus === "yet") && <LoadingCircleCenter />}
+														{getAllergensStatus === "blocked" && (
+															<div
+																className={css`
+																	p {
+																		text-align: center;
+																		line-height: 1;
+																	}
+																`}
+															>
+																<p>API制限中</p>
+																<p>時間を置いてからアクセスしてください。</p>
+															</div>
+														)}
 														<div
 															className={css`
 																display: flex;
@@ -491,53 +506,59 @@ export default function ({ storeId, menuList }: Props): JSX.Element {
 															})}
 														</div>
 													</div>
-													<div
-														className={css`
-															display: flex;
-															gap: 5px;
-															padding: 5px 4px;
-															align-items: center;
-															flex-wrap: wrap;
-
-															* {
-																font-size: 13px;
-															}
-														`}
-													>
-														<span>含まれないアレルゲン：</span>
+													{getAllergensStatus === "successed" && (
 														<div
 															className={css`
 																display: flex;
+																gap: 5px;
+																padding: 5px 4px;
+																align-items: center;
 																flex-wrap: wrap;
-																gap: 6px;
+
+																* {
+																	font-size: 13px;
+																}
 															`}
 														>
-															{(getAllergensResponse ?? []).filter((allergen) => {
-																return menu.allergens[allergen.id] === "not contained";
-															}).length === 0 && <span>ありません。</span>}
-															{getAllergensResponse?.map((allergen) => {
-																if (menu.allergens[allergen.id] === "not contained") {
+															<span>含まれないアレルゲン：</span>
+															<div
+																className={css`
+																	display: flex;
+																	flex-wrap: wrap;
+																	gap: 6px;
+																`}
+															>
+																{(getAllergensResponse ?? []).filter((allergen) => {
 																	return (
-																		<span
-																			key={allergen.id}
-																			className={css`
-																				&:last-child {
-																					span {
-																						display: none;
-																					}
-																				}
-																			`}
-																		>
-																			{allergen.name}
-																			<span>,</span>
-																		</span>
+																		menu.allergens[allergen.id] === "not contained"
 																	);
-																}
+																}).length === 0 && <span>ありません。</span>}
+																{getAllergensResponse?.map((allergen) => {
+																	if (
+																		menu.allergens[allergen.id] === "not contained"
+																	) {
+																		return (
+																			<span
+																				key={allergen.id}
+																				className={css`
+																					&:last-child {
+																						span {
+																							display: none;
+																						}
+																					}
+																				`}
+																			>
+																				{allergen.name}
+																				<span>,</span>
+																			</span>
+																		);
+																	}
 
-																return "";
-															})}
+																	return "";
+																})}
+															</div>
 														</div>
-													</div>
+													)}
 												</div>
 											)}
 										</div>
