@@ -19,7 +19,7 @@ export default function ({ children }: Props): JSX.Element {
 	return (
 		<html lang="ja" prefix="og: https://ogp.me/ns#">
 			<head>
-				<meta name="theme-color" content="#fc9e82" />
+				<meta name="theme-color" content="#f76262" />
 				<link rel="preconnect" href="https://fonts.googleapis.com" />
 				<link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
 				<link
