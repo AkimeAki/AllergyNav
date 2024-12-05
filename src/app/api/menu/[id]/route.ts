@@ -1,5 +1,5 @@
 import { ForbiddenError, TooManyRequestError, ValidationError } from "@/definition";
-import type { AllergenStatusValue, EditMenuResponse, GetMenuResponse } from "@/type";
+import type { AllergenStatusValue, DeleteMenuResponse, EditMenuResponse, GetMenuResponse } from "@/type";
 import { safeString } from "@/libs/safe-type";
 import { isEmptyString } from "@/libs/check-string";
 import { prisma } from "@/libs/prisma";
@@ -198,6 +198,77 @@ export const PUT = async (req: NextRequest, { params }: Data): Promise<Response>
 					}
 				});
 			}
+		});
+
+		status = 200;
+	} catch (e) {
+		data = null;
+		console.error(e);
+
+		status = getStatus(e);
+	}
+
+	return new Response(JSON.stringify(data), {
+		status
+	});
+};
+
+export const DELETE = async (req: NextRequest, { params }: Data): Promise<Response> => {
+	let status = 500;
+	let data: DeleteMenuResponse = null;
+
+	const session = await getServerSession(nextAuthOptions);
+	const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
+	try {
+		if (!(await accessCheck(req))) {
+			throw new TooManyRequestError();
+		}
+
+		if (session === null || token === null) {
+			throw new ForbiddenError();
+		}
+
+		const menuId = safeString(params.id);
+		const userId = safeString(session?.user?.id);
+
+		if (menuId === null) {
+			throw new ValidationError();
+		}
+
+		if (userId === null) {
+			throw new ForbiddenError();
+		}
+
+		if (!(await isVerifiedUser(userId))) {
+			throw new ForbiddenError();
+		}
+
+		await prisma.$transaction(async (prisma): Promise<void> => {
+			const menuDeleteResult = await prisma.menu.update({
+				data: {
+					deleted: true,
+					updated_user_id: userId
+				},
+				where: {
+					id: menuId
+				}
+			});
+
+			data = {
+				id: menuDeleteResult.id
+			};
+
+			await prisma.menuHistory.create({
+				data: {
+					name: menuDeleteResult.name,
+					store_id: menuDeleteResult.store_id,
+					menu_id: menuDeleteResult.id,
+					description: menuDeleteResult.description,
+					deleted: true,
+					updated_user_id: menuDeleteResult.updated_user_id
+				}
+			});
 		});
 
 		status = 200;

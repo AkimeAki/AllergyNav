@@ -67,6 +67,9 @@ export type GetMenuResponse = MenuResponse | null;
 export type GetMenusResponse = MenuResponse[] | null;
 export type AddMenuResponse = MenuResponse | null;
 export type EditMenuResponse = MenuResponse | null;
+export type DeleteMenuResponse = {
+	id: MenuResponse["id"];
+} | null;
 
 interface CommentResponse {
 	id: string;
