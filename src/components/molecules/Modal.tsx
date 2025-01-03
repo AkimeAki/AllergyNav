@@ -163,6 +163,16 @@ export default function ({
 									}
 								}
 
+								@keyframes modalFadeOut {
+									0% {
+										opacity: 1;
+									}
+
+									100% {
+										opacity: 0;
+									}
+								}
+
 								@keyframes modalSlideIn {
 									0% {
 										opacity: 1;
@@ -198,6 +208,8 @@ export default function ({
 							`,
 							!isOpen &&
 								css`
+									animation-name: modalFadeOut;
+
 									@media (max-width: 880px) {
 										animation-name: modalSlideOut;
 									}
