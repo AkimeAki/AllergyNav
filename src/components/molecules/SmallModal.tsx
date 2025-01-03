@@ -68,53 +68,70 @@ export default function ({ isOpen, setIsOpen, children, targetElement, title, mi
 	return (
 		<>
 			{isOpen && (
-				<div
-					style={{
-						top: `${top}px`,
-						left: `${left}px`,
-						minWidth: width === undefined ? `${minWidth}px` : `${width}px`,
-						maxWidth: width === undefined ? undefined : `${width}px`,
-						width: width === undefined ? undefined : `${width}px`
-					}}
-					className={css`
-						position: fixed;
-						display: flex;
-						flex-direction: column;
-						gap: 10px;
-						z-index: 9;
-						max-height: 300px;
-						height: 100%;
-						background-color: var(--color-secondary);
-						border-radius: 4px;
-						box-shadow: 0 0 4px -1px #a7a7a7;
-						border: 1px solid #a7a7a7;
-						overflow-y: auto;
-						padding: 10px;
-						opacity: 0;
-						animation-name: small-modal-show;
-						animation-iteration-count: 1;
-						animation-fill-mode: forwards;
-						animation-delay: 50ms;
-
-						@keyframes small-modal-show {
-							100% {
-								opacity: 1;
-							}
-						}
-					`}
-					ref={modalElement}
-				>
-					<h3
+				<>
+					<div
 						className={css`
-							font-size: 15px;
-							font-weight: bold;
-							user-select: none;
+							position: fixed;
+							top: 0;
+							left: 0;
+							width: 100%;
+							height: 100%;
+							z-index: 9;
+							display: none;
+
+							@media (max-width: 880px) {
+								display: block;
+							}
 						`}
+					/>
+					<div
+						style={{
+							top: `${top}px`,
+							left: `${left}px`,
+							minWidth: width === undefined ? `${minWidth}px` : `${width}px`,
+							maxWidth: width === undefined ? undefined : `${width}px`,
+							width: width === undefined ? undefined : `${width}px`
+						}}
+						className={css`
+							position: fixed;
+							display: flex;
+							flex-direction: column;
+							gap: 10px;
+							z-index: 9;
+							max-height: 300px;
+							height: 100%;
+							background-color: var(--color-secondary);
+							border-radius: 4px;
+							box-shadow: 0 0 4px -1px #a7a7a7;
+							border: 1px solid #a7a7a7;
+							overflow-y: auto;
+							padding: 10px;
+							opacity: 0;
+							animation-name: small-modal-show;
+							animation-iteration-count: 1;
+							animation-fill-mode: forwards;
+							animation-delay: 50ms;
+
+							@keyframes small-modal-show {
+								100% {
+									opacity: 1;
+								}
+							}
+						`}
+						ref={modalElement}
 					>
-						{title}
-					</h3>
-					<div>{children}</div>
-				</div>
+						<h3
+							className={css`
+								font-size: 15px;
+								font-weight: bold;
+								user-select: none;
+							`}
+						>
+							{title}
+						</h3>
+						<div>{children}</div>
+					</div>
+				</>
 			)}
 		</>
 	);

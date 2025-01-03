@@ -1,7 +1,11 @@
 import type { DependencyList, RefObject } from "react";
 import { useEffect, useRef } from "react";
 
-export default function <T>(onClick: () => void, deps: DependencyList, targetClass?: string): RefObject<T> {
+export default function <T>(
+	onClick: (e: MouseEvent) => void,
+	deps: DependencyList,
+	targetClass?: string
+): RefObject<T> {
 	const element = useRef<T>(null);
 
 	const handelClick = (e: MouseEvent): void => {
@@ -33,7 +37,7 @@ export default function <T>(onClick: () => void, deps: DependencyList, targetCla
 			}
 
 			if (click) {
-				onClick();
+				onClick(e);
 			}
 		}
 	};

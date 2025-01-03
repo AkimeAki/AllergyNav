@@ -72,9 +72,6 @@ export default function (): JSX.Element {
 							<div
 								className={css`
 									font-weight: bold;
-									@media (max-width: 410px) {
-										display: none;
-									}
 								`}
 							>
 								アレルギーナビ β版
