@@ -19,7 +19,7 @@ export default function ({ children, onClick, disabled }: Props) {
 				css`
 					cursor: pointer;
 					user-select: none;
-					border: 2px solid var(--color-hide);
+					border: 2px solid var(--color-primary-thin);
 					border-radius: 7px;
 					padding: 10px;
 					font-size: 17px;

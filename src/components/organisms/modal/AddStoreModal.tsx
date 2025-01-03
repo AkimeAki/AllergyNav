@@ -3,7 +3,6 @@ import { css } from "@kuma-ui/core";
 import SubTitle from "@/components/atoms/SubTitle";
 import Label from "@/components/atoms/Label";
 import TextInput from "@/components/atoms/TextInput";
-import Select from "@/components/atoms/Select";
 import TextArea from "@/components/atoms/TextArea";
 import Button from "@/components/atoms/Button";
 import type { Dispatch, SetStateAction } from "react";
@@ -28,9 +27,6 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 	const [storeDescription, setStoreDescription] = useState<string>("");
 	const [storeUrl, setStoreUrl] = useState<string>("");
 	const [allergyMenuUrl, setAllergyMenuUrl] = useState<string>("");
-	const [tabelogUrl, setTabelogUrl] = useState<string>("");
-	const [gurunaviUrl, setGurunaviUrl] = useState<string>("");
-	const [hotpepperUrl, setHotpepperUrl] = useState<string>("");
 	const router = useRouter();
 	const { addStoreResponse, addStoreStatus, addStore, addStoreReset } = useAddStore();
 	const { addMessage } = useFloatMessage();
@@ -45,15 +41,15 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 		const normalizeResult = await normalize(storeAddress);
 		switch (normalizeResult.level) {
 			case 0:
-				addMessage("都道府県の識別ができません\n\nシステムに問題がある場合はお問い合わせください", "error");
+				addMessage("都道府県の識別ができません\nシステムに問題がある場合はお問い合わせください", "error");
 				return;
 
 			case 1:
-				addMessage("市区町村の識別ができません\n\nシステムに問題がある場合はお問い合わせください", "error");
+				addMessage("市区町村の識別ができません\nシステムに問題がある場合はお問い合わせください", "error");
 				return;
 
 			case 2:
-				addMessage("町丁目の識別ができません\n\nシステムに問題がある場合はお問い合わせください", "error");
+				addMessage("町丁目の識別ができません\nシステムに問題がある場合はお問い合わせください", "error");
 				return;
 		}
 
@@ -73,16 +69,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 			(normalizeResult.addr ?? "") +
 			normalizeResult.other;
 
-		addStore(
-			storeName,
-			normalizedAddress,
-			storeDescription,
-			storeUrl,
-			allergyMenuUrl,
-			tabelogUrl,
-			gurunaviUrl,
-			hotpepperUrl
-		);
+		addStore(storeName, normalizedAddress, storeDescription, storeUrl, allergyMenuUrl, "", "", "");
 	};
 
 	useEffect(() => {
@@ -106,16 +93,13 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 			!isEmptyString(storeAddress) ||
 			!isEmptyString(storeDescription) ||
 			!isEmptyString(storeUrl) ||
-			!isEmptyString(allergyMenuUrl) ||
-			!isEmptyString(tabelogUrl) ||
-			!isEmptyString(gurunaviUrl) ||
-			!isEmptyString(hotpepperUrl)
+			!isEmptyString(allergyMenuUrl)
 		) {
 			setIsChanged(true);
 		} else {
 			setIsChanged(false);
 		}
-	}, [storeName, storeAddress, storeDescription, storeUrl, allergyMenuUrl, tabelogUrl, gurunaviUrl, hotpepperUrl]);
+	}, [storeName, storeAddress, storeDescription, storeUrl, allergyMenuUrl]);
 
 	useEffect(() => {
 		if (!isOpen) {
@@ -124,9 +108,6 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 			setStoreDescription("");
 			setStoreUrl("");
 			setAllergyMenuUrl("");
-			setTabelogUrl("");
-			setGurunaviUrl("");
-			setHotpepperUrl("");
 			addStoreReset();
 		}
 	}, [isOpen]);
@@ -222,39 +203,6 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 							autoSize
 							onChange={(e) => {
 								setStoreDescription(e.target.value);
-							}}
-						/>
-					</div>
-					<div>
-						<Label>食べログURL</Label>
-						<TextInput
-							value={tabelogUrl}
-							disabled={addStoreStatus === "loading" || addStoreStatus === "successed"}
-							loading={addStoreStatus === "loading" || addStoreStatus === "successed"}
-							onChange={(e) => {
-								setTabelogUrl(e.target.value);
-							}}
-						/>
-					</div>
-					<div>
-						<Label>ぐるなびURL</Label>
-						<TextInput
-							value={gurunaviUrl}
-							disabled={addStoreStatus === "loading" || addStoreStatus === "successed"}
-							loading={addStoreStatus === "loading" || addStoreStatus === "successed"}
-							onChange={(e) => {
-								setGurunaviUrl(e.target.value);
-							}}
-						/>
-					</div>
-					<div>
-						<Label>ホットペッパーグルメURL</Label>
-						<TextInput
-							value={hotpepperUrl}
-							disabled={addStoreStatus === "loading" || addStoreStatus === "successed"}
-							loading={addStoreStatus === "loading" || addStoreStatus === "successed"}
-							onChange={(e) => {
-								setHotpepperUrl(e.target.value);
 							}}
 						/>
 					</div>

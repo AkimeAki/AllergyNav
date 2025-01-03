@@ -7,7 +7,7 @@ import Select from "@/components/atoms/Select";
 import TextArea from "@/components/atoms/TextArea";
 import Button from "@/components/atoms/Button";
 import type { Dispatch, SetStateAction } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Cursor from "@/components/atoms/Cursor";
 import useAddMenu from "@/hooks/fetch-api/useAddMenu";
 import AllergenItem from "@/components/atoms/AllergenItem";
@@ -66,12 +66,20 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 	}, [addMenuStatus]);
 
 	useEffect(() => {
-		if (!isEmptyString(menuName) || !isEmptyString(menuDescription)) {
+		let allergenChanged = false;
+
+		Object.keys(allergenStatus).forEach((key) => {
+			if (allergenStatus[key] !== "unkown") {
+				allergenChanged = true;
+			}
+		});
+
+		if (!isEmptyString(menuName) || !isEmptyString(menuDescription) || allergenChanged) {
 			setIsChanged(true);
 		} else {
 			setIsChanged(false);
 		}
-	}, [menuName]);
+	}, [menuName, menuDescription, allergenStatus]);
 
 	useEffect(() => {
 		if (!isOpen) {
@@ -137,12 +145,6 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						>
 							選択する
 						</Button>
-						<SelectAllergenModal
-							isOpen={isSelectAllergenModalOpen}
-							setIsOpen={setIsSelectAllergenModalOpen}
-							allergenStatus={allergenStatus}
-							setAllergenStatus={setAllergenStatus}
-						/>
 						<div
 							className={css`
 								display: flex;
@@ -205,6 +207,12 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 					</div>
 				</form>
 			</Modal>
+			<SelectAllergenModal
+				isOpen={isSelectAllergenModalOpen}
+				setIsOpen={setIsSelectAllergenModalOpen}
+				allergenStatus={allergenStatus}
+				setAllergenStatus={setAllergenStatus}
+			/>
 		</>
 	);
 }

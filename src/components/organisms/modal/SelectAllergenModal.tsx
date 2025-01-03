@@ -2,7 +2,7 @@
 
 import { css } from "@kuma-ui/core";
 import SubTitle from "@/components/atoms/SubTitle";
-import type { Dispatch, SetStateAction } from "react";
+import type { Dispatch, RefObject, SetStateAction } from "react";
 import { useEffect, useRef } from "react";
 import useGetAllergens from "@/hooks/fetch-api/useGetAllergens";
 import Modal from "@/components/molecules/Modal";
@@ -230,6 +230,10 @@ export default function ({ isOpen, setIsOpen, allergenStatus, setAllergenStatus 
 				<div
 					className={css`
 						position: relative;
+
+						body[data-cursor="grabbing"] & {
+							overflow: hidden;
+						}
 					`}
 					ref={parentElement}
 				>
@@ -287,7 +291,6 @@ export default function ({ isOpen, setIsOpen, allergenStatus, setAllergenStatus 
 							className={css`
 								position: relative;
 								width: 100%;
-								height: 400px;
 								display: flex;
 								flex-direction: column;
 								gap: 30px;

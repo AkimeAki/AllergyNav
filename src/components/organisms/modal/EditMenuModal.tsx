@@ -162,12 +162,6 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 						>
 							選択する
 						</Button>
-						<SelectAllergenModal
-							isOpen={isSelectAllergenModalOpen}
-							setIsOpen={setIsSelectAllergenModalOpen}
-							allergenStatus={allergenStatus}
-							setAllergenStatus={setAllergenStatus}
-						/>
 						<div
 							className={css`
 								display: flex;
@@ -235,6 +229,12 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 					</div>
 				</form>
 			</Modal>
+			<SelectAllergenModal
+				isOpen={isSelectAllergenModalOpen}
+				setIsOpen={setIsSelectAllergenModalOpen}
+				allergenStatus={allergenStatus}
+				setAllergenStatus={setAllergenStatus}
+			/>
 		</>
 	);
 }

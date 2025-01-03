@@ -35,7 +35,7 @@ export default function ({
 				background-color: var(--color-secondary);
 
 				&[data-disabled="true"] {
-					background-color: var(--color-hide);
+					background-color: var(--color-primary-thin);
 					cursor: not-allowed;
 					user-select: none;
 				}

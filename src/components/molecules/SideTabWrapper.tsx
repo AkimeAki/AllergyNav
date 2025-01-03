@@ -2,7 +2,6 @@
 
 import { useEffect, type ReactNode, useRef, useState } from "react";
 import { css } from "@kuma-ui/core";
-import useScroll from "@/hooks/useScroll";
 import useIsTouchDevice from "@/hooks/useIsTouchDevice";
 import GoogleAds from "@/components/atoms/GoogleAds";
 import { useRouter } from "next/navigation";
@@ -14,11 +13,11 @@ interface Props {
 
 export default function ({ children }: Props): JSX.Element {
 	const element = useRef<HTMLDivElement | null>(null);
-	const { stopScroll, startScroll } = useScroll();
 	const [, setTouchScrollX] = useState<number>(0);
 	const { isTouch } = useIsTouchDevice();
 	const router = useRouter();
 	const pathname = usePathname();
+	const [enableScroll, setEnableScroll] = useState<boolean>(true);
 
 	useEffect(() => {
 		const scroll = (e: WheelEvent): void => {
@@ -48,28 +47,28 @@ export default function ({ children }: Props): JSX.Element {
 		const enter = (): void => {
 			const mediaQuery = window.matchMedia("(max-width: 880px)");
 			if (mediaQuery.matches) {
-				stopScroll();
+				setEnableScroll(false);
 			}
 		};
 
 		const leave = (): void => {
 			const mediaQuery = window.matchMedia("(max-width: 880px)");
 			if (mediaQuery.matches && !isTouch) {
-				startScroll();
+				setEnableScroll(true);
 			}
 		};
 
 		const touchStart = (e: TouchEvent): void => {
 			setTouchScrollX(e.changedTouches[0].pageX);
-			stopScroll();
+			setEnableScroll(false);
 		};
 
 		const touchEnd = (): void => {
-			startScroll();
+			setEnableScroll(true);
 		};
 
 		const click = (): void => {
-			startScroll();
+			setEnableScroll(true);
 		};
 
 		if (element.current !== null) {
@@ -107,16 +106,16 @@ export default function ({ children }: Props): JSX.Element {
 			if (isTouch && touchX !== null && touchY !== null) {
 				const touch = e.touches[0];
 
-				const root = document.querySelector<HTMLDivElement>("#root");
-				if (
-					!isMoving &&
-					(Math.abs(touchY - touch.clientY) > 50 || (root !== null && root.style.overflowY === "hidden"))
-				) {
+				if (!isMoving && Math.abs(touchY - touch.clientY) > 50) {
+					noSwipe = true;
+				}
+
+				if (document.body.dataset.swipeLoading === "true") {
 					noSwipe = true;
 				}
 
 				if (!noSwipe && (Math.abs(touchX - touch.clientX) > 30 || isMoving)) {
-					stopScroll();
+					setEnableScroll(false);
 
 					const sideTabContents = document.querySelector<HTMLDivElement>("#side-tab-contents");
 					if (sideTabContents !== null && Array.isArray(children)) {
@@ -174,6 +173,10 @@ export default function ({ children }: Props): JSX.Element {
 						}
 
 						document.body.dataset.swipeLoading = "true";
+						window.scroll({
+							top: 0,
+							behavior: "instant"
+						});
 						setTimeout(
 							(nextPath) => {
 								router.push(nextPath);
@@ -192,7 +195,7 @@ export default function ({ children }: Props): JSX.Element {
 				}
 			}
 
-			startScroll();
+			setEnableScroll(true);
 			isMoving = false;
 			touchX = null;
 			touchY = null;
@@ -222,6 +225,24 @@ export default function ({ children }: Props): JSX.Element {
 		document.body.dataset.swipeLoading = "";
 	}, [pathname]);
 
+	useEffect(() => {
+		const scroll = (e: Event) => {
+			if (e.target instanceof HTMLElement) {
+				if (!enableScroll) {
+					e.preventDefault();
+				}
+			}
+		};
+
+		window.addEventListener("touchmove", scroll, { passive: false });
+		window.addEventListener("mousewheel", scroll, { passive: false });
+
+		return () => {
+			window.removeEventListener("touchmove", scroll);
+			window.removeEventListener("mousewheel", scroll);
+		};
+	}, [enableScroll]);
+
 	return (
 		<div
 			className={css`
@@ -230,17 +251,13 @@ export default function ({ children }: Props): JSX.Element {
 				gap: 30px;
 
 				@media (max-width: 880px) {
-					width: calc(100% + 60px);
-					margin-left: -30px;
-					position: sticky;
-					top: 0;
+					width: 100%;
+					position: fixed;
+					top: 60px;
+					left: 0;
 					z-index: 9999;
 					overflow: hidden;
-				}
-
-				@media (max-width: 800px) {
-					width: calc(100% + 20px);
-					margin-left: -10px;
+					background-color: var(--color-secondary);
 				}
 			`}
 		>
@@ -249,7 +266,7 @@ export default function ({ children }: Props): JSX.Element {
 				className={css`
 					display: flex;
 					flex-direction: column;
-					border-radius: 7px;
+					border-radius: 4px;
 					overflow: hidden;
 
 					@media (max-width: 880px) {
@@ -258,7 +275,7 @@ export default function ({ children }: Props): JSX.Element {
 						height: 60px;
 						align-items: center;
 						white-space: nowrap;
-						border-bottom: 1px solid var(--color-hide);
+						border-bottom: 1px solid var(--color-primary-thin);
 					}
 				`}
 			>

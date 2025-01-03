@@ -1,7 +1,7 @@
 import type { DependencyList, RefObject } from "react";
 import { useEffect, useRef } from "react";
 
-export default function <T>(onClick: () => void, deps: DependencyList): RefObject<T> {
+export default function <T>(onClick: () => void, deps: DependencyList, targetClass?: string): RefObject<T> {
 	const element = useRef<T>(null);
 
 	const handelClick = (e: MouseEvent): void => {
@@ -10,7 +10,29 @@ export default function <T>(onClick: () => void, deps: DependencyList): RefObjec
 				return;
 			}
 
-			if (!(element.current as unknown as HTMLElement).contains(e.target as HTMLElement)) {
+			let click = false;
+
+			if (targetClass !== undefined) {
+				const targets = document.querySelectorAll<HTMLDivElement>(`.${targetClass}`);
+				for (const target of Array.from(targets)) {
+					if (
+						!target.contains(e.target as HTMLElement) &&
+						!(element.current as unknown as HTMLElement).contains(e.target as HTMLElement)
+					) {
+						click = true;
+					}
+				}
+
+				if (targets.length === 0) {
+					if (!(element.current as unknown as HTMLElement).contains(e.target as HTMLElement)) {
+						click = true;
+					}
+				}
+			} else if (!(element.current as unknown as HTMLElement).contains(e.target as HTMLElement)) {
+				click = true;
+			}
+
+			if (click) {
 				onClick();
 			}
 		}

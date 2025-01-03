@@ -1,18 +1,10 @@
-@font-face {
-	font-family: "BIZ UDPGothic";
-	src: url(/fonts/BIZUDPGothic-Regular.ttf);
-	font-display: swap;
-}
-
 @layer base {
 	* {
-		font-family: "BIZ UDPGothic";
-		font-size: 17px;
 		color: var(--color-primary);
 		word-wrap: break-word;
 		overflow-wrap: anywhere;
 		word-break: break-word;
-		word-break: auto-phrase;
+		border: none;
 		-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 
 		@media (max-width: 700px) {
@@ -23,7 +15,7 @@
 	:root {
 		--color-primary: #656565;
 		--color-black: #656565;
-		--color-hide: #c0c0c0;
+		--color-primary-thin: #c0c0c0;
 		--color-red: #d2374f;
 		--color-theme: #f76262;
 		--color-sub: #6e8334;
@@ -31,12 +23,13 @@
 		--color-secondary: white;
 
 		@media (prefers-color-scheme: dark) {
+			--color-red: #ffb7c2;
 			--color-theme: #73b979;
 			--color-theme-thin: #5d7c5d;
 			--color-sub: #6e8334;
-			--color-hide: #122412;
+			--color-primary-thin: #122412;
 			--color-primary: white;
-			--color-secondary: #101210;
+			--color-secondary: #3b3b3b;
 		}
 	}
 
@@ -44,20 +37,7 @@
 		background-color: var(--color-secondary);
 	}
 
-	html,
-	body {
-		overflow: hidden;
-	}
-
 	html {
-		&[data-cursor="grabbing"] {
-			cursor: grabbing;
-
-			* {
-				cursor: grabbing;
-			}
-		}
-
 		&[data-cursor="wait"] {
 			cursor: wait;
 
@@ -67,8 +47,24 @@
 		}
 	}
 
+	body {
+		height: auto;
+
+		&[data-cursor="grabbing"] {
+			cursor: grabbing !important;
+
+			* {
+				cursor: grabbing !important;
+			}
+		}
+	}
+
 	a {
 		color: #1976d2;
+
+		@media (prefers-color-scheme: dark) {
+			color: #9cceff;
+		}
 	}
 
 	p {

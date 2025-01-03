@@ -21,7 +21,7 @@ import NotLoginedModal from "@/components/molecules/NotLoginedModal";
 import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
 import GoogleAds from "@/components/atoms/GoogleAds";
 import AlertBox from "@/components/atoms/AlertBox";
-import SubTitle from "@/components/atoms/SubTitle";
+import HeaderItemArea from "../organisms/HeaderItemArea";
 
 export default function (): JSX.Element {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
@@ -198,16 +198,65 @@ export default function (): JSX.Element {
 							align-items: flex-end;
 						`}
 					>
-						<span>{getStoresResponse.info.page}ページ目</span>
-						<span>
+						<span
+							className={css`
+								display: flex;
+								gap: 3px;
+								align-items: flex-end;
+							`}
+						>
 							<span
 								className={css`
-									font-size: 20px;
+									font-weight: bold;
+									font-size: 18px;
 								`}
 							>
-								{getStoresResponse.data.length}件
-							</span>{" "}
-							/ {getStoresResponse.info.total}件中
+								{getStoresResponse.info.total}
+							</span>
+							<span
+								className={css`
+									font-size: 15px;
+								`}
+							>
+								件
+							</span>
+						</span>
+						<span
+							className={css`
+								display: flex;
+								gap: 3px;
+								align-items: flex-end;
+							`}
+						>
+							<span
+								className={css`
+									font-weight: bold;
+									font-size: 18px;
+								`}
+							>
+								{getStoresResponse.info.page}
+							</span>
+							<span
+								className={css`
+									font-size: 15px;
+								`}
+							>
+								/
+							</span>
+							<span
+								className={css`
+									font-size: 15px;
+								`}
+							>
+								{Math.floor(getStoresResponse.info.total / getStoresResponse.info.limit + 1)}
+							</span>
+							<span
+								className={css`
+									font-size: 15px;
+								`}
+							>
+								ページ
+							</span>
 						</span>
 					</div>
 				)}
@@ -248,7 +297,7 @@ export default function (): JSX.Element {
 										text-align: center;
 									`}
 								>
-									お店が無いようです😿
+									お店が見つかりませんでした
 								</p>
 							)}
 							{[...getStoresResponse.data].reverse().map((store, index) => (
@@ -256,17 +305,11 @@ export default function (): JSX.Element {
 									<div
 										className={css`
 											position: relative;
-											transition-duration: 200ms;
-											transition-property: box-shadow;
 											overflow: hidden;
-											border-radius: 7px;
+											border-radius: 4px;
 											border-width: 2px;
 											border-style: solid;
 											border-color: #f3f3f3;
-
-											&:hover {
-												box-shadow: 0px 0px 15px -10px #777777;
-											}
 										`}
 									>
 										<div
@@ -344,7 +387,16 @@ export default function (): JSX.Element {
 													`}
 												>
 													<div>
-														<SubTitle>{store.name}</SubTitle>
+														<h2
+															className={css`
+																font-weight: bold;
+																font-size: 18px;
+																padding: 10px;
+																user-select: none;
+															`}
+														>
+															{store.name}
+														</h2>
 													</div>
 													{store.description !== "" && <div>{store.description}</div>}
 												</div>
@@ -473,6 +525,7 @@ export default function (): JSX.Element {
 							`}
 						>
 							<Button
+								size="small"
 								disabled={
 									getStoresStatus !== "successed" ||
 									getStoresResponse === undefined ||
@@ -488,6 +541,7 @@ export default function (): JSX.Element {
 								前へ
 							</Button>
 							<Button
+								size="small"
 								disabled={
 									getStoresStatus !== "successed" ||
 									getStoresResponse === undefined ||
@@ -507,47 +561,22 @@ export default function (): JSX.Element {
 								次へ
 							</Button>
 						</div>
-						<div
-							className={css`
-								position: sticky;
-								bottom: 40px;
-								text-align: right;
-								z-index: 99;
-								animation-name: addStoreButtonFadeIn;
-								opacity: 0;
-								animation-iteration-count: 1;
-								animation-duration: 200ms;
-								animation-fill-mode: forwards;
-
-								@keyframes addStoreButtonFadeIn {
-									0% {
-										opacity: 0;
-									}
-
-									100% {
-										opacity: 1;
-									}
-								}
-
-								@media (max-width: 600px) {
-									bottom: 20px;
-								}
-							`}
-						>
-							<Button
-								onClick={() => {
-									setIsOpenAddModal(true);
-								}}
-								disabled={userStatus === "loading"}
-								loading={userStatus === "loading"}
-								selected={isOpenAddModal}
-							>
-								お店を追加
-							</Button>
-						</div>
 					</>
 				)}
 			</div>
+			<HeaderItemArea>
+				<Button
+					size="small"
+					onClick={() => {
+						setIsOpenAddModal(true);
+					}}
+					disabled={userStatus === "loading"}
+					loading={userStatus === "loading"}
+					selected={isOpenAddModal}
+				>
+					お店を追加
+				</Button>
+			</HeaderItemArea>
 		</>
 	);
 }

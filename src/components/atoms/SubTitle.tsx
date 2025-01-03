@@ -15,7 +15,7 @@ export default function ({ children }: Props): JSX.Element {
 				background-color: var(--color-theme);
 				padding: 10px 20px;
 				color: var(--color-secondary);
-				border-radius: 7px;
+				border-radius: 4px;
 				user-select: none;
 
 				* {

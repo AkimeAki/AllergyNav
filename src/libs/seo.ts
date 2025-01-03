@@ -16,12 +16,12 @@ export const seoHead = ({
 	canonicalPath,
 	noIndex = false
 }: Props): Metadata => {
-	let metaTitle = `${siteTitle}｜アレルギーの方向けの飲食店情報サービス`;
+	let metaTitle = `${siteTitle} - アレルギーの方向けのグルメナビ`;
 	if (title !== undefined) {
 		if (isFullTitle) {
 			metaTitle = title;
 		} else {
-			metaTitle = `${title}｜${siteTitle}`;
+			metaTitle = `${title} - ${siteTitle}`;
 		}
 	}
 
@@ -30,7 +30,7 @@ export const seoHead = ({
 		description,
 		authors: { name: "彩季", url: "https://aki.wtf" },
 		generator: "nextjs",
-		keywords: ["アレルギー", "飲食店", "メニュー表", "アレルギーナビ", "Allergy"],
+		keywords: ["アレルギー", "飲食店", "メニュー表", "アレルギーナビ", "Allergy", "グルメ"],
 		creator: "彩季",
 		openGraph: {
 			type: "website",

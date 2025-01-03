@@ -55,23 +55,22 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 		const normalizeResult = await normalize(storeAddress);
 		switch (normalizeResult.level) {
 			case 0:
-				addMessage("都道府県の識別ができません\n\nシステムに問題がある場合はお問い合わせください", "error");
+				addMessage("都道府県の識別ができません\nシステムに問題がある場合はお問い合わせください", "error");
 				return;
 
 			case 1:
-				addMessage("市区町村の識別ができません\n\nシステムに問題がある場合はお問い合わせください", "error");
+				addMessage("市区町村の識別ができません\nシステムに問題がある場合はお問い合わせください", "error");
 				return;
 
 			case 2:
-				addMessage("町丁目の識別ができません\n\nシステムに問題がある場合はお問い合わせください", "error");
+				addMessage("町丁目の識別ができません\nシステムに問題がある場合はお問い合わせください", "error");
 				return;
 		}
 
 		if (
 			normalizeResult.pref === undefined ||
 			normalizeResult.city === undefined ||
-			normalizeResult.town === undefined ||
-			normalizeResult.addr === undefined
+			normalizeResult.town === undefined
 		) {
 			addMessage("エラーが発生しました", "error");
 			return;
