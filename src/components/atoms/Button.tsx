@@ -76,7 +76,7 @@ export default function ({
 			* {
 				transition-duration: 200ms;
 				transition-property: color, border-color, background-color;
-				color: var(--button-color);
+				color: var(--color-secondary);
 			}
 		`,
 		size === "small" &&
