@@ -48,7 +48,7 @@ export default function ({
 				if (
 					(bgElement.current.contains(e.target) ||
 						modalElement.current.clientHeight === modalElement.current.scrollHeight) &&
-					isOpen
+					isModalOpen
 				) {
 					e.preventDefault();
 				}
@@ -62,7 +62,7 @@ export default function ({
 			window.removeEventListener("touchmove", scroll);
 			window.removeEventListener("mousewheel", scroll);
 		};
-	}, [isOpen]);
+	}, [isModalOpen]);
 
 	// 要素が多い時だけ閉じるボタン表示
 	useEffect(() => {
@@ -85,7 +85,7 @@ export default function ({
 		return () => {
 			window.removeEventListener("resize", resize);
 		};
-	}, [isOpen]);
+	}, [isModalOpen]);
 
 	return (
 		<>

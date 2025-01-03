@@ -14,6 +14,8 @@ export default function ({ children }: Props): JSX.Element {
 				width: 100%;
 				height: 80px;
 				z-index: 9999;
+				user-select: none;
+				pointer-events: none;
 
 				@media (max-width: 880px) {
 					height: 60px;
@@ -32,6 +34,11 @@ export default function ({ children }: Props): JSX.Element {
 					padding: 0 30px;
 					height: 100%;
 					gap: 20px;
+
+					* {
+						user-select: auto;
+						pointer-events: auto;
+					}
 
 					@media (max-width: 600px) {
 						padding: 0 10px;

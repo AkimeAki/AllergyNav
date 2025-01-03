@@ -446,7 +446,6 @@ export default function (): JSX.Element {
 												left: 0;
 												width: 100%;
 												height: 100%;
-												z-index: 99;
 											`}
 											href={`/store/${store.id}`}
 										/>
