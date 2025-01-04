@@ -3,6 +3,7 @@ import { css } from "@kuma-ui/core";
 import { useEffect, useRef, useState, type Dispatch, type ReactNode, type SetStateAction } from "react";
 import GoogleIcon from "@/components/atoms/GoogleIcon";
 import { cx } from "@/libs/merge-kuma";
+import useIsTouchDevice from "@/hooks/useIsTouchDevice";
 
 interface Props {
 	isOpen: boolean;
@@ -30,6 +31,7 @@ export default function ({
 	const modalElement = useRef<HTMLDivElement>(null);
 	const bgElement = useRef<HTMLDivElement>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const { isTouch } = useIsTouchDevice();
 
 	useEffect(() => {
 		if (isOpen) {
@@ -63,6 +65,26 @@ export default function ({
 			window.removeEventListener("mousewheel", scroll);
 		};
 	}, [isModalOpen]);
+
+	// 戻るボタン検知用
+	useEffect(() => {
+		if (isModalOpen && isTouch) {
+			history.pushState(null, "", null);
+		}
+
+		const back = () => {
+			if (isTouch) {
+				setIsOpen(false);
+				history.pushState(null, "", null);
+			}
+		};
+
+		window.addEventListener("popstate", back);
+
+		return () => {
+			window.removeEventListener("popstate", back);
+		};
+	}, [isModalOpen, isTouch]);
 
 	// 要素が多い時だけ閉じるボタン表示
 	useEffect(() => {
