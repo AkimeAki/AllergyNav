@@ -52,7 +52,7 @@ export default function ({ href, children, onClick, disabled = false, loading = 
 		`,
 		disabled &&
 			css`
-				color: var(--color-hide);
+				color: var(--color-primary-thin);
 				user-select: none;
 				cursor: not-allowed;
 				background-color: var(--color-secondary);
@@ -65,7 +65,7 @@ export default function ({ href, children, onClick, disabled = false, loading = 
 				&:hover {
 					background-color: var(--color-secondary);
 					box-shadow: none;
-					color: var(--color-hide);
+					color: var(--color-primary-thin);
 
 					* {
 						background-color: inherit;

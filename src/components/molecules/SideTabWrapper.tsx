@@ -2,7 +2,6 @@
 
 import { useEffect, type ReactNode, useRef, useState } from "react";
 import { css } from "@kuma-ui/core";
-import useScroll from "@/hooks/useScroll";
 import useIsTouchDevice from "@/hooks/useIsTouchDevice";
 import GoogleAds from "@/components/atoms/GoogleAds";
 import { useRouter } from "next/navigation";
@@ -14,11 +13,12 @@ interface Props {
 
 export default function ({ children }: Props): JSX.Element {
 	const element = useRef<HTMLDivElement | null>(null);
-	const { stopScroll, startScroll } = useScroll();
 	const [, setTouchScrollX] = useState<number>(0);
 	const { isTouch } = useIsTouchDevice();
 	const router = useRouter();
 	const pathname = usePathname();
+	const [enableScroll, setEnableScroll] = useState<boolean>(true);
+	const tabBorder = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		const scroll = (e: WheelEvent): void => {
@@ -48,28 +48,28 @@ export default function ({ children }: Props): JSX.Element {
 		const enter = (): void => {
 			const mediaQuery = window.matchMedia("(max-width: 880px)");
 			if (mediaQuery.matches) {
-				stopScroll();
+				setEnableScroll(false);
 			}
 		};
 
 		const leave = (): void => {
 			const mediaQuery = window.matchMedia("(max-width: 880px)");
 			if (mediaQuery.matches && !isTouch) {
-				startScroll();
+				setEnableScroll(true);
 			}
 		};
 
 		const touchStart = (e: TouchEvent): void => {
 			setTouchScrollX(e.changedTouches[0].pageX);
-			stopScroll();
+			setEnableScroll(false);
 		};
 
 		const touchEnd = (): void => {
-			startScroll();
+			setEnableScroll(true);
 		};
 
 		const click = (): void => {
-			startScroll();
+			setEnableScroll(true);
 		};
 
 		if (element.current !== null) {
@@ -107,41 +107,69 @@ export default function ({ children }: Props): JSX.Element {
 			if (isTouch && touchX !== null && touchY !== null) {
 				const touch = e.touches[0];
 
-				const root = document.querySelector<HTMLDivElement>("#root");
-				if (
-					!isMoving &&
-					(Math.abs(touchY - touch.clientY) > 50 || (root !== null && root.style.overflowY === "hidden"))
-				) {
+				if (!isMoving && Math.abs(touchY - touch.clientY) > 50) {
+					noSwipe = true;
+				}
+
+				if (document.body.dataset.swipeLoading === "true") {
 					noSwipe = true;
 				}
 
 				if (!noSwipe && (Math.abs(touchX - touch.clientX) > 30 || isMoving)) {
-					stopScroll();
+					setEnableScroll(false);
 
 					const sideTabContents = document.querySelector<HTMLDivElement>("#side-tab-contents");
-					if (sideTabContents !== null && Array.isArray(children)) {
+					const sideTabLinks = document.querySelectorAll<HTMLAnchorElement | HTMLButtonElement>(
+						".side-tab-link"
+					);
+					if (sideTabContents !== null && sideTabLinks.length !== 0) {
 						if (!isMoving) {
 							sideTabContents.style.transitionDuration = "0s";
 						}
 
 						isMoving = true;
 
-						const childPaths: string[] = children.map((child) => {
-							return child.props.href;
+						const linkPaths: string[] = Array.from(sideTabLinks).map((link) => {
+							return link.tagName === "A" ? new URL((link as HTMLAnchorElement).href).pathname : "";
 						});
-						const currentIndex = childPaths.findIndex((path) => {
+
+						const currentIndex = linkPaths.findIndex((path) => {
 							return path === location.pathname;
 						});
 
 						if (touchX - touch.clientX > 0) {
-							if (currentIndex !== childPaths.length - 1) {
+							if (currentIndex !== linkPaths.length - 1) {
 								sideTabContents.style.transform = `translateX(${touch.clientX - touchX}px)`;
-								nextPath = childPaths[currentIndex + 1];
+
+								if (tabBorder.current !== null) {
+									let tabBorderPercent = (((touch.clientX - touchX) * -1) / window.innerWidth) * 100;
+									if (tabBorderPercent >= 100) {
+										tabBorderPercent = 100;
+									} else if (tabBorderPercent <= -100) {
+										tabBorderPercent = -100;
+									}
+
+									tabBorder.current.style.transform = `translateX(${(tabBorderPercent / 100) * tabBorder.current.offsetWidth}px)`;
+								}
+
+								nextPath = linkPaths[currentIndex + 1];
 							}
 						} else {
 							if (currentIndex !== 0) {
 								sideTabContents.style.transform = `translateX(${touch.clientX - touchX}px)`;
-								nextPath = childPaths[currentIndex - 1];
+
+								if (tabBorder.current !== null) {
+									let tabBorderPercent = (((touch.clientX - touchX) * -1) / window.innerWidth) * 100;
+									if (tabBorderPercent >= 100) {
+										tabBorderPercent = 100;
+									} else if (tabBorderPercent <= -100) {
+										tabBorderPercent = -100;
+									}
+
+									tabBorder.current.style.transform = `translateX(${(tabBorderPercent / 100) * tabBorder.current.offsetWidth}px)`;
+								}
+
+								nextPath = linkPaths[currentIndex - 1];
 							}
 						}
 						overPercent = ((touch.clientX - touchX) / sideTabContents.offsetWidth) * 100;
@@ -151,6 +179,31 @@ export default function ({ children }: Props): JSX.Element {
 		};
 
 		const start = (e: TouchEvent) => {
+			const sideTabLinks = document.querySelectorAll<HTMLAnchorElement | HTMLButtonElement>(".side-tab-link");
+			sideTabLinks.forEach((link, index) => {
+				const linkPath = link.tagName === "A" ? new URL((link as HTMLAnchorElement).href).pathname : "";
+
+				if (tabBorder.current !== null && linkPath === location.pathname) {
+					if (
+						sideTabLinks[index - 1] !== undefined &&
+						sideTabLinks[index - 1].tagName === "A" &&
+						(sideTabLinks[index - 1] as HTMLAnchorElement).href !== ""
+					) {
+						const pathname = new URL((sideTabLinks[index - 1] as HTMLAnchorElement).href).pathname;
+						router.prefetch(pathname);
+					}
+
+					if (
+						sideTabLinks[index + 1] !== undefined &&
+						sideTabLinks[index + 1].tagName === "A" &&
+						(sideTabLinks[index + 1] as HTMLAnchorElement).href !== ""
+					) {
+						const pathname = new URL((sideTabLinks[index + 1] as HTMLAnchorElement).href).pathname;
+						router.prefetch(pathname);
+					}
+				}
+			});
+
 			isMoving = false;
 			nextPath = null;
 			noSwipe = false;
@@ -164,16 +217,24 @@ export default function ({ children }: Props): JSX.Element {
 
 		const end = () => {
 			const sideTabContents = document.querySelector<HTMLDivElement>("#side-tab-contents");
-			if (sideTabContents !== null) {
+			if (sideTabContents !== null && tabBorder.current !== null) {
 				if (isTouch && touchX !== null && touchY !== null && isMoving && nextPath !== null) {
 					if (Math.abs(overPercent) > 30) {
+						tabBorder.current.style.transitionDuration = "300ms";
+						sideTabContents.style.transitionDuration = "300ms";
 						if (overPercent > 0) {
 							sideTabContents.style.transform = "translateX(calc(100% + 30px))";
+							tabBorder.current.style.transform = `translateX(${tabBorder.current.offsetWidth * -1}px)`;
 						} else {
 							sideTabContents.style.transform = "translateX(calc(-100% - 30px))";
+							tabBorder.current.style.transform = `translateX(${tabBorder.current.offsetWidth}px)`;
 						}
 
 						document.body.dataset.swipeLoading = "true";
+						window.scroll({
+							top: 0,
+							behavior: "instant"
+						});
 						setTimeout(
 							(nextPath) => {
 								router.push(nextPath);
@@ -182,17 +243,23 @@ export default function ({ children }: Props): JSX.Element {
 							nextPath
 						);
 					} else {
+						sideTabContents.style.transitionDuration = "300ms";
 						sideTabContents.style.transform = "";
+						tabBorder.current.style.transitionDuration = "300ms";
+						tabBorder.current.style.transform = "";
 					}
 
-					sideTabContents.style.transitionDuration = "300ms";
 					setTimeout(() => {
 						sideTabContents.style.transitionDuration = "";
+
+						if (tabBorder.current !== null) {
+							tabBorder.current.style.transitionDuration = "";
+						}
 					}, 300);
 				}
 			}
 
-			startScroll();
+			setEnableScroll(true);
 			isMoving = false;
 			touchX = null;
 			touchY = null;
@@ -222,6 +289,46 @@ export default function ({ children }: Props): JSX.Element {
 		document.body.dataset.swipeLoading = "";
 	}, [pathname]);
 
+	useEffect(() => {
+		const scroll = (e: Event) => {
+			if (e.target instanceof HTMLElement) {
+				if (!enableScroll) {
+					e.preventDefault();
+				}
+			}
+		};
+
+		window.addEventListener("touchmove", scroll, { passive: false });
+		window.addEventListener("mousewheel", scroll, { passive: false });
+
+		return () => {
+			window.removeEventListener("touchmove", scroll);
+			window.removeEventListener("mousewheel", scroll);
+		};
+	}, [enableScroll]);
+
+	useEffect(() => {
+		const resize = () => {
+			const sideTabLinks = document.querySelectorAll<HTMLAnchorElement | HTMLButtonElement>(".side-tab-link");
+			sideTabLinks.forEach((link, index) => {
+				const linkPath = link.tagName === "A" ? new URL((link as HTMLAnchorElement).href).pathname : "";
+
+				if (tabBorder.current !== null && linkPath === location.pathname) {
+					tabBorder.current.style.transform = "";
+					tabBorder.current.style.width = link.clientWidth + "px";
+					tabBorder.current.style.left = link.clientWidth * index + "px";
+				}
+			});
+		};
+
+		resize();
+		window.addEventListener("resize", resize);
+
+		return () => {
+			window.removeEventListener("resize", resize);
+		};
+	}, [pathname]);
+
 	return (
 		<div
 			className={css`
@@ -230,26 +337,23 @@ export default function ({ children }: Props): JSX.Element {
 				gap: 30px;
 
 				@media (max-width: 880px) {
-					width: calc(100% + 60px);
-					margin-left: -30px;
-					position: sticky;
-					top: 0;
+					width: 100%;
+					position: fixed;
+					top: 60px;
+					left: 0;
 					z-index: 9999;
 					overflow: hidden;
-				}
-
-				@media (max-width: 800px) {
-					width: calc(100% + 20px);
-					margin-left: -10px;
+					background-color: var(--color-secondary);
 				}
 			`}
 		>
 			<aside
 				ref={element}
 				className={css`
+					position: relative;
 					display: flex;
 					flex-direction: column;
-					border-radius: 7px;
+					border-radius: 4px;
 					overflow: hidden;
 
 					@media (max-width: 880px) {
@@ -258,11 +362,27 @@ export default function ({ children }: Props): JSX.Element {
 						height: 60px;
 						align-items: center;
 						white-space: nowrap;
-						border-bottom: 1px solid var(--color-hide);
+						border-bottom: 1px solid var(--color-primary-thin);
 					}
 				`}
 			>
 				{children}
+				<div
+					ref={tabBorder}
+					className={css`
+						display: none;
+						position: absolute;
+						bottom: 0;
+						height: 2px;
+						background-color: var(--color-theme);
+						transition-duration: 0s;
+						transition-property: transform;
+
+						@media (max-width: 880px) {
+							display: block;
+						}
+					`}
+				/>
 			</aside>
 			<div
 				className={css`

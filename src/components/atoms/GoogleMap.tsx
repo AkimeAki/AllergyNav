@@ -12,11 +12,9 @@ export default function ({ search }: Props): JSX.Element {
 				src={`https://maps.google.co.jp/maps?q=${encodeURIComponent(search)}&output=embed&t=m&z=17`}
 				className={css`
 					position: relative;
-					z-index: -1;
 					border: none;
 					width: 100%;
 					height: 400px;
-					user-select: none;
 				`}
 			/>
 		</>

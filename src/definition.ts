@@ -33,3 +33,10 @@ export class TooManyRequestError extends Error {
 
 export const headerHeight = 70;
 export const viewSidebarWidth = 753;
+
+export const searchArea: {
+	[key: string]: string;
+} = {
+	all: "全エリア",
+	location: "現在地周辺"
+};

@@ -264,6 +264,9 @@ export default function ({ storeId, menuList }: Props): JSX.Element {
 														display: flex;
 														gap: 5px;
 														z-index: 99;
+
+														--color-main: #6173ac;
+														--color-sub: #61ac8c;
 													`}
 												>
 													<Button
@@ -283,6 +286,7 @@ export default function ({ storeId, menuList }: Props): JSX.Element {
 															}
 														}}
 														selected={openEditModalId === menu.id && isOpenEditModal}
+														color="var(--color-main)"
 													>
 														<div
 															className={css`

@@ -9,9 +9,13 @@ export default function (): JSX.Element {
 			<NotVerifiedHeaderMessage />
 			<header
 				className={css`
+					position: sticky;
+					top: 0;
 					width: 100%;
-					height: 140px;
-					z-index: 10;
+					height: 80px;
+					z-index: 9999;
+					background-color: var(--color-secondary);
+					border-bottom: 1px solid var(--color-primary-thin);
 
 					@media (max-width: 880px) {
 						height: 60px;
@@ -29,6 +33,11 @@ export default function (): JSX.Element {
 						margin: 0 auto;
 						padding: 0 30px;
 						height: 100%;
+						gap: 20px;
+
+						@media (max-width: 600px) {
+							padding: 0 10px;
+						}
 					`}
 				>
 					<h1
@@ -65,7 +74,7 @@ export default function (): JSX.Element {
 									font-weight: bold;
 								`}
 							>
-								アレルギーナビ 超β版
+								アレルギーナビ β版
 							</div>
 						</Link>
 					</h1>

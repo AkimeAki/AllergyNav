@@ -4,6 +4,7 @@ import { css } from "@kuma-ui/core";
 import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
 import LoadingCircle from "@/components/atoms/LoadingCircle";
+import { cx } from "@/libs/merge-kuma";
 
 interface Props {
 	href?: string;
@@ -50,18 +51,18 @@ export default function ({
 	loading = false,
 	color = "var(--color-theme)"
 }: Props): JSX.Element {
-	const buttonStyle = [
+	const buttonStyle = cx(
 		css`
 			position: relative;
 			display: inline-block;
 			text-decoration: none;
 			cursor: pointer;
-			background-color: var(--color-secondary);
+			background-color: var(--button-color);
 			border-style: solid;
 			border-color: var(--button-color);
-			color: var(--button-color);
+			color: var(--color-secondary);
 			border-width: 2px;
-			border-radius: 30px;
+			border-radius: 4px;
 			font-weight: bold;
 			overflow: hidden;
 			transition-duration: 200ms;
@@ -75,16 +76,7 @@ export default function ({
 			* {
 				transition-duration: 200ms;
 				transition-property: color, border-color, background-color;
-				color: var(--button-color);
-			}
-
-			&:hover {
-				background-color: var(--button-color);
 				color: var(--color-secondary);
-
-				* {
-					color: var(--color-secondary);
-				}
 			}
 		`,
 		size === "small" &&
@@ -117,33 +109,22 @@ export default function ({
 			`,
 		disabled &&
 			css`
-				border-color: var(--color-hide);
-				color: var(--color-hide);
+				border-color: var(--color-primary-thin);
+				color: var(--color-primary-thin);
 				user-select: none;
 				cursor: not-allowed;
 				background-color: var(--color-secondary);
 
 				* {
-					border-color: var(--color-hide);
-					color: var(--color-hide);
-				}
-
-				&:hover {
-					background-color: var(--color-secondary);
-					color: var(--color-hide);
-					box-shadow: none;
-
-					* {
-						box-shadow: none;
-						color: var(--color-hide);
-					}
+					border-color: var(--color-primary-thin);
+					color: var(--color-primary-thin);
 				}
 			`,
 		loading &&
 			css`
 				cursor: progress;
 			`
-	].join(" ");
+	);
 
 	const click = (): void => {
 		if (onClick !== undefined) {

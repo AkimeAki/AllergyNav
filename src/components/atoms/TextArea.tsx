@@ -78,7 +78,7 @@ export default function ({
 						}
 
 						&[disabled] {
-							background-color: var(--color-hide);
+							background-color: var(--color-primary-thin);
 							user-select: none;
 							cursor: not-allowed;
 

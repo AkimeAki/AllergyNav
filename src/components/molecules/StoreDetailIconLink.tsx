@@ -13,7 +13,7 @@ export default function ({ href, icon, text }: Props): JSX.Element {
 		<Link
 			aria-label={text}
 			className={css`
-				display: inline-flex;
+				display: flex;
 				align-items: center;
 				gap: 5px;
 
