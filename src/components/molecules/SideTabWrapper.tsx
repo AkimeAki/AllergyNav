@@ -243,6 +243,7 @@ export default function ({ children }: Props): JSX.Element {
 							nextPath
 						);
 					} else {
+						sideTabContents.style.transitionDuration = "300ms";
 						sideTabContents.style.transform = "";
 						tabBorder.current.style.transitionDuration = "300ms";
 						tabBorder.current.style.transform = "";
@@ -307,16 +308,25 @@ export default function ({ children }: Props): JSX.Element {
 	}, [enableScroll]);
 
 	useEffect(() => {
-		const sideTabLinks = document.querySelectorAll<HTMLAnchorElement | HTMLButtonElement>(".side-tab-link");
-		sideTabLinks.forEach((link, index) => {
-			const linkPath = link.tagName === "A" ? new URL((link as HTMLAnchorElement).href).pathname : "";
+		const resize = () => {
+			const sideTabLinks = document.querySelectorAll<HTMLAnchorElement | HTMLButtonElement>(".side-tab-link");
+			sideTabLinks.forEach((link, index) => {
+				const linkPath = link.tagName === "A" ? new URL((link as HTMLAnchorElement).href).pathname : "";
 
-			if (tabBorder.current !== null && linkPath === location.pathname) {
-				tabBorder.current.style.transform = "";
-				tabBorder.current.style.width = link.clientWidth + "px";
-				tabBorder.current.style.left = link.clientWidth * index + "px";
-			}
-		});
+				if (tabBorder.current !== null && linkPath === location.pathname) {
+					tabBorder.current.style.transform = "";
+					tabBorder.current.style.width = link.clientWidth + "px";
+					tabBorder.current.style.left = link.clientWidth * index + "px";
+				}
+			});
+		};
+
+		resize();
+		window.addEventListener("resize", resize);
+
+		return () => {
+			window.removeEventListener("resize", resize);
+		};
 	}, [pathname]);
 
 	return (
