@@ -196,6 +196,7 @@ export default function ({ children }: Props): JSX.Element {
 				if (isTouch && touchX !== null && touchY !== null && isMoving && nextPath !== null) {
 					if (Math.abs(overPercent) > 30) {
 						tabBorder.current.style.transitionDuration = "300ms";
+						sideTabContents.style.transitionDuration = "300ms";
 						if (overPercent > 0) {
 							sideTabContents.style.transform = "translateX(calc(100% + 30px))";
 							tabBorder.current.style.transform = `translateX(${tabBorder.current.offsetWidth * -1}px)`;
@@ -222,7 +223,6 @@ export default function ({ children }: Props): JSX.Element {
 						tabBorder.current.style.transform = "";
 					}
 
-					sideTabContents.style.transitionDuration = "300ms";
 					setTimeout(() => {
 						sideTabContents.style.transitionDuration = "";
 
