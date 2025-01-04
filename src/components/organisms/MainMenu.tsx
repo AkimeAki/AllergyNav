@@ -3,7 +3,7 @@
 import { css } from "@kuma-ui/core";
 import MainMenuLink from "@/components/atoms/MainMenuLink";
 import MainMenuHumberger from "@/components/molecules/MainMenuHumberger";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import useGetUserData from "@/hooks/useGetUserData";
 import MainMenuLinkLoading from "@/components/atoms/MainMenuLinkLoading";
@@ -13,6 +13,10 @@ export default function (): JSX.Element {
 	const sidebarRef = useRef(null);
 	const pathname = usePathname();
 	const { userStatus, userId, userRole } = useGetUserData();
+
+	useEffect(() => {
+		setIsSidebarOpen(false);
+	}, [pathname]);
 
 	return (
 		<>
