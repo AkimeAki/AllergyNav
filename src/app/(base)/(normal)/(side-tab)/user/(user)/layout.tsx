@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "@/libs/auth";
 import UserTabs from "@/components/organisms/side-tab/UserTabs";
 import SideTabLayout from "@/components/templates/SideTabLayout";
+import { css } from "@kuma-ui/core";
 
 interface Props {
 	children: ReactNode;
@@ -23,7 +24,14 @@ export default async function ({ children }: Props): Promise<JSX.Element> {
 
 	return (
 		<SideTabLayout sideTabLinks={<UserTabs pageId={id} userId={id} />}>
-			<h3>ユーザー</h3>
+			<h3
+				className={css`
+					font-size: 25px;
+					font-weight: bold;
+				`}
+			>
+				ユーザー
+			</h3>
 			<div>{children}</div>
 		</SideTabLayout>
 	);

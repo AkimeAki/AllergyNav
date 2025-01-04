@@ -12,7 +12,7 @@ interface Props {
 export default function ({ children }: Props): JSX.Element {
 	return (
 		<>
-			<NextTopLoader color="var(--color-theme)" showSpinner={false} />
+			<NextTopLoader color="var(--color-theme)" showSpinner={false} zIndex={99999} />
 			<Header />
 			<MainMenu />
 			{children}

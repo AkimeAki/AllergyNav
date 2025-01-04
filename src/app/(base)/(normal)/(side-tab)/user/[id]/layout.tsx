@@ -49,7 +49,14 @@ export default async function ({ children, params }: Props): Promise<JSX.Element
 
 	return (
 		<SideTabLayout sideTabLinks={<UserTabs pageId={pageId} userId={userId} />}>
-			<h3>ユーザー</h3>
+			<h3
+				className={css`
+					font-size: 25px;
+					font-weight: bold;
+				`}
+			>
+				ユーザー
+			</h3>
 			<div>{children}</div>
 		</SideTabLayout>
 	);
