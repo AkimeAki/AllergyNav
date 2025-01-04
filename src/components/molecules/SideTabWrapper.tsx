@@ -179,6 +179,31 @@ export default function ({ children }: Props): JSX.Element {
 		};
 
 		const start = (e: TouchEvent) => {
+			const sideTabLinks = document.querySelectorAll<HTMLAnchorElement | HTMLButtonElement>(".side-tab-link");
+			sideTabLinks.forEach((link, index) => {
+				const linkPath = link.tagName === "A" ? new URL((link as HTMLAnchorElement).href).pathname : "";
+
+				if (tabBorder.current !== null && linkPath === location.pathname) {
+					if (
+						sideTabLinks[index - 1] !== undefined &&
+						sideTabLinks[index - 1].tagName === "A" &&
+						(sideTabLinks[index - 1] as HTMLAnchorElement).href !== ""
+					) {
+						const pathname = new URL((sideTabLinks[index - 1] as HTMLAnchorElement).href).pathname;
+						router.prefetch(pathname);
+					}
+
+					if (
+						sideTabLinks[index + 1] !== undefined &&
+						sideTabLinks[index + 1].tagName === "A" &&
+						(sideTabLinks[index + 1] as HTMLAnchorElement).href !== ""
+					) {
+						const pathname = new URL((sideTabLinks[index + 1] as HTMLAnchorElement).href).pathname;
+						router.prefetch(pathname);
+					}
+				}
+			});
+
 			isMoving = false;
 			nextPath = null;
 			noSwipe = false;
