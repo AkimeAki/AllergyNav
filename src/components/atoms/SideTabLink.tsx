@@ -4,6 +4,7 @@ import { css } from "@kuma-ui/core";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import GoogleIcon from "@/components/atoms/GoogleIcon";
+import { cx } from "@/libs/merge-kuma";
 
 interface Props {
 	href?: string;
@@ -14,7 +15,7 @@ interface Props {
 }
 
 export default function ({ href, onClick, children, active = false, icon = "pending" }: Props): JSX.Element {
-	const style = [
+	const style = cx(
 		css`
 			text-decoration: none;
 			height: 48px;
@@ -43,8 +44,6 @@ export default function ({ href, onClick, children, active = false, icon = "pend
 				height: 60px;
 				padding: 15px 0;
 				min-width: 80px;
-				border-bottom-width: 4px;
-				border-bottom-style: solid;
 
 				span {
 					font-size: 12px;
@@ -74,7 +73,6 @@ export default function ({ href, onClick, children, active = false, icon = "pend
 
 					@media (max-width: 880px) {
 						background-color: transparent;
-						border-bottom-color: var(--color-theme);
 						color: var(--color-primary);
 
 						&:hover {
@@ -93,8 +91,9 @@ export default function ({ href, onClick, children, active = false, icon = "pend
 						background-color: transparent;
 						border-bottom-color: transparent;
 					}
-				`
-	].join(" ");
+				`,
+		"side-tab-link"
+	);
 
 	const iconStyle = css`
 		display: none;

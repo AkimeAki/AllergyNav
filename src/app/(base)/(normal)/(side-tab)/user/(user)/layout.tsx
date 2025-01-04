@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
 import { safeString } from "@/libs/safe-type";
 import type { ReactNode } from "react";
-import { css } from "@kuma-ui/core";
 import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "@/libs/auth";
-import UserTabs from "@/components/organisms/UserTabs";
+import UserTabs from "@/components/organisms/side-tab/UserTabs";
+import SideTabLayout from "@/components/templates/SideTabLayout";
 
 interface Props {
 	children: ReactNode;
@@ -22,18 +22,9 @@ export default async function ({ children }: Props): Promise<JSX.Element> {
 	}
 
 	return (
-		<>
-			<UserTabs pageId={id} userId={id} />
-			<div
-				className={css`
-					display: flex;
-					flex-direction: column;
-					gap: 30px;
-				`}
-			>
-				<h3>ユーザー</h3>
-				<div>{children}</div>
-			</div>
-		</>
+		<SideTabLayout sideTabLinks={<UserTabs pageId={id} userId={id} />}>
+			<h3>ユーザー</h3>
+			<div>{children}</div>
+		</SideTabLayout>
 	);
 }

@@ -4,7 +4,8 @@ import type { ReactNode } from "react";
 import { css } from "@kuma-ui/core";
 import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "@/libs/auth";
-import AdminTabs from "@/components/organisms/AdminTabs";
+import AdminTabs from "@/components/organisms/side-tab/AdminTabs";
+import SideTabLayout from "@/components/templates/SideTabLayout";
 
 interface Props {
 	children: ReactNode;
@@ -22,24 +23,15 @@ export default async function ({ children }: Props): Promise<JSX.Element> {
 	}
 
 	return (
-		<>
-			<AdminTabs />
+		<SideTabLayout sideTabLinks={<AdminTabs />}>
+			<h3>管理画面</h3>
 			<div
 				className={css`
-					display: flex;
-					flex-direction: column;
-					gap: 30px;
+					padding: 0 10px;
 				`}
 			>
-				<h3>管理画面</h3>
-				<div
-					className={css`
-						padding: 0 10px;
-					`}
-				>
-					{children}
-				</div>
+				{children}
 			</div>
-		</>
+		</SideTabLayout>
 	);
 }

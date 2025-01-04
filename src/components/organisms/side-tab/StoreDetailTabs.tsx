@@ -1,7 +1,6 @@
 "use client";
 
 import SideTabLink from "@/components/atoms/SideTabLink";
-import SideTabWrapper from "@/components/molecules/SideTabWrapper";
 import { usePathname } from "next/navigation";
 
 interface Props {
@@ -12,7 +11,7 @@ export default function ({ storeId }: Props): JSX.Element {
 	const pathname = usePathname();
 
 	return (
-		<SideTabWrapper>
+		<>
 			<SideTabLink href={`/store/${storeId}`} active={pathname === `/store/${storeId}`} icon="store">
 				お店情報
 			</SideTabLink>
@@ -37,6 +36,6 @@ export default function ({ storeId }: Props): JSX.Element {
 			>
 				コメント
 			</SideTabLink>
-		</SideTabWrapper>
+		</>
 	);
 }
