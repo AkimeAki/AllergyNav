@@ -148,10 +148,24 @@ export default function ({
 										opacity: 0.4;
 									}
 								}
+
+								@keyframes modalBackgroundFadeOut {
+									0% {
+										opacity: 0.4;
+									}
+
+									100% {
+										opacity: 0;
+									}
+								}
 							`,
 							!viewBg &&
 								css`
 									background-color: transparent;
+								`,
+							!isOpen &&
+								css`
+									animation-name: modalBackgroundFadeOut;
 								`
 						)}
 					/>
