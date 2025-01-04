@@ -75,7 +75,7 @@ export default function ({
 		const back = () => {
 			if (isTouch) {
 				setIsOpen(false);
-				history.pushState(null, "", null);
+				history.replaceState(null, "", null);
 			}
 		};
 
