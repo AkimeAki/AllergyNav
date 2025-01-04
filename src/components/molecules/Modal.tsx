@@ -271,10 +271,10 @@ export default function ({
 
 									@media (max-width: 880px) {
 										border-radius: 0;
-										border-top-left-radius: 12px;
-										border-top-right-radius: 12px;
+										border-top-left-radius: 30px;
+										border-top-right-radius: 30px;
 										max-height: 100%;
-										padding: 15px;
+										padding: 20px 15px 15px;
 									}
 								`,
 								isViewCloseButton &&
