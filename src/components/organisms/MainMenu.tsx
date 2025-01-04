@@ -3,63 +3,34 @@
 import { css } from "@kuma-ui/core";
 import MainMenuLink from "@/components/atoms/MainMenuLink";
 import MainMenuHumberger from "@/components/molecules/MainMenuHumberger";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import useGetUserData from "@/hooks/useGetUserData";
 import MainMenuLinkLoading from "@/components/atoms/MainMenuLinkLoading";
-// import useScroll from "@/hooks/useScroll";
 
 export default function (): JSX.Element {
 	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 	const sidebarRef = useRef(null);
 	const pathname = usePathname();
 	const { userStatus, userId, userRole } = useGetUserData();
-	// const { stopScroll, startScroll, isScroll } = useScroll();
-	// const [isSizeSp, setIsSizeSp] = useState<boolean>(false);
-
-	const sidebarCloseAreaClick = (event: MouseEvent): void => {
-		if (isSidebarOpen && sidebarRef.current !== null && event.target !== sidebarRef.current) {
-			setIsSidebarOpen(false);
-		}
-	};
-
-	// useEffect(() => {
-	// 	const resize = (): void => {
-	// 		const mediaQuery = window.matchMedia("(max-width: 600px)");
-	// 		if (mediaQuery.matches) {
-	// 			setIsSizeSp(true);
-	// 		} else {
-	// 			setIsSizeSp(false);
-	// 		}
-	// 	};
-
-	// 	resize();
-
-	// 	window.addEventListener("resize", resize, false);
-
-	// 	return () => {
-	// 		window.removeEventListener("resize", resize);
-	// 	};
-	// }, []);
-
-	// useEffect(() => {
-	// 	if (isSidebarOpen && isSizeSp) {
-	// 		stopScroll();
-	// 	} else if (!isScroll) {
-	// 		startScroll();
-	// 	}
-	// }, [isSizeSp, isSidebarOpen]);
-
-	useEffect(() => {
-		document.addEventListener("click", sidebarCloseAreaClick, false);
-
-		return () => {
-			document.removeEventListener("click", sidebarCloseAreaClick);
-		};
-	}, [isSidebarOpen]);
 
 	return (
 		<>
+			{isSidebarOpen && (
+				<div
+					onClick={() => {
+						setIsSidebarOpen(false);
+					}}
+					className={css`
+						position: fixed;
+						top: 0;
+						left: 0;
+						z-index: 9999;
+						width: 100%;
+						height: 100%;
+					`}
+				/>
+			)}
 			<div
 				className={css`
 					--sidebar-width: 330px;
