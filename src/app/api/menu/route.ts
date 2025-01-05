@@ -10,10 +10,14 @@ import { getToken } from "next-auth/jwt";
 import { accessCheck } from "@/libs/access-check";
 import { getStatus } from "@/libs/get-status";
 import { isVerifiedUser } from "@/libs/check-verified-user";
+import { isAdminUser } from "@/libs/check-admin-user";
 
 export const GET = async (req: NextRequest): Promise<Response> => {
 	let status = 500;
 	let data: GetMenusResponse = null;
+
+	const session = await getServerSession(nextAuthOptions);
+	const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
 	try {
 		if (!(await accessCheck(req))) {
@@ -22,6 +26,23 @@ export const GET = async (req: NextRequest): Promise<Response> => {
 
 		const { searchParams } = new URL(req.url);
 		const storeId = safeString(searchParams.get("storeId"));
+
+		// 全メニュー一覧は管理者以外
+		if (storeId === null) {
+			if (session === null || token === null) {
+				throw new ForbiddenError();
+			}
+
+			const userId = safeString(session?.user?.id);
+
+			if (userId === null) {
+				throw new ForbiddenError();
+			}
+
+			if (!(await isAdminUser(userId))) {
+				throw new ForbiddenError();
+			}
+		}
 
 		const result = await prisma.menu.findMany({
 			select: {
@@ -177,8 +198,6 @@ export const POST = async (req: NextRequest): Promise<Response> => {
 					updated_user_id: menuInsertResult.updated_user_id
 				}
 			});
-
-			console.log(allergenStatus);
 
 			for (const allergen in allergenStatus) {
 				if (allergenStatus[allergen] === "unkown") {
