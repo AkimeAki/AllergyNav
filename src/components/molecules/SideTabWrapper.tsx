@@ -109,7 +109,7 @@ export default function ({ children }: Props): JSX.Element {
 			if (mediaQuery.matches && isTouch && touchX !== null && touchY !== null) {
 				const touch = e.touches[0];
 
-				if (!isMoving && Math.abs(touchY - touch.clientY) > 50) {
+				if (!isMoving && Math.abs(touchY - touch.clientY) > 5) {
 					noSwipe = true;
 				}
 
