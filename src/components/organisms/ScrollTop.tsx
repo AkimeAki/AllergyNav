@@ -7,7 +7,7 @@ export default function () {
 	const pathname = usePathname();
 
 	useEffect(() => {
-		if (document.body.dataset.browser === "safari") {
+		if (document.body.dataset.browser !== undefined && document.body.dataset.browser === "safari") {
 			window.scrollTo(0, 0);
 
 			setTimeout(() => {
