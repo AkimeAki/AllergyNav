@@ -10,6 +10,7 @@ import type { NextRequest } from "next/server";
 import { accessCheck } from "@/libs/access-check";
 import { getStatus } from "@/libs/get-status";
 import { isVerifiedUser } from "@/libs/check-verified-user";
+import { isAdminUser } from "@/libs/check-admin-user";
 
 interface Data {
 	params: {
@@ -240,7 +241,7 @@ export const DELETE = async (req: NextRequest, { params }: Data): Promise<Respon
 			throw new ForbiddenError();
 		}
 
-		if (!(await isVerifiedUser(userId))) {
+		if (!(await isAdminUser(userId))) {
 			throw new ForbiddenError();
 		}
 
