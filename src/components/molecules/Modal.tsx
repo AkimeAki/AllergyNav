@@ -131,7 +131,7 @@ export default function ({
 								left: 0;
 								width: 100%;
 								height: 100%;
-								z-index: 100000;
+								z-index: 1000000;
 								opacity: 0;
 								animation-name: modalBackgroundFadeIn;
 								animation-iteration-count: 1;
@@ -180,7 +180,7 @@ export default function ({
 								width: 100%;
 								padding: 30px;
 								max-width: 800px;
-								z-index: 100000;
+								z-index: 1000000;
 								user-select: none;
 								pointer-events: none;
 								opacity: 0;

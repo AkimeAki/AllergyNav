@@ -26,7 +26,7 @@ export default function ({ isOpen, setIsOpen, children, close = true }: Props): 
 							position: absolute;
 							top: 0;
 							right: 0;
-							z-index: 100000;
+							z-index: 1000000;
 							user-select: none;
 							pointer-events: none;
 							opacity: 0;
