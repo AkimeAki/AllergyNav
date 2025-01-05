@@ -140,7 +140,7 @@ export default function ({ children }: Props): JSX.Element {
 						});
 
 						if (touchX - touch.clientX > 0) {
-							if (currentIndex !== linkPaths.length - 1) {
+							if (currentIndex !== linkPaths.length - 1 && linkPaths[currentIndex + 1] !== "") {
 								sideTabContents.style.transform = `translateX(${touch.clientX - touchX}px)`;
 
 								if (tabBorder.current !== null) {
@@ -157,7 +157,7 @@ export default function ({ children }: Props): JSX.Element {
 								nextPath = linkPaths[currentIndex + 1];
 							}
 						} else {
-							if (currentIndex !== 0) {
+							if (currentIndex !== 0 && linkPaths[currentIndex - 1] !== "") {
 								sideTabContents.style.transform = `translateX(${touch.clientX - touchX}px)`;
 
 								if (tabBorder.current !== null) {
