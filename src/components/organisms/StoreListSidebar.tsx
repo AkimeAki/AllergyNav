@@ -12,7 +12,7 @@ import { useFloatMessage } from "@/hooks/useFloatMessage";
 import { safeNumber } from "@/libs/safe-type";
 import InputButton from "@/components/atoms/InputButton";
 import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
-import SmallModal from "@/components/molecules/SmallModal";
+import FlowWindow from "@/components/molecules/FlowWindow";
 import InputText from "@/components/atoms/InputText";
 import GoogleIcon from "@/components/atoms/GoogleIcon";
 import { searchArea } from "@/definition";
@@ -375,7 +375,7 @@ export default function (): JSX.Element {
 					/>
 				</div>
 			</aside>
-			<SmallModal
+			<FlowWindow
 				isOpen={isSidebarAllergenSelectModalOpen}
 				setIsOpen={setIsSidebarAllergenSelectModalOpen}
 				targetElement={selectSidebarAllergensButton.current}
@@ -424,8 +424,8 @@ export default function (): JSX.Element {
 						</div>
 					))}
 				</div>
-			</SmallModal>
-			<SmallModal
+			</FlowWindow>
+			<FlowWindow
 				isOpen={isHeaderAllergenSelectModalOpen}
 				setIsOpen={setIsHeaderAllergenSelectModalOpen}
 				targetElement={selectHeaderAllergensButton.current}
@@ -474,8 +474,8 @@ export default function (): JSX.Element {
 						</div>
 					))}
 				</div>
-			</SmallModal>
-			<SmallModal
+			</FlowWindow>
+			<FlowWindow
 				isOpen={isAreaSelectModalOpen}
 				setIsOpen={setIsAreaSelectModalOpen}
 				targetElement={selectAreaButton.current}
@@ -515,7 +515,7 @@ export default function (): JSX.Element {
 						現在地周辺
 					</div>
 				</div>
-			</SmallModal>
+			</FlowWindow>
 		</>
 	);
 }

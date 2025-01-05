@@ -29,7 +29,8 @@ export default forwardRef<HTMLDivElement, Props>(({ children, isOpen, setIsOpen,
 					height: 40px;
 					background-color: var(--color-secondary);
 					color: var(--color-primary);
-					align-content: center;
+					display: flex;
+					align-items: center;
 					cursor: pointer;
 					white-space: nowrap;
 					overflow: hidden;

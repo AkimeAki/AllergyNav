@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { css } from "@kuma-ui/core";
-import SmallModal from "@/components/molecules/SmallModal";
+import FlowWindow from "@/components/molecules/FlowWindow";
 import useGetAllergens from "@/hooks/fetch-api/useGetAllergens";
 import AllergenItem from "@/components/atoms/AllergenItem";
 import LoadingCircleCenter from "../atoms/LoadingCircleCenter";
@@ -63,7 +63,8 @@ export default function (): JSX.Element {
 							height: 40px;
 							background-color: var(--color-secondary);
 							color: var(--color-primary);
-							align-content: center;
+							display: flex;
+							align-items: center;
 							border-right: none;
 						}
 
@@ -204,7 +205,7 @@ export default function (): JSX.Element {
 					検索
 				</a>
 			</div>
-			<SmallModal
+			<FlowWindow
 				isOpen={isOpenSelectAllergensModal}
 				setIsOpen={setIsOpenSelectAllergensModal}
 				targetElement={selectAllergensButton.current}
@@ -253,8 +254,8 @@ export default function (): JSX.Element {
 						</div>
 					))}
 				</div>
-			</SmallModal>
-			<SmallModal
+			</FlowWindow>
+			<FlowWindow
 				isOpen={isOpenSelectAreaModal}
 				setIsOpen={setIsOpenSelectAreaModal}
 				targetElement={selectAreaButton.current}
@@ -294,7 +295,7 @@ export default function (): JSX.Element {
 						現在地周辺
 					</div>
 				</div>
-			</SmallModal>
+			</FlowWindow>
 		</div>
 	);
 }
