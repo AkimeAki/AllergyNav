@@ -104,7 +104,9 @@ export default function ({ children }: Props): JSX.Element {
 		let noSwipe = false;
 
 		const move = (e: TouchEvent) => {
-			if (isTouch && touchX !== null && touchY !== null) {
+			const mediaQuery = window.matchMedia("(max-width: 880px)");
+
+			if (mediaQuery.matches && isTouch && touchX !== null && touchY !== null) {
 				const touch = e.touches[0];
 
 				if (!isMoving && Math.abs(touchY - touch.clientY) > 50) {
