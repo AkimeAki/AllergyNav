@@ -131,13 +131,13 @@ export default function ({
 								left: 0;
 								width: 100%;
 								height: 100%;
-								z-index: 50000;
+								z-index: 100000;
 								opacity: 0;
 								animation-name: modalBackgroundFadeIn;
 								animation-iteration-count: 1;
 								animation-duration: 200ms;
 								animation-fill-mode: forwards;
-								background-color: #afafaf;
+								background-color: var(--color-modal-bg);
 
 								@keyframes modalBackgroundFadeIn {
 									0% {
@@ -180,7 +180,7 @@ export default function ({
 								width: 100%;
 								padding: 30px;
 								max-width: 800px;
-								z-index: 50000;
+								z-index: 100000;
 								user-select: none;
 								pointer-events: none;
 								opacity: 0;

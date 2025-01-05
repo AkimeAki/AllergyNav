@@ -19,7 +19,17 @@ export default function ({ children }: Props): JSX.Element {
 			<ScrollTop />
 			<Header />
 			<MainMenu />
-			{children}
+			<div
+				className={css`
+					margin-top: 80px;
+
+					@media (max-width: 880px) {
+						margin-top: 60px;
+					}
+				`}
+			>
+				{children}
+			</div>
 			<div
 				className={css`
 					margin-top: 90px;

@@ -13,7 +13,7 @@ export default function ({ children }: Props): JSX.Element {
 				left: 0;
 				width: 100%;
 				height: 80px;
-				z-index: 9999;
+				z-index: 10000;
 				user-select: none;
 				pointer-events: none;
 

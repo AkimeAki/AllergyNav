@@ -9,13 +9,13 @@ export default function (): JSX.Element {
 			<NotVerifiedHeaderMessage />
 			<header
 				className={css`
-					position: sticky;
+					position: fixed;
 					top: 0;
 					width: 100%;
 					height: 80px;
-					z-index: 9999;
 					background-color: var(--color-secondary);
 					border-bottom: 1px solid var(--color-primary-thin);
+					z-index: 10000;
 
 					@media (max-width: 880px) {
 						height: 60px;

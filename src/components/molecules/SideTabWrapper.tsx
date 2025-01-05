@@ -341,7 +341,7 @@ export default function ({ children }: Props): JSX.Element {
 					position: fixed;
 					top: 60px;
 					left: 0;
-					z-index: 9999;
+					z-index: 10000;
 					overflow: hidden;
 					background-color: var(--color-secondary);
 				}

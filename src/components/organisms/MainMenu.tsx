@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import useGetUserData from "@/hooks/useGetUserData";
 import MainMenuLinkLoading from "@/components/atoms/MainMenuLinkLoading";
+import { cx } from "@/libs/merge-kuma";
 
 export default function (): JSX.Element {
 	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
@@ -20,21 +21,38 @@ export default function (): JSX.Element {
 
 	return (
 		<>
-			{isSidebarOpen && (
-				<div
-					onClick={() => {
-						setIsSidebarOpen(false);
-					}}
-					className={css`
+			<div
+				onClick={() => {
+					setIsSidebarOpen(false);
+				}}
+				className={cx(
+					css`
 						position: fixed;
 						top: 0;
 						left: 0;
-						z-index: 9999;
+						z-index: 100000;
 						width: 100%;
 						height: 100%;
-					`}
-				/>
-			)}
+						transition-duration: 200ms;
+						transition-property: opacity;
+
+						@media (max-width: 880px) {
+							background-color: var(--color-modal-bg);
+						}
+					`,
+					isSidebarOpen
+						? css`
+								opacity: 0.4;
+								user-select: auto;
+								pointer-events: auto;
+							`
+						: css`
+								opacity: 0;
+								user-select: none;
+								pointer-events: none;
+							`
+				)}
+			/>
 			<div
 				className={css`
 					--sidebar-width: 330px;
@@ -45,7 +63,7 @@ export default function (): JSX.Element {
 					width: 100%;
 					pointer-events: none;
 					user-select: none;
-					z-index: 9999;
+					z-index: 100000;
 
 					@media (max-width: 600px) {
 						bottom: 110px;
