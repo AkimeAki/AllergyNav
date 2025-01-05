@@ -22,7 +22,7 @@ export default function ({ isSidebarOpen, setIsSidebarOpen }: Props): JSX.Elemen
 					padding: 30px;
 					pointer-events: none;
 					user-select: none;
-					z-index: 9999;
+					z-index: 100001;
 
 					@media screen and (max-width: 600px) {
 						padding: 20px;

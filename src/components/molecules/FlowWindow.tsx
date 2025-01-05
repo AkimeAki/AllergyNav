@@ -17,9 +17,13 @@ export default function ({ isOpen, setIsOpen, children, targetElement, title, mi
 	const [left, setLeft] = useState<number>(0);
 	const [width, setWidth] = useState<number | undefined>(undefined);
 
-	const modalElement = useClickElemenetSet<HTMLDivElement>(() => {
-		setIsOpen(false);
-	}, [isOpen]);
+	const modalElement = useClickElemenetSet<HTMLDivElement>(
+		(e) => {
+			e.preventDefault();
+			setIsOpen(false);
+		},
+		[isOpen]
+	);
 
 	const setModalPosition = () => {
 		if (targetElement !== null && modalElement.current !== null) {
@@ -76,7 +80,7 @@ export default function ({ isOpen, setIsOpen, children, targetElement, title, mi
 							left: 0;
 							width: 100%;
 							height: 100%;
-							z-index: 9;
+							z-index: 1000;
 							display: none;
 
 							@media (max-width: 880px) {
@@ -97,7 +101,7 @@ export default function ({ isOpen, setIsOpen, children, targetElement, title, mi
 							display: flex;
 							flex-direction: column;
 							gap: 10px;
-							z-index: 9;
+							z-index: 1000;
 							max-height: 300px;
 							height: 100%;
 							background-color: var(--color-secondary);

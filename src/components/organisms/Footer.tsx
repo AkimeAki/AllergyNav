@@ -1,7 +1,7 @@
 import { css } from "@kuma-ui/core";
-import FooterLink from "@/components/molecules/FooterLink";
+import FooterLink from "@/components/molecules/footer/FooterLink";
 import InstallAppButton from "@/components/atoms/InstallAppButton";
-import FooterAds from "@/components/molecules/FooterAds";
+import FooterAds from "@/components/molecules/footer/FooterAds";
 
 export default function (): JSX.Element {
 	return (
