@@ -29,7 +29,9 @@ export default function <T>(initStatus: FetchStatus = "yet") {
 			| "editPicture"
 			| "getStore"
 			| "getStores"
-			| "changePassword",
+			| "changePassword"
+			| "sendDeleteMenuRequest"
+			| "deleteMenu",
 		params: Record<string, string | undefined>,
 		value: Record<string, string | undefined>
 	): Promise<void> => {
@@ -38,7 +40,7 @@ export default function <T>(initStatus: FetchStatus = "yet") {
 		setResponse(undefined);
 
 		try {
-			const options: { url: string; method: "GET" | "POST" | "PUT" } = (() => {
+			const options: { url: string; method: "GET" | "POST" | "PUT" | "DELETE" } = (() => {
 				switch (type) {
 					case "getAllergens":
 						return {
@@ -94,6 +96,22 @@ export default function <T>(initStatus: FetchStatus = "yet") {
 						return {
 							url: `${process.env.NEXT_PUBLIC_API_URL}/user/recovery`,
 							method: "POST"
+						};
+
+					case "sendDeleteMenuRequest":
+						return {
+							url: `${process.env.NEXT_PUBLIC_API_URL}/request/menu/delete`,
+							method: "POST"
+						};
+
+					case "deleteMenu":
+						if (params.menuId === undefined) {
+							throw new Error();
+						}
+
+						return {
+							url: `${process.env.NEXT_PUBLIC_API_URL}/menu/${params.menuId}`,
+							method: "DELETE"
 						};
 
 					case "getComments":
@@ -158,11 +176,7 @@ export default function <T>(initStatus: FetchStatus = "yet") {
 						const offset = (page - 1) * limit;
 
 						return {
-							url: `${process.env.NEXT_PUBLIC_API_URL}/store?keywords=${
-								params.keywords ?? ""
-							}&allergens=${params.allergens ?? ""}&area=${params.area ?? ""}&coords=${
-								params.coords ?? ""
-							}&radius=${params.radius ?? ""}&offset=${offset}&limit=${limit}`,
+							url: `${process.env.NEXT_PUBLIC_API_URL}/store?keywords=${params.keywords ?? ""}&allergens=${params.allergens ?? ""}&area=${params.area ?? ""}&coords=${params.coords ?? ""}&radius=${params.radius ?? ""}&offset=${offset}&limit=${limit}`,
 							method: "GET"
 						};
 					}

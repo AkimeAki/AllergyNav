@@ -23,14 +23,14 @@ export default async function ({ children }: Props): Promise<JSX.Element> {
 	}
 
 	return (
-		<SideTabLayout sideTabLinks={<UserTabs pageId={id} userId={id} />}>
+		<SideTabLayout sideTabLinks={<UserTabs pageId={id} currentUserId={id} />}>
 			<h3
 				className={css`
 					font-size: 25px;
 					font-weight: bold;
 				`}
 			>
-				ユーザー
+				マイページ
 			</h3>
 			<div>{children}</div>
 		</SideTabLayout>

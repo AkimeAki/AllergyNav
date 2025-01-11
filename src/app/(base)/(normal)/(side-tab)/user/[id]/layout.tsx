@@ -17,45 +17,26 @@ interface Props {
 }
 
 export const generateMetadata = async ({ params }: Props): Promise<Metadata> => {
-	let title = "";
-	let userId: null | string = "";
-
-	try {
-		userId = safeString(params.id);
-		if (userId === null) {
-			throw new Error();
-		}
-
-		title = "ユーザー";
-	} catch (e) {
-		notFound();
-	}
-
 	return seoHead({
-		title,
-		canonicalPath: `/user/${userId}`,
+		title: "ユーザー",
+		canonicalPath: `/user/${params.id}`,
 		noIndex: true
 	});
 };
 
 export default async function ({ children, params }: Props): Promise<JSX.Element> {
-	const pageId = safeString(params.id);
 	const session = await getServerSession(nextAuthOptions);
 	const userId = safeString(session?.user?.id);
 
-	if (pageId === null) {
-		notFound();
-	}
-
 	return (
-		<SideTabLayout sideTabLinks={<UserTabs pageId={pageId} userId={userId} />}>
+		<SideTabLayout sideTabLinks={<UserTabs pageId={params.id} currentUserId={userId} />}>
 			<h3
 				className={css`
 					font-size: 25px;
 					font-weight: bold;
 				`}
 			>
-				ユーザー
+				マイページ
 			</h3>
 			<div>{children}</div>
 		</SideTabLayout>

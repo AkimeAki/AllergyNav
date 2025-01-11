@@ -1,4 +1,3 @@
-import JsonLD from "@/components/atoms/JsonLD";
 import { seoHead } from "@/libs/seo";
 import { css } from "@kuma-ui/core";
 import type { Metadata } from "next";
@@ -6,7 +5,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = seoHead({
 	title: "設定",
-	canonicalPath: "/user/settings",
+	canonicalPath: "/settings",
 	noIndex: true
 });
 

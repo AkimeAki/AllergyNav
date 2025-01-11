@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
 import { css } from "@kuma-ui/core";
 import StoreDetailTabs from "@/components/organisms/side-tab/StoreDetailTabs";
-import { getStore } from "@/libs/server-fetch";
+import { serverApiFetch } from "@/libs/server-fetch";
 import SideTabLayout from "@/components/templates/SideTabLayout";
+import { notFound } from "next/navigation";
+import { GetStoreResponse } from "@/type";
 
 interface Props {
 	children: ReactNode;
@@ -12,7 +14,11 @@ interface Props {
 }
 
 export default async function ({ children, params }: Props): Promise<JSX.Element> {
-	const storeDetail = await getStore(params.id);
+	const storeDetail = await serverApiFetch<GetStoreResponse>(`/store/${params.id}`);
+
+	if (storeDetail === null) {
+		notFound();
+	}
 
 	return (
 		<SideTabLayout sideTabLinks={<StoreDetailTabs storeId={storeDetail.id} />}>

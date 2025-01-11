@@ -28,13 +28,12 @@ export const GET = async (req: NextRequest): Promise<Response> => {
 		const storeId = safeString(searchParams.get("storeId"));
 
 		// 全メニュー一覧は管理者以外
-		if (storeId === null) {
+		if (storeId === null || isEmptyString(storeId)) {
 			if (session === null || token === null) {
 				throw new ForbiddenError();
 			}
 
 			const userId = safeString(session?.user?.id);
-
 			if (userId === null) {
 				throw new ForbiddenError();
 			}
@@ -58,7 +57,7 @@ export const GET = async (req: NextRequest): Promise<Response> => {
 			},
 			where: {
 				deleted: false,
-				store_id: storeId ?? undefined
+				store_id: storeId === null || isEmptyString(storeId) ? undefined : storeId
 			}
 		});
 

@@ -207,7 +207,6 @@ export default function (): JSX.Element {
 					</div>
 					<div>
 						<Button
-							size="small"
 							onClick={() => {
 								search();
 							}}
@@ -335,7 +334,6 @@ export default function (): JSX.Element {
 					</div>
 					<div>
 						<Button
-							size="small"
 							onClick={() => {
 								search();
 							}}

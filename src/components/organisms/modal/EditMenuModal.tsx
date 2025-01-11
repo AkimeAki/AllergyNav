@@ -144,7 +144,7 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 						<Label required>名前</Label>
 						<TextInput
 							disabled={editMenuStatus === "loading" || getMenuStatus === "loading"}
-							loading={editMenuStatus === "loading" || getMenuStatus === "loading"}
+							loading={getMenuStatus === "loading"}
 							onChange={(e) => {
 								setMenuName(e.target.value);
 							}}
@@ -158,7 +158,7 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 								setIsSelectAllergenModalOpen(true);
 							}}
 							disabled={editMenuStatus === "loading" || getMenuStatus === "loading"}
-							loading={editMenuStatus === "loading" || getMenuStatus === "loading"}
+							loading={getMenuStatus === "loading"}
 						>
 							選択する
 						</Button>
@@ -196,7 +196,7 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 						<Label>メニューの詳細情報</Label>
 						<TextArea
 							disabled={editMenuStatus === "loading" || getMenuStatus === "loading"}
-							loading={editMenuStatus === "loading" || getMenuStatus === "loading"}
+							loading={getMenuStatus === "loading"}
 							onChange={(e) => {
 								setMenuDescription(e.target.value);
 							}}

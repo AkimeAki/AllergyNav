@@ -2,8 +2,10 @@ import JsonLD from "@/components/atoms/JsonLD";
 import MenuList from "@/components/templates/MenuList";
 import { siteTitle, siteUrl } from "@/definition";
 import { seoHead } from "@/libs/seo";
-import { getMenus, getStore } from "@/libs/server-fetch";
+import { serverApiFetch } from "@/libs/server-fetch";
+import { GetMenusResponse, GetStoreResponse } from "@/type";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 interface Props {
 	params: {
@@ -12,7 +14,11 @@ interface Props {
 }
 
 export const generateMetadata = async ({ params }: Props): Promise<Metadata> => {
-	const storeDetail = await getStore(params.id);
+	const storeDetail = await serverApiFetch<GetStoreResponse>(`/store/${params.id}`);
+
+	if (storeDetail === null) {
+		notFound();
+	}
 
 	return seoHead({
 		title: `アレルギー成分表 - ${storeDetail.name}`,
@@ -22,8 +28,17 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 };
 
 export default async function ({ params }: Props): Promise<JSX.Element> {
-	const store = await getStore(params.id);
-	const menus = await getMenus(params.id);
+	const storeDetail = await serverApiFetch<GetStoreResponse>(`/store/${params.id}`);
+
+	if (storeDetail === null) {
+		notFound();
+	}
+
+	const storeMenus = await serverApiFetch<GetMenusResponse>(`/menu?keywords=&allergens=&storeId=${params.id ?? ""}`);
+
+	if (storeMenus === null) {
+		notFound();
+	}
 
 	return (
 		<>
@@ -54,15 +69,15 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 								"@type": "ListItem",
 								position: 3,
 								item: {
-									"@id": `${siteUrl}/store/${store.id}`,
-									name: store.name
+									"@id": `${siteUrl}/store/${storeDetail.id}`,
+									name: storeDetail.name
 								}
 							},
 							{
 								"@type": "ListItem",
 								position: 4,
 								item: {
-									"@id": `${siteUrl}/store/${store.id}/menu`,
+									"@id": `${siteUrl}/store/${storeDetail.id}/menu`,
 									name: "アレルギー成分表"
 								}
 							}
@@ -84,7 +99,7 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 					}
 				]}
 			/>
-			<MenuList storeId={store.id} menuList={menus} />
+			<MenuList storeId={storeDetail.id} menuList={storeMenus} />
 		</>
 	);
 }

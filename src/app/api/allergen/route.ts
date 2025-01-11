@@ -5,6 +5,8 @@ import { TooManyRequestError } from "@/definition";
 import { accessCheck } from "@/libs/access-check";
 import { getStatus } from "@/libs/get-status";
 
+export const dynamic = "force-dynamic";
+
 export const GET = async (req: NextRequest): Promise<Response> => {
 	let data: GetAllergensResponse = null;
 	let status = 500;

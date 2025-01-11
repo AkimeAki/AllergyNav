@@ -28,8 +28,6 @@ import AlertBox from "@/components/atoms/AlertBox";
 import useGetPictures from "@/hooks/fetch-api/useGetPictures";
 import LoadingEffect from "@/components/atoms/LoadingEffect";
 import DeleteMenuRequestModal from "@/components/organisms/modal/DeleteMenuRequestModal";
-import ListWrapper from "@/components/molecules/ListWrapper";
-import ListItem from "@/components/molecules/ListItem";
 
 interface Props {
 	storeId: string;
@@ -143,7 +141,13 @@ export default function ({ storeId, menuList }: Props): JSX.Element {
 					gap: 20px;
 				`}
 			>
-				<ListWrapper>
+				<section
+					className={css`
+						display: flex;
+						flex-direction: column;
+						gap: 20px;
+					`}
+				>
 					{(getMenusStatus === "loading" || getMenusStatus === "yet") && <LoadingCircleCenter />}
 					{getMenusStatus === "blocked" && (
 						<div
@@ -202,7 +206,19 @@ export default function ({ storeId, menuList }: Props): JSX.Element {
 								</AlertBox>
 							)}
 							{[...menus].reverse().map((menu) => (
-								<ListItem key={menu.id}>
+								<div
+									key={menu.id}
+									className={css`
+										position: relative;
+										transition-duration: 200ms;
+										transition-property: box-shadow;
+										overflow: hidden;
+										border-radius: 7px;
+										border-width: 2px;
+										border-style: solid;
+										border-color: #f3f3f3;
+									`}
+								>
 									<MiniModal
 										key={menu.id}
 										isOpen={isOpenTouchMenuModal && openTouchMenuModalId === menu.id}
@@ -713,11 +729,11 @@ export default function ({ storeId, menuList }: Props): JSX.Element {
 											</div>
 										</div>
 									</div>
-								</ListItem>
+								</div>
 							))}
 						</>
 					)}
-				</ListWrapper>
+				</section>
 				{getMenusStatus === "successed" && (
 					<div
 						className={css`

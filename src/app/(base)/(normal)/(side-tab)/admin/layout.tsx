@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
-import { safeString } from "@/libs/safe-type";
 import type { ReactNode } from "react";
 import { css } from "@kuma-ui/core";
-import { getServerSession } from "next-auth";
-import { nextAuthOptions } from "@/libs/auth";
 import AdminTabs from "@/components/organisms/side-tab/AdminTabs";
 import SideTabLayout from "@/components/templates/SideTabLayout";
+import { getUserData } from "@/libs/get-user-data";
+import { seoHead } from "@/libs/seo";
+import { Metadata } from "next";
 
 interface Props {
 	children: ReactNode;
@@ -14,24 +14,33 @@ interface Props {
 	};
 }
 
-export default async function ({ children }: Props): Promise<JSX.Element> {
-	const session = await getServerSession(nextAuthOptions);
-	const id = safeString(session?.user?.id);
+export const generateMetadata = async (): Promise<Metadata> => {
+	const { userId, role } = await getUserData();
 
-	if (id === null) {
+	if (userId === null || role !== "admin") {
+		notFound();
+	}
+
+	return seoHead({});
+};
+
+export default async function ({ children }: Props): Promise<JSX.Element> {
+	const { userId, role } = await getUserData();
+	if (userId === null || role !== "admin") {
 		notFound();
 	}
 
 	return (
 		<SideTabLayout sideTabLinks={<AdminTabs />}>
-			<h3>管理画面</h3>
-			<div
+			<h3
 				className={css`
-					padding: 0 10px;
+					font-size: 25px;
+					font-weight: bold;
 				`}
 			>
-				{children}
-			</div>
+				管理画面
+			</h3>
+			<div>{children}</div>
 		</SideTabLayout>
 	);
 }

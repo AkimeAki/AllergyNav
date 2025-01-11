@@ -2,13 +2,15 @@ import { css } from "@kuma-ui/core";
 import GoogleMap from "@/components/atoms/GoogleMap";
 import { formatText } from "@/libs/format-text";
 import EditStoreButton from "@/components/organisms/EditStoreButton";
-import { getStore } from "@/libs/server-fetch";
+import { serverApiFetch } from "@/libs/server-fetch";
 import SubTitle from "@/components/atoms/SubTitle";
 import type { Metadata } from "next";
 import { seoHead } from "@/libs/seo";
 import StoreDetailIconLink from "@/components/molecules/StoreDetailIconLink";
 import JsonLD from "@/components/atoms/JsonLD";
 import { siteTitle, siteUrl } from "@/definition";
+import { GetStoreResponse } from "@/type";
+import { notFound } from "next/navigation";
 
 interface Props {
 	params: {
@@ -17,7 +19,11 @@ interface Props {
 }
 
 export const generateMetadata = async ({ params }: Props): Promise<Metadata> => {
-	const storeDetail = await getStore(params.id);
+	const storeDetail = await serverApiFetch<GetStoreResponse>(`/store/${params.id}`);
+
+	if (storeDetail === null) {
+		notFound();
+	}
 
 	return seoHead({
 		title: storeDetail.name,
@@ -27,7 +33,12 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 };
 
 export default async function ({ params }: Props): Promise<JSX.Element> {
-	const storeDetail = await getStore(params.id);
+	const storeDetail = await serverApiFetch<GetStoreResponse>(`/store/${params.id}`);
+
+	if (storeDetail === null) {
+		notFound();
+	}
+
 	let linkCount = 0;
 	let linkFirst = "";
 	if (storeDetail.url !== null) {

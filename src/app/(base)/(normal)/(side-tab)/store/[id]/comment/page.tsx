@@ -3,11 +3,12 @@ import { safeString } from "@/libs/safe-type";
 import { css } from "@kuma-ui/core";
 import StoreComment from "@/components/templates/StoreComment";
 import type { Metadata } from "next";
-import { getStore } from "@/libs/server-fetch";
+import { serverApiFetch } from "@/libs/server-fetch";
 import { seoHead } from "@/libs/seo";
 import AlertBox from "@/components/atoms/AlertBox";
 import JsonLD from "@/components/atoms/JsonLD";
 import { siteTitle, siteUrl } from "@/definition";
+import { GetStoreResponse } from "@/type";
 
 interface Props {
 	params: {
@@ -16,7 +17,11 @@ interface Props {
 }
 
 export const generateMetadata = async ({ params }: Props): Promise<Metadata> => {
-	const storeDetail = await getStore(params.id);
+	const storeDetail = await serverApiFetch<GetStoreResponse>(`/store/${params.id}`);
+
+	if (storeDetail === null) {
+		notFound();
+	}
 
 	return seoHead({
 		title: `コメント - ${storeDetail.name}`,
@@ -26,10 +31,9 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 };
 
 export default async function ({ params }: Props): Promise<JSX.Element> {
-	const id = safeString(params.id);
-	const storeDetail = await getStore(params.id);
+	const storeDetail = await serverApiFetch<GetStoreResponse>(`/store/${params.id}`);
 
-	if (id === null) {
+	if (storeDetail === null) {
 		notFound();
 	}
 
@@ -106,7 +110,7 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 						</p>
 					</AlertBox>
 				</div>
-				<StoreComment storeId={id} />
+				<StoreComment storeId={params.id} />
 			</div>
 		</>
 	);

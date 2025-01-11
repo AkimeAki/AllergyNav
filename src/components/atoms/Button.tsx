@@ -9,7 +9,7 @@ import { cx } from "@/libs/merge-kuma";
 interface Props {
 	href?: string;
 	children: ReactNode;
-	size?: "normal" | "small" | "tiny";
+	size?: "normal" | "tiny";
 	onClick?: () => void;
 	disabled?: boolean;
 	disabledClick?: boolean;
@@ -70,8 +70,8 @@ export default function ({
 			white-space: nowrap;
 			user-select: none;
 			text-align: center;
-			padding: 12px 30px;
-			font-size: 18px;
+			padding: 10px 20px;
+			font-size: 15px;
 
 			* {
 				transition-duration: 200ms;
@@ -79,15 +79,6 @@ export default function ({
 				color: var(--color-secondary);
 			}
 		`,
-		size === "small" &&
-			css`
-				padding: 10px 20px;
-				font-size: 15px;
-
-				* {
-					font-size: 15px;
-				}
-			`,
 		size === "tiny" &&
 			css`
 				padding: 3px 5px;

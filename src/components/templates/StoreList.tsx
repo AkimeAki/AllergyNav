@@ -524,7 +524,6 @@ export default function (): JSX.Element {
 							`}
 						>
 							<Button
-								size="small"
 								disabled={
 									getStoresStatus !== "successed" ||
 									getStoresResponse === undefined ||
@@ -540,7 +539,6 @@ export default function (): JSX.Element {
 								前へ
 							</Button>
 							<Button
-								size="small"
 								disabled={
 									getStoresStatus !== "successed" ||
 									getStoresResponse === undefined ||
@@ -565,7 +563,6 @@ export default function (): JSX.Element {
 			</div>
 			<HeaderItemArea>
 				<Button
-					size="small"
 					onClick={() => {
 						setIsOpenAddModal(true);
 					}}

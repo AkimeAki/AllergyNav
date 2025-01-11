@@ -5,7 +5,7 @@ interface Props {
 	title?: string;
 	description?: string;
 	isFullTitle?: boolean;
-	canonicalPath: string;
+	canonicalPath?: string;
 	noIndex?: boolean;
 }
 
@@ -51,7 +51,7 @@ export const seoHead = ({
 		icons: `${process.env.SITEURL}/favicon.png`,
 		manifest: `${process.env.SITEURL}/manifest.json`,
 		alternates: {
-			canonical: `${process.env.SITEURL}${canonicalPath}`
+			canonical: canonicalPath === undefined ? undefined : `${process.env.SITEURL}${canonicalPath}`
 		},
 		robots: {
 			index: !noIndex // noindexの設定
