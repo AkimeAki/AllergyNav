@@ -20,6 +20,8 @@ steps:
         "R2_ACCESS_KEY_ID=${_R2_ACCESS_KEY_ID}",
         "--build-arg",
         "R2_BUCKET=${_R2_BUCKET}",
+        "--build-arg",
+        "REQUEST_DISCORD_WEBHOOK_URL=${_REQUEST_DISCORD_WEBHOOK_URL}",
         "-t",
         "${_IMAGE_NAME}:${COMMIT_SHA}",
         "-f",
