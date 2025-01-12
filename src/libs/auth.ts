@@ -1,11 +1,12 @@
 import type { DefaultSession, NextAuthOptions } from "next-auth";
 // import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import NextAuth from "next-auth";
 // import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "@/libs/prisma";
 import { verifyPass } from "@/libs/password";
 import { safeString } from "@/libs/safe-type";
+import NextAuth from "next-auth";
+import { NextApiRequest, NextApiResponse } from "next";
 
 declare module "next-auth" {
 	interface Session extends DefaultSession {
@@ -109,4 +110,8 @@ export const nextAuthOptions: NextAuthOptions = {
 	}
 };
 
-export const handler = NextAuth(nextAuthOptions);
+export const handler = (req: NextApiRequest, res: NextApiResponse) => {
+	req.headers["x-forwarded-host"] = process.env.NEXTAUTH_URL || req.headers["x-forwarded-host"];
+
+	return NextAuth(req, res, nextAuthOptions);
+};
