@@ -119,6 +119,14 @@ export default function ({ children }: Props): JSX.Element {
 					noSwipe = true;
 				}
 
+				if (
+					element.current !== null &&
+					e.target !== null &&
+					element.current.contains(e.target as HTMLElement)
+				) {
+					noSwipe = true;
+				}
+
 				if (!noSwipe && (Math.abs(touchX - touch.clientX) > 30 || isMoving)) {
 					setEnableScroll(false);
 
