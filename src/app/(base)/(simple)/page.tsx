@@ -17,8 +17,9 @@ export default async function (): Promise<JSX.Element> {
 
 					@media (max-width: 860px) {
 						font-size: 5.5cqw;
+						gap: 0;
 						height: auto;
-						padding: 30px 0;
+						padding-bottom: 30px;
 					}
 				`}
 			>
@@ -29,6 +30,11 @@ export default async function (): Promise<JSX.Element> {
 						user-select: none;
 
 						@media (max-width: 860px) {
+							font-size: 4.3cqw;
+							margin: 70px 0;
+						}
+
+						@media (max-width: 670px) {
 							font-size: 5.5cqw;
 						}
 					`}
