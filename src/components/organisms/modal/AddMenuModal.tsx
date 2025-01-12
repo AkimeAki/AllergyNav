@@ -130,7 +130,6 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						<TextInput
 							value={menuName}
 							disabled={addMenuStatus === "loading"}
-							loading={addMenuStatus === "loading"}
 							onChange={(e) => {
 								setMenuName(e.target.value);
 							}}
@@ -180,7 +179,6 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						<TextArea
 							value={menuDescription}
 							disabled={addMenuStatus === "loading"}
-							loading={addMenuStatus === "loading"}
 							onChange={(e) => {
 								setMenuDescription(e.target.value);
 							}}

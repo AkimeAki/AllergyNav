@@ -105,7 +105,6 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						<Label>写真をアップロード</Label>
 						<FileUpload
 							disabled={addPictureStatus === "loading"}
-							loading={addPictureStatus === "loading"}
 							onChange={(e) => {
 								const files = e.target.files;
 								console.log(files);
@@ -121,7 +120,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						<Select
 							value={pictureMenuId}
 							disabled={getMenusStatus === "loading" || addPictureStatus === "loading"}
-							loading={getMenusStatus === "loading" || addPictureStatus === "loading"}
+							loading={getMenusStatus === "loading"}
 							onChange={(e) => {
 								let selectId = "null";
 								Array.from(e.target).forEach((item) => {
@@ -147,7 +146,6 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						<TextArea
 							value={pictureDescription}
 							disabled={addPictureStatus === "loading"}
-							loading={addPictureStatus === "loading"}
 							onChange={(e) => {
 								setPictureDescription(e.target.value);
 							}}

@@ -233,7 +233,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						<Label required>お店の名前</Label>
 						<TextInput
 							disabled={editStoreStatus === "loading" || getStoreStatus === "loading"}
-							loading={editStoreStatus === "loading" || getStoreStatus === "loading"}
+							loading={getStoreStatus === "loading"}
 							onChange={(e) => {
 								setStoreName(e.target.value);
 							}}
@@ -245,7 +245,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						<p>郵便番号は除外してください。</p>
 						<TextInput
 							disabled={editStoreStatus === "loading" || getStoreStatus === "loading"}
-							loading={editStoreStatus === "loading" || getStoreStatus === "loading"}
+							loading={getStoreStatus === "loading"}
 							onChange={(e) => {
 								setStoreAddress(e.target.value);
 							}}
@@ -257,7 +257,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						<TextInput
 							value={storeUrl}
 							disabled={editStoreStatus === "loading" || getStoreStatus === "loading"}
-							loading={editStoreStatus === "loading" || getStoreStatus === "loading"}
+							loading={getStoreStatus === "loading"}
 							onChange={(e) => {
 								setStoreUrl(e.target.value);
 							}}
@@ -271,7 +271,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						<TextInput
 							value={allergyMenuUrl}
 							disabled={editStoreStatus === "loading" || getStoreStatus === "loading"}
-							loading={editStoreStatus === "loading" || getStoreStatus === "loading"}
+							loading={getStoreStatus === "loading"}
 							onChange={(e) => {
 								setAllergyMenuUrl(e.target.value);
 							}}
@@ -282,7 +282,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						<TextArea
 							autoSize
 							disabled={editStoreStatus === "loading" || getStoreStatus === "loading"}
-							loading={editStoreStatus === "loading" || getStoreStatus === "loading"}
+							loading={getStoreStatus === "loading"}
 							onChange={(e) => {
 								setStoreDescription(e.target.value);
 							}}
@@ -294,7 +294,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						<TextInput
 							value={tabelogUrl}
 							disabled={editStoreStatus === "loading" || getStoreStatus === "loading"}
-							loading={editStoreStatus === "loading" || getStoreStatus === "loading"}
+							loading={getStoreStatus === "loading"}
 							onChange={(e) => {
 								setTabelogUrl(e.target.value);
 							}}
@@ -305,7 +305,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						<TextInput
 							value={gurunaviUrl}
 							disabled={editStoreStatus === "loading" || getStoreStatus === "loading"}
-							loading={editStoreStatus === "loading" || getStoreStatus === "loading"}
+							loading={getStoreStatus === "loading"}
 							onChange={(e) => {
 								setGurunaviUrl(e.target.value);
 							}}
@@ -316,7 +316,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						<TextInput
 							value={hotpepperUrl}
 							disabled={editStoreStatus === "loading" || getStoreStatus === "loading"}
-							loading={editStoreStatus === "loading" || getStoreStatus === "loading"}
+							loading={getStoreStatus === "loading"}
 							onChange={(e) => {
 								setHotpepperUrl(e.target.value);
 							}}

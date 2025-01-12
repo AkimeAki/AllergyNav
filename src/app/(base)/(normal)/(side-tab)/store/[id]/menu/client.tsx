@@ -445,31 +445,43 @@ export default function ({ storeId, menuList }: Props): JSX.Element {
 													top: 0;
 													left: 0;
 													z-index: -1;
-												`}
-											>
-												<LoadingEffect />
-											</div>
-											{getPicturesStatus === "successed" && (
-												<Image
-													className={css`
-														display: block;
-														width: 100%;
-														height: 100%;
-														object-fit: cover;
+													background-color: #f5f5f5;
 
-														@media (max-width: 880px) {
-															object-fit: cover;
-														}
-													`}
-													src={
-														getPicturesResponse?.find((p) => p.menu_id === menu.id)?.url ??
-														"/no-image.png"
+													@media (prefers-color-scheme: dark) {
+														background-color: #555555;
 													}
-													width={100}
-													height={100}
-													alt={`${menu.name}の画像`}
-												/>
-											)}
+												`}
+											/>
+											{(() => {
+												if (getPicturesStatus === "successed") {
+													const imageUrl = getPicturesResponse?.find(
+														(p) => p.menu_id === menu.id
+													)?.url;
+
+													if (imageUrl !== undefined) {
+														return (
+															<Image
+																className={css`
+																	display: block;
+																	width: 100%;
+																	height: 100%;
+																	object-fit: cover;
+
+																	@media (max-width: 880px) {
+																		object-fit: cover;
+																	}
+																`}
+																src={imageUrl}
+																width={100}
+																height={100}
+																alt={`${menu.name}の画像`}
+															/>
+														);
+													}
+												}
+
+												return "";
+											})()}
 										</div>
 										<div
 											className={css`

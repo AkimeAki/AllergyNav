@@ -12,7 +12,6 @@ import useGetAllergens from "@/hooks/fetch-api/useGetAllergens";
 import AllergenItem from "@/components/atoms/AllergenItem";
 import useGetUserData from "@/hooks/useGetUserData";
 import useGetPictures from "@/hooks/fetch-api/useGetPictures";
-import LoadingEffect from "@/components/atoms/LoadingEffect";
 import { safeNumber, safeString } from "@/libs/safe-type";
 import { isEmptyString } from "@/libs/check-string";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
@@ -341,33 +340,43 @@ export default function (): JSX.Element {
 														top: 0;
 														left: 0;
 														z-index: -1;
-													`}
-												>
-													<LoadingEffect />
-												</div>
-												{getPicturesStatus === "successed" && (
-													<Image
-														className={css`
-															display: block;
-															width: 100%;
-															height: 100%;
-															object-fit: cover;
+														background-color: #f5f5f5;
 
-															@media (max-width: 880px) {
-																object-fit: cover;
-															}
-														`}
-														src={
-															getPicturesResponse?.find(
-																(p) =>
-																	p.store_id === store.id && p.menu_id !== undefined
-															)?.url ?? "/no-image.png"
+														@media (prefers-color-scheme: dark) {
+															background-color: #555555;
 														}
-														width={250}
-														height={250}
-														alt={`${store.name}の画像`}
-													/>
-												)}
+													`}
+												/>
+												{(() => {
+													if (getPicturesStatus === "successed") {
+														const imageUrl = getPicturesResponse?.find(
+															(p) => p.store_id === store.id && p.menu_id !== undefined
+														)?.url;
+
+														if (imageUrl !== undefined) {
+															return (
+																<Image
+																	className={css`
+																		display: block;
+																		width: 100%;
+																		height: 100%;
+																		object-fit: cover;
+
+																		@media (max-width: 880px) {
+																			object-fit: cover;
+																		}
+																	`}
+																	src={imageUrl}
+																	width={250}
+																	height={250}
+																	alt={`${store.name}の画像`}
+																/>
+															);
+														}
+													}
+
+													return "";
+												})()}
 											</div>
 											<div
 												className={css`

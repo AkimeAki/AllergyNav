@@ -151,7 +151,6 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 						<TextInput
 							value={storeName}
 							disabled={addStoreStatus === "loading" || addStoreStatus === "successed"}
-							loading={addStoreStatus === "loading" || addStoreStatus === "successed"}
 							onChange={(e) => {
 								setStoreName(e.target.value);
 							}}
@@ -163,7 +162,6 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 						<TextInput
 							value={storeAddress}
 							disabled={addStoreStatus === "loading" || addStoreStatus === "successed"}
-							loading={addStoreStatus === "loading" || addStoreStatus === "successed"}
 							onChange={(e) => {
 								setStoreAddress(e.target.value);
 							}}
@@ -174,7 +172,6 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 						<TextInput
 							value={storeUrl}
 							disabled={addStoreStatus === "loading" || addStoreStatus === "successed"}
-							loading={addStoreStatus === "loading" || addStoreStatus === "successed"}
 							onChange={(e) => {
 								setStoreUrl(e.target.value);
 							}}
@@ -188,7 +185,6 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 						<TextInput
 							value={allergyMenuUrl}
 							disabled={addStoreStatus === "loading" || addStoreStatus === "successed"}
-							loading={addStoreStatus === "loading" || addStoreStatus === "successed"}
 							onChange={(e) => {
 								setAllergyMenuUrl(e.target.value);
 							}}
@@ -199,7 +195,6 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 						<TextArea
 							value={storeDescription}
 							disabled={addStoreStatus === "loading" || addStoreStatus === "successed"}
-							loading={addStoreStatus === "loading" || addStoreStatus === "successed"}
 							autoSize
 							onChange={(e) => {
 								setStoreDescription(e.target.value);

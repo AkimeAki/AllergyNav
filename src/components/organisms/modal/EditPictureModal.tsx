@@ -124,11 +124,7 @@ export default function ({ pictureId, storeId, isOpen, setIsOpen, callback }: Pr
 								editPictureStatus === "loading" ||
 								getPictureStatus === "loading"
 							}
-							loading={
-								getMenusStatus === "loading" ||
-								editPictureStatus === "loading" ||
-								getPictureStatus === "loading"
-							}
+							loading={getMenusStatus === "loading" || getPictureStatus === "loading"}
 							onChange={(e) => {
 								let selectId = "null";
 								Array.from(e.target).forEach((item) => {
@@ -154,7 +150,7 @@ export default function ({ pictureId, storeId, isOpen, setIsOpen, callback }: Pr
 						<TextArea
 							value={pictureDescription}
 							disabled={editPictureStatus === "loading" || getPictureStatus === "loading"}
-							loading={editPictureStatus === "loading" || getPictureStatus === "loading"}
+							loading={getPictureStatus === "loading"}
 							onChange={(e) => {
 								setPictureDescription(e.target.value);
 							}}
