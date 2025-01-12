@@ -99,6 +99,8 @@ export default function ({ children }: Props): JSX.Element {
 		let touchX: number | null = null;
 		let touchY: number | null = null;
 		let overPercent = 0;
+		let swipeStartTime = 0;
+		let swipeEndTime = 0;
 		let isMoving = false;
 		let nextPath: null | string = null;
 		let noSwipe = false;
@@ -109,7 +111,7 @@ export default function ({ children }: Props): JSX.Element {
 			if (mediaQuery.matches && isTouch && touchX !== null && touchY !== null) {
 				const touch = e.touches[0];
 
-				if (!isMoving && Math.abs(touchY - touch.clientY) > 5) {
+				if (!isMoving && Math.abs(touchY - touch.clientY) > 50) {
 					noSwipe = true;
 				}
 
@@ -210,6 +212,8 @@ export default function ({ children }: Props): JSX.Element {
 			nextPath = null;
 			noSwipe = false;
 			overPercent = 0;
+			swipeStartTime = new Date().getTime();
+			swipeEndTime = new Date().getTime();
 			if (isTouch) {
 				const touch = e.touches[0];
 				touchX = touch.clientX;
@@ -218,10 +222,16 @@ export default function ({ children }: Props): JSX.Element {
 		};
 
 		const end = () => {
+			swipeEndTime = new Date().getTime();
 			const sideTabContents = document.querySelector<HTMLDivElement>("#side-tab-contents");
 			if (sideTabContents !== null && tabBorder.current !== null) {
 				if (isTouch && touchX !== null && touchY !== null && isMoving && nextPath !== null) {
-					if (Math.abs(overPercent) > 30) {
+					if (
+						Math.abs(overPercent) > 50 ||
+						(Math.abs(overPercent) > 20 &&
+							swipeEndTime - swipeStartTime > 0 &&
+							swipeEndTime - swipeStartTime < 200)
+					) {
 						tabBorder.current.style.transitionDuration = "300ms";
 						sideTabContents.style.transitionDuration = "300ms";
 						if (overPercent > 0) {
@@ -268,6 +278,8 @@ export default function ({ children }: Props): JSX.Element {
 			noSwipe = false;
 			nextPath = null;
 			overPercent = 0;
+			swipeStartTime = 0;
+			swipeEndTime = 0;
 		};
 
 		document.addEventListener("touchmove", move);

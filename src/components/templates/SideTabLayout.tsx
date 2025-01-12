@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import { css } from "@kuma-ui/core";
-import SideTabLink from "@/components/atoms/SideTabLink";
 import SideTabWrapper from "@/components/molecules/SideTabWrapper";
 import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
 
