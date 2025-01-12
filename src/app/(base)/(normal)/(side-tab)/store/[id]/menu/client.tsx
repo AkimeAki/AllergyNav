@@ -26,7 +26,6 @@ import useGetAllergens from "@/hooks/fetch-api/useGetAllergens";
 import type { AllergenItemStatus, GetMenusResponse } from "@/type";
 import AlertBox from "@/components/atoms/AlertBox";
 import useGetPictures from "@/hooks/fetch-api/useGetPictures";
-import LoadingEffect from "@/components/atoms/LoadingEffect";
 import DeleteMenuRequestModal from "@/components/organisms/modal/DeleteMenuRequestModal";
 import ListWrapper from "@/components/molecules/ListWrapper";
 import ListItem from "@/components/molecules/ListItem";
