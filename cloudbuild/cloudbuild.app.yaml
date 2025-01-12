@@ -22,6 +22,8 @@ steps:
         "R2_BUCKET=${_R2_BUCKET}",
         "--build-arg",
         "REQUEST_DISCORD_WEBHOOK_URL=${_REQUEST_DISCORD_WEBHOOK_URL}",
+        "--build-arg",
+        "NEXTAUTH_URL_INTERNAL=${_NEXTAUTH_URL_INTERNAL}",
         "-t",
         "${_IMAGE_NAME}:${COMMIT_SHA}",
         "-f",
