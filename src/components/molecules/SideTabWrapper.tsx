@@ -345,6 +345,8 @@ export default function ({ children }: Props): JSX.Element {
 
 	return (
 		<>
+			{/* Skipping auto-scroll behavior Warning用 */}
+			{/* 参考：https://zenn.dev/luvmini511/articles/65ba057f0c7dfe */}
 			<div></div>
 			<div
 				className={css`
