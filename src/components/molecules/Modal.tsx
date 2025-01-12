@@ -68,12 +68,12 @@ export default function ({
 
 	// 戻るボタン検知用
 	useEffect(() => {
-		if (isModalOpen && isTouch) {
+		if (isModalOpen && isTouch && document.body.dataset.os === "android") {
 			history.pushState(null, "", null);
 		}
 
 		const back = () => {
-			if (isTouch) {
+			if (isModalOpen && isTouch && document.body.dataset.os === "android") {
 				setIsOpen(false);
 				history.replaceState(null, "", null);
 			}
@@ -117,7 +117,11 @@ export default function ({
 						onClick={() => {
 							if (close) {
 								if (onOutsideClick === undefined) {
-									setIsOpen(false);
+									if (isTouch && document.body.dataset.os === "android") {
+										history.back();
+									} else {
+										setIsOpen(false);
+									}
 								} else {
 									onOutsideClick();
 								}
@@ -319,7 +323,11 @@ export default function ({
 								onClick={() => {
 									if (close) {
 										if (onOutsideClick === undefined) {
-											setIsOpen(false);
+											if (isTouch && document.body.dataset.os === "android") {
+												history.back();
+											} else {
+												setIsOpen(false);
+											}
 										} else {
 											onOutsideClick();
 										}
