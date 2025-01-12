@@ -1,11 +1,11 @@
 import JsonLD from "@/components/atoms/JsonLD";
 import StoreListSidebar from "@/components/organisms/StoreListSidebar";
-import StoreList from "@/components/templates/StoreList";
 import { siteTitle, siteUrl } from "@/definition";
 import { seoHead } from "@/libs/seo";
 import { css } from "@kuma-ui/core";
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import Client from "./client";
 
 const title = "アレルギー成分情報が提供されているお店一覧";
 
@@ -78,7 +78,7 @@ export default function (): JSX.Element {
 					</h2>
 				</div>
 				<Suspense>
-					<StoreList />
+					<Client />
 				</Suspense>
 			</div>
 		</>

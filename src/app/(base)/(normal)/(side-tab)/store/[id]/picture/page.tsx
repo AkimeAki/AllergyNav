@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
-import StorePictureList from "@/components/templates/StorePictureList";
 import type { Metadata } from "next";
 import { serverApiFetch } from "@/libs/server-fetch";
 import { seoHead } from "@/libs/seo";
 import JsonLD from "@/components/atoms/JsonLD";
 import { siteTitle, siteUrl } from "@/definition";
 import { GetStoreResponse } from "@/type";
+import Client from "./client";
 
 interface Props {
 	params: {
@@ -79,7 +79,7 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 					}
 				]}
 			/>
-			<StorePictureList storeId={params.id} />
+			<Client storeId={params.id} />
 		</>
 	);
 }

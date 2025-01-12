@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { prisma } from "@/libs/prisma";
 import { safeString } from "@/libs/safe-type";
 import { seoHead } from "@/libs/seo";
-import ChangePasswordForm from "@/components/templates/ChangePasswordForm";
+import Client from "./client";
 
 export const metadata: Metadata = seoHead({ title: "メール認証", canonicalPath: "/verified", noIndex: true });
 export const dynamic = "force-dynamic";
@@ -79,7 +79,7 @@ export default async function ({ searchParams }: Props): Promise<JSX.Element> {
 			`}
 		>
 			{text !== "" && <p>{text}</p>}
-			{isPossibleRecovery && <ChangePasswordForm recoveryCode={recoveryCode} />}
+			{isPossibleRecovery && <Client recoveryCode={recoveryCode} />}
 		</div>
 	);
 }

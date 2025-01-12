@@ -12,7 +12,7 @@ import useGetAllergens from "@/hooks/fetch-api/useGetAllergens";
 import AllergenItem from "@/components/atoms/AllergenItem";
 import useGetUserData from "@/hooks/useGetUserData";
 import useGetPictures from "@/hooks/fetch-api/useGetPictures";
-import LoadingEffect from "../atoms/LoadingEffect";
+import LoadingEffect from "@/components/atoms/LoadingEffect";
 import { safeNumber, safeString } from "@/libs/safe-type";
 import { isEmptyString } from "@/libs/check-string";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
@@ -21,7 +21,7 @@ import NotLoginedModal from "@/components/molecules/NotLoginedModal";
 import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
 import GoogleAds from "@/components/atoms/GoogleAds";
 import AlertBox from "@/components/atoms/AlertBox";
-import HeaderItemArea from "../organisms/HeaderItemArea";
+import HeaderItemArea from "@/components/organisms/HeaderItemArea";
 
 export default function (): JSX.Element {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);

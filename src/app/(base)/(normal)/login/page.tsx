@@ -1,10 +1,9 @@
 import JsonLD from "@/components/atoms/JsonLD";
-import LoginForm from "@/components/templates/LoginForm";
 import { seoHead } from "@/libs/seo";
-import { css } from "@kuma-ui/core";
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
+import Client from "./client";
 
 export const metadata: Metadata = seoHead({ title: "ログイン", canonicalPath: "/login" });
 
@@ -19,17 +18,7 @@ export default async function (): Promise<JSX.Element> {
 	return (
 		<>
 			<JsonLD />
-			<div
-				className={css`
-					width: 100%;
-					max-width: 500px;
-					margin: 0 auto;
-				`}
-			>
-				<div>
-					<LoginForm />
-				</div>
-			</div>
+			<Client />
 		</>
 	);
 }

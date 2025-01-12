@@ -1,11 +1,11 @@
 import JsonLD from "@/components/atoms/JsonLD";
-import MenuList from "@/components/templates/MenuList";
 import { siteTitle, siteUrl } from "@/definition";
 import { seoHead } from "@/libs/seo";
 import { serverApiFetch } from "@/libs/server-fetch";
 import { GetMenusResponse, GetStoreResponse } from "@/type";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Client from "./client";
 
 interface Props {
 	params: {
@@ -99,7 +99,7 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 					}
 				]}
 			/>
-			<MenuList storeId={storeDetail.id} menuList={storeMenus} />
+			<Client storeId={storeDetail.id} menuList={storeMenus} />
 		</>
 	);
 }

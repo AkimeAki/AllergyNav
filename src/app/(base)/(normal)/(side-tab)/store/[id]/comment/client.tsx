@@ -18,6 +18,7 @@ import useSendVerifyMail from "@/hooks/fetch-api/useSendVerifyMail";
 import StoreCommentBarrier from "@/components/molecules/StoreCommentBarrier";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
 import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
+import AlertBox from "@/components/atoms/AlertBox";
 
 interface Props {
 	storeId: string;
@@ -51,7 +52,34 @@ export default function ({ storeId }: Props): JSX.Element {
 	}, [addCommentStatus]);
 
 	return (
-		<>
+		<div
+			className={css`
+				display: flex;
+				flex-direction: column;
+				gap: 30px;
+			`}
+		>
+			<div>
+				<AlertBox>
+					<p
+						className={css`
+							text-align: center;
+						`}
+					>
+						こちらのコメント欄は、アレルギーの方への対応やアレルギー除去対応について等、
+						<span
+							className={css`
+								color: var(--color-red);
+								font-weight: bold;
+								text-decoration: underline;
+							`}
+						>
+							アレルギーに関することのみ記載
+						</span>
+						をお願いします。
+					</p>
+				</AlertBox>
+			</div>
 			{addCommentStatus === "loading" && <Cursor cursor="wait" />}
 			<SubTitle>コメントを書く</SubTitle>
 			{getCommentsStatus === "blocked" && (
@@ -301,6 +329,6 @@ export default function ({ storeId }: Props): JSX.Element {
 					</>
 				)}
 			</div>
-		</>
+		</div>
 	);
 }
