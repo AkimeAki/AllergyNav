@@ -77,7 +77,11 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 		}
 
 		const normalizedAddress =
-			normalizeResult.pref + normalizeResult.city + normalizeResult.town + normalizeResult.addr;
+			normalizeResult.pref +
+			normalizeResult.city +
+			normalizeResult.town +
+			(normalizeResult.addr ?? "") +
+			normalizeResult.other;
 
 		editStore(
 			storeId,
