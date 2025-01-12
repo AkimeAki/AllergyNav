@@ -344,76 +344,79 @@ export default function ({ children }: Props): JSX.Element {
 	}, [pathname]);
 
 	return (
-		<div
-			className={css`
-				display: flex;
-				flex-direction: column;
-				gap: 30px;
-
-				@media (max-width: 880px) {
-					width: 100%;
-					position: fixed;
-					top: 60px;
-					left: 0;
-					z-index: 10000;
-					overflow: hidden;
-					background-color: var(--color-secondary);
-				}
-			`}
-		>
-			<aside
-				ref={element}
-				className={css`
-					position: relative;
-					display: flex;
-					flex-direction: column;
-					border-radius: 4px;
-					overflow: hidden;
-
-					@media (max-width: 880px) {
-						flex-direction: row;
-						border-radius: 0;
-						height: 60px;
-						align-items: center;
-						white-space: nowrap;
-						border-bottom: 1px solid var(--color-primary-thin);
-					}
-				`}
-			>
-				{children}
-				<div
-					ref={tabBorder}
-					className={css`
-						display: none;
-						position: absolute;
-						bottom: 0;
-						height: 2px;
-						background-color: var(--color-theme);
-						transition-duration: 0s;
-						transition-property: transform;
-
-						@media (max-width: 880px) {
-							display: block;
-						}
-					`}
-				/>
-			</aside>
+		<>
+			<div></div>
 			<div
 				className={css`
-					text-align: center;
+					display: flex;
+					flex-direction: column;
+					gap: 30px;
+
 					@media (max-width: 880px) {
-						display: none;
+						width: 100%;
+						position: fixed;
+						top: 60px;
+						left: 0;
+						z-index: 10000;
+						overflow: hidden;
+						background-color: var(--color-secondary);
 					}
 				`}
 			>
-				<GoogleAds
-					slot="7661038914"
-					style={css`
-						width: 220px;
-						height: 600px;
+				<aside
+					ref={element}
+					className={css`
+						position: relative;
+						display: flex;
+						flex-direction: column;
+						border-radius: 4px;
+						overflow: hidden;
+
+						@media (max-width: 880px) {
+							flex-direction: row;
+							border-radius: 0;
+							height: 60px;
+							align-items: center;
+							white-space: nowrap;
+							border-bottom: 1px solid var(--color-primary-thin);
+						}
 					`}
-				/>
+				>
+					{children}
+					<div
+						ref={tabBorder}
+						className={css`
+							display: none;
+							position: absolute;
+							bottom: 0;
+							height: 2px;
+							background-color: var(--color-theme);
+							transition-duration: 0s;
+							transition-property: transform;
+
+							@media (max-width: 880px) {
+								display: block;
+							}
+						`}
+					/>
+				</aside>
+				<div
+					className={css`
+						text-align: center;
+						@media (max-width: 880px) {
+							display: none;
+						}
+					`}
+				>
+					<GoogleAds
+						slot="7661038914"
+						style={css`
+							width: 220px;
+							height: 600px;
+						`}
+					/>
+				</div>
 			</div>
-		</div>
+		</>
 	);
 }
