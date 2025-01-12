@@ -55,9 +55,11 @@ export default function (): JSX.Element {
 					display: flex;
 					flex-direction: column;
 					gap: 20px;
+					grid-column: 2 / 3;
 
 					@media (max-width: 880px) {
 						margin-top: 60px;
+						grid-column: auto;
 					}
 				`}
 			>
