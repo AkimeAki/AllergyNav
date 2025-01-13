@@ -9,7 +9,7 @@ export default function ({ children }: Props): JSX.Element {
 		<aside
 			className={css`
 				position: fixed;
-				top: 0;
+				top: var(--top-space);
 				left: 0;
 				width: 100%;
 				height: 80px;

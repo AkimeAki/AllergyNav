@@ -10,7 +10,7 @@ export default function (): JSX.Element {
 			<header
 				className={css`
 					position: fixed;
-					top: 0;
+					top: var(--top-space);
 					width: 100%;
 					height: 80px;
 					background-color: var(--color-secondary);

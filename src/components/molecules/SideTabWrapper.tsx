@@ -367,7 +367,7 @@ export default function ({ children }: Props): JSX.Element {
 						grid-column: auto;
 						width: 100%;
 						position: fixed;
-						top: 60px;
+						top: calc(var(--top-space) + 60px);
 						left: 0;
 						z-index: 10000;
 						overflow: hidden;

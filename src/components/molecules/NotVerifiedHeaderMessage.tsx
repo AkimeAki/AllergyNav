@@ -4,16 +4,41 @@ import { css } from "@kuma-ui/core";
 import Button from "@/components/atoms/Button";
 import useGetUserData from "@/hooks/useGetUserData";
 import useSendVerifyMail from "@/hooks/fetch-api/useSendVerifyMail";
+import { useEffect, useRef } from "react";
 
 export default function (): JSX.Element {
 	const { userId, userVerified } = useGetUserData();
 	const { sendVerifyMail, sendVerifyMailStatus } = useSendVerifyMail();
+	const element = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		const resize = () => {
+			if (element.current !== null) {
+				document.body.style.setProperty("--top-space", String(element.current.offsetHeight) + "px");
+			}
+		};
+
+		if (!userVerified) {
+			resize();
+			window.addEventListener("resize", resize);
+		}
+
+		return () => {
+			window.removeEventListener("resize", resize);
+		};
+	}, [userVerified]);
 
 	return (
 		<>
 			{userVerified === false && (
 				<div
+					ref={element}
 					className={css`
+						position: fixed;
+						top: 0;
+						left: 0;
+						width: 100%;
+						z-index: 10001;
 						background-color: var(--color-theme);
 					`}
 				>
@@ -22,16 +47,17 @@ export default function (): JSX.Element {
 							max-width: 1200px;
 							margin: 0 auto;
 							width: 100%;
-							padding: 10px 30px;
+							padding: 5px 30px;
 							display: flex;
 							align-items: center;
 							flex-wrap: wrap;
-							gap: 10px;
+							gap: 3px;
 						`}
 					>
 						<span
 							className={css`
 								color: white;
+								font-weight: bold;
 							`}
 						>
 							メール認証が完了していません。アカウント作成日から7日後にアカウントが削除されます。

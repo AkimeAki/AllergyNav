@@ -2,7 +2,6 @@
 
 import Button from "@/components/atoms/Button";
 import Label from "@/components/atoms/Label";
-import TextInput from "@/components/atoms/TextInput";
 import { css } from "@kuma-ui/core";
 import { useEffect, useState } from "react";
 import SubTitle from "@/components/atoms/SubTitle";
@@ -13,6 +12,7 @@ import { useSearchParams } from "next/navigation";
 import Cursor from "@/components/atoms/Cursor";
 import useLogin from "@/hooks/useLogin";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
+import InputText from "@/components/atoms/InputText";
 
 export default function (): JSX.Element {
 	const [email, setEmail] = useState<string>("");
@@ -99,7 +99,7 @@ export default function (): JSX.Element {
 						>
 							<div>
 								<Label>メールアドレス</Label>
-								<TextInput
+								<InputText
 									value={email}
 									disabled={addUserStatus === "loading" || loginLoading}
 									loading={addUserStatus === "loading" || loginLoading}
@@ -121,7 +121,7 @@ export default function (): JSX.Element {
 							</div>
 							<div>
 								<Label>パスワード</Label>
-								<TextInput
+								<InputText
 									password
 									value={password}
 									disabled={addUserStatus === "loading" || loginLoading}
@@ -191,7 +191,7 @@ export default function (): JSX.Element {
 								>
 									もう一度パスワードを入力してください。
 								</span>
-								<TextInput
+								<InputText
 									password
 									value={confirmPassword}
 									disabled={addUserStatus === "loading" || loginLoading}

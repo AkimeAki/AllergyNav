@@ -2,7 +2,6 @@
 
 import Button from "@/components/atoms/Button";
 import Label from "@/components/atoms/Label";
-import TextInput from "@/components/atoms/TextInput";
 import { css } from "@kuma-ui/core";
 import { useEffect, useState } from "react";
 import SubTitle from "@/components/atoms/SubTitle";
@@ -12,6 +11,7 @@ import Cursor from "@/components/atoms/Cursor";
 import { useSearchParams } from "next/navigation";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
 import { isEmptyString } from "@/libs/check-string";
+import InputText from "@/components/atoms/InputText";
 
 export default function (): JSX.Element {
 	const [email, setEmail] = useState<string>("");
@@ -92,7 +92,7 @@ export default function (): JSX.Element {
 						>
 							<div>
 								<Label>メールアドレス</Label>
-								<TextInput
+								<InputText
 									value={email}
 									onChange={(e) => {
 										setEmail(e.target.value);
@@ -102,7 +102,7 @@ export default function (): JSX.Element {
 							</div>
 							<div>
 								<Label>パスワード</Label>
-								<TextInput
+								<InputText
 									value={password}
 									onChange={(e) => {
 										setPassword(e.target.value);

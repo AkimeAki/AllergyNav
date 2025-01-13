@@ -23,10 +23,10 @@ export default function ({ children }: Props): JSX.Element {
 			<MainMenu />
 			<div
 				className={css`
-					margin-top: 80px;
+					margin-top: calc(var(--top-space) + 80px);
 
 					@media (max-width: 880px) {
-						margin-top: 60px;
+						margin-top: calc(var(--top-space) + 60px);
 					}
 				`}
 			>

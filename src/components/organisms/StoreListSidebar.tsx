@@ -96,7 +96,7 @@ export default function (): JSX.Element {
 			<aside
 				className={css`
 					position: fixed;
-					top: 60px;
+					top: calc(var(--top-space) + 60px);
 					left: 0;
 					width: 100%;
 					height: 60px;

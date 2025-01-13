@@ -47,7 +47,7 @@ export default function ({ children }: Props): JSX.Element {
 					/>
 				)}
 			</head>
-			<body>
+			<body style={{ "--top-space": "0px" } as React.CSSProperties}>
 				{process.env.NODE_ENV === "production" && process.env.MAINTENANCE === "false" && (
 					<noscript>
 						<iframe
