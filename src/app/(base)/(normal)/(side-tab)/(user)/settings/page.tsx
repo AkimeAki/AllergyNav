@@ -1,3 +1,5 @@
+import SmallTitle from "@/components/atoms/SmallTitle";
+import { getUserData } from "@/libs/get-user-data";
 import { seoHead } from "@/libs/seo";
 import { css } from "@kuma-ui/core";
 import type { Metadata } from "next";
@@ -10,6 +12,8 @@ export const metadata: Metadata = seoHead({
 });
 
 export default async function (): Promise<JSX.Element> {
+	const { email } = await getUserData();
+
 	return (
 		<div
 			className={css`
@@ -19,7 +23,15 @@ export default async function (): Promise<JSX.Element> {
 				width: 100%;
 			`}
 		>
-			<Link href="/recovery">パスワードを変更</Link>
+			<div>
+				<SmallTitle>パスワード</SmallTitle>
+				<Link href="/recovery">パスワードを変更</Link>
+			</div>
+			<div>
+				<SmallTitle>メールアドレス</SmallTitle>
+				<p>{email}</p>
+				<p>メールアドレス変更機能は現在実装されていません。実装されるまでしばらくお待ち下さい。</p>
+			</div>
 		</div>
 	);
 }

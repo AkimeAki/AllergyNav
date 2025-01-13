@@ -15,9 +15,9 @@ interface Props {
 }
 
 export const generateMetadata = async (): Promise<Metadata> => {
-	const { userId, role } = await getUserData();
+	const { isLogin, role } = await getUserData();
 
-	if (userId === null || role !== "admin") {
+	if (!isLogin || role !== "admin") {
 		notFound();
 	}
 
@@ -25,8 +25,8 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 export default async function ({ children }: Props): Promise<JSX.Element> {
-	const { userId, role } = await getUserData();
-	if (userId === null || role !== "admin") {
+	const { isLogin, role } = await getUserData();
+	if (!isLogin || role !== "admin") {
 		notFound();
 	}
 

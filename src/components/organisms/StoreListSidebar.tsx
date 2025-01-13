@@ -17,6 +17,7 @@ import InputText from "@/components/atoms/InputText";
 import GoogleIcon from "@/components/atoms/GoogleIcon";
 import { searchArea } from "@/definition";
 import { isEmptyString } from "@/libs/check-string";
+import SmallTitle from "@/components/atoms/SmallTitle";
 
 export default function (): JSX.Element {
 	const [selectAllergens, setSelectAllergens] = useState<string[]>([]);
@@ -252,11 +253,6 @@ export default function (): JSX.Element {
 						padding: 10px;
 						border-radius: 4px;
 
-						h2 {
-							font-size: 15px;
-							font-weight: bold;
-						}
-
 						& > div {
 							display: flex;
 							flex-direction: column;
@@ -265,7 +261,7 @@ export default function (): JSX.Element {
 					`}
 				>
 					<div>
-						<h2>アレルギー</h2>
+						<SmallTitle>アレルギー</SmallTitle>
 						<InputButton
 							ref={selectSidebarAllergensButton}
 							isOpen={isSidebarAllergenSelectModalOpen}
@@ -286,7 +282,7 @@ export default function (): JSX.Element {
 						</InputButton>
 					</div>
 					<div>
-						<h2>エリア</h2>
+						<SmallTitle>エリア</SmallTitle>
 						<InputButton
 							ref={selectAreaButton}
 							isOpen={isAreaSelectModalOpen}
@@ -323,7 +319,7 @@ export default function (): JSX.Element {
 						)}
 					</div>
 					<div>
-						<h2>キーワード</h2>
+						<SmallTitle>キーワード</SmallTitle>
 						<InputText
 							placeholder="店名、ジャンルなど"
 							value={keywords}

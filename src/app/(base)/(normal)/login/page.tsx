@@ -1,17 +1,16 @@
 import JsonLD from "@/components/atoms/JsonLD";
 import { seoHead } from "@/libs/seo";
 import type { Metadata } from "next";
-import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 import Client from "./client";
+import { getUserData } from "@/libs/get-user-data";
 
 export const metadata: Metadata = seoHead({ title: "ログイン", canonicalPath: "/login" });
 
 export default async function (): Promise<JSX.Element> {
-	const session = await getServerSession();
-	const user = session?.user;
+	const { isLogin } = await getUserData();
 
-	if (user?.email !== undefined && user.email !== null) {
+	if (isLogin) {
 		redirect("/");
 	}
 
