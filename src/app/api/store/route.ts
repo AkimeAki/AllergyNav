@@ -63,6 +63,9 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 								status: true
 							}
 						}
+					},
+					where: {
+						deleted: false
 					}
 				}
 			},
