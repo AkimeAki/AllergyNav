@@ -13,14 +13,16 @@ interface Props {
 }
 
 export default async function ({ children }: Props): Promise<JSX.Element> {
-	const { isLogin, userId } = await getUserData();
+	const { isLogin, userId, isVerified } = await getUserData();
 
 	if (!isLogin) {
 		redirect("/signin?redirect=/settings");
 	}
 
 	return (
-		<SideTabLayout sideTabLinks={<UserTabs pageId={userId} currentUserId={userId} />}>
+		<SideTabLayout
+			sideTabLinks={<UserTabs pageId={userId} currentUserId={userId} currentUserVerified={isVerified} />}
+		>
 			<h3
 				className={css`
 					font-size: 25px;
