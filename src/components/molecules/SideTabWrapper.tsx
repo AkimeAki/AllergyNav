@@ -361,8 +361,10 @@ export default function ({ children }: Props): JSX.Element {
 					display: flex;
 					flex-direction: column;
 					gap: 30px;
+					grid-column: 1 / 2;
 
 					@media (max-width: 880px) {
+						grid-column: auto;
 						width: 100%;
 						position: fixed;
 						top: 60px;
