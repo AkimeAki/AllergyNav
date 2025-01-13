@@ -55,6 +55,15 @@ export default function (): JSX.Element {
 					>
 						<InstallAppButton>アプリとしてインストール</InstallAppButton>
 					</div>
+					<div
+						className={css`
+							display: inline-block;
+							text-align: center;
+							color: var(--color-primary);
+						`}
+					>
+						contact@mail.allergy-navi.com
+					</div>
 				</div>
 			</footer>
 		</>
