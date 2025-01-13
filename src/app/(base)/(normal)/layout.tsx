@@ -10,6 +10,7 @@ export default function ({ children }: Props): JSX.Element {
 		<main
 			className={css`
 				max-width: 1200px;
+				min-height: 100vh;
 				margin: 0 auto;
 				padding: 30px;
 
