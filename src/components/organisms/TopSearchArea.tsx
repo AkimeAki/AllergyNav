@@ -190,7 +190,9 @@ export default function (): JSX.Element {
 						border-bottom-right-radius: 4px;
 						color: var(--color-secondary);
 						white-space: nowrap;
-						align-content: center;
+						display: flex;
+						justify-content: center;
+						align-items: center;
 						padding: 0 10px;
 						font-size: 14px;
 						font-weight: bold;
