@@ -309,6 +309,10 @@ export default function (): JSX.Element {
 											border-width: 2px;
 											border-style: solid;
 											border-color: #f3f3f3;
+
+											body[data-browser="safari"] & {
+												overflow: visible;
+											}
 										`}
 									>
 										<div
@@ -325,6 +329,7 @@ export default function (): JSX.Element {
 													position: relative;
 													aspect-ratio: 1/1;
 													width: 250px;
+													height: 100%;
 
 													@media (max-width: 880px) {
 														width: 100%;
