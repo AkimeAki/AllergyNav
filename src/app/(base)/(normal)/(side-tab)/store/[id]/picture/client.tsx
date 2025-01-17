@@ -15,6 +15,7 @@ import NotLoginedModal from "@/components/molecules/NotLoginedModal";
 import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
 import GoogleIcon from "@/components/atoms/GoogleIcon";
 import EditPictureModal from "@/components/organisms/modal/EditPictureModal";
+import HeaderItemArea from "@/components/organisms/HeaderItemArea";
 
 interface Props {
 	storeId: string;
@@ -258,32 +259,21 @@ export default function ({ storeId }: Props): JSX.Element {
 						</section>
 					</>
 				)}
-				{getPicturesStatus === "successed" && (
-					<div
-						className={css`
-							position: sticky;
-							bottom: 40px;
-							text-align: right;
-							z-index: 99;
-
-							@media (max-width: 600px) {
-								bottom: 20px;
-							}
-						`}
-					>
-						<Button
-							onClick={() => {
-								setIsOpenAddModal(true);
-							}}
-							disabled={userStatus === "loading"}
-							loading={userStatus === "loading"}
-							selected={isOpenAddModal}
-						>
-							写真を追加
-						</Button>
-					</div>
-				)}
 			</div>
+			<HeaderItemArea>
+				{getPicturesStatus === "successed" && (
+					<Button
+						onClick={() => {
+							setIsOpenAddModal(true);
+						}}
+						disabled={userStatus === "loading"}
+						loading={userStatus === "loading"}
+						selected={isOpenAddModal}
+					>
+						写真を追加
+					</Button>
+				)}
+			</HeaderItemArea>
 		</>
 	);
 }

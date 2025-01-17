@@ -29,6 +29,7 @@ import useGetPictures from "@/hooks/fetch-api/useGetPictures";
 import DeleteMenuRequestModal from "@/components/organisms/modal/DeleteMenuRequestModal";
 import ListWrapper from "@/components/molecules/ListWrapper";
 import ListItem from "@/components/molecules/ListItem";
+import HeaderItemArea from "@/components/organisms/HeaderItemArea";
 
 interface Props {
 	storeId: string;
@@ -729,28 +730,21 @@ export default function ({ storeId, menuList }: Props): JSX.Element {
 						</>
 					)}
 				</ListWrapper>
-				{getMenusStatus === "successed" && (
-					<div
-						className={css`
-							position: sticky;
-							bottom: 0;
-							text-align: right;
-							z-index: 99;
-						`}
-					>
-						<Button
-							disabled={userStatus === "loading"}
-							loading={userStatus === "loading"}
-							onClick={() => {
-								setIsOpenAddModal(true);
-							}}
-							selected={isOpenAddModal}
-						>
-							メニューを追加
-						</Button>
-					</div>
-				)}
 			</div>
+			<HeaderItemArea>
+				{getMenusStatus === "successed" && (
+					<Button
+						disabled={userStatus === "loading"}
+						loading={userStatus === "loading"}
+						onClick={() => {
+							setIsOpenAddModal(true);
+						}}
+						selected={isOpenAddModal}
+					>
+						メニューを追加
+					</Button>
+				)}
+			</HeaderItemArea>
 		</>
 	);
 }

@@ -11,6 +11,7 @@ import JsonLD from "@/components/atoms/JsonLD";
 import { siteTitle, siteUrl } from "@/definition";
 import { GetStoreResponse } from "@/type";
 import { notFound } from "next/navigation";
+import HeaderItemArea from "@/components/organisms/HeaderItemArea";
 
 interface Props {
 	params: {
@@ -293,8 +294,10 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 					<SubTitle>マップ</SubTitle>
 					<GoogleMap search={`${storeDetail.address} ${storeDetail.name}`} />
 				</div>
-				<EditStoreButton storeId={storeDetail.id} />
 			</div>
+			<HeaderItemArea>
+				<EditStoreButton storeId={storeDetail.id} />
+			</HeaderItemArea>
 		</>
 	);
 }
