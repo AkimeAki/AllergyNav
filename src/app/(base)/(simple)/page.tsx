@@ -97,11 +97,11 @@ export default async function (): Promise<JSX.Element> {
 					<li>アレルギー情報提供の貢献度に応じた広告の非表示</li>
 				</ul>
 				<p>
-					アプデ情報は
+					アップデート情報は
 					<a href="https://blog.aki.wtf/category/allergy-navi" target="_blank">
-						こちらのブログ
+						開発者のブログ
 					</a>
-					に記載しています。
+					にて確認することができます。
 				</p>
 			</section>
 		</>
