@@ -397,7 +397,7 @@ export default function (): JSX.Element {
 													className={css`
 														display: flex;
 														flex-direction: column;
-														gap: 20px;
+														gap: 10px;
 													`}
 												>
 													<div>
@@ -405,7 +405,6 @@ export default function (): JSX.Element {
 															className={css`
 																font-weight: bold;
 																font-size: 18px;
-																padding: 10px;
 																user-select: none;
 															`}
 														>
