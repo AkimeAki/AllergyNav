@@ -251,12 +251,13 @@ export default function ({ children }: Props): JSX.Element {
 						}
 
 						document.body.dataset.swipeLoading = "true";
-						window.scroll({
-							top: 0,
-							behavior: "instant"
-						});
+
 						setTimeout(
 							(nextPath) => {
+								window.scroll({
+									top: 0,
+									behavior: "instant"
+								});
 								router.push(nextPath);
 							},
 							300,
