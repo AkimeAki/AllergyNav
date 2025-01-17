@@ -2,7 +2,6 @@
 import { css } from "@kuma-ui/core";
 import SubTitle from "@/components/atoms/SubTitle";
 import Label from "@/components/atoms/Label";
-import TextInput from "@/components/atoms/TextInput";
 import TextArea from "@/components/atoms/TextArea";
 import Button from "@/components/atoms/Button";
 import type { Dispatch, SetStateAction } from "react";
@@ -15,6 +14,7 @@ import Modal from "@/components/molecules/Modal";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
 import { normalize } from "@geolonia/normalize-japanese-addresses";
 import { includePostCode } from "@/libs/check-address";
+import InputText from "@/components/atoms/InputText";
 
 interface Props {
 	isOpen: boolean;
@@ -148,7 +148,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 				>
 					<div>
 						<Label required>お店の名前</Label>
-						<TextInput
+						<InputText
 							value={storeName}
 							disabled={addStoreStatus === "loading" || addStoreStatus === "successed"}
 							onChange={(e) => {
@@ -159,7 +159,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 					<div>
 						<Label required>住所</Label>
 						<p>郵便番号は除外してください。</p>
-						<TextInput
+						<InputText
 							value={storeAddress}
 							disabled={addStoreStatus === "loading" || addStoreStatus === "successed"}
 							onChange={(e) => {
@@ -169,7 +169,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 					</div>
 					<div>
 						<Label>公式サイトURL</Label>
-						<TextInput
+						<InputText
 							value={storeUrl}
 							disabled={addStoreStatus === "loading" || addStoreStatus === "successed"}
 							onChange={(e) => {
@@ -182,7 +182,7 @@ export default function ({ isOpen, setIsOpen }: Props): JSX.Element {
 						<p>
 							アレルギー表がPDFで提供されている場合などは、更新されるごとにURLが変わる可能性があるため、URLに設定するのはおすすめしません。
 						</p>
-						<TextInput
+						<InputText
 							value={allergyMenuUrl}
 							disabled={addStoreStatus === "loading" || addStoreStatus === "successed"}
 							onChange={(e) => {

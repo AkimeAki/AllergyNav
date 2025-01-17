@@ -8,10 +8,8 @@ import Button from "@/components/atoms/Button";
 import type { Dispatch, SetStateAction } from "react";
 import { useEffect, useState } from "react";
 import Cursor from "@/components/atoms/Cursor";
-import useAddPicture from "@/hooks/fetch-api/useAddPicture";
 import Modal from "@/components/molecules/Modal";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
-import { isEmptyString } from "@/libs/check-string";
 import useGetMenus from "@/hooks/fetch-api/useGetMenus";
 import useEditPicture from "@/hooks/fetch-api/useEditPicture";
 import useGetPicture from "@/hooks/fetch-api/useGetPicture";
@@ -31,7 +29,7 @@ export default function ({ pictureId, storeId, isOpen, setIsOpen, callback }: Pr
 	const [isChanged, setIsChanged] = useState<boolean>(false);
 	const { getMenus, getMenusResponse, getMenusStatus } = useGetMenus();
 	const { getPicture, getPictureResponse, getPictureStatus } = useGetPicture();
-	const { editPicture, editPictureResponse, editPictureStatus, editPictureReset } = useEditPicture();
+	const { editPicture, editPictureStatus, editPictureReset } = useEditPicture();
 	const [pictureMenuId, setPictureMenuId] = useState<string>("null");
 	const [oldPictureMenuId, setOldPictureMenuId] = useState<string>("null");
 

@@ -3,8 +3,6 @@
 import { css } from "@kuma-ui/core";
 import SubTitle from "@/components/atoms/SubTitle";
 import Label from "@/components/atoms/Label";
-import TextInput from "@/components/atoms/TextInput";
-import Select from "@/components/atoms/Select";
 import TextArea from "@/components/atoms/TextArea";
 import Button from "@/components/atoms/Button";
 import type { Dispatch, SetStateAction } from "react";
@@ -17,6 +15,7 @@ import Modal from "../../molecules/Modal";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
 import { includePostCode } from "@/libs/check-address";
 import { normalize } from "@geolonia/normalize-japanese-addresses";
+import InputText from "@/components/atoms/InputText";
 interface Props {
 	storeId: string;
 	isOpen: boolean;
@@ -231,7 +230,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 				>
 					<div>
 						<Label required>お店の名前</Label>
-						<TextInput
+						<InputText
 							disabled={editStoreStatus === "loading" || getStoreStatus === "loading"}
 							loading={getStoreStatus === "loading"}
 							onChange={(e) => {
@@ -243,7 +242,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 					<div>
 						<Label required>住所</Label>
 						<p>郵便番号は除外してください。</p>
-						<TextInput
+						<InputText
 							disabled={editStoreStatus === "loading" || getStoreStatus === "loading"}
 							loading={getStoreStatus === "loading"}
 							onChange={(e) => {
@@ -254,7 +253,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 					</div>
 					<div>
 						<Label>公式サイトURL</Label>
-						<TextInput
+						<InputText
 							value={storeUrl}
 							disabled={editStoreStatus === "loading" || getStoreStatus === "loading"}
 							loading={getStoreStatus === "loading"}
@@ -268,7 +267,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 						<p>
 							アレルギー表がPDFで提供されている場合などは、更新されるごとにURLが変わる可能性があるため、URLに設定するのはおすすめしません。
 						</p>
-						<TextInput
+						<InputText
 							value={allergyMenuUrl}
 							disabled={editStoreStatus === "loading" || getStoreStatus === "loading"}
 							loading={getStoreStatus === "loading"}
@@ -291,7 +290,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 					</div>
 					<div>
 						<Label>食べログURL</Label>
-						<TextInput
+						<InputText
 							value={tabelogUrl}
 							disabled={editStoreStatus === "loading" || getStoreStatus === "loading"}
 							loading={getStoreStatus === "loading"}
@@ -302,7 +301,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 					</div>
 					<div>
 						<Label>ぐるなびURL</Label>
-						<TextInput
+						<InputText
 							value={gurunaviUrl}
 							disabled={editStoreStatus === "loading" || getStoreStatus === "loading"}
 							loading={getStoreStatus === "loading"}
@@ -313,7 +312,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 					</div>
 					<div>
 						<Label>ホットペッパーグルメURL</Label>
-						<TextInput
+						<InputText
 							value={hotpepperUrl}
 							disabled={editStoreStatus === "loading" || getStoreStatus === "loading"}
 							loading={getStoreStatus === "loading"}

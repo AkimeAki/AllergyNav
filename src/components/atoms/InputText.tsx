@@ -34,16 +34,8 @@ export default function ({
 				placeholder={placeholder}
 				type={password ? "password" : "text"}
 				disabled={disabled}
-				onChange={(e) => {
-					if (onChange !== undefined) {
-						onChange(e);
-					}
-				}}
-				onKeyDown={(e) => {
-					if (onKeyDown !== undefined) {
-						onKeyDown(e);
-					}
-				}}
+				onChange={onChange}
+				onKeyDown={onKeyDown}
 				value={value}
 				className={css`
 					width: 100%;

@@ -2,12 +2,10 @@
 import { css } from "@kuma-ui/core";
 import SubTitle from "@/components/atoms/SubTitle";
 import Label from "@/components/atoms/Label";
-import TextInput from "@/components/atoms/TextInput";
-import Select from "@/components/atoms/Select";
 import TextArea from "@/components/atoms/TextArea";
 import Button from "@/components/atoms/Button";
 import type { Dispatch, SetStateAction } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Cursor from "@/components/atoms/Cursor";
 import useAddMenu from "@/hooks/fetch-api/useAddMenu";
 import AllergenItem from "@/components/atoms/AllergenItem";
@@ -17,6 +15,7 @@ import Modal from "@/components/molecules/Modal";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
 import SelectAllergenModal from "@/components/organisms/modal/SelectAllergenModal";
 import type { AllergenItemStatus, AllergenStatusValue } from "@/type";
+import InputText from "@/components/atoms/InputText";
 
 interface Props {
 	storeId: string;
@@ -127,7 +126,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 				>
 					<div>
 						<Label required>名前</Label>
-						<TextInput
+						<InputText
 							value={menuName}
 							disabled={addMenuStatus === "loading"}
 							onChange={(e) => {

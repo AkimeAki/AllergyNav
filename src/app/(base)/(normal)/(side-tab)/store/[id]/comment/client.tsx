@@ -19,6 +19,7 @@ import StoreCommentBarrier from "@/components/molecules/StoreCommentBarrier";
 import { useFloatMessage } from "@/hooks/useFloatMessage";
 import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
 import AlertBox from "@/components/atoms/AlertBox";
+import InputText from "@/components/atoms/InputText";
 
 interface Props {
 	storeId: string;
@@ -193,7 +194,7 @@ export default function ({ storeId }: Props): JSX.Element {
 					>
 						<div>
 							<Label required>タイトル</Label>
-							<TextInput
+							<InputText
 								value={newCommentTitle}
 								onChange={(e) => {
 									setNewCommentTitle(e.target.value);
