@@ -130,6 +130,13 @@ export default function ({ children }: Props): JSX.Element {
 				if (!noSwipe && (Math.abs(touchX - touch.clientX) > 30 || isMoving)) {
 					setEnableScroll(false);
 
+					const headerItemAreaList = document.querySelectorAll<HTMLDivElement>(".header-item-area");
+					headerItemAreaList.forEach((item) => {
+						item.style.transitionDuration = "0s";
+						item.style.opacity = "0";
+						item.style.top = "-100%";
+					});
+
 					const sideTabContents = document.querySelector<HTMLDivElement>("#side-tab-contents");
 					const sideTabLinks = document.querySelectorAll<HTMLAnchorElement | HTMLButtonElement>(
 						".side-tab-link"
@@ -276,6 +283,17 @@ export default function ({ children }: Props): JSX.Element {
 						if (tabBorder.current !== null) {
 							tabBorder.current.style.transitionDuration = "";
 						}
+
+						setTimeout(() => {
+							const headerItemAreaList = document.querySelectorAll<HTMLDivElement>(".header-item-area");
+							headerItemAreaList.forEach((item) => {
+								item.style.top = "";
+								item.style.transitionDuration = "";
+								item.style.userSelect = "";
+								item.style.pointerEvents = "";
+								item.style.opacity = "";
+							});
+						}, 300);
 					}, 300);
 				}
 			}

@@ -1,3 +1,4 @@
+import { cx } from "@/libs/merge-kuma";
 import { css } from "@kuma-ui/core";
 
 interface Props {
@@ -7,20 +8,25 @@ interface Props {
 export default function ({ children }: Props): JSX.Element {
 	return (
 		<aside
-			className={css`
-				position: fixed;
-				top: var(--top-space);
-				left: 0;
-				width: 100%;
-				height: 80px;
-				z-index: 10000;
-				user-select: none;
-				pointer-events: none;
+			className={cx(
+				css`
+					position: fixed;
+					top: var(--top-space);
+					left: 0;
+					width: 100%;
+					height: 80px;
+					z-index: 10000;
+					user-select: none;
+					pointer-events: none;
+					transition-duration: 200ms;
+					transition-property: opacity;
 
-				@media (max-width: 880px) {
-					height: 60px;
-				}
-			`}
+					@media (max-width: 880px) {
+						height: 60px;
+					}
+				`,
+				"header-item-area"
+			)}
 		>
 			<div
 				className={css`
