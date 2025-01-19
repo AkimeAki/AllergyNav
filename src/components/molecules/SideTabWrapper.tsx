@@ -231,8 +231,14 @@ export default function ({ children }: Props): JSX.Element {
 			swipeEndTime = new Date().getTime();
 			if (isTouch) {
 				const touch = e.touches[0];
-				touchX = touch.clientX;
-				touchY = touch.clientY;
+
+				if (
+					window.innerWidth * 0.13 < touch.clientX &&
+					touch.clientX < window.innerWidth - window.innerWidth * 0.13
+				) {
+					touchX = touch.clientX;
+					touchY = touch.clientY;
+				}
 			}
 		};
 
