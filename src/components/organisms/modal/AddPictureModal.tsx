@@ -107,7 +107,6 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 							disabled={addPictureStatus === "loading"}
 							onChange={(e) => {
 								const files = e.target.files;
-								console.log(files);
 								if (files !== null && files.length === 1) {
 									setPictureData(files[0]);
 								}
