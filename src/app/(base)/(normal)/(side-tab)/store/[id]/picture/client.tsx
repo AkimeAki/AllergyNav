@@ -2,7 +2,6 @@
 
 import { css } from "@kuma-ui/core";
 import { Fragment, useEffect, useState } from "react";
-import Image from "next/image";
 import Button from "@/components/atoms/Button";
 import AddPictureModal from "@/components/organisms/modal/AddPictureModal";
 import useGetPictures from "@/hooks/fetch-api/useGetPictures";
@@ -62,7 +61,7 @@ export default function ({ storeId }: Props): JSX.Element {
 						isOpen={isViewPicture && viewPictureId === picture.id && !isOpenEditModal}
 						setIsOpen={setIsViewPicture}
 					>
-						<Image
+						<img
 							className={css`
 								width: 100%;
 								height: calc(100% - 10px);
@@ -241,7 +240,7 @@ export default function ({ storeId }: Props): JSX.Element {
 										}
 									`}
 								>
-									<Image
+									<img
 										className={css`
 											aspect-ratio: 1/1;
 											width: 100%;

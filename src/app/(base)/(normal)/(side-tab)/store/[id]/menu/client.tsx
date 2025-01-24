@@ -2,7 +2,6 @@
 
 import { css } from "@kuma-ui/core";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Button from "@/components/atoms/Button";
 import AddMenuModal from "@/components/organisms/modal/AddMenuModal";
 import EditMenuModal from "@/components/organisms/modal/EditMenuModal";
@@ -460,7 +459,7 @@ export default function ({ storeId, menuList }: Props): JSX.Element {
 
 													if (imageUrl !== undefined) {
 														return (
-															<Image
+															<img
 																className={css`
 																	display: block;
 																	width: 100%;
@@ -474,7 +473,7 @@ export default function ({ storeId, menuList }: Props): JSX.Element {
 																src={imageUrl}
 																width={100}
 																height={100}
-																alt={`${menu.name}の画像`}
+																alt={menu.name}
 															/>
 														);
 													}

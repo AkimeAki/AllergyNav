@@ -1,7 +1,7 @@
 import { css } from "@kuma-ui/core";
-import Image from "next/image";
 import GoogleIcon from "@/components/atoms/GoogleIcon";
 import type { AllergenItemStatus } from "@/type";
+import { cx } from "@/libs/merge-kuma";
 
 interface Props {
 	image: string;
@@ -35,7 +35,7 @@ export default function ({
 				}
 			}}
 			style={{ width: `${size + 10}px` }}
-			className={[
+			className={cx(
 				css`
 					position: relative;
 					display: flex;
@@ -48,10 +48,10 @@ export default function ({
 					css`
 						cursor: pointer;
 					`
-			].join(" ")}
+			)}
 		>
-			<Image
-				className={[
+			<img
+				className={cx(
 					css`
 						height: auto;
 						aspect-ratio: 1/1;
@@ -71,11 +71,11 @@ export default function ({
 						css`
 							filter: drop-shadow(0 0 4px var(--color-red)) drop-shadow(0 0 4px var(--color-red));
 						`
-				].join(" ")}
+				)}
 				width={size}
 				height={size}
 				src={image}
-				alt={`${text}のアイコン`}
+				alt={text}
 			/>
 			{!nameHidden && (
 				<div

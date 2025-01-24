@@ -1,6 +1,5 @@
 import { css } from "@kuma-ui/core";
 import Link from "next/link";
-import Image from "next/image";
 
 interface Props {
 	href: string;
@@ -24,12 +23,7 @@ export default function ({ href, icon, text }: Props): JSX.Element {
 			href={href}
 			target="_blank"
 		>
-			{/^http/.test(icon) ? (
-				// eslint-disable-next-line @next/next/no-img-element
-				<img width={20} height={20} src={icon} alt={`${text}のアイコン`} />
-			) : (
-				<Image width={20} height={20} src={icon} alt={`${text}のアイコン`} />
-			)}
+			<img width={20} height={20} src={icon} alt={text} />
 			<span
 				className={css`
 					color: inherit;

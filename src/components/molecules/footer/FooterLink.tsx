@@ -1,5 +1,4 @@
 import { css } from "@kuma-ui/core";
-import Image from "next/image";
 import Link from "next/link";
 
 interface Props {
@@ -37,11 +36,11 @@ export default function ({ href, name }: Props): JSX.Element {
 				}
 			`}
 		>
-			<Image
+			<img
 				width={100}
 				height={100}
 				src={`/icons/circle/${name}.png`}
-				alt={`${name}のアイコン`}
+				alt={name}
 				className={css`
 					width: 100%;
 					height: 100%;

@@ -126,15 +126,18 @@ export const POST = async (req: NextRequest): Promise<NextResponse> => {
 
 			const buffer = Buffer.from(JSON.parse(pictureBuffer));
 			const formattedBuffer = await sharp(buffer)
-				.resize(1280, 1280, {
+				.resize(600, 600, {
 					fit: "inside"
 				})
 				.rotate()
 				.withMetadata()
-				.jpeg()
+				.webp({
+					quality: 60,
+					effort: 6
+				})
 				.toBuffer();
 
-			const filename = `${createId()}.jpg`;
+			const filename = `${createId()}.webp`;
 
 			const addPictureResult = await prisma.picture.create({
 				data: {

@@ -25,7 +25,8 @@ module.exports = [
 			...pluginNext.configs.recommended.rules,
 			"react/display-name": "off",
 			"react/react-in-jsx-scope": "off",
-			"react-hooks/exhaustive-deps": "off"
+			"react-hooks/exhaustive-deps": "off",
+			"@next/next/no-img-element": "off"
 		}
 	},
 	{

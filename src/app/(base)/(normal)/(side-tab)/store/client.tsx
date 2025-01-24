@@ -3,7 +3,6 @@
 import { css } from "@kuma-ui/core";
 import { useSearchParams } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import Button from "@/components/atoms/Button";
 import AddStoreModal from "@/components/organisms/modal/AddStoreModal";
@@ -360,7 +359,7 @@ export default function (): JSX.Element {
 
 														if (imageUrl !== undefined) {
 															return (
-																<Image
+																<img
 																	className={css`
 																		display: block;
 																		width: 100%;
@@ -374,7 +373,7 @@ export default function (): JSX.Element {
 																	src={imageUrl}
 																	width={250}
 																	height={250}
-																	alt={`${store.name}の画像`}
+																	alt={store.name}
 																/>
 															);
 														}

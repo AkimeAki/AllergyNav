@@ -1,6 +1,5 @@
 import { css } from "@kuma-ui/core";
 import Link from "next/link";
-import Image from "next/image";
 import NotVerifiedHeaderMessage from "@/components/molecules/NotVerifiedHeaderMessage";
 
 export default function (): JSX.Element {
@@ -57,9 +56,9 @@ export default function (): JSX.Element {
 								gap: 10px;
 							`}
 						>
-							<Image
+							<img
 								src="/icons/allergy-nav.png"
-								alt="アイコン"
+								alt="アレルギーナビ"
 								width={256}
 								height={269}
 								className={css`
