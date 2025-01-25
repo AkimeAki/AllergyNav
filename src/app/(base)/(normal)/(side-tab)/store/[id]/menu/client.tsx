@@ -29,6 +29,7 @@ import DeleteMenuRequestModal from "@/components/organisms/modal/DeleteMenuReque
 import ListWrapper from "@/components/molecules/ListWrapper";
 import ListItem from "@/components/molecules/ListItem";
 import HeaderItemArea from "@/components/organisms/HeaderItemArea";
+import Image from "next/image";
 
 interface Props {
 	storeId: string;
@@ -458,6 +459,27 @@ export default function ({ storeId, menuList }: Props): JSX.Element {
 													)?.url;
 
 													if (imageUrl !== undefined) {
+														if (imageUrl.endsWith(".jpg")) {
+															return (
+																<Image
+																	className={css`
+																		display: block;
+																		width: 100%;
+																		height: 100%;
+																		object-fit: cover;
+
+																		@media (max-width: 880px) {
+																			object-fit: cover;
+																		}
+																	`}
+																	src={imageUrl}
+																	width={100}
+																	height={100}
+																	alt={menu.name}
+																/>
+															);
+														}
+
 														return (
 															<img
 																className={css`

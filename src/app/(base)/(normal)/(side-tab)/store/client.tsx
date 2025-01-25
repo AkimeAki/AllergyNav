@@ -20,6 +20,7 @@ import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
 import GoogleAds from "@/components/atoms/GoogleAds";
 import AlertBox from "@/components/atoms/AlertBox";
 import HeaderItemArea from "@/components/organisms/HeaderItemArea";
+import Image from "next/image";
 
 export default function (): JSX.Element {
 	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
@@ -358,6 +359,27 @@ export default function (): JSX.Element {
 														)?.url;
 
 														if (imageUrl !== undefined) {
+															if (imageUrl.endsWith(".jpg")) {
+																return (
+																	<Image
+																		className={css`
+																			display: block;
+																			width: 100%;
+																			height: 100%;
+																			object-fit: cover;
+
+																			@media (max-width: 880px) {
+																				object-fit: cover;
+																			}
+																		`}
+																		src={imageUrl}
+																		width={250}
+																		height={250}
+																		alt={store.name}
+																	/>
+																);
+															}
+
 															return (
 																<img
 																	className={css`

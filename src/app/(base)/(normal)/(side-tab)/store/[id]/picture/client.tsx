@@ -15,6 +15,7 @@ import LoadingCircleCenter from "@/components/atoms/LoadingCircleCenter";
 import GoogleIcon from "@/components/atoms/GoogleIcon";
 import EditPictureModal from "@/components/organisms/modal/EditPictureModal";
 import HeaderItemArea from "@/components/organisms/HeaderItemArea";
+import Image from "next/image";
 
 interface Props {
 	storeId: string;
@@ -61,18 +62,33 @@ export default function ({ storeId }: Props): JSX.Element {
 						isOpen={isViewPicture && viewPictureId === picture.id && !isOpenEditModal}
 						setIsOpen={setIsViewPicture}
 					>
-						<img
-							className={css`
-								width: 100%;
-								height: calc(100% - 10px);
-								object-fit: contain;
-								user-select: none;
-							`}
-							src={picture.url}
-							width={1280}
-							height={1280}
-							alt="写真"
-						/>
+						{picture.url.endsWith(".jpg") ? (
+							<Image
+								className={css`
+									width: 100%;
+									height: calc(100% - 10px);
+									object-fit: contain;
+									user-select: none;
+								`}
+								src={picture.url}
+								width={1280}
+								height={1280}
+								alt="写真"
+							/>
+						) : (
+							<img
+								className={css`
+									width: 100%;
+									height: calc(100% - 10px);
+									object-fit: contain;
+									user-select: none;
+								`}
+								src={picture.url}
+								width={1280}
+								height={1280}
+								alt="写真"
+							/>
+						)}
 						{picture.description !== "" && (
 							<div
 								className={css`
@@ -240,19 +256,35 @@ export default function ({ storeId }: Props): JSX.Element {
 										}
 									`}
 								>
-									<img
-										className={css`
-											aspect-ratio: 1/1;
-											width: 100%;
-											height: 100%;
-											object-fit: contain;
-											user-select: none;
-										`}
-										src={picture.url}
-										width={300}
-										height={300}
-										alt="写真"
-									/>
+									{picture.url.endsWith(".jpg") ? (
+										<Image
+											className={css`
+												aspect-ratio: 1/1;
+												width: 100%;
+												height: 100%;
+												object-fit: contain;
+												user-select: none;
+											`}
+											src={picture.url}
+											width={300}
+											height={300}
+											alt="写真"
+										/>
+									) : (
+										<img
+											className={css`
+												aspect-ratio: 1/1;
+												width: 100%;
+												height: 100%;
+												object-fit: contain;
+												user-select: none;
+											`}
+											src={picture.url}
+											width={300}
+											height={300}
+											alt="写真"
+										/>
+									)}
 								</div>
 							))}
 						</section>
