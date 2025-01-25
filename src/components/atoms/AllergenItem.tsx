@@ -51,6 +51,7 @@ export default function ({
 			)}
 		>
 			<img
+				style={{ width: `${size}px`, height: `${size}px` }}
 				className={cx(
 					css`
 						height: auto;
