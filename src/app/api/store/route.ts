@@ -40,6 +40,41 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 		}
 		const offset = safeNumber(searchParams.get("offset")) ?? 0;
 
+		const where = {
+			menus: {
+				some: {
+					menu_allergens: {
+						none: {
+							allergen_id: {
+								in: allergens
+							},
+							status: "contain"
+						}
+					}
+				}
+			},
+			OR: [
+				{
+					OR: keywords.map((keyword) => {
+						return {
+							name: {
+								contains: keyword
+							}
+						};
+					})
+				},
+				{
+					OR: keywords.map((keyword) => {
+						return {
+							description: {
+								contains: keyword
+							}
+						};
+					})
+				}
+			]
+		};
+
 		const result = await prisma.store.findMany({
 			select: {
 				id: true,
@@ -69,28 +104,7 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 					}
 				}
 			},
-			where: {
-				OR: [
-					{
-						OR: keywords.map((keyword) => {
-							return {
-								name: {
-									contains: keyword
-								}
-							};
-						})
-					},
-					{
-						OR: keywords.map((keyword) => {
-							return {
-								description: {
-									contains: keyword
-								}
-							};
-						})
-					}
-				]
-			},
+			where: where,
 			orderBy: {
 				created_at: "desc"
 			},
@@ -99,95 +113,37 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 		});
 
 		const totalCount = await prisma.store.count({
-			where: {
-				OR: [
-					{
-						OR: keywords.map((keyword) => {
-							return {
-								name: {
-									contains: keyword
-								}
-							};
-						})
-					},
-					{
-						OR: keywords.map((keyword) => {
-							return {
-								description: {
-									contains: keyword
-								}
-							};
-						})
-					}
-				]
-			}
+			where: where
 		});
 
 		let data = [];
 
-		// アレルゲンフィルター
 		for (const item of result) {
-			// お店の全メニューの中にアレルゲンが含まれていなかったかどうかを管理する変数
-			let menuAllergen = false;
-			for (const menu of item.menus) {
-				// メニューの中にアレルゲンが含まれているかどうかを管理する変数
-				let allergen = false;
-				const allergenIds = menu.menu_allergens
-					.filter((allergen) => {
-						return allergen.status === "contain";
-					})
-					.map((allergen) => {
-						return allergen.allergen_id;
-					});
-
-				for (const allergenId of allergenIds) {
-					if (allergens.includes(allergenId)) {
-						allergen = true;
-					}
-				}
-
-				// メニューの中にアレルゲンが含まれていたので次のメニューにスキップ
-				if (allergen) {
-					continue;
-				}
-
-				// ここまで処理が来れば、検索時のアレルゲンが含まれていないメニューが見つかったということ
-				menuAllergen = true;
-				continue;
-			}
-
-			if (item.menus.length === 0) {
-				menuAllergen = true;
-			}
-
-			// メニューの中にアレルゲンが含まれていなかったらお店をレスポンスに追加
-			if (menuAllergen) {
-				const labels: StoreResponse["labels"] = [];
-				if (item.allergy_menu_url !== null) {
-					labels.push({
-						id: "exist_official_allergy_menu_url",
-						name: "公式成分表あり",
-						locked: true
-					});
-				}
-
-				data.push({
-					id: item.id,
-					name: item.name,
-					address: item.address,
-					description: item.description,
-					url: item.url,
-					allergy_menu_url: item.allergy_menu_url,
-					tabelog_url: item.tabelog_url,
-					gurunavi_url: item.gurunavi_url,
-					hotpepper_url: item.hotpepper_url,
-					updated_at: item.updated_at,
-					created_at: item.created_at,
-					created_user_id: item.created_user_id,
-					updated_user_id: item.updated_user_id,
-					labels
+			const labels: StoreResponse["labels"] = [];
+			if (item.allergy_menu_url !== null) {
+				labels.push({
+					id: "exist_official_allergy_menu_url",
+					name: "公式成分表あり",
+					locked: true
 				});
 			}
+
+			data.push({
+				id: item.id,
+				name: item.name,
+				address: item.address,
+				description: item.description,
+				url: item.url,
+				allergy_menu_url: item.allergy_menu_url,
+				tabelog_url: item.tabelog_url,
+				gurunavi_url: item.gurunavi_url,
+				hotpepper_url: item.hotpepper_url,
+				updated_at: item.updated_at,
+				created_at: item.created_at,
+				created_user_id: item.created_user_id,
+				updated_user_id: item.updated_user_id,
+				labels: labels
+			});
 		}
 
 		// 現在位置情報検索フィルター
