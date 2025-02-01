@@ -39,7 +39,7 @@ export default function ({ href, name }: Props): JSX.Element {
 			<img
 				width={100}
 				height={100}
-				src={`/icons/circle/${name}.png`}
+				src={`https://files.allergy-navi.com/icons/circle/${name}.png`}
 				alt={name}
 				className={css`
 					width: 100%;
