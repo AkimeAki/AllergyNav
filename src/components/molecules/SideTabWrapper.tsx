@@ -68,12 +68,7 @@ export default function ({ children }: Props): JSX.Element {
 			setEnableScroll(true);
 		};
 
-		const click = (): void => {
-			setEnableScroll(true);
-		};
-
 		if (element.current !== null) {
-			element.current.addEventListener("click", click, false);
 			element.current.addEventListener("wheel", scroll, false);
 			element.current.addEventListener("touchstart", touchStart, false);
 			element.current.addEventListener("touchend", touchEnd, false);
@@ -84,7 +79,6 @@ export default function ({ children }: Props): JSX.Element {
 
 		return () => {
 			if (element.current !== null) {
-				element.current.removeEventListener("click", click);
 				element.current.removeEventListener("wheel", scroll);
 				element.current.removeEventListener("touchstart", touchStart);
 				element.current.removeEventListener("touchend", touchEnd);
