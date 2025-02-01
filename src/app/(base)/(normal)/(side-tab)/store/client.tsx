@@ -247,7 +247,7 @@ export default function (): JSX.Element {
 									font-size: 15px;
 								`}
 							>
-								{Math.floor(getStoresResponse.info.total / getStoresResponse.info.limit + 1)}
+								{Math.ceil(getStoresResponse.info.total / getStoresResponse.info.limit)}
 							</span>
 							<span
 								className={css`
