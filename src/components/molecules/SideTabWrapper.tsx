@@ -105,6 +105,10 @@ export default function ({ children }: Props): JSX.Element {
 		let nextPath: null | string = null;
 		let noSwipe = false;
 		let previousTouchY: number | null = null;
+		let velocityY: number = 0;
+		let startTime = 0;
+		let moveY = 0;
+		let moveStart = false;
 
 		function move(e: TouchEvent) {
 			e.preventDefault();
@@ -198,6 +202,8 @@ export default function ({ children }: Props): JSX.Element {
 				} else {
 					if (previousTouchY !== null) {
 						window.scrollBy(0, -1 * (e.touches[0].clientY - previousTouchY));
+						startTime = performance.now();
+						moveY = e.touches[0].clientY - previousTouchY;
 					}
 				}
 			}
@@ -231,10 +237,13 @@ export default function ({ children }: Props): JSX.Element {
 				}
 			});
 
+			moveStart = true;
 			isMoving = false;
 			nextPath = null;
 			noSwipe = false;
 			overPercent = 0;
+			velocityY = 0;
+			moveY = 0;
 			swipeStartTime = new Date().getTime();
 			swipeEndTime = new Date().getTime();
 			if (isTouch) {
@@ -309,6 +318,22 @@ export default function ({ children }: Props): JSX.Element {
 							});
 						}, 300);
 					}, 300);
+				} else {
+					velocityY = moveY / (performance.now() - startTime);
+					moveStart = false;
+
+					const friction = 0.95;
+					const inertiaScroll = () => {
+						window.scrollBy(0, -1 * velocityY);
+						velocityY *= friction;
+
+						if (Math.abs(velocityY) > 0.1 && !moveStart) {
+							requestAnimationFrame(inertiaScroll);
+						} else {
+							moveStart = false;
+						}
+					};
+					inertiaScroll();
 				}
 			}
 
@@ -322,6 +347,8 @@ export default function ({ children }: Props): JSX.Element {
 			swipeStartTime = 0;
 			swipeEndTime = 0;
 			previousTouchY = null;
+			startTime = 0;
+			moveY = 0;
 		}
 
 		document.addEventListener("touchmove", move, { passive: false });
