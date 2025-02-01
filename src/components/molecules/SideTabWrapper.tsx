@@ -134,8 +134,6 @@ export default function ({ children }: Props): JSX.Element {
 				}
 
 				if (!noSwipe && (Math.abs(touchX - touch.clientX) > 30 || isMoving)) {
-					setEnableScroll(false);
-
 					const headerItemAreaList = document.querySelectorAll<HTMLDivElement>(".header-item-area");
 					headerItemAreaList.forEach((item) => {
 						item.style.transitionDuration = "0s";
@@ -343,7 +341,6 @@ export default function ({ children }: Props): JSX.Element {
 				}
 			}
 
-			setEnableScroll(true);
 			isMoving = false;
 			touchX = null;
 			touchY = null;
