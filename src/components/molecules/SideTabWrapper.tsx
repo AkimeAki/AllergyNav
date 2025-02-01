@@ -332,13 +332,13 @@ export default function ({ children }: Props): JSX.Element {
 	}, [pathname]);
 
 	useEffect(() => {
-		const scroll = (e: Event) => {
+		function scroll(e: Event) {
 			if (e.target instanceof HTMLElement) {
 				if (!enableScroll) {
 					e.preventDefault();
 				}
 			}
-		};
+		}
 
 		window.addEventListener("touchmove", scroll, { passive: false });
 		window.addEventListener("mousewheel", scroll, { passive: false });
@@ -350,7 +350,7 @@ export default function ({ children }: Props): JSX.Element {
 	}, [enableScroll]);
 
 	useEffect(() => {
-		const resize = () => {
+		function resize() {
 			const sideTabLinks = document.querySelectorAll<HTMLAnchorElement | HTMLButtonElement>(".side-tab-link");
 			sideTabLinks.forEach((link, index) => {
 				const linkPath = link.tagName === "A" ? new URL((link as HTMLAnchorElement).href).pathname : "";
@@ -361,7 +361,7 @@ export default function ({ children }: Props): JSX.Element {
 					tabBorder.current.style.left = link.clientWidth * index + "px";
 				}
 			});
-		};
+		}
 
 		resize();
 		window.addEventListener("resize", resize);
