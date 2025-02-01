@@ -98,22 +98,9 @@ export default function ({ children }: Props): JSX.Element {
 		let isMoving = false;
 		let nextPath: null | string = null;
 		let noSwipe = false;
-		let previousTouchY: number | null = null;
-		let velocityY: number = 0;
-		let startTime = 0;
-		let moveY = 0;
-		let moveStart = false;
 		let sideTouch = false;
 
 		function move(e: TouchEvent) {
-			if (
-				document.body.dataset.browserType === "chromium" &&
-				(document.body.dataset.os === "windows" ||
-					document.body.dataset.os === "android" ||
-					document.body.dataset.os === "mac")
-			) {
-				e.preventDefault();
-			}
 			const mediaQuery = window.matchMedia("(max-width: 880px)");
 
 			if (mediaQuery.matches && isTouch && touchX !== null && touchY !== null) {
@@ -199,23 +186,8 @@ export default function ({ children }: Props): JSX.Element {
 						}
 						overPercent = ((touch.clientX - touchX) / sideTabContents.offsetWidth) * 100;
 					}
-				} else {
-					if (
-						document.body.dataset.browserType === "chromium" &&
-						(document.body.dataset.os === "windows" ||
-							document.body.dataset.os === "android" ||
-							document.body.dataset.os === "mac")
-					) {
-						if (previousTouchY !== null) {
-							window.scrollBy(0, -1 * (e.touches[0].clientY - previousTouchY));
-							startTime = performance.now();
-							moveY = e.touches[0].clientY - previousTouchY;
-						}
-					}
 				}
 			}
-
-			previousTouchY = e.touches[0].clientY;
 		}
 
 		function start(e: TouchEvent) {
@@ -245,13 +217,10 @@ export default function ({ children }: Props): JSX.Element {
 			});
 
 			sideTouch = false;
-			moveStart = true;
 			isMoving = false;
 			nextPath = null;
 			noSwipe = false;
 			overPercent = 0;
-			velocityY = 0;
-			moveY = 0;
 			swipeStartTime = new Date().getTime();
 			swipeEndTime = new Date().getTime();
 			if (isTouch) {
@@ -329,35 +298,6 @@ export default function ({ children }: Props): JSX.Element {
 							});
 						}, 300);
 					}, 300);
-				} else {
-					if (
-						document.body.dataset.browserType === "chromium" &&
-						(document.body.dataset.os === "windows" ||
-							document.body.dataset.os === "android" ||
-							document.body.dataset.os === "mac")
-					) {
-						velocityY = moveY / (performance.now() - startTime);
-						moveStart = false;
-
-						const friction = 0.95;
-						const inertiaScroll = () => {
-							if (velocityY > 40) {
-								velocityY = 40;
-							} else if (velocityY < -40) {
-								velocityY = -40;
-							}
-
-							window.scrollBy(0, -1 * velocityY);
-							velocityY *= friction;
-
-							if (Math.abs(velocityY) > 0.1 && !moveStart) {
-								requestAnimationFrame(inertiaScroll);
-							} else {
-								moveStart = false;
-							}
-						};
-						inertiaScroll();
-					}
 				}
 			}
 
@@ -370,9 +310,6 @@ export default function ({ children }: Props): JSX.Element {
 			overPercent = 0;
 			swipeStartTime = 0;
 			swipeEndTime = 0;
-			previousTouchY = null;
-			startTime = 0;
-			moveY = 0;
 		}
 
 		document.addEventListener("touchmove", move, { passive: false });
