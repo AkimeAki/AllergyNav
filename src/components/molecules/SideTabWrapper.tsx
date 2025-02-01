@@ -98,7 +98,6 @@ export default function ({ children }: Props): JSX.Element {
 		let isMoving = false;
 		let nextPath: null | string = null;
 		let noSwipe = false;
-		let sideTouch = false;
 
 		function move(e: TouchEvent) {
 			const mediaQuery = window.matchMedia("(max-width: 880px)");
@@ -122,7 +121,7 @@ export default function ({ children }: Props): JSX.Element {
 					noSwipe = true;
 				}
 
-				if (!noSwipe && (Math.abs(touchX - touch.clientX) > 30 || isMoving) && !sideTouch) {
+				if (!noSwipe && (Math.abs(touchX - touch.clientX) > 30 || isMoving)) {
 					const headerItemAreaList = document.querySelectorAll<HTMLDivElement>(".header-item-area");
 					headerItemAreaList.forEach((item) => {
 						item.style.transitionDuration = "0s";
@@ -218,7 +217,6 @@ export default function ({ children }: Props): JSX.Element {
 				}
 			});
 
-			sideTouch = false;
 			isMoving = false;
 			nextPath = null;
 			noSwipe = false;
@@ -227,16 +225,13 @@ export default function ({ children }: Props): JSX.Element {
 			swipeEndTime = new Date().getTime();
 			if (isTouch) {
 				const touch = e.touches[0];
-				touchX = touch.clientX;
-				touchY = touch.clientY;
 
 				if (
-					!(
-						window.innerWidth * 0.13 < touch.clientX &&
-						touch.clientX < window.innerWidth - window.innerWidth * 0.13
-					)
+					window.innerWidth * 0.13 < touch.clientX &&
+					touch.clientX < window.innerWidth - window.innerWidth * 0.13
 				) {
-					sideTouch = true;
+					touchX = touch.clientX;
+					touchY = touch.clientY;
 				}
 			}
 		}
@@ -305,7 +300,6 @@ export default function ({ children }: Props): JSX.Element {
 				}
 			}
 
-			sideTouch = false;
 			isMoving = false;
 			touchX = null;
 			touchY = null;
