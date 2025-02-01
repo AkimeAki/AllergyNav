@@ -57,7 +57,7 @@ export default function (): JSX.Element {
 							`}
 						>
 							<img
-								src="https://${process.env.FILES_HOSTNAME}/icons/allergy-nav.png"
+								src="https://files.allergy-navi.com/icons/allergy-nav.png"
 								alt="アレルギーナビ"
 								width={256}
 								height={269}
