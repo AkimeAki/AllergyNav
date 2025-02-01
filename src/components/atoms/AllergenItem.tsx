@@ -4,7 +4,7 @@ import type { AllergenItemStatus } from "@/type";
 import { cx } from "@/libs/merge-kuma";
 
 interface Props {
-	image: string;
+	allergen: string;
 	text: string;
 	nameHidden?: boolean;
 	size?: number;
@@ -14,7 +14,7 @@ interface Props {
 }
 
 export default function ({
-	image,
+	allergen,
 	text,
 	nameHidden = false,
 	size = 32,
@@ -75,7 +75,7 @@ export default function ({
 				)}
 				width={size}
 				height={size}
-				src={image}
+				src={`https://files.allergy-navi.com/allergens/${allergen}.png`}
 				alt={text}
 			/>
 			{!nameHidden && (

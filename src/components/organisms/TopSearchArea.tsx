@@ -254,7 +254,7 @@ export default function (): JSX.Element {
 									: ""
 							].join(" ")}
 						>
-							<AllergenItem image={`/icons/${allergen.id}.png`} text={allergen.name} />
+							<AllergenItem allergen={allergen.id} text={allergen.name} />
 						</div>
 					))}
 				</div>

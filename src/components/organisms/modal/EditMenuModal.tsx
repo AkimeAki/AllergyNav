@@ -183,7 +183,7 @@ export default function ({ menuId, isOpen, setIsOpen, callback }: Props): JSX.El
 								return (
 									<AllergenItem
 										key={allergen.id}
-										image={`/icons/${allergen.id}.png`}
+										allergen={allergen.id}
 										text={allergen.name}
 										status={status}
 									/>

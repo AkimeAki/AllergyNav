@@ -270,11 +270,7 @@ export default function ({ isOpen, setIsOpen, allergenStatus, setAllergenStatus 
 										}
 									`}
 								>
-									<AllergenItem
-										key={allergen.id}
-										image={`/icons/${allergen.id}.png`}
-										text={allergen.name}
-									/>
+									<AllergenItem key={allergen.id} allergen={allergen.id} text={allergen.name} />
 								</div>
 							);
 						})}
@@ -320,10 +316,7 @@ export default function ({ isOpen, setIsOpen, allergenStatus, setAllergenStatus 
 												data-hold-allergen
 												data-allergen={allergen.id}
 											>
-												<AllergenItem
-													image={`/icons/${allergen.id}.png`}
-													text={allergen.name}
-												/>
+												<AllergenItem allergen={allergen.id} text={allergen.name} />
 											</div>
 										);
 									}
@@ -366,10 +359,7 @@ export default function ({ isOpen, setIsOpen, allergenStatus, setAllergenStatus 
 														data-hold-allergen
 														data-allergen={allergen.id}
 													>
-														<AllergenItem
-															image={`/icons/${allergen.id}.png`}
-															text={allergen.name}
-														/>
+														<AllergenItem allergen={allergen.id} text={allergen.name} />
 													</div>
 												);
 											}
@@ -402,10 +392,7 @@ export default function ({ isOpen, setIsOpen, allergenStatus, setAllergenStatus 
 														data-hold-allergen
 														data-allergen={allergen.id}
 													>
-														<AllergenItem
-															image={`/icons/${allergen.id}.png`}
-															text={allergen.name}
-														/>
+														<AllergenItem allergen={allergen.id} text={allergen.name} />
 													</div>
 												);
 											}
@@ -438,10 +425,7 @@ export default function ({ isOpen, setIsOpen, allergenStatus, setAllergenStatus 
 														data-hold-allergen
 														data-allergen={allergen.id}
 													>
-														<AllergenItem
-															image={`/icons/${allergen.id}.png`}
-															text={allergen.name}
-														/>
+														<AllergenItem allergen={allergen.id} text={allergen.name} />
 													</div>
 												);
 											}

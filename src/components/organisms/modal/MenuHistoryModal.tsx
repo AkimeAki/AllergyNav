@@ -119,7 +119,7 @@ export default function ({ menuId, isOpen, setIsOpen }: Props): JSX.Element {
 												return (
 													<AllergenItem
 														key={allergen.id}
-														image={`/icons/${allergen.id}.png`}
+														allergen={allergen.id}
 														text={allergen.name}
 														status={status}
 													/>

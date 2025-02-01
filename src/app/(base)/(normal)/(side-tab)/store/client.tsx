@@ -175,7 +175,7 @@ export default function (): JSX.Element {
 										}
 									});
 
-									return <AllergenItem key={item} image={`/icons/${item}.png`} text={name} />;
+									return <AllergenItem key={item} allergen={item} text={name} />;
 								})}
 							</div>
 							<div>

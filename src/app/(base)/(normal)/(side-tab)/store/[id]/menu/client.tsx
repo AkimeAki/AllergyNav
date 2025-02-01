@@ -583,7 +583,7 @@ export default function ({ storeId, menuList }: Props): JSX.Element {
 																return (
 																	<AllergenItem
 																		key={allergen.id}
-																		image={`/icons/${allergen.id}.png`}
+																		allergen={allergen.id}
 																		text={allergen.name}
 																		status={status}
 																	/>
@@ -690,7 +690,7 @@ export default function ({ storeId, menuList }: Props): JSX.Element {
 													return (
 														<AllergenItem
 															key={allergen.id}
-															image={`/icons/${allergen.id}.png`}
+															allergen={allergen.id}
 															text={allergen.name}
 															status={status}
 														/>

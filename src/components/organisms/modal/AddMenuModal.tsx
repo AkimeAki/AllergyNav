@@ -165,7 +165,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 								return (
 									<AllergenItem
 										key={allergen.id}
-										image={`/icons/${allergen.id}.png`}
+										allergen={allergen.id}
 										text={allergen.name}
 										status={status}
 									/>
