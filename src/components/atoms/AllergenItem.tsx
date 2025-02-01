@@ -75,7 +75,7 @@ export default function ({
 				)}
 				width={size}
 				height={size}
-				src={`https://${process.env.FILES_HOSTNAME}/allergens/${allergen}.png`}
+				src={`https://files.allergy-navi.com/allergens/${allergen}.png`}
 				alt={text}
 			/>
 			{!nameHidden && (

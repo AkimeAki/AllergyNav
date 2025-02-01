@@ -173,7 +173,7 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 								<td>
 									<StoreDetailIconLink
 										href={`https://www.google.com/maps/search/${storeDetail.address} ${storeDetail.name}`}
-										icon={`https://${process.env.FILES_HOSTNAME}/icons/google-map.svg`}
+										icon="https://files.allergy-navi.com/icons/google-map.svg"
 										text={storeDetail.address}
 									/>
 								</td>
@@ -209,7 +209,7 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 									<td>
 										<StoreDetailIconLink
 											href={storeDetail.tabelog_url}
-											icon={`https://${process.env.FILES_HOSTNAME}/icons/tabelog.png`}
+											icon="https://files.allergy-navi.com/icons/tabelog.png"
 											text="食べログ"
 										/>
 									</td>
@@ -221,7 +221,7 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 									<td>
 										<StoreDetailIconLink
 											href={storeDetail.gurunavi_url}
-											icon={`https://${process.env.FILES_HOSTNAME}/icons/gurunavi.png`}
+											icon="https://files.allergy-navi.com/icons/gurunavi.png"
 											text="ぐるなび"
 										/>
 									</td>
@@ -233,7 +233,7 @@ export default async function ({ params }: Props): Promise<JSX.Element> {
 									<td>
 										<StoreDetailIconLink
 											href={storeDetail.hotpepper_url}
-											icon={`https://${process.env.FILES_HOSTNAME}/icons/hotpepper.png`}
+											icon="https://files.allergy-navi.com/icons/hotpepper.png"
 											text="ホットペッパーグルメ"
 										/>
 									</td>
