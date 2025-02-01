@@ -129,7 +129,11 @@ export default function ({ children }: Props): JSX.Element {
 						item.style.top = "-100%";
 					});
 
-					document.body.style.overflowY = "hidden";
+					if (!isMoving) {
+						document.body.style.top = `${-1 * window.scrollY}px`;
+						document.body.style.overflowY = "hidden";
+						document.body.style.position = "fixed";
+					}
 
 					const sideTabContents = document.querySelector<HTMLDivElement>("#side-tab-contents");
 					const sideTabLinks = document.querySelectorAll<HTMLAnchorElement | HTMLButtonElement>(
@@ -237,8 +241,6 @@ export default function ({ children }: Props): JSX.Element {
 		}
 
 		function end() {
-			document.body.style.overflowY = "";
-
 			swipeEndTime = new Date().getTime();
 			const sideTabContents = document.querySelector<HTMLDivElement>("#side-tab-contents");
 			if (sideTabContents !== null && tabBorder.current !== null) {
@@ -263,6 +265,10 @@ export default function ({ children }: Props): JSX.Element {
 
 						setTimeout(
 							(nextPath) => {
+								document.body.style.overflowY = "";
+								document.body.style.position = "";
+								document.body.style.top = "";
+
 								window.scroll({
 									top: 0,
 									behavior: "instant"
@@ -281,6 +287,14 @@ export default function ({ children }: Props): JSX.Element {
 
 					setTimeout(() => {
 						sideTabContents.style.transitionDuration = "";
+						document.body.style.overflowY = "";
+						document.body.style.position = "";
+						const scrollY = Number(document.body.style.top.replace("px", "")) * -1;
+						document.body.style.top = "";
+						window.scroll({
+							top: scrollY,
+							behavior: "instant"
+						});
 
 						if (tabBorder.current !== null) {
 							tabBorder.current.style.transitionDuration = "";
@@ -329,6 +343,9 @@ export default function ({ children }: Props): JSX.Element {
 		}
 
 		document.body.dataset.swipeLoading = "";
+		document.body.style.overflowY = "";
+		document.body.style.position = "";
+		document.body.style.top = "";
 	}, [pathname]);
 
 	useEffect(() => {
