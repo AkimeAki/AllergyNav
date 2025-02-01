@@ -324,6 +324,12 @@ export default function ({ children }: Props): JSX.Element {
 
 					const friction = 0.95;
 					const inertiaScroll = () => {
+						if (velocityY > 40) {
+							velocityY = 40;
+						} else if (velocityY < -40) {
+							velocityY = -40;
+						}
+
 						window.scrollBy(0, -1 * velocityY);
 						velocityY *= friction;
 
