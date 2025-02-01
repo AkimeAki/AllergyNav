@@ -111,10 +111,18 @@ export default function ({ children }: Props): JSX.Element {
 		let moveStart = false;
 
 		function move(e: TouchEvent) {
-			e.preventDefault();
+			if (
+				document.body.dataset.browserType === "chromium" &&
+				(document.body.dataset.os === "windows" ||
+					document.body.dataset.os === "android" ||
+					document.body.dataset.os === "mac")
+			) {
+				e.preventDefault();
+			}
 			const mediaQuery = window.matchMedia("(max-width: 880px)");
 
 			if (mediaQuery.matches && isTouch && touchX !== null && touchY !== null) {
+				console.log("aa");
 				const touch = e.touches[0];
 
 				if (!isMoving && Math.abs(touchY - touch.clientY) > 50) {
@@ -198,10 +206,17 @@ export default function ({ children }: Props): JSX.Element {
 						overPercent = ((touch.clientX - touchX) / sideTabContents.offsetWidth) * 100;
 					}
 				} else {
-					if (previousTouchY !== null) {
-						window.scrollBy(0, -1 * (e.touches[0].clientY - previousTouchY));
-						startTime = performance.now();
-						moveY = e.touches[0].clientY - previousTouchY;
+					if (
+						document.body.dataset.browserType === "chromium" &&
+						(document.body.dataset.os === "windows" ||
+							document.body.dataset.os === "android" ||
+							document.body.dataset.os === "mac")
+					) {
+						if (previousTouchY !== null) {
+							window.scrollBy(0, -1 * (e.touches[0].clientY - previousTouchY));
+							startTime = performance.now();
+							moveY = e.touches[0].clientY - previousTouchY;
+						}
 					}
 				}
 			}
@@ -317,27 +332,34 @@ export default function ({ children }: Props): JSX.Element {
 						}, 300);
 					}, 300);
 				} else {
-					velocityY = moveY / (performance.now() - startTime);
-					moveStart = false;
+					if (
+						document.body.dataset.browserType === "chromium" &&
+						(document.body.dataset.os === "windows" ||
+							document.body.dataset.os === "android" ||
+							document.body.dataset.os === "mac")
+					) {
+						velocityY = moveY / (performance.now() - startTime);
+						moveStart = false;
 
-					const friction = 0.95;
-					const inertiaScroll = () => {
-						if (velocityY > 40) {
-							velocityY = 40;
-						} else if (velocityY < -40) {
-							velocityY = -40;
-						}
+						const friction = 0.95;
+						const inertiaScroll = () => {
+							if (velocityY > 40) {
+								velocityY = 40;
+							} else if (velocityY < -40) {
+								velocityY = -40;
+							}
 
-						window.scrollBy(0, -1 * velocityY);
-						velocityY *= friction;
+							window.scrollBy(0, -1 * velocityY);
+							velocityY *= friction;
 
-						if (Math.abs(velocityY) > 0.1 && !moveStart) {
-							requestAnimationFrame(inertiaScroll);
-						} else {
-							moveStart = false;
-						}
-					};
-					inertiaScroll();
+							if (Math.abs(velocityY) > 0.1 && !moveStart) {
+								requestAnimationFrame(inertiaScroll);
+							} else {
+								moveStart = false;
+							}
+						};
+						inertiaScroll();
+					}
 				}
 			}
 
