@@ -104,8 +104,10 @@ export default function ({ children }: Props): JSX.Element {
 		let isMoving = false;
 		let nextPath: null | string = null;
 		let noSwipe = false;
+		let previousTouchY: number | null = null;
 
-		const move = (e: TouchEvent) => {
+		function move(e: TouchEvent) {
+			e.preventDefault();
 			const mediaQuery = window.matchMedia("(max-width: 880px)");
 
 			if (mediaQuery.matches && isTouch && touchX !== null && touchY !== null) {
@@ -193,11 +195,17 @@ export default function ({ children }: Props): JSX.Element {
 						}
 						overPercent = ((touch.clientX - touchX) / sideTabContents.offsetWidth) * 100;
 					}
+				} else {
+					if (previousTouchY !== null) {
+						window.scrollBy(0, -1 * (e.touches[0].clientY - previousTouchY));
+					}
 				}
 			}
-		};
 
-		const start = (e: TouchEvent) => {
+			previousTouchY = e.touches[0].clientY;
+		}
+
+		function start(e: TouchEvent) {
 			const sideTabLinks = document.querySelectorAll<HTMLAnchorElement | HTMLButtonElement>(".side-tab-link");
 			sideTabLinks.forEach((link, index) => {
 				const linkPath = link.tagName === "A" ? new URL((link as HTMLAnchorElement).href).pathname : "";
@@ -240,9 +248,9 @@ export default function ({ children }: Props): JSX.Element {
 					touchY = touch.clientY;
 				}
 			}
-		};
+		}
 
-		const end = () => {
+		function end() {
 			swipeEndTime = new Date().getTime();
 			const sideTabContents = document.querySelector<HTMLDivElement>("#side-tab-contents");
 			if (sideTabContents !== null && tabBorder.current !== null) {
@@ -313,9 +321,10 @@ export default function ({ children }: Props): JSX.Element {
 			overPercent = 0;
 			swipeStartTime = 0;
 			swipeEndTime = 0;
-		};
+			previousTouchY = null;
+		}
 
-		document.addEventListener("touchmove", move);
+		document.addEventListener("touchmove", move, { passive: false });
 		document.addEventListener("touchstart", start);
 		document.addEventListener("touchend", end);
 
