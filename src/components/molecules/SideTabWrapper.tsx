@@ -130,6 +130,8 @@ export default function ({ children }: Props): JSX.Element {
 						item.style.top = "-100%";
 					});
 
+					document.body.style.overflowY = "hidden";
+
 					const sideTabContents = document.querySelector<HTMLDivElement>("#side-tab-contents");
 					const sideTabLinks = document.querySelectorAll<HTMLAnchorElement | HTMLButtonElement>(
 						".side-tab-link"
@@ -240,6 +242,8 @@ export default function ({ children }: Props): JSX.Element {
 		}
 
 		function end() {
+			document.body.style.overflowY = "";
+
 			swipeEndTime = new Date().getTime();
 			const sideTabContents = document.querySelector<HTMLDivElement>("#side-tab-contents");
 			if (sideTabContents !== null && tabBorder.current !== null) {
