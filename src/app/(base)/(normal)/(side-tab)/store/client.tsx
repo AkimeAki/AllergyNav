@@ -577,7 +577,7 @@ export default function (): JSX.Element {
 									getStoresStatus !== "successed" ||
 									getStoresResponse === undefined ||
 									(getStoresResponse !== undefined &&
-										getStoresResponse.info.limit * getStoresResponse.info.page >
+										getStoresResponse.info.limit * getStoresResponse.info.page >=
 											getStoresResponse.info.total)
 								}
 								loading={getStoresStatus !== "successed" || getStoresResponse === undefined}
