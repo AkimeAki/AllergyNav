@@ -226,7 +226,7 @@ export default function ({ isOpen, setIsOpen, allergenStatus, setAllergenStatus 
 
 	return (
 		<>
-			<Modal isOpen={isOpen} setIsOpen={setIsOpen} viewBg={false} margin={30} icon="back">
+			<Modal isOpen={isOpen} setIsOpen={setIsOpen} margin={30} icon="back">
 				<div
 					className={css`
 						position: relative;

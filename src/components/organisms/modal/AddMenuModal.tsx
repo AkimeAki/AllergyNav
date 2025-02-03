@@ -94,7 +94,7 @@ export default function ({ storeId, isOpen, setIsOpen, callback }: Props): JSX.E
 		<>
 			{addMenuStatus === "loading" && <Cursor cursor="wait" />}
 			<Modal
-				isOpen={isOpen}
+				isOpen={isOpen && !isSelectAllergenModalOpen}
 				setIsOpen={setIsOpen}
 				close={addMenuStatus !== "loading" && addMenuStatus !== "successed"}
 				onOutsideClick={
