@@ -27,7 +27,9 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 		}
 
 		const { searchParams } = new URL(req.url);
-		const allergens = (safeString(searchParams.get("allergens")) ?? "").split(",");
+		const allergens = (safeString(searchParams.get("allergens")) ?? "").split(",").filter((allergen) => {
+			return !/\s/.test(allergen) && allergen !== "";
+		});
 		const keywords = (safeString(searchParams.get("keywords")) ?? "").replaceAll(/\s/g, " ").split(" ");
 		const area = !isEmptyString(safeString(searchParams.get("area")) ?? "")
 			? (safeString(searchParams.get("area")) ?? "all")
@@ -102,12 +104,9 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 							}
 						}
 					},
-					where:
-						allergens.length !== 0
-							? {
-									deleted: false
-								}
-							: undefined
+					where: {
+						deleted: false
+					}
 				}
 			},
 			where: where,
