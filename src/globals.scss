@@ -48,7 +48,6 @@
 
 	body {
 		height: auto;
-		overscroll-behavior-y: none;
 
 		&[data-cursor="grabbing"] {
 			cursor: grabbing !important;
