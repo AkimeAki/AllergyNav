@@ -102,9 +102,12 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 							}
 						}
 					},
-					where: {
-						deleted: false
-					}
+					where:
+						allergens.length !== 0
+							? {
+									deleted: false
+								}
+							: undefined
 				}
 			},
 			where: where,
