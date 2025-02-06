@@ -41,18 +41,21 @@ export const GET = async (req: NextRequest): Promise<NextResponse> => {
 		const offset = safeNumber(searchParams.get("offset")) ?? 0;
 
 		const where = {
-			menus: {
-				some: {
-					menu_allergens: {
-						none: {
-							allergen_id: {
-								in: allergens
-							},
-							status: "contain"
+			menus:
+				allergens.length !== 0
+					? {
+							some: {
+								menu_allergens: {
+									none: {
+										allergen_id: {
+											in: allergens
+										},
+										status: "contain"
+									}
+								}
+							}
 						}
-					}
-				}
-			},
+					: undefined,
 			OR: [
 				{
 					OR: keywords.map((keyword) => {
